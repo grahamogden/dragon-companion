@@ -46,6 +46,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler', [
             'enableBeforeRedirect' => false,
         ]);
+        $this->loadComponent('Csrf');
 
         /*
          * Enable the following component for recommended CakePHP security settings.
@@ -54,6 +55,7 @@ class AppController extends Controller
         //$this->loadComponent('Security');
         $this->loadComponent('Flash');
         $this->loadComponent('Auth', [
+            'authorize'=> 'Controller',
             'authenticate' => [
                 'Form' => [
                     'fields' => [
@@ -75,4 +77,9 @@ class AppController extends Controller
         $this->Auth->allow(['display', 'view', 'index']);
     }
 
+    public function isAuthorized($user)
+    {
+        // By default deny access.
+        return false;
+    }
 }

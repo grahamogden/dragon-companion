@@ -13,6 +13,7 @@ class TimelineSegmentsController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
+        $this->Auth->allow(['tags']);
     }
 
     public function index()
@@ -58,7 +59,14 @@ class TimelineSegmentsController extends AppController
             ->firstOrFail();
 
         if ($this->request->is(['post', 'put'])) {
-            $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
+            $this->TimelineSegments->patchEntity(
+                $timelineSegment,
+                $this->request->getData(),
+                [
+                    // Added: Disable modification of user_id.
+                    'accessibleFields' => ['user_id' => false]
+                ]
+            );
 
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('Your timelineSegment has been updated.'));
@@ -99,6 +107,26 @@ class TimelineSegmentsController extends AppController
             'timelineSegments' => $timelineSegments,
             'tags' => $tags
         ]);
+    }
+
+    public function isAuthorized($user)
+    {
+        $action = $this->request->getParam('action');
+        // The add and tags actions are always allowed to logged in users.
+        if (in_array($action, ['add', 'tags'])) {
+            return true;
+        }
+
+        // All other actions require a slug.
+        $slug = $this->request->getParam('pass.0');
+        if (!$slug) {
+            return false;
+        }
+
+        // Check that the timelineSegment belongs to the current user.
+        $timelineSegment = $this->TimelineSegments->findBySlug($slug)->first();
+
+        return $timelineSegment->user_id === $user['id'];
     }
 
 }
