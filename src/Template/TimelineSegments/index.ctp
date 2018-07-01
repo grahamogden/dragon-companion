@@ -20,11 +20,18 @@
             <?= $timelineSegment->created->format(DATE_RFC850) ?>
         </td>
         <td>
-            <?= $this->Html->link('Edit', ['action' => 'edit', $timelineSegment->slug]) ?>
+            <?= $this->Html->link(
+                'Edit',
+                ['action' => 'edit', $timelineSegment->slug],
+                ['class' => CSS_CLASS_BUTTON_LINK]
+            ) ?>
             <?= $this->Form->postLink(
                 'Delete',
                 ['action' => 'delete', $timelineSegment->slug],
-                ['confirm' => 'Are you sure?'])
+                [
+                    'class' => [CSS_CLASS_BUTTON_LINK, CSS_CLASS_RED_ITEM],
+                    'confirm' => 'Are you sure?'
+                ])
             ?>
         </td>
     </tr>

@@ -1,0 +1,99 @@
+/*
+ * Mixins
+ */
+
+@smallRadius: 3px;
+
+@paddingThin: 4px;
+@paddingMed: @paddingThin * 2;
+@paddingThick: @paddingThin * 4;
+@paddingFat: @paddingThin * 8;
+
+@redItemColor: rgba(250, 70, 70, 1);
+
+/*
+ * Reusable Classes
+ */
+
+ .border-color(@color) {
+    border-color: @color - 30;
+ }
+
+.border-radius(@radius: @smallRadius) {
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.red-item() {
+    background-color: @redItemColor;
+    border: 1px solid;
+    .border-color(@redItemColor);
+    color: rgba(255, 255, 255, 1);
+}
+
+.style-button() {
+    @backgroundColor: rgba(240, 240, 240, 1);
+    background-color: @backgroundColor;
+    border: 1px solid;
+    .border-color(@backgroundColor - 30);
+    .border-radius();
+    margin: 0 10px 10px 0;
+    padding: 4px 16px;
+
+    &:hover {
+        background-color: @backgroundColor - 10;
+        .border-color(@backgroundColor - 10);
+    }
+}
+
+/*
+ * Styles
+ */
+
+a {
+    display: inline-block;
+
+    &.button-link {
+        .style-button();
+
+        &.red-button {
+            .red-item();
+        }
+    }
+}
+
+div.container {
+    padding: 0 @paddingMed;
+}
+
+h1 {
+    font-size: 2.2em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.8em;
+}
+
+h4 {
+    font-size: 1.6em;
+}
+
+table {
+    border: 1px solid #333;
+    margin: 0 auto @paddingThick 0;
+    width: 100%;
+
+    tbody {
+
+        tr {
+
+            td, th {
+                padding: @paddingThick @paddingFat;
+            }
+        }
+    }
+}
