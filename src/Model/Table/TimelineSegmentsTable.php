@@ -72,6 +72,60 @@ class TimelineSegmentsTable extends Table
 
         return $query->group(['TimelineSegments.id']);
     }
+
+    /**
+     * Finds Timeline segments by the provided parent ID
+     * 
+     * @param Query $query
+     * @param array $options
+     * 
+     * @return Query
+     */
+    public function findByParentId(Query $query, array $options): Query
+    {
+        $returnKey = 'TimelineSegments.id';
+        $columns = [
+            $returnKey,
+            'TimelineSegments.title',
+            'TimelineSegments.body',
+            'TimelineSegments.created',
+            'TimelineSegments.slug',
+            'TimelineSegments.parent_id',
+        ];
+
+        // Find timeline segments that have the provided parent ID
+        $query = $query
+            ->select($columns)
+            ->distinct($columns)
+            ->where(['parent_id = ' => $options['parentId']]);
+
+        return $query->group([$returnKey]);
+    }
+
+    /**
+     * Finds all of the ancestors based on the current item's ID
+     * 
+     * @param Query $query 
+     * @param array $options
+     * 
+     * @return TimelineSegment
+     */
+    public function findAncestorByParentId(Query $query, array $options)//: TimelineSegment
+    {
+        $returnKey = 'TimelineSegments.id';
+        $columns = [
+            $returnKey,
+            'TimelineSegments.title',
+            'TimelineSegments.parent_id',
+        ];
+
+        $query = $query
+            ->select($columns)
+            ->distinct($columns)
+            ->where(['id' => $options['parentId']]);
+
+        return $query->firstOrFail([$returnKey]);
+    }
     
     protected function _buildTags($tagString)
     {
