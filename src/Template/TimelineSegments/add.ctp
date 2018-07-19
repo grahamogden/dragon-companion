@@ -1,5 +1,13 @@
 <h1><?=ucwords($this->request->action)?> Timeline Segment</h1>
 <?php
+
+    $this->Breadcrumbs->add($breadcrumbs);
+
+    echo $this->Breadcrumbs->render(
+        ['class' => 'breadcrumbs-trail'],
+        ['separator' => '']
+    );
+        
     echo $this->Form->create($timelineSegment);
     // Hard code the user for now.
     echo $this->Form->control('user_id', ['type' => 'hidden', 'value' => 1]);

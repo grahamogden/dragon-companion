@@ -18,6 +18,14 @@ class TimelineSegmentsTable extends Table
         $this->belongsToMany('Tags');
     }
 
+    /**
+     * Before saving
+     * 
+     * @param type $event 
+     * @param type $entity 
+     * @param type $options 
+     * @return type
+     */
     public function beforeSave($event, $entity, $options)
     {
         if ($entity->tag_string) {
@@ -36,11 +44,11 @@ class TimelineSegmentsTable extends Table
     {
         $validator
             ->notEmpty('title')
-            ->minLength('title', 10)
+            // ->minLength('title', 10)
             ->maxLength('title', 2000)
 
-            ->notEmpty('body')
-            ->minLength('body', 10);
+            ->notEmpty('body');
+            // ->minLength('body', 10);
 
         return $validator;
     }
@@ -91,18 +99,21 @@ class TimelineSegmentsTable extends Table
             'TimelineSegments.created',
             'TimelineSegments.slug',
             'TimelineSegments.parent_id',
+            'TimelineSegments.previous_id',
         ];
 
         // Find timeline segments that have the provided parent ID
         $query = $query
             ->select($columns)
-            ->distinct($columns)
-            ->where(['parent_id = ' => $options['parentId']]);
+            ->where(['parent_id = ' => $options['parentId']])
+            ->order(['previous_id' => 'ASC']);
 
         return $query->group([$returnKey]);
     }
 
     /**
+     * @deprecated - Might as well just findById with the parent ID
+     * 
      * Finds all of the ancestors based on the current item's ID
      * 
      * @param Query $query 
@@ -110,23 +121,32 @@ class TimelineSegmentsTable extends Table
      * 
      * @return TimelineSegment
      */
-    public function findAncestorByParentId(Query $query, array $options)//: TimelineSegment
+    public function findByPreviousId(Query $query, array $options)//: TimelineSegment
     {
         $returnKey = 'TimelineSegments.id';
         $columns = [
             $returnKey,
             'TimelineSegments.title',
+            'TimelineSegments.body',
+            'TimelineSegments.created',
+            'TimelineSegments.slug',
             'TimelineSegments.parent_id',
+            'TimelineSegments.previous_id',
         ];
 
         $query = $query
             ->select($columns)
-            ->distinct($columns)
-            ->where(['id' => $options['parentId']]);
+            ->where(['previous_id' => $options['previousId']]);
 
-        return $query->firstOrFail([$returnKey]);
+        return $query->first(/*[$returnKey]*/);
     }
     
+    /**
+     * Description
+     * 
+     * @param type $tagString 
+     * @return type
+     */
     protected function _buildTags($tagString)
     {
         // Trim tags

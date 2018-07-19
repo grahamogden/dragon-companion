@@ -8,7 +8,7 @@ $(function() {
         "fantasy_asian_by_macduykhanh121094-da50lyq.jpg",
     ];
 
-    let intervalTime = 5000; // 5 seconds
+    let intervalTime = 7000; // 7 seconds
 
     // let headerbackgroundChange = function (url) {
     //     let headerImage = $("#header-background");
@@ -53,8 +53,10 @@ $(function() {
         var backgroundHeader = $("#header-background");
 
         backgroundHeader.css({
-            animation: "move-header " + (intervalTime / 1000) + "s linear infinite",
+            animation: "move-header-mobile " + (intervalTime / 1000) + "s linear infinite",
         });
+
+        // backgroundHeader.addClass('animate');
 
         var url = '';
 
@@ -68,12 +70,22 @@ $(function() {
         }, intervalTime);
     }
 
-    // setTimeout(function() {
-        backgroundSlider();
-    // }, intervalTime);
+    // backgroundSlider();
 
     $('#nav-menu-button').click(function(){
         $('header nav').toggleClass('open');
         $(this).toggleClass('open');
     });
+
+    // let list = $('table tbody.sortable');
+    // list.sortable({
+    //     cancel:'tr.add-item-row',
+    //     placeholder: 'item-row-placeholder',
+    //     update: function() {
+    //         console.log('updated!');
+    //         $.post('/timeline-segments/reorder', function(data) {
+    //             window.location.href(window.location.href);
+    //         });
+    //     }
+    // });
 });
