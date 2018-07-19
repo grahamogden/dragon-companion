@@ -19,11 +19,7 @@ class TimelineSegmentsController extends AppController
 
     public function index()
     {
-        $parentId = $this->request->getQuery('parentId');
-
-        if (!isset($parentId)) {
-            $parentId = 0;
-        }
+        $parentId = $this->request->getQuery('parentId') ?? 0;
 
         // Get the timeline segments for this parent ID
         $timelineSegments = $this->TimelineSegments->find('ByParentId', [
@@ -62,16 +58,14 @@ class TimelineSegmentsController extends AppController
     /**
      * Add route
      * 
+     * @param int $parentId - ID of the timeline segment that the new item will be a child of
+     * 
      * @return void|\Cake\Http\Response
      */
-    public function add()
+    public function add(int $parentId = 0)
     {
-        // Get the parent ID
-        $parentId   = $this->request->getQuery('parentId') ?? 0;
-        // Get the ID of the previous item that this item will point to
-        $previousId = $this->request->getQuery('previousId') ?? 0;
-        // Get the ID of the next item that will point to this item
-        $nextId     = $this->request->getQuery('nextId') ?? 0;
+        // Get the order number that the new item will be inserted into
+        $orderNumber = $this->request->getQuery('order_number') ?? 0;
 
         $newTimelineSegment = $this->TimelineSegments->newEntity();
         if ($this->request->is('post')) {
@@ -79,46 +73,21 @@ class TimelineSegmentsController extends AppController
 
             // Updates the entity with the POST data
             $newTimelineSegment = $this->TimelineSegments->patchEntity($newTimelineSegment, $this->request->getData());
-
-            // If we have a parent ID, then set it
-            if ($parentId) {
-                $newTimelineSegment->parent_id = $parentId;
-            }
-
-            // If we have a next ID, then set it
-            if ($previousId) {
-                $newTimelineSegment->previous_id = $previousId;
-            }
-
+            $newTimelineSegment->parent_id = $parentId;
+            $newTimelineSegment->order_number  = $orderNumber;
             // Set the user ID on the item
             $newTimelineSegment->user_id = $this->Auth->user('id');
 
+            $this->TimelineSegments->updateAllOrder($parentId, $orderNumber);
+
             if ($this->TimelineSegments->save($newTimelineSegment)) {
-                // If we have a next ID, then get the next timeline segment and update it to point to the new one
-                if ($nextId) {
-                    $nextTimelineSegment = $this->TimelineSegments
-                        ->findById($nextId)
-                        ->firstOrFail();
-
-                    $this->TimelineSegments->patchEntity($nextTimelineSegment, [
-                        'previous_id' => $newTimelineSegment->id
-                    ]);
-
-                    if ($this->TimelineSegments->save($nextTimelineSegment)) {
-                        $success = true;
-                    }
-                } else {
-                    $success = true;
-                }
-            }
-
-            if ($success) {
                 $this->Flash->success(__('Your timeline segment has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('Unable to add your timeline segment.'));
             }
         }
+
         // Get a list of tags.
         $tags = $this->TimelineSegments->Tags->find('list');
 
@@ -180,17 +149,10 @@ class TimelineSegmentsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
 
         $timelineSegmentToDelete = $this->TimelineSegments->findById($id)->firstOrFail();
-        $timelineSegmentToUpdate = $this->TimelineSegments->find('ByPreviousId', [
-                'previousId' => $timelineSegmentToDelete->id
-            ]);
 
-        $this->TimelineSegments->patchEntity($timelineSegmentToUpdate, [
-            'previous_id' => $timelineSegmentToDelete->previous_id
-        ]);
+        $this->TimelineSegments->updateAllOrder($timelineSegmentToDelete->parent_id);
 
-        if ($this->TimelineSegments->save($timelineSegmentToUpdate)
-            && $this->TimelineSegments->delete($timelineSegmentToDelete)
-        ) {
+        if ($this->TimelineSegments->delete($timelineSegmentToDelete)) {
             $this->Flash->success(__('The {0} timeline segment has been deleted.', $timelineSegmentToDelete->title));
             return $this->redirect(['action' => 'index']);
         } else {
@@ -304,103 +266,32 @@ class TimelineSegmentsController extends AppController
      */
     public function reorder($id)
     {
-        /*
-         * TODO: We need to update 4 records(!) not just three because:
-         * eg. move up
-         * id | previous_id
-         *  1 | 0
-         *  2 | 1
-         *  3 | 2 <- target segment - moves up
-         *  4 | 3
-         *  = (which equals or will become...)
-         * id order OR previous id order (which is what is visible to the user)
-         *  1 | 0        1 | 0
-         *  2 | 3   OR   3 | 1
-         *  3 | 1        2 | 3
-         *  4 | 2        4 | 2
-         *
-         * eg. move down
-         * id | previous_id
-         *  1 | 0
-         *  2 | 1 <- target segment - moves up
-         *  3 | 2
-         *  4 | 3
-         *  = (which equals or will become...)
-         * id order OR previous id order (which is what is visible to the user)
-         *  1 | 0        1 | 0
-         *  2 | 3   OR   3 | 1
-         *  3 | 1        2 | 3
-         *  4 | 2        4 | 2
-         * 
-         * ... Mind-blown... Moving something up or down is irrelevant,
-         * because something moving up is something else moving down...
-         */
+        // Get the current timeline segment we are going to update
+        $timelineSegmentAbove = $this->TimelineSegments->findById($id)->firstOrFail();
+
+        $orderNumber = $timelineSegmentAbove->order_number;
 
         // Get the current timeline segment we are going to update
-        $aboveTimelineSegment = $this->TimelineSegments->findById($id)->firstOrFail();
-        // Get the timeline segment that the middle segment is pointing to
-        // $middleTimelineSegment = $this->TimelineSegments->findById($aboveTimelineSegment->previous_id)->firstOrFail();
-        $middleTimelineSegment = $this->TimelineSegments->find(
-            'ByPreviousId', [
-                'previousId' => $aboveTimelineSegment->id
+        $timelineSegmentBelow = $this->TimelineSegments->find('ByOrderNumber', [
+            'order_number' => $orderNumber + 1
         ]);
 
-        // pr($aboveTimelineSegment);
-        // pr($middleTimelineSegment);
+        $this->TimelineSegments->patchEntity($timelineSegmentAbove, [
+            'order_number' => $orderNumber + 1
+        ]);
 
-        if ($middleTimelineSegment) {
-            // pr('Gone into middle - true');
-            // Point the middle item to where the above item was pointing to
-            $this->TimelineSegments->patchEntity($middleTimelineSegment, [
-                'previous_id' => ($aboveTimelineSegment ? $aboveTimelineSegment->previous_id : 0)
-            ]);
+        $this->TimelineSegments->patchEntity($timelineSegmentBelow, [
+            'order_number' => $orderNumber
+        ]);
 
-            // pr('Update middle');
-            // pr($middleTimelineSegment);
-
-            if ($aboveTimelineSegment) {
-                // pr('Gone into above - true');
-                // Point the above item to the middle item
-                $this->TimelineSegments->patchEntity($aboveTimelineSegment, [
-                    'previous_id' => $middleTimelineSegment->id
-                ]);
-                // pr('Updated above');
-                // pr($aboveTimelineSegment);
-            }
-
-            // Get the timeline segment that is pointing to the middle segment
-            $belowTimelineSegment = $this->TimelineSegments->find(
-                'ByPreviousId', [
-                    'previousId' => $middleTimelineSegment->id
-            ]);
-            // pr($belowTimelineSegment);
-
-            if ($belowTimelineSegment) {
-                // pr('Gone into below - true');
-                // Point the below item to the above item
-                $this->TimelineSegments->patchEntity($belowTimelineSegment, [
-                    'previous_id' => $aboveTimelineSegment->id
-                ]);
-                // pr('Updated below');
-                // pr($belowTimelineSegment);
-            }
-
-            // pr($aboveTimelineSegment);
-            // pr($middleTimelineSegment);
-            // pr($belowTimelineSegment);
-            // exit();
-
-            if ($this->TimelineSegments->save($middleTimelineSegment)
-                && $this->TimelineSegments->save($aboveTimelineSegment)
-            ) {
-                $this->Flash->success(__('The timeline segments have been reordered.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The timeline segments could not be reordered.'));
-                return $this->redirect(['aciton' => 'index']);
-            }
+        if ($this->TimelineSegments->save($timelineSegmentAbove)
+            && $this->TimelineSegments->save($timelineSegmentBelow)
+        ) {
+            $this->Flash->success(__('The timeline segments have been reordered.'));
+            return $this->redirect(['action' => 'index']);
         } else {
             $this->Flash->error(__('The timeline segments could not be reordered.'));
+            return $this->redirect(['aciton' => 'index']);
         }
     }
 }

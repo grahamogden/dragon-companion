@@ -91,6 +91,14 @@ Router::scope('/', function (RouteBuilder $routes) {
         // ->setPatterns(['direction' => '(up|down)']);
 
     $routes->connect(
+        'timeline-segments/add/:parentId',///:direction',
+        ['controller' => 'TimelineSegments', 'action' => 'add',])
+        ->setMethods(['POST'])
+        ->setPass(['parentId'])
+        ->setPatterns(['parentId' => '\d+']);
+        // ->setPatterns(['direction' => '(up|down)']);
+
+    $routes->connect(
         '/timeline-segments/:action/:id',
         [
             'controller' => 'TimelineSegments'

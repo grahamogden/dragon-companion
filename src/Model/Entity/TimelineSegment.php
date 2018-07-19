@@ -8,15 +8,15 @@ use Cake\Collection\Collection;
 class TimelineSegment extends Entity
 {
     protected $_accessible = [
-        '*'           => true,
-        'id'          => false,
-        'parent_id'   => false,
-        'title'       => true,
-        'body'        => true,
-        'slug'        => true,
-        'created'     => false,
-        'modified'    => false,
-        'previous_id' => true,
+        '*'            => true,
+        'id'           => false,
+        'parent_id'    => false,
+        'title'        => true,
+        'body'         => true,
+        'slug'         => true,
+        'created'      => false,
+        'modified'     => false,
+        'order_number' => true,
     ];
 
     protected function _getTagString()

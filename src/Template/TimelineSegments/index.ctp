@@ -29,60 +29,48 @@
 
     <!-- Here is where we iterate through our $timelineSegments query object, printing out timelineSegment info -->
     <tbody class="sortable">
-        <?php
-        // If we have a parent, then show the body of it
-        if ($parent) {
-        ?>
+        <?php // If we have a parent, then show the body of it
+        if ($parent) { ?>
             <tr class="header-row">
                 <td colspan="2">
                     <?= __($parent->body) ?>
                 </td>
             </tr>
-        <?php
-        }
-        // Set previous ID as 0 because thats what the first item will always have its previous ID set to
+        <?php } ?>
+        <tr class="add-item-row">
+            <td colspan="2">
+                <?php
+                    echo $this->Html->link('&plus;',[
+                            'controller' => 'TimelineSegments',
+                            'action'   => 'add',
+                            $parent ? $parent->id : 0,
+                            'orderNumber' => 0,
+                        ], [
+                            'escapeTitle' => false
+                        ]
+                    ) ?>
+            </td>
+        </tr>
+        <?php // Set previous ID as 0 because thats what the first item will always have its previous ID set to
         $previousId = 0;
         // Loop through each timeline segment and add a new table row for each record
         foreach ($timelineSegments as $key =>  $timelineSegment) {
-            // Add record before current item
-            ?>
-            <tr class="add-item-row">
-                <td colspan="2">
-                    <?= $this->Html->link(
-                        '&plus;', [
-                            'action'      => 'add',
-                            'parentId'    => $parent ? $parent->id : 0,
-                            // 'previousId'  => $previousId,
-                            'nextId'      => $timelineSegment->id,
-                        ], [
-                            'escapeTitle' => false
-                    ]); ?>
-                </td>
-            </tr>
-            <?php // Timeline segment row ?>
+            // Timeline segment row ?>
             <tr class="item-row">
                 <td>
                     <p>
                         <?php
-                            echo //sprintf ('%s:%s',
-                                $this->Html->link(
-                                    $timelineSegment->title, [
-                                        'action' => 'index',
-                                        'parentId' => $timelineSegment->id,
-                                    ]
-                                );//,
-                                // $this->Html->link(
-                                //     $timelineSegment->title, [
-                                //         'action' => 'edit',
-                                //         $timelineSegment->id
-                                //     ])
-                            // );
+                            echo $this->Html->link(
+                                $timelineSegment->title, [
+                                    'action' => 'index',
+                                    'parentId' => $timelineSegment->id,
+                                ]
+                            );
                         ?>
                     </p>
                     <p>
                         <?= __($timelineSegment->body) ?>
                     </p>
-                    
                 </td>
                 <!-- <td> -->
                     <!-- <?= $timelineSegment->created->format('H:i d-m-Y'/*DATE_RFC850*/) ?> -->
@@ -122,29 +110,24 @@
                     ?>
                 </td>
             </tr>
-        <?php
+            <?php // Add record after current item ?>
+            <tr class="add-item-row">
+                <td colspan="2">
+                    <?= $this->Html->link(
+                        '&plus;', [
+                            'controller' => 'TimelineSegments',
+                            'action'     => 'add',
+                            $parent ? $parent->id : 0,
+                            'orderNumber'   => $timelineSegment->order_number + 1,
+                        ], [
+                            'escapeTitle' => false
+                    ]); ?>
+                </td>
+            </tr>
+            <?php
             $previousId = $timelineSegment->id;
         }
         // Add row at the bottom after the last timeline segment
         ?>
-        <tr class="add-item-row">
-            <td colspan="2">
-                <?php
-                    $options = [
-                        'action'   => 'add',
-                        'parentId' => $parent ? $parent->id : 0,
-                    ];
-
-                    if ($previousId) {
-                        $options['previousId'] = $previousId;
-                    }
-
-                    echo $this->Html->link('&plus;',
-                        $options, [
-                            'escapeTitle' => false
-                        ]
-                    ) ?>
-            </td>
-        </tr>
     </tbody>
 </table>

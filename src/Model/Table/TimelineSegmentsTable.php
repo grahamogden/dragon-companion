@@ -9,6 +9,8 @@ use Cake\Utility\Text;
 use Cake\Validation\Validator;
 // the Query class
 use Cake\ORM\Query;
+// the QueryExpressions class
+use Cake\Database\Expression\QueryExpression;
 
 class TimelineSegmentsTable extends Table
 {
@@ -56,11 +58,13 @@ class TimelineSegmentsTable extends Table
     // The $query argument is a query builder instance.
     // The $options array will contain the 'tags' option we passed
     // to find('tagged') in our controller action.
-    public function findTagged(Query $query, array $options)
+    protected function findTagged(Query $query, array $options)
     {
         $columns = [
-            'TimelineSegments.id', 'TimelineSegments.title',
-            'TimelineSegments.body', 'TimelineSegments.created',
+            'TimelineSegments.id',
+            'TimelineSegments.title',
+            'TimelineSegments.body',
+            'TimelineSegments.created',
             'TimelineSegments.slug',
         ];
 
@@ -89,7 +93,7 @@ class TimelineSegmentsTable extends Table
      * 
      * @return Query
      */
-    public function findByParentId(Query $query, array $options): Query
+    protected function findByParentId(Query $query, array $options): Query
     {
         $returnKey = 'TimelineSegments.id';
         $columns = [
@@ -99,46 +103,42 @@ class TimelineSegmentsTable extends Table
             'TimelineSegments.created',
             'TimelineSegments.slug',
             'TimelineSegments.parent_id',
-            'TimelineSegments.previous_id',
+            'TimelineSegments.order_number',
         ];
 
         // Find timeline segments that have the provided parent ID
         $query = $query
             ->select($columns)
             ->where(['parent_id = ' => $options['parentId']])
-            ->order(['previous_id' => 'ASC']);
+            ->order(['order_number' => 'ASC']);
 
         return $query->group([$returnKey]);
     }
 
     /**
-     * @deprecated - Might as well just findById with the parent ID
-     * 
-     * Finds all of the ancestors based on the current item's ID
-     * 
+     * Finds an timeline segment by its order number
      * @param Query $query 
-     * @param array $options
-     * 
-     * @return TimelineSegment
+     * @param array $options 
+     * @return type
      */
-    public function findByPreviousId(Query $query, array $options)//: TimelineSegment
+    protected function findByOrderNumber(Query $query, array $options)
     {
-        $returnKey = 'TimelineSegments.id';
         $columns = [
-            $returnKey,
+            'TimelineSegments.id',
             'TimelineSegments.title',
             'TimelineSegments.body',
             'TimelineSegments.created',
             'TimelineSegments.slug',
             'TimelineSegments.parent_id',
-            'TimelineSegments.previous_id',
+            'TimelineSegments.order_number',
         ];
 
+        // Find timeline segments that have the provided parent ID
         $query = $query
             ->select($columns)
-            ->where(['previous_id' => $options['previousId']]);
+            ->where(['order_number = ' => $options['order_number']]);
 
-        return $query->first(/*[$returnKey]*/);
+        return $query->firstOrFail();
     }
     
     /**
@@ -176,5 +176,22 @@ class TimelineSegmentsTable extends Table
             $out[] = $this->Tags->newEntity(['title' => $tag]);
         }
         return $out;
+    }
+
+    /**
+     * Updates the order for all timeeline segments for the provided parent ID
+     * @param int $parentId
+     * @param int $orderStartPoint - the number from which to start order everything else from
+     * @return type
+     */
+    public function updateAllOrder(int $parentId, int $orderStartPoint = 0)
+    {
+        $expression = new QueryExpression('order_number = order_number + 1');
+        $this->updateAll([
+            $expression
+        ], [
+            'parent_id'        => $parentId,
+            'order_number >'   => $orderStartPoint
+        ]);
     }
 }
