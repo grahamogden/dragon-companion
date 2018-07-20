@@ -215,3 +215,16 @@ Type::build('timestamp')
 if (Configure::read('debug')) {
     Plugin::load('DebugKit', ['bootstrap' => true]);
 }
+
+try {
+    Configure::write('Session', [
+        'defaults' => 'php',
+        'ini' => [
+            // Invalidate the cookie after 30 minutes without visiting
+            // any page on the site.
+            'session.cookie_lifetime' => 1800
+        ]
+    ]);
+} catch(\Exception $e) {
+    exit($e->getMessage() . "\n");
+}

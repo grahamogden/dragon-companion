@@ -73,7 +73,7 @@ class TimelineSegmentsController extends AppController
 
             // Updates the entity with the POST data
             $newTimelineSegment = $this->TimelineSegments->patchEntity($newTimelineSegment, $this->request->getData());
-            $newTimelineSegment->parent_id = $parentId;
+            $newTimelineSegment->parent_id     = $parentId;
             $newTimelineSegment->order_number  = $orderNumber;
             // Set the user ID on the item
             $newTimelineSegment->user_id = $this->Auth->user('id');
@@ -94,7 +94,31 @@ class TimelineSegmentsController extends AppController
         // Set tags to the view context
         $this->set('tags', $tags);
         $this->set('breadcrumbs', $this->fetchAncestorBreadcrumbs($parentId));
+        $this->set('orderNumber', $this->request->getQuery('orderNumber'));
         $this->set('timelineSegment', $newTimelineSegment);
+    }
+
+    /**
+     * Delete action
+     * 
+     * @param int $id 
+     * @return 
+     */
+    public function delete($id)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+
+        $timelineSegmentToDelete = $this->TimelineSegments->findById($id)->firstOrFail();
+
+        $this->TimelineSegments->updateAllOrder($timelineSegmentToDelete->parent_id);
+
+        if ($this->TimelineSegments->delete($timelineSegmentToDelete)) {
+            $this->Flash->success(__('The {0} timeline segment has been deleted.', $timelineSegmentToDelete->title));
+            return $this->redirect(['action' => 'index']);
+        } else {
+            $this->Flash->error(__('The {0} timeline segment could not be deleted.', $timelineSegmentToDelete->title));
+            return $this->redirect(['aciton' => 'index']);
+        }
     }
 
     /**
@@ -120,6 +144,8 @@ class TimelineSegmentsController extends AppController
                 ]
             );
 
+            $this->TimelineSegments->updateAllOrder($parentId);
+
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('Your timelineSegment has been updated.'));
                 return $this->redirect(['action' => 'index']);
@@ -136,29 +162,6 @@ class TimelineSegmentsController extends AppController
         $this->set('timelineSegment', $timelineSegment);
         $this->render('/TimelineSegments/add');
         // $this->viewBuilder()->setLayout('add');
-    }
-
-    /**
-     * Delete action
-     * 
-     * @param int $id 
-     * @return 
-     */
-    public function delete($id)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-
-        $timelineSegmentToDelete = $this->TimelineSegments->findById($id)->firstOrFail();
-
-        $this->TimelineSegments->updateAllOrder($timelineSegmentToDelete->parent_id);
-
-        if ($this->TimelineSegments->delete($timelineSegmentToDelete)) {
-            $this->Flash->success(__('The {0} timeline segment has been deleted.', $timelineSegmentToDelete->title));
-            return $this->redirect(['action' => 'index']);
-        } else {
-            $this->Flash->error(__('The {0} timeline segment could not be deleted.', $timelineSegmentToDelete->title));
-            return $this->redirect(['aciton' => 'index']);
-        }
     }
 
     public function tags(...$tags)

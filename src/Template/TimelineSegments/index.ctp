@@ -76,38 +76,40 @@
                     <!-- <?= $timelineSegment->created->format('H:i d-m-Y'/*DATE_RFC850*/) ?> -->
                 <!-- </td> -->
                 <td class="action-column">
-                    <?php
-                        // Don't show the move up arrow for the first item
-                        if ($key > 0) {
+                    <div class="">
+                        <?php
+                            // Don't show the move up arrow for the first item
+                            if ($key > 0) {
+                                echo $this->Form->postLink(
+                                    '', [
+                                        'action'    => 'reorder',
+                                        'id'        => $previousId,
+                                    ], [
+                                        'class'   => ['action', 'move-arrow', 'arrow-up'],
+                                ]);
+                            }
+
+                            // If this is the last item, then we don't want to show the move down arrow
+                            if ($key < ($timelineSegments->count() - 1)) {
+                                echo $this->Form->postLink(
+                                    '', [
+                                        'action'    => 'reorder',
+                                        'id'        => $timelineSegment->id,
+                                    ], [
+                                        'class'   => ['action', 'move-arrow', 'arrow-down'],
+                                ]);
+                            }
+
                             echo $this->Form->postLink(
                                 '', [
-                                    'action'    => 'reorder',
-                                    'id'        => $previousId,
+                                    'action' => 'delete',
+                                    $timelineSegment->id
                                 ], [
-                                    'class'   => ['action', 'move-arrow', 'arrow-up'],
+                                    'class'   => ['action', 'button', 'delete-button'],
+                                    'confirm' => 'Are you sure you want to delete "' . substr($timelineSegment->title, 0, 20) . '"?'
                             ]);
-                        }
-
-                        // If this is the last item, then we don't want to show the move down arrow
-                        if ($key < ($timelineSegments->count() - 1)) {
-                            echo $this->Form->postLink(
-                                '', [
-                                    'action'    => 'reorder',
-                                    'id'        => $timelineSegment->id,
-                                ], [
-                                    'class'   => ['action', 'move-arrow', 'arrow-down'],
-                            ]);
-                        }
-
-                        echo $this->Form->postLink(
-                            '', [
-                                'action' => 'delete',
-                                $timelineSegment->id
-                            ], [
-                                'class'   => ['action', 'button', 'delete-button'],
-                                'confirm' => 'Are you sure you want to delete "' . substr($timelineSegment->title, 0, 20) . '"?'
-                        ]);
-                    ?>
+                        ?>
+                    </div>
                 </td>
             </tr>
             <?php // Add record after current item ?>

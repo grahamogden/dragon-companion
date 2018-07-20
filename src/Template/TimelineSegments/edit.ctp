@@ -1,4 +1,4 @@
-<h1>Add Timeline Segment</h1>
+<h1>Edit Timeline Segment</h1>
 <?php
     //ucwords($this->request->action)
     $this->Breadcrumbs->add($breadcrumbs);
@@ -9,7 +9,6 @@
     );
         
     echo $this->Form->create($timelineSegment);
-    echo $this->Form->hidden('order_number', ['value' => $orderNumber]);
     echo $this->Form->control('title');
     echo $this->Form->control('body', ['rows' => '7']);
     echo $this->Form->control('tag_string', ['type' => 'text']);

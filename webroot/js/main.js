@@ -1,4 +1,4 @@
-$(function() {
+(function($) {
     let backgroundImages = [
         "battle_of_four_armies_by_jasonengle.jpg",
         "190622ddba35c1efab03fec90b427c65-d7pdb8i.png",
@@ -88,4 +88,4 @@ $(function() {
     //         });
     //     }
     // });
-});
+})(jQuery);
