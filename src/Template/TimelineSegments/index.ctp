@@ -1,135 +1,63 @@
-<!-- File: src/Template/TimelineSegments/index.ctp -->
-<h1>Timeline Segments</h1>
 <?php
-
-    $this->Breadcrumbs->add($breadcrumbs);
-
-    echo $this->Breadcrumbs->render(
-        ['class' => 'breadcrumbs-trail'],
-        ['separator' => '']
-    );
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\TimelineSegment[]|\Cake\Collection\CollectionInterface $timelineSegments
+ */
 ?>
-<table class="insert-table">
-    <thead>
-        <tr>
-            <th colspan="2">
-                <?php if($parent) {
-                    echo $this->Html->link(
-                        $parent->title, [
-                            'action' => 'edit',
-                            $parent->id
-                        ]);
-                } else {
-                    echo 'Timeline Segments';
-                } ?>
-            </th>
-            <!-- <th class="action-column">Actions</th> -->
-        </tr>
-    </thead>
-
-    <!-- Here is where we iterate through our $timelineSegments query object, printing out timelineSegment info -->
-    <tbody class="sortable">
-        <?php // If we have a parent, then show the body of it
-        if ($parent) { ?>
-            <tr class="header-row">
-                <td colspan="2">
-                    <?= __($parent->body) ?>
+<nav class="large-3 medium-4 columns" id="actions-sidebar">
+    <ul class="side-nav">
+        <li class="heading"><?= __('Actions') ?></li>
+        <li><?= $this->Html->link(__('New Timeline Segment'), ['action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Tags'), ['controller' => 'Tags', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Tag'), ['controller' => 'Tags', 'action' => 'add']) ?></li>
+    </ul>
+</nav>
+<div class="timelineSegments index large-9 medium-8 columns content">
+    <h3><?= __('Timeline Segments') ?></h3>
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('parent_id') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('title') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('created') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('slug') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('order_number') ?></th>
+                <th scope="col" class="actions"><?= __('Actions') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($timelineSegments as $timelineSegment): ?>
+            <tr>
+                <td><?= $this->Number->format($timelineSegment->id) ?></td>
+                <td><?= $timelineSegment->has('parent_timeline_segment') ? $this->Html->link($timelineSegment->parent_timeline_segment->title, ['controller' => 'TimelineSegments', 'action' => 'view', $timelineSegment->parent_timeline_segment->id]) : '' ?></td>
+                <td><?= h($timelineSegment->title) ?></td>
+                <td><?= h($timelineSegment->created) ?></td>
+                <td><?= h($timelineSegment->modified) ?></td>
+                <td><?= h($timelineSegment->slug) ?></td>
+                <td><?= $timelineSegment->has('user') ? $this->Html->link($timelineSegment->user->id, ['controller' => 'Users', 'action' => 'view', $timelineSegment->user->id]) : '' ?></td>
+                <td><?= $this->Number->format($timelineSegment->order_number) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $timelineSegment->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $timelineSegment->id]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $timelineSegment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $timelineSegment->id)]) ?>
                 </td>
             </tr>
-        <?php } ?>
-        <tr class="add-item-row">
-            <td colspan="2">
-                <?php
-                    echo $this->Html->link('&plus;',[
-                            'controller' => 'TimelineSegments',
-                            'action'   => 'add',
-                            $parent ? $parent->id : 0,
-                            'orderNumber' => 0,
-                        ], [
-                            'escapeTitle' => false
-                        ]
-                    ) ?>
-            </td>
-        </tr>
-        <?php // Set previous ID as 0 because thats what the first item will always have its previous ID set to
-        $previousId = 0;
-        // Loop through each timeline segment and add a new table row for each record
-        foreach ($timelineSegments as $key =>  $timelineSegment) {
-            // Timeline segment row ?>
-            <tr class="item-row">
-                <td>
-                    <p>
-                        <?php
-                            echo $this->Html->link(
-                                $timelineSegment->title, [
-                                    'action' => 'index',
-                                    'parentId' => $timelineSegment->id,
-                                ]
-                            );
-                        ?>
-                    </p>
-                    <p>
-                        <?= __($timelineSegment->body) ?>
-                    </p>
-                </td>
-                <!-- <td> -->
-                    <!-- <?= $timelineSegment->created->format('H:i d-m-Y'/*DATE_RFC850*/) ?> -->
-                <!-- </td> -->
-                <td class="action-column">
-                    <div class="">
-                        <?php
-                            // Don't show the move up arrow for the first item
-                            if ($key > 0) {
-                                echo $this->Form->postLink(
-                                    '', [
-                                        'action'    => 'reorder',
-                                        'id'        => $previousId,
-                                    ], [
-                                        'class'   => ['action', 'move-arrow', 'arrow-up'],
-                                ]);
-                            }
-
-                            // If this is the last item, then we don't want to show the move down arrow
-                            if ($key < ($timelineSegments->count() - 1)) {
-                                echo $this->Form->postLink(
-                                    '', [
-                                        'action'    => 'reorder',
-                                        'id'        => $timelineSegment->id,
-                                    ], [
-                                        'class'   => ['action', 'move-arrow', 'arrow-down'],
-                                ]);
-                            }
-
-                            echo $this->Form->postLink(
-                                '', [
-                                    'action' => 'delete',
-                                    $timelineSegment->id
-                                ], [
-                                    'class'   => ['action', 'button', 'delete-button'],
-                                    'confirm' => 'Are you sure you want to delete "' . substr($timelineSegment->title, 0, 20) . '"?'
-                            ]);
-                        ?>
-                    </div>
-                </td>
-            </tr>
-            <?php // Add record after current item ?>
-            <tr class="add-item-row">
-                <td colspan="2">
-                    <?= $this->Html->link(
-                        '&plus;', [
-                            'controller' => 'TimelineSegments',
-                            'action'     => 'add',
-                            $parent ? $parent->id : 0,
-                            'orderNumber'   => $timelineSegment->order_number + 1,
-                        ], [
-                            'escapeTitle' => false
-                    ]); ?>
-                </td>
-            </tr>
-            <?php
-            $previousId = $timelineSegment->id;
-        }
-        // Add row at the bottom after the last timeline segment
-        ?>
-    </tbody>
-</table>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <div class="paginator">
+        <ul class="pagination">
+            <?= $this->Paginator->first('<< ' . __('first')) ?>
+            <?= $this->Paginator->prev('< ' . __('previous')) ?>
+            <?= $this->Paginator->numbers() ?>
+            <?= $this->Paginator->next(__('next') . ' >') ?>
+            <?= $this->Paginator->last(__('last') . ' >>') ?>
+        </ul>
+        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+    </div>
+</div>

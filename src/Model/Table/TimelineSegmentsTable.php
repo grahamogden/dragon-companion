@@ -1,197 +1,119 @@
 <?php
 namespace App\Model\Table;
 
-// the Table class
-use Cake\ORM\Table;
-// the Text class
-use Cake\Utility\Text;
-// the Validator class
-use Cake\Validation\Validator;
-// the Query class
 use Cake\ORM\Query;
-// the QueryExpressions class
-use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\RulesChecker;
+use Cake\ORM\Table;
+use Cake\Validation\Validator;
 
+/**
+ * TimelineSegments Model
+ *
+ * @property \App\Model\Table\TimelineSegmentsTable|\Cake\ORM\Association\BelongsTo $ParentTimelineSegments
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\TimelineSegmentsTable|\Cake\ORM\Association\HasMany $ChildTimelineSegments
+ * @property \App\Model\Table\TagsTable|\Cake\ORM\Association\BelongsToMany $Tags
+ *
+ * @method \App\Model\Entity\TimelineSegment get($primaryKey, $options = [])
+ * @method \App\Model\Entity\TimelineSegment newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\TimelineSegment[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\TimelineSegment|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\TimelineSegment|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\TimelineSegment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\TimelineSegment[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\TimelineSegment findOrCreate($search, callable $callback = null, $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \Cake\ORM\Behavior\TreeBehavior
+ */
 class TimelineSegmentsTable extends Table
 {
+
+    /**
+     * Initialize method
+     *
+     * @param array $config The configuration for the Table.
+     * @return void
+     */
     public function initialize(array $config)
     {
+        parent::initialize($config);
+
+        $this->setTable('timeline_segments');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
+
         $this->addBehavior('Timestamp');
-        $this->belongsToMany('Tags');
+        $this->addBehavior('Tree');
+
+        $this->belongsTo('ParentTimelineSegments', [
+            'className' => 'TimelineSegments',
+            'foreignKey' => 'parent_id'
+        ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->hasMany('ChildTimelineSegments', [
+            'className' => 'TimelineSegments',
+            'foreignKey' => 'parent_id'
+        ]);
+        $this->belongsToMany('Tags', [
+            'foreignKey' => 'timeline_segment_id',
+            'targetForeignKey' => 'tag_id',
+            'joinTable' => 'tags_timeline_segments'
+        ]);
     }
 
     /**
-     * Before saving
-     * 
-     * @param type $event 
-     * @param type $entity 
-     * @param type $options 
-     * @return type
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
      */
-    public function beforeSave($event, $entity, $options)
-    {
-        if ($entity->tag_string) {
-            $entity->tags = $this->_buildTags($entity->tag_string);
-        }
-
-        if ($entity->isNew() && !$entity->slug) {
-            $sluggedTitle = Text::slug($entity->title);
-            // trim slug to maximum length defined in schema
-            $entity->slug = substr($sluggedTitle, 0, 250);
-        }
-    }
-
-    // Add the following method.
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->notEmpty('title')
-            // ->minLength('title', 10)
-            ->maxLength('title', 2000)
+            ->integer('id')
+            ->allowEmpty('id', 'create');
 
+        $validator
+            ->scalar('title')
+            ->maxLength('title', 2000)
+            ->requirePresence('title', 'create')
+            ->notEmpty('title');
+
+        $validator
+            ->scalar('body')
+            ->requirePresence('body', 'create')
             ->notEmpty('body');
-            // ->minLength('body', 10);
+
+        $validator
+            ->scalar('slug')
+            ->maxLength('slug', 250)
+            ->requirePresence('slug', 'create')
+            ->notEmpty('slug');
+
+        $validator
+            ->integer('order_number')
+            ->requirePresence('order_number', 'create')
+            ->notEmpty('order_number');
 
         return $validator;
     }
 
-    // The $query argument is a query builder instance.
-    // The $options array will contain the 'tags' option we passed
-    // to find('tagged') in our controller action.
-    protected function findTagged(Query $query, array $options)
-    {
-        $columns = [
-            'TimelineSegments.id',
-            'TimelineSegments.title',
-            'TimelineSegments.body',
-            'TimelineSegments.created',
-            'TimelineSegments.slug',
-        ];
-
-        $query = $query
-            ->select($columns)
-            ->distinct($columns);
-
-        if (empty($options['tags'])) {
-            // If there are no tags provided, find timeline segments that have no tags.
-            $query->leftJoinWith('Tags')
-                ->where(['Tags.title IS' => null]);
-        } else {
-            // Find timeline segments that have one or more of the provided tags.
-            $query->innerJoinWith('Tags')
-                ->where(['Tags.title IN' => $options['tags']]);
-        }
-
-        return $query->group(['TimelineSegments.id']);
-    }
-
     /**
-     * Finds Timeline segments by the provided parent ID
-     * 
-     * @param Query $query
-     * @param array $options
-     * 
-     * @return Query
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
      */
-    protected function findByParentId(Query $query, array $options): Query
+    public function buildRules(RulesChecker $rules)
     {
-        $returnKey = 'TimelineSegments.id';
-        $columns = [
-            $returnKey,
-            'TimelineSegments.title',
-            'TimelineSegments.body',
-            'TimelineSegments.created',
-            'TimelineSegments.slug',
-            'TimelineSegments.parent_id',
-            'TimelineSegments.order_number',
-        ];
+        $rules->add($rules->existsIn(['parent_id'], 'ParentTimelineSegments'));
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
 
-        // Find timeline segments that have the provided parent ID
-        $query = $query
-            ->select($columns)
-            ->where(['parent_id = ' => $options['parentId']])
-            ->order(['order_number' => 'ASC']);
-
-        return $query->group([$returnKey]);
-    }
-
-    /**
-     * Finds an timeline segment by its order number
-     * @param Query $query 
-     * @param array $options 
-     * @return type
-     */
-    protected function findByOrderNumber(Query $query, array $options)
-    {
-        $columns = [
-            'TimelineSegments.id',
-            'TimelineSegments.title',
-            'TimelineSegments.body',
-            'TimelineSegments.created',
-            'TimelineSegments.slug',
-            'TimelineSegments.parent_id',
-            'TimelineSegments.order_number',
-        ];
-
-        // Find timeline segments that have the provided parent ID
-        $query = $query
-            ->select($columns)
-            ->where(['order_number = ' => $options['order_number']]);
-
-        return $query->firstOrFail();
-    }
-    
-    /**
-     * Description
-     * 
-     * @param type $tagString 
-     * @return type
-     */
-    protected function _buildTags($tagString)
-    {
-        // Trim tags
-        $newTags = array_map('trim', explode(',', $tagString));
-        // Remove all empty tags
-        $newTags = array_filter($newTags);
-        // Reduce duplicated tags
-        $newTags = array_unique($newTags);
-
-        $out = [];
-        $query = $this->Tags->find()
-            ->where(['Tags.title IN' => $newTags]);
-
-        // Remove existing tags from the list of new tags.
-        foreach ($query->extract('title') as $existing) {
-            $index = array_search($existing, $newTags);
-            if ($index !== false) {
-                unset($newTags[$index]);
-            }
-        }
-        // Add existing tags.
-        foreach ($query as $tag) {
-            $out[] = $tag;
-        }
-        // Add new tags.
-        foreach ($newTags as $tag) {
-            $out[] = $this->Tags->newEntity(['title' => $tag]);
-        }
-        return $out;
-    }
-
-    /**
-     * Updates the order for all timeeline segments for the provided parent ID
-     * @param int $parentId
-     * @param int $orderStartPoint - the number from which to start order everything else from
-     * @return type
-     */
-    public function updateAllOrder(int $parentId, int $orderStartPoint = 0)
-    {
-        $expression = new QueryExpression('order_number = order_number + 1');
-        $this->updateAll([
-            $expression
-        ], [
-            'parent_id'        => $parentId,
-            'order_number >'   => $orderStartPoint
-        ]);
+        return $rules;
     }
 }
