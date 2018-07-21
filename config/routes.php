@@ -82,21 +82,21 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['_name' => 'logout']
     );
 
-    $routes->connect(
-        'timeline-segments/reorder/:id',///:direction',
-        ['controller' => 'TimelineSegments', 'action' => 'reorder',])
-        ->setMethods(['POST'])
-        ->setPass(['id'])
-        ->setPatterns(['id' => '\d+']);
-        // ->setPatterns(['direction' => '(up|down)']);
+    // $routes->connect(
+    //     'timeline-segments/reorder/:id',///:direction',
+    //     ['controller' => 'TimelineSegments', 'action' => 'reorder',])
+    //     ->setMethods(['POST'])
+    //     ->setPass(['id'])
+    //     ->setPatterns(['id' => '\d+']);
+    //     // ->setPatterns(['direction' => '(up|down)']);
 
-    $routes->connect(
-        'timeline-segments/add/:parentId',///:direction',
-        ['controller' => 'TimelineSegments', 'action' => 'add',])
-        ->setMethods(['POST'])
-        ->setPass(['parentId'])
-        ->setPatterns(['parentId' => '\d+']);
-        // ->setPatterns(['direction' => '(up|down)']);
+    // $routes->connect(
+    //     'timeline-segments/add/:parentId',///:direction',
+    //     ['controller' => 'TimelineSegments', 'action' => 'add',])
+    //     ->setMethods(['POST'])
+    //     ->setPass(['parentId'])
+    //     ->setPatterns(['parentId' => '\d+']);
+    //     // ->setPatterns(['direction' => '(up|down)']);
 
     $routes->connect(
         '/timeline-segments/:action/:id',

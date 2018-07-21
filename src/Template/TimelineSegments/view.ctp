@@ -7,18 +7,63 @@
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Timeline Segment'), ['action' => 'edit', $timelineSegment->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Timeline Segment'), ['action' => 'delete', $timelineSegment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $timelineSegment->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Timeline Segments'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Timeline Segment'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Parent Timeline Segments'), ['controller' => 'TimelineSegments', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Parent Timeline Segment'), ['controller' => 'TimelineSegments', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Child Timeline Segments'), ['controller' => 'TimelineSegments', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Child Timeline Segment'), ['controller' => 'TimelineSegments', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Tags'), ['controller' => 'Tags', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Tag'), ['controller' => 'Tags', 'action' => 'add']) ?> </li>
+        <li><?=
+            $this->Html->link(__('Edit Timeline Segment'), [
+                'action' => 'edit', $timelineSegment->id]
+            ) ?></li>
+        <li><?=
+            $this->Form->postLink(__('Delete Timeline Segment'), [
+                'action' => 'delete', $timelineSegment->id], [
+                    'confirm' => __('Are you sure you want to delete # {0}?', $timelineSegment->id)]
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('List Timeline Segments'), [
+                'action' => 'index']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('New Timeline Segment'), [
+                'action' => 'add']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('List Parent Timeline Segments'), [
+                'controller' => 'TimelineSegments',
+                'action' => 'index']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('New Parent Timeline Segment'), [
+                'controller' => 'TimelineSegments',
+                'action' => 'add']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('List Users'), [
+                'controller' => 'Users',
+                'action' => 'index']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('New User'), [
+                'controller' => 'Users',
+                'action' => 'add']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('List Child Timeline Segments'), [
+                'controller' => 'TimelineSegments',
+                'action' => 'index']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('New Child Timeline Segment'), [
+                'controller' => 'TimelineSegments',
+                'action' => 'add']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('List Tags'), [
+                'controller' => 'Tags',
+                'action' => 'index']
+            ) ?></li>
+        <li><?=
+            $this->Html->link(__('New Tag'), [
+                'controller' => 'Tags',
+                'action' => 'add']
+            ) ?></li>
     </ul>
 </nav>
 <div class="timelineSegments view large-9 medium-8 columns content">
@@ -43,10 +88,6 @@
         <tr>
             <th scope="row"><?= __('Id') ?></th>
             <td><?= $this->Number->format($timelineSegment->id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Order Number') ?></th>
-            <td><?= $this->Number->format($timelineSegment->order_number) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Lft') ?></th>
@@ -109,7 +150,6 @@
                 <th scope="col"><?= __('Modified') ?></th>
                 <th scope="col"><?= __('Slug') ?></th>
                 <th scope="col"><?= __('User Id') ?></th>
-                <th scope="col"><?= __('Order Number') ?></th>
                 <th scope="col"><?= __('Lft') ?></th>
                 <th scope="col"><?= __('Rght') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
@@ -124,7 +164,6 @@
                 <td><?= h($childTimelineSegments->modified) ?></td>
                 <td><?= h($childTimelineSegments->slug) ?></td>
                 <td><?= h($childTimelineSegments->user_id) ?></td>
-                <td><?= h($childTimelineSegments->order_number) ?></td>
                 <td><?= h($childTimelineSegments->lft) ?></td>
                 <td><?= h($childTimelineSegments->rght) ?></td>
                 <td class="actions">

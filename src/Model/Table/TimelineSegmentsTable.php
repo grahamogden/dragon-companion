@@ -94,11 +94,6 @@ class TimelineSegmentsTable extends Table
             ->requirePresence('slug', 'create')
             ->notEmpty('slug');
 
-        $validator
-            ->integer('order_number')
-            ->requirePresence('order_number', 'create')
-            ->notEmpty('order_number');
-
         return $validator;
     }
 

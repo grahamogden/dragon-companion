@@ -26,7 +26,6 @@
             echo $this->Form->control('body');
             echo $this->Form->control('slug');
             echo $this->Form->control('user_id', ['options' => $users]);
-            echo $this->Form->control('order_number');
             echo $this->Form->control('tags._ids', ['options' => $tags]);
         ?>
     </fieldset>

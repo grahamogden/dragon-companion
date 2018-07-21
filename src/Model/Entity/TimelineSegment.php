@@ -43,7 +43,6 @@ class TimelineSegment extends Entity
         'modified' => true,
         'slug' => true,
         'user_id' => true,
-        'order_number' => true,
         'lft' => true,
         'rght' => true,
         'parent_timeline_segment' => true,
