@@ -4,17 +4,19 @@
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
 ?>
+<h1><?= h($timelineSegment->title) ?> Timeline Segment</h1>
+<?= $this->element('breadcrumbs'); ?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?=
             $this->Html->link(__('Edit Timeline Segment'), [
-                'action' => 'edit', $timelineSegment->id]
+                'action' => 'edit', $timelineSegment->getId()]
             ) ?></li>
         <li><?=
             $this->Form->postLink(__('Delete Timeline Segment'), [
-                'action' => 'delete', $timelineSegment->id], [
-                    'confirm' => __('Are you sure you want to delete # {0}?', $timelineSegment->id)]
+                'action' => 'delete', $timelineSegment->getId()], [
+                    'confirm' => __('Are you sure you want to delete # {0}?', $timelineSegment->getId())]
             ) ?></li>
         <li><?=
             $this->Html->link(__('List Timeline Segments'), [
@@ -67,11 +69,10 @@
     </ul>
 </nav>
 <div class="timelineSegments view large-9 medium-8 columns content">
-    <h3><?= h($timelineSegment->title) ?></h3>
     <table class="vertical-table">
         <tr>
             <th scope="row"><?= __('Parent Timeline Segment') ?></th>
-            <td><?= $timelineSegment->has('parent_timeline_segment') ? $this->Html->link($timelineSegment->parent_timeline_segment->title, ['controller' => 'TimelineSegments', 'action' => 'view', $timelineSegment->parent_timeline_segment->id]) : '' ?></td>
+            <td><?= $timelineSegment->has('parent_timeline_segment') ? $this->Html->link($timelineSegment->parent_timeline_segment->title, ['controller' => 'TimelineSegments', 'action' => 'view', $timelineSegment->parent_timeline_segment->getId()]) : '' ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Title') ?></th>
@@ -83,11 +84,11 @@
         </tr>
         <tr>
             <th scope="row"><?= __('User') ?></th>
-            <td><?= $timelineSegment->has('user') ? $this->Html->link($timelineSegment->user->id, ['controller' => 'Users', 'action' => 'view', $timelineSegment->user->id]) : '' ?></td>
+            <td><?= $timelineSegment->has('user') ? $this->Html->link($timelineSegment->user->getId(), ['controller' => 'Users', 'action' => 'view', $timelineSegment->user->getId()]) : '' ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($timelineSegment->id) ?></td>
+            <td><?= $this->Number->format($timelineSegment->getId()) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Lft') ?></th>
@@ -123,14 +124,14 @@
             </tr>
             <?php foreach ($timelineSegment->tags as $tags): ?>
             <tr>
-                <td><?= h($tags->id) ?></td>
+                <td><?= h($tags->getId()) ?></td>
                 <td><?= h($tags->title) ?></td>
                 <td><?= h($tags->created) ?></td>
                 <td><?= h($tags->modified) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'Tags', 'action' => 'view', $tags->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'Tags', 'action' => 'edit', $tags->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Tags', 'action' => 'delete', $tags->id], ['confirm' => __('Are you sure you want to delete # {0}?', $tags->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['controller' => 'Tags', 'action' => 'view', $tags->getId()]) ?>
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Tags', 'action' => 'edit', $tags->getId()]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Tags', 'action' => 'delete', $tags->getId()], ['confirm' => __('Are you sure you want to delete # {0}?', $tags->getId())]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -156,7 +157,7 @@
             </tr>
             <?php foreach ($timelineSegment->child_timeline_segments as $childTimelineSegments): ?>
             <tr>
-                <td><?= h($childTimelineSegments->id) ?></td>
+                <td><?= h($childTimelineSegments->getId()) ?></td>
                 <td><?= h($childTimelineSegments->parent_id) ?></td>
                 <td><?= h($childTimelineSegments->title) ?></td>
                 <td><?= h($childTimelineSegments->body) ?></td>
@@ -167,9 +168,15 @@
                 <td><?= h($childTimelineSegments->lft) ?></td>
                 <td><?= h($childTimelineSegments->rght) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'TimelineSegments', 'action' => 'view', $childTimelineSegments->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'TimelineSegments', 'action' => 'edit', $childTimelineSegments->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'TimelineSegments', 'action' => 'delete', $childTimelineSegments->id], ['confirm' => __('Are you sure you want to delete # {0}?', $childTimelineSegments->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['controller' => 'TimelineSegments', 'action' => 'view', $childTimelineSegments->getId()]) ?>
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'TimelineSegments', 'action' => 'edit', $childTimelineSegments->getId()]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'TimelineSegments', 'action' => 'delete', $childTimelineSegments->getId()], ['confirm' => __('Are you sure you want to delete # {0}?', $childTimelineSegments->getId())]) ?>
+                    <?= $this->Form->postLink(__('Move down'), [
+                        'action' => 'moveDown', $childTimelineSegments->getId()
+                    ]) ?>
+                    <?= $this->Form->postLink(__('Move up'), [
+                        'action' => 'moveUp', $childTimelineSegments->getId()
+                    ]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

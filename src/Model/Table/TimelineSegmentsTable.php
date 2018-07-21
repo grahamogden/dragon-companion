@@ -5,6 +5,10 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+// the Text class
+use Cake\Utility\Text;
+// the QueryExpressions class
+// use Cake\Database\Expression\QueryExpression;
 
 /**
  * TimelineSegments Model
@@ -88,13 +92,34 @@ class TimelineSegmentsTable extends Table
             ->requirePresence('body', 'create')
             ->notEmpty('body');
 
-        $validator
-            ->scalar('slug')
-            ->maxLength('slug', 250)
-            ->requirePresence('slug', 'create')
-            ->notEmpty('slug');
+        // $validator
+        //     ->scalar('slug')
+        //     ->maxLength('slug', 250)
+        //     ->requirePresence('slug', 'create')
+        //     ->notEmpty('slug');
 
         return $validator;
+    }
+
+    /**
+     * Before saving
+     * 
+     * @param type $event 
+     * @param type $entity 
+     * @param type $options 
+     * @return type
+     */
+    public function beforeSave($event, $entity, $options)
+    {
+        if ($entity->tag_string) {
+            $entity->tags = $this->_buildTags($entity->tag_string);
+        }
+
+        if ($entity->isNew() && !$entity->slug) {
+            $sluggedTitle = Text::slug($entity->title);
+            // trim slug to maximum length defined in schema
+            $entity->slug = substr($sluggedTitle, 0, 250);
+        }
     }
 
     /**

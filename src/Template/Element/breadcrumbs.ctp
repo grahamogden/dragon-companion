@@ -12,8 +12,8 @@ if (isset($breadcrumbs)) {
             'title' => $breadcrumb->getTitle(),
             'url'   => [
                 'controller' => 'timeline-segments',
-                'action'     => 'index',
-                'parentId'   => (int) $breadcrumb->getId(),
+                'action'     => 'view',
+                $breadcrumb->getId(),
             ],
         ];
     }

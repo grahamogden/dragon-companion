@@ -41,7 +41,7 @@ class TimelineSegmentsTable extends Table
         }
 
         if ($entity->isNew() && !$entity->slug) {
-            $sluggedTitle = Text::slug($entity->title);
+            $sluggedTitle = Text::slug(strtolower($entity->title));
             // trim slug to maximum length defined in schema
             $entity->slug = substr($sluggedTitle, 0, 250);
         }

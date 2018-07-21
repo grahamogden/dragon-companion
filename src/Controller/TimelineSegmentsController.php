@@ -38,7 +38,12 @@ class TimelineSegmentsController extends AppController
         $this->paginate = [
             'contain' => ['ParentTimelineSegments', 'Users']
         ];
-        $timelineSegments = $this->paginate($this->TimelineSegments);
+        $timelineSegments = $this->TimelineSegments
+            ->find()
+            ->where(['TimelineSegments.parent_id IS' => null])
+            ->order('TimelineSegments.lft asc');
+        // $timelineSegments = $this->TimelineSegments;
+        $timelineSegments = $this->paginate($timelineSegments);
 
         $this->set(compact('timelineSegments'));
     }
@@ -53,9 +58,18 @@ class TimelineSegmentsController extends AppController
     public function view(int $id = null)
     {
         $timelineSegment = $this->TimelineSegments->get($id, [
-            'contain' => ['ParentTimelineSegments', 'Users', 'Tags', 'ChildTimelineSegments']
+            'contain' => [
+                'ParentTimelineSegments',
+                'Users',
+                'Tags',
+                'ChildTimelineSegments' => [
+                    'sort' => ['lft' => 'ASC']
+            ]],
         ]);
 
+        // if ($parentId) {
+            $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
+        // }
         $this->set('timelineSegment', $timelineSegment);
     }
 
@@ -69,6 +83,9 @@ class TimelineSegmentsController extends AppController
         $timelineSegment = $this->TimelineSegments->newEntity();
         if ($this->request->is('post')) {
             $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
+            // Set the user ID on the item
+            $timelineSegment->user_id = $this->Auth->user('id');
+
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment has been saved.'));
 
@@ -79,6 +96,7 @@ class TimelineSegmentsController extends AppController
         $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('list', ['limit' => 200]);
         $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
         $tags = $this->TimelineSegments->Tags->find('list', ['limit' => 200]);
+
         $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
     }
 
@@ -106,6 +124,10 @@ class TimelineSegmentsController extends AppController
         $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('list', ['limit' => 200]);
         $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
         $tags = $this->TimelineSegments->Tags->find('list', ['limit' => 200]);
+
+        // if ($parentId) {
+            $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
+        // }
         $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
     }
 
@@ -163,23 +185,24 @@ class TimelineSegmentsController extends AppController
     public function moveUp(int $id = null)
     {
         $this->request->allowMethod(['post', 'put']);
-        $category = $this->Categories->get($id);
-        if ($this->Categories->moveUp($category)) {
-            $this->Flash->success('The category has been moved Up.');
+        $timelineSegment = $this->TimelineSegments->get($id);
+        if ($this->TimelineSegments->moveUp($timelineSegment)) {
+            $this->Flash->success('The timeline segment has been moved Up.');
         } else {
-            $this->Flash->error('The category could not be moved up. Please, try again.');
+            $this->Flash->error('The timeline segment could not be moved up. Please, try again.');
         }
         return $this->redirect($this->referer(['action' => 'index']));
     }
 
+
     public function moveDown(int $id = null)
     {
         $this->request->allowMethod(['post', 'put']);
-        $category = $this->Categories->get($id);
-        if ($this->Categories->moveDown($category)) {
-            $this->Flash->success('The category has been moved down.');
+        $timelineSegment = $this->TimelineSegments->get($id);
+        if ($this->TimelineSegments->moveDown($timelineSegment)) {
+            $this->Flash->success('The timeline segment has been moved down.');
         } else {
-            $this->Flash->error('The category could not be moved down. Please, try again.');
+            $this->Flash->error('The timeline segment could not be moved down. Please, try again.');
         }
         return $this->redirect($this->referer(['action' => 'index']));
     }

@@ -4,6 +4,8 @@
  * @var \App\Model\Entity\TimelineSegment[]|\Cake\Collection\CollectionInterface $timelineSegments
  */
 ?>
+<h1><?= __('Timeline Segments') ?></h1>
+<?= $this->element('breadcrumbs'); ?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -15,7 +17,6 @@
     </ul>
 </nav>
 <div class="timelineSegments index large-9 medium-8 columns content">
-    <h3><?= __('Timeline Segments') ?></h3>
     <table cellpadding="0" cellspacing="0">
         <thead>
             <tr>
@@ -43,6 +44,16 @@
                     <?= $this->Html->link(__('View'), ['action' => 'view', $timelineSegment->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $timelineSegment->id]) ?>
                     <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $timelineSegment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $timelineSegment->id)]) ?>
+                    <?= $this->Form->postLink(__('Move down'), [
+                        'action' => 'moveDown', $timelineSegment->getId()
+                    ], [
+                        'confirm' => __('Are you sure you want to move down # {0}?', $timelineSegment->getId())
+                    ]) ?>
+                    <?= $this->Form->postLink(__('Move up'), [
+                        'action' => 'moveUp', $timelineSegment->getId()
+                    ], [
+                        'confirm' => __('Are you sure you want to move up # {0}?', $timelineSegment->getId())
+                    ]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

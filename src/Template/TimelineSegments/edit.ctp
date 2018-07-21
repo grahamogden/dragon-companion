@@ -4,6 +4,8 @@
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
 ?>
+<h1>Edit Timeline Segment</h1>
+<?= $this->element('breadcrumbs'); ?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -30,8 +32,6 @@
             echo $this->Form->control('parent_id', ['options' => $parentTimelineSegments, 'empty' => true]);
             echo $this->Form->control('title');
             echo $this->Form->control('body');
-            echo $this->Form->control('slug');
-            echo $this->Form->control('user_id', ['options' => $users]);
             echo $this->Form->control('tags._ids', ['options' => $tags]);
         ?>
     </fieldset>
