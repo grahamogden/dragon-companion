@@ -8,8 +8,8 @@
 
     <?= $this->fetch('meta') ?>
     
-    <?= $this->Html->script('http://code.jquery.com/jquery.min.js') ?>
-    <!-- <?= $this->Html->script('https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js') ?> -->
+    <?= $this->Html->script('libs/jquery-3.3.1.min.js') ?>
+    <?= $this->Html->script('libs/jquery-ui.min.js') ?>
 
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>

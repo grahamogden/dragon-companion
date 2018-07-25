@@ -1,4 +1,4 @@
-(function($) {
+jQuery(document).ready(function($) {
     let backgroundImages = [
         "battle_of_four_armies_by_jasonengle.jpg",
         "190622ddba35c1efab03fec90b427c65-d7pdb8i.png",
@@ -77,6 +77,10 @@
         $(this).toggleClass('open');
     });
 
+    $('.menu-button').click(function(){
+        $(this).siblings('ul').slideToggle(); // toggleClass('open');
+    });
+
     // let list = $('table tbody.sortable');
     // list.sortable({
     //     cancel:'tr.add-item-row',
@@ -88,4 +92,4 @@
     //         });
     //     }
     // });
-})(jQuery);
+});

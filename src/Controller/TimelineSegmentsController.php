@@ -1,14 +1,25 @@
 <?php
-
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\View\Helper\BreadcrumbsHelper;
+// use Cake\View\Helper\BreadcrumbsHelper;
 
+/**
+ * TimelineSegments Controller
+ *
+ * @property \App\Model\Table\TimelineSegmentsTable $TimelineSegments
+ *
+ * @method \App\Model\Entity\TimelineSegment[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ */
 class TimelineSegmentsController extends AppController
 {
 
-    public function initialize()
+    /**
+     * Initialises the class, including authentication
+     * 
+     * @return void
+     */
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -17,181 +28,141 @@ class TimelineSegmentsController extends AppController
         $this->Auth->allow(['tags','reorder']);
     }
 
-    public function index()
+    /**
+     * Index method
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function index(): void
     {
-        $parentId = $this->request->getQuery('parentId') ?? 0;
+        $this->paginate = [
+            'contain' => ['ParentTimelineSegments', 'Users']
+        ];
+        $timelineSegments = $this->TimelineSegments
+            ->find()
+            ->where(['TimelineSegments.parent_id IS' => null])
+            ->order('TimelineSegments.lft asc');
+        // $timelineSegments = $this->TimelineSegments;
+        $timelineSegments = $this->paginate($timelineSegments);
 
-        // Get the timeline segments for this parent ID
-        $timelineSegments = $this->TimelineSegments->find('ByParentId', [
-            'parentId' => $parentId,
-        ]);
-
-        // Get the parent timeline segment
-        $parentTimelineSegment = $this->TimelineSegments
-            ->findById($parentId)
-            ->first();
-
-        // Get breadcrumbs
-        $breadcrumbs = $this->fetchAncestorBreadcrumbs($parentId);
-
-        // $timelineSegments = $this->Paginator->paginate($this->TimelineSegments->find());
-        $this->set('parent', $parentTimelineSegment);
-        $this->set('parentId', $parentId);
-        $this->set('breadcrumbs', $breadcrumbs);
         $this->set(compact('timelineSegments'));
     }
 
     /**
-     * @deprecated - no longer in use
-     * 
-     * @param type $id 
-     * @return type
+     * View method
+     *
+     * @param int $id Timeline Segment id.
+     * @return \Cake\Http\Response|void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id)
+    public function view(int $id = null)
     {
-        $timelineSegment = $this->TimelineSegments
-            ->findById($id)
-            ->firstOrFail();
-        $this->set(compact('timelineSegment'));
+        $timelineSegment = $this->TimelineSegments->get($id, [
+            'contain' => [
+                'ParentTimelineSegments',
+                'Users',
+                'Tags',
+                'ChildTimelineSegments' => [
+                    'sort' => ['lft' => 'ASC']
+            ]],
+        ]);
+
+        // if ($parentId) {
+            $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
+        // }
+        $this->set('timelineSegment', $timelineSegment);
     }
 
     /**
-     * Add route
-     * 
-     * @param int $parentId - ID of the timeline segment that the new item will be a child of
-     * 
-     * @return void|\Cake\Http\Response
+     * Add method
+     *
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add(int $parentId = 0)
+    public function add()
     {
-        // Get the order number that the new item will be inserted into
-        $orderNumber = $this->request->getQuery('order_number') ?? 0;
-
-        $newTimelineSegment = $this->TimelineSegments->newEntity();
+        $timelineSegment = $this->TimelineSegments->newEntity();
         if ($this->request->is('post')) {
-            $success = false;
-
-            // Updates the entity with the POST data
-            $newTimelineSegment = $this->TimelineSegments->patchEntity($newTimelineSegment, $this->request->getData());
-            $newTimelineSegment->parent_id     = $parentId;
-            $newTimelineSegment->order_number  = $orderNumber;
+            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
             // Set the user ID on the item
-            $newTimelineSegment->user_id = $this->Auth->user('id');
-
-            $this->TimelineSegments->updateAllOrder($parentId, $orderNumber);
-
-            if ($this->TimelineSegments->save($newTimelineSegment)) {
-                $this->Flash->success(__('Your timeline segment has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('Unable to add your timeline segment.'));
-            }
-        }
-
-        // Get a list of tags.
-        $tags = $this->TimelineSegments->Tags->find('list');
-
-        // Set tags to the view context
-        $this->set('tags', $tags);
-        $this->set('breadcrumbs', $this->fetchAncestorBreadcrumbs($parentId));
-        $this->set('orderNumber', $this->request->getQuery('orderNumber'));
-        $this->set('timelineSegment', $newTimelineSegment);
-    }
-
-    /**
-     * Delete action
-     * 
-     * @param int $id 
-     * @return 
-     */
-    public function delete($id)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-
-        $timelineSegmentToDelete = $this->TimelineSegments->findById($id)->firstOrFail();
-
-        $this->TimelineSegments->updateAllOrder($timelineSegmentToDelete->parent_id);
-
-        if ($this->TimelineSegments->delete($timelineSegmentToDelete)) {
-            $this->Flash->success(__('The {0} timeline segment has been deleted.', $timelineSegmentToDelete->title));
-            return $this->redirect(['action' => 'index']);
-        } else {
-            $this->Flash->error(__('The {0} timeline segment could not be deleted.', $timelineSegmentToDelete->title));
-            return $this->redirect(['aciton' => 'index']);
-        }
-    }
-
-    /**
-     * Edit route
-     * 
-     * @param int $id 
-     * @return void|\Cake\Http\Response|null
-     */
-    public function edit(int $id)
-    {
-        $timelineSegment = $this->TimelineSegments
-            ->findById($id)
-            ->contain('Tags') // load associated Tags
-            ->firstOrFail();
-
-        if ($this->request->is(['post', 'put'])) {
-            $this->TimelineSegments->patchEntity(
-                $timelineSegment,
-                $this->request->getData(),
-                [
-                    // Added: Disable modification of user_id.
-                    'accessibleFields' => ['user_id' => false]
-                ]
-            );
-
-            $this->TimelineSegments->updateAllOrder($parentId);
+            $timelineSegment->user_id = $this->Auth->user('id');
 
             if ($this->TimelineSegments->save($timelineSegment)) {
-                $this->Flash->success(__('Your timelineSegment has been updated.'));
+                $this->Flash->success(__('The timeline segment has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Unable to update your timelineSegment.'));
+            $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
+        }
+        // $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('list', ['limit' => 200]);
+        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('treeList', [
+            'spacer' => '-',
+            'limit' => 200
+        ]);
+        $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
+        $tags = $this->TimelineSegments->Tags->find('list', ['limit' => 200]);
+
+        $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
+    }
+
+    /**
+     * Edit method
+     *
+     * @param int $id Timeline Segment id.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function edit(int $id = null)
+    {
+        $timelineSegment = $this->TimelineSegments->get($id, [
+            'contain' => ['Tags']
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
+            if ($this->TimelineSegments->save($timelineSegment)) {
+                $this->Flash->success(__('The timeline segment has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
+        }
+        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('list', ['limit' => 200]);
+        $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
+        $tags = $this->TimelineSegments->Tags->find('list', ['limit' => 200]);
+
+        // if ($parentId) {
+            $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
+        // }
+        $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
+    }
+
+    /**
+     * Delete method
+     *
+     * @param int $id Timeline Segment id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete(int $id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $timelineSegment = $this->TimelineSegments->get($id);
+        if ($this->TimelineSegments->delete($timelineSegment)) {
+            $this->Flash->success(__('The timeline segment has been deleted.'));
+        } else {
+            $this->Flash->error(__('The timeline segment could not be deleted. Please, try again.'));
         }
 
-        // Get a list of tags.
-        $tags = $this->TimelineSegments->Tags->find('list');
-
-        // Set tags to the view context
-        $this->set('tags', $tags);
-        $this->set('breadcrumbs', $this->fetchAncestorBreadcrumbs($timelineSegment->parent_id));
-        $this->set('timelineSegment', $timelineSegment);
-        $this->render('/TimelineSegments/add');
-        // $this->viewBuilder()->setLayout('add');
+        return $this->redirect(['action' => 'index']);
     }
 
-    public function tags(...$tags)
-    {
-        // Use the TimelineSegmentsTable to find tagged timelineSegments.
-        $timelineSegments = $this->TimelineSegments->find('tagged', [
-            'tags' => $tags,
-        ]);
-
-        // Pass variables into the view template context.
-        $this->set([
-            'timelineSegments' => $timelineSegments,
-            'tags' => $tags,
-        ]);
-    }
-
-    public function segments($parentId)
-    {
-        $timelineSegments = $this->TimelineSegments->find('ByParentId', [
-            'parentId' => $parentId
-        ]);
-
-        $this->set('timelineSegments', $timelineSegments);
-        $this->set('parentId', $parentId);
-
-        // $this->render('/TimelineSegments/index');
-        $this->viewBuilder()->setLayout('index');
-    }
-
-    public function isAuthorized($user)
+    /**
+     * Determines whether the user is authorised to be able to use this action
+     * 
+     * @param type $user
+     * 
+     * @return bool
+     */
+    public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
         // The add and tags actions are always allowed to logged in users
@@ -214,87 +185,29 @@ class TimelineSegmentsController extends AppController
         return $timelineSegment->user_id === $user['id'];
     }
 
-    /**
-     * Description
-     * @param int $parentId 
-     * @return type
-     */
-    private function fetchAncestorBreadcrumbs($parentId)
+
+    public function moveUp(int $id = null)
     {
-        $breadcrumbs = [];
-
-        // if ($parentId > 0) {
-            while ($parentId != 0) {
-                $item = $this->TimelineSegments
-                    ->findById($parentId)
-                    ->firstOrFail();
-
-                $breadcrumbs[] = [
-                    'title' => $item->title,
-                    'url' => [
-                        'controller' => 'timeline-segments',
-                        'action' => 'index',
-                        'parentId' => $item->id,
-                    ],
-                ];
-
-                $parentId = $item->parent_id;
-            }
-
-            // Need to add the "home" at the end of the array because it will be reversed at the end
-            $breadcrumbs[] = [
-                'title' => 'Timeline Segments',
-                'url' => [
-                    'controller' => 'timeline-segments',
-                    'action' => 'index',
-                ]
-            ];
-        // }
-
-        // Need to reverse the array because it finds the ancestors in nearest order first
-        // - meaning that the direct parent will be added to the array first, and
-        // subsequent parents will be added afterwards. Which would make the breadcrumbs
-        // be in reverese order
-        return array_reverse($breadcrumbs);
+        $this->request->allowMethod(['post', 'put']);
+        $timelineSegment = $this->TimelineSegments->get($id);
+        if ($this->TimelineSegments->moveUp($timelineSegment)) {
+            $this->Flash->success('The timeline segment has been moved Up.');
+        } else {
+            $this->Flash->error('The timeline segment could not be moved up. Please, try again.');
+        }
+        return $this->redirect($this->referer(['action' => 'index']));
     }
 
-    /**
-     * Moves the item with the provided ID down in the stack
-     * This will also act as a promotion for the item below it (if the ID was
-     * the previous_id of the element that the user selected)
-     * 
-     * @param type $id - The ID of the item that will be moved down 
-     * 
-     * @return type
-     */
-    public function reorder($id)
+
+    public function moveDown(int $id = null)
     {
-        // Get the current timeline segment we are going to update
-        $timelineSegmentAbove = $this->TimelineSegments->findById($id)->firstOrFail();
-
-        $orderNumber = $timelineSegmentAbove->order_number;
-
-        // Get the current timeline segment we are going to update
-        $timelineSegmentBelow = $this->TimelineSegments->find('ByOrderNumber', [
-            'order_number' => $orderNumber + 1
-        ]);
-
-        $this->TimelineSegments->patchEntity($timelineSegmentAbove, [
-            'order_number' => $orderNumber + 1
-        ]);
-
-        $this->TimelineSegments->patchEntity($timelineSegmentBelow, [
-            'order_number' => $orderNumber
-        ]);
-
-        if ($this->TimelineSegments->save($timelineSegmentAbove)
-            && $this->TimelineSegments->save($timelineSegmentBelow)
-        ) {
-            $this->Flash->success(__('The timeline segments have been reordered.'));
-            return $this->redirect(['action' => 'index']);
+        $this->request->allowMethod(['post', 'put']);
+        $timelineSegment = $this->TimelineSegments->get($id);
+        if ($this->TimelineSegments->moveDown($timelineSegment)) {
+            $this->Flash->success('The timeline segment has been moved down.');
         } else {
-            $this->Flash->error(__('The timeline segments could not be reordered.'));
-            return $this->redirect(['aciton' => 'index']);
+            $this->Flash->error('The timeline segment could not be moved down. Please, try again.');
         }
+        return $this->redirect($this->referer(['action' => 'index']));
     }
 }
