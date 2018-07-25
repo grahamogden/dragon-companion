@@ -1,7 +1,7 @@
     <header>
         <div id="top-bar">
             <h1><?=$this->Html->link('Dragon Companion', ['controller' => '', 'action' => 'index'])?></h1>
-            <div id="nav-menu-button">
+            <div id="nav-menu-button" class="menu-button">
                 <div class="bar1"></div>
                 <div class="bar2"></div>
                 <div class="bar3"></div>

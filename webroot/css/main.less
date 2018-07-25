@@ -110,57 +110,69 @@ a {
         text-decoration: none;
     }
 
-    &.move-arrow {
-        background-color: rgba(190, 230, 255, 1);
+    &.action {
+        border: 1px solid;
+        color: rgb(255, 255, 255);
         height: @buttonIconHeight;
         padding: 0;
         position: relative;
         width: @buttonIconWidth;
 
-        &.arrow-up:before,
-        &.arrow-up:after,
-        &.arrow-down:before,
-        &.arrow-down:after {
-            content: '';
-            position: absolute;
+        &.delete-button {
+            .red-item();
+
+            &:before, &:after {
+                background-color: rgba(255, 255, 255, 1);
+                content: '';
+                height: 2.5rem;
+                left: 1.2rem;
+                position: absolute;
+                top: 0.1rem;
+                transform-origin: center;
+                width: 0.4rem;
+            }
+
+            &:before {
+                transform: rotate(-45deg);
+            }
+
+            &:after {
+                transform: rotate(45deg);
+            }
         }
 
-        &.arrow-up:before, &.arrow-down:before {
-            border: 0.4rem solid transparent;// rgba(255, 255, 255, 1);
-            height: 1rem;
-            left: 0.6rem;
-            transform: rotate(45deg);
-            transform-origin: center;
-            width: 1rem;
+        &.move-arrow {
+            .background-border-color(rgba(160, 190, 255, 1));
+
+            &.arrow-up:before,
+            &.arrow-up:after,
+            &.arrow-down:before,
+            &.arrow-down:after {
+                content: '';
+                position: absolute;
+            }
+
+            &.arrow-up:before, &.arrow-down:before {
+                border: 0.4rem solid transparent;// rgba(255, 255, 255, 1);
+                height: 1rem;
+                left: 0.6rem;
+                transform: rotate(45deg);
+                transform-origin: center;
+                width: 1rem;
+            }
+
+            &.arrow-up:before {
+                border-top-color: white;
+                border-left-color: white;
+                top: 1rem;
+            }
+
+            &.arrow-down:before {
+                border-right-color: white;
+                border-bottom-color: white;
+                bottom: 1rem;
+            }
         }
-
-        // &.arrow-up:after, &.arrow-down:after {
-        //     background-color: rgba(255, 255, 255, 1);
-        //     height: 50%;
-        //     left: 40%;
-        //     width: 20%;
-        // }
-
-        &.arrow-up:before {
-            border-top-color: white;
-            border-left-color: white;
-            top: 1rem;
-        }
-
-        // &.arrow-up:after {
-        //     top: 40%;
-        // }
-
-        &.arrow-down:before {
-            border-right-color: white;
-            border-bottom-color: white;
-            bottom: 1rem;
-        }
-
-        // &.arrow-down:after {
-        //     top: 10%;
-        // }
-
     }
 }
 
@@ -174,33 +186,6 @@ button, .button, input[type=submit], input[type=button] {
 
     &:last-of-type {
         margin: 0;
-    }
-
-    &.delete-button {
-        .red-item();
-        height: @buttonIconHeight;
-        padding: 0;
-        position: relative;
-        width: @buttonIconWidth;
-
-        &:before, &:after {
-            background-color: rgba(255, 255, 255, 1);
-            content: '';
-            height: 2.5rem;
-            left: 1.2rem;
-            position: absolute;
-            top: 0.1rem;
-            transform-origin: center;
-            width: 0.4rem;
-        }
-
-        &:before {
-            transform: rotate(-45deg);
-        }
-
-        &:after {
-            transform: rotate(45deg);
-        }
     }
 
     &[type=submit], &.submit {
@@ -218,7 +203,7 @@ div.submit {
     justify-content: center;
 }
 
-form {
+fieldset {
     div.input {
         align-items: center;
         display: flex;
@@ -274,6 +259,17 @@ h4 {
     font-size: 1.4rem;
     line-height: 1.8rem;
     margin: 0 0 @marginThree 0;
+}
+
+h6.menu-button {
+    font-size: 1.4rem;
+    line-height: 1.6rem;
+    margin: 0;
+    padding: @paddingThree 0;
+
+    &+ ul.menu {
+        display: none;
+    }
 }
 
 header {
@@ -514,9 +510,7 @@ table {
 ul {
     margin: 0 0 @marginThree 0;
     padding: 0 @paddingThree 0 @paddingEight;
-}
 
-ul {
     &.breadcrumbs-trail {
         display: flex;
         list-style-type: none;
@@ -557,6 +551,48 @@ ul {
             }
         }
     }
+
+    &.pagination {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        padding: 0;
+
+        li {
+            text-align: center;
+            width: 25%;
+
+            &.first {
+
+            }
+
+            &.first, &.prev:before {
+
+            }
+
+            &.last {
+
+            }
+
+            &.last, &.next:before {
+
+            }
+
+            &.next {
+
+            }
+
+            &.prev {
+
+            }
+
+            a {
+                display: block;
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
 }
 
 footer {
@@ -571,7 +607,7 @@ footer {
         padding: 0;
 
         li {
-            padding: @paddingThree @paddingFive;
+            padding: 0; //@paddingThree @paddingFive;
 
             a, p {
                 margin: 0;

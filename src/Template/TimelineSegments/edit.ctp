@@ -4,11 +4,11 @@
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
 ?>
-<h1>Edit Timeline Segment</h1>
 <?= $this->element('breadcrumbs'); ?>
+<h1>Edit Timeline Segment</h1>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
+        <li class="heading menu-button"><?= __('Actions') ?></li>
         <li><?= $this->Form->postLink(
                 __('Delete'),
                 ['action' => 'delete', $timelineSegment->id],
@@ -35,6 +35,6 @@
             echo $this->Form->control('tags._ids', ['options' => $tags]);
         ?>
     </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+    <?= $this->Form->submit(__('Save')) ?>
     <?= $this->Form->end() ?>
 </div>
