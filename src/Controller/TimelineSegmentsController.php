@@ -42,7 +42,7 @@ class TimelineSegmentsController extends AppController
             ->find()
             ->where(['TimelineSegments.parent_id IS' => null])
             ->order('TimelineSegments.lft asc');
-        // $timelineSegments = $this->TimelineSegments;
+
         $timelineSegments = $this->paginate($timelineSegments);
 
         $this->set(compact('timelineSegments'));
@@ -67,9 +67,7 @@ class TimelineSegmentsController extends AppController
             ]],
         ]);
 
-        // if ($parentId) {
-            $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
-        // }
+        $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
         $this->set('timelineSegment', $timelineSegment);
     }
 

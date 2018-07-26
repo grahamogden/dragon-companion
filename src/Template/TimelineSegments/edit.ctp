@@ -4,7 +4,6 @@
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
 ?>
-<?= $this->element('breadcrumbs'); ?>
 <h1>Edit Timeline Segment</h1>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">

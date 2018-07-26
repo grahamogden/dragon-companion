@@ -4,7 +4,6 @@
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
 ?>
-<?= $this->element('breadcrumbs'); ?>
 <h1>Add Timeline Segment</h1>
 <?= $this->element('sidenav'); ?>
 <div class="timelineSegments form large-9 medium-8 columns content">

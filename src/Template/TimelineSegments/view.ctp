@@ -4,7 +4,6 @@
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
 ?>
-<?= $this->element('breadcrumbs'); ?>
 <h1><?= h($timelineSegment->title); ?> Timeline Segment</h1>
 <?= $this->element('sidenav'); ?>
 <div class="timelineSegments view columns content">
@@ -18,7 +17,7 @@
     </div> -->
     <div class="segment-row">
         <h3><?= __('Body'); ?></h3>
-        <p class="item"><?= $this->Text->autoParagraph(h($timelineSegment->body)); ?></p>
+        <?= $this->Text->autoParagraph(h($timelineSegment->body)); ?>
     </div>
     <?php if (!empty($timelineSegment->tags)) { ?>
         <div class="segment-row">
