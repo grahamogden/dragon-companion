@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Text;
 
 /**
  * Tags Model
@@ -58,11 +59,9 @@ class TagsTable extends Table
      */
     public function beforeSave($event, $entity, $options)
     {
-        if ($entity->isNew() && !$entity->slug) {
-            $sluggedTitle = Text::slug(strtolower($entity->title));
-            // trim slug to maximum length defined in schema
-            $entity->slug = substr($sluggedTitle, 0, 250);
-        }
+        $sluggedTitle = Text::slug(strtolower($entity->title));
+        // trim slug to maximum length defined in schema
+        $entity->slug = substr($sluggedTitle, 0, 250);
     }
 
     /**
@@ -83,11 +82,6 @@ class TagsTable extends Table
             ->requirePresence('title', 'create')
             ->notEmpty('title')
             ->add('title', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
-
-        $validator
-            ->scalar('description')
-            ->requirePresence('description', 'create')
-            ->notEmpty('description');
 
         $validator
             ->scalar('slug')

@@ -5,17 +5,11 @@
                 ?>
             <tr>
                 <td>
-                    <p>
-                        <?= $this->Html->link(
-                                $childTimelineSegment->title, [
-                                    'action' => 'view',
-                                    $childTimelineSegment->id,
-                                ]
-                        ); ?>
-                    </p>
-                    <p>
-                        <?= __($childTimelineSegment->body) ?>
-                    </p>
+                    <p><?= $this->Html->link($childTimelineSegment->title, [
+                            'action' => 'view',
+                            $childTimelineSegment->id,
+                        ]); ?></p>
+                    <p><?= __($childTimelineSegment->body) ?></p>
                 </td>
                 <td class="actions action-column">
                     <div>
