@@ -2,7 +2,7 @@
 
 // Have to stupidly hack value="{{val}}" because the widget refuses to add the "value" attribute and will instead create "val"
 return [
-    'autocomplete' => '<input type="text" name="{{name}}" id="autocomplete-{{name}}" value="{{val}}" {{attrs}} /><div class="tags-container"></div><input type="hidden" class="autocomplete-template" />
+    'autocomplete' => '<div class="autocomplete-container"><input type="text" name="{{name}}" id="autocomplete-{{name}}" value="{{val}}" {{attrs}} /><div class="autocomplete-results" id="results-{{name}}"></div><input type="hidden" class="autocomplete-template" /></div>
     <script>
         // $("#autocomplete-{{name}}").autocomplete({
         //     source: "{{source}}",
@@ -24,12 +24,26 @@ return [
                 }
             })
             .autocomplete({
+                appendTo: "#results-{{name}}",
                 minLength: 3,
+                position: {
+                    my: "center (bottom - 2px)",
+                    of: "autocomplete-{{name}}"
+                },
                 source: function( request, response ) {
                     $.getJSON( "{{source}}", {
                         term: extractLast( request.term )
                     }, response );
                     $(".ui-helper-hidden-accessible").remove();
+                },
+                search: function() {
+                    // custom minLength - because using the other one does not always work!
+                    // It should be noted this causes a bug whereby when deleting less than
+                    // 3 characters results in the autocomplete staying visible
+                    var term = extractLast( this.value );
+                    if ( term.length < 3 ) {
+                        return false;
+                    }
                 },
                 focus: function() {
                     // prevent value inserted on focus
