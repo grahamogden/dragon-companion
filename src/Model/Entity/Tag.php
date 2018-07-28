@@ -8,10 +8,12 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property string $title
+ * @property string $description
+ * @property string $slug
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\TimelineSegmentTag[] $timeline_segment_tags
+ * @property \App\Model\Entity\TimelineSegment[] $timeline_segments
  */
 class Tag extends Entity
 {
@@ -27,8 +29,10 @@ class Tag extends Entity
      */
     protected $_accessible = [
         'title' => true,
+        'description' => true,
+        'slug' => true,
         'created' => true,
         'modified' => true,
-        'timeline_segment_tags' => true
+        'timeline_segments' => true
     ];
 }

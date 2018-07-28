@@ -25,7 +25,7 @@ class TagsTableTest extends TestCase
      */
     public $fixtures = [
         'app.tags',
-        'app.timeline_segment_tags'
+        'app.timeline_segments'
     ];
 
     /**

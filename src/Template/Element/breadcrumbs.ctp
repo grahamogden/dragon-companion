@@ -24,7 +24,7 @@ if (isset($breadcrumbs)) {
     $crumbs[$breadcrumbCounter]['url'] = '';
 
     $this->Breadcrumbs->add($crumbs);
-    $this->Breadcrumbs->templates([
+    $this->Breadcrumbs->setTemplates([
         'itemWithoutLink' => '<li{{attrs}}><span{{innerAttrs}}>{{title}}</span></li>{{separator}}',
         'separator'       => '',
     ]);

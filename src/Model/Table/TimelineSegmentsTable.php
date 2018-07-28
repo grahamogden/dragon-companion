@@ -118,7 +118,7 @@ class TimelineSegmentsTable extends Table
         }
 
         if ($entity->isNew() && !$entity->slug) {
-            $sluggedTitle = Text::slug($entity->title);
+            $sluggedTitle = Text::slug(strtolower($entity->title));
             // trim slug to maximum length defined in schema
             $entity->slug = substr($sluggedTitle, 0, 250);
         }
@@ -137,5 +137,72 @@ class TimelineSegmentsTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
+    }
+
+    // The $query argument is a query builder instance.
+    // The $options array will contain the 'tags' option we passed
+    // to find('tagged') in our controller action.
+    protected function findTagged(Query $query, array $options)
+    {
+        $columns = [
+            'TimelineSegments.id',
+            'TimelineSegments.title',
+            'TimelineSegments.body',
+            'TimelineSegments.created',
+            'TimelineSegments.slug',
+        ];
+
+        $query = $query
+            ->select($columns)
+            ->distinct($columns);
+
+        if (empty($options['tags'])) {
+            // If there are no tags provided, find timeline segments that have no tags.
+            $query->leftJoinWith('Tags')
+                ->where(['Tags.title IS' => null]);
+        } else {
+            // Find timeline segments that have one or more of the provided tags.
+            $query->innerJoinWith('Tags')
+                ->where(['Tags.title IN' => $options['tags']]);
+        }
+
+        return $query->group(['TimelineSegments.id']);
+    }
+    
+    /**
+     * Description
+     * 
+     * @param type $tagString 
+     * @return type
+     */
+    protected function _buildTags($tagString)
+    {
+        // Trim tags
+        $newTags = array_map('trim', explode(',', $tagString));
+        // Remove all empty tags
+        $newTags = array_filter($newTags);
+        // Reduce duplicated tags
+        $newTags = array_unique($newTags);
+
+        $out = [];
+        $query = $this->Tags->find()
+            ->where(['Tags.title IN' => $newTags]);
+
+        // Remove existing tags from the list of new tags.
+        foreach ($query->extract('title') as $existing) {
+            $index = array_search($existing, $newTags);
+            if ($index !== false) {
+                unset($newTags[$index]);
+            }
+        }
+        // Add existing tags.
+        foreach ($query as $tag) {
+            $out[] = $tag;
+        }
+        // Add new tags.
+        foreach ($newTags as $tag) {
+            $out[] = $this->Tags->newEntity(['title' => $tag]);
+        }
+        return $out;
     }
 }

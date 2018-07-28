@@ -98,6 +98,7 @@ body {
 a {
     // border-bottom: 1px solid;
     color: rgb(40, 120, 250);
+    cursor: pointer;
     // background-color: rgba(70, 70, 70, 1);
     // color: rgb(255, 255, 255);
     display: inline-block;
@@ -113,13 +114,16 @@ a {
     }
 
     &.action {
+        color: rgb(0, 0, 0);
         border: 1px solid;
         .background-border-color(rgba(240, 240, 240, 1));
-        color: rgb(255, 255, 255);
+        font-size: 1.4rem;
+        line-height: 3rem;
         height: @buttonIconHeight;
         overflow: hidden;
         padding: 0;
         position: relative;
+        text-decoration: none;
         width: @buttonIconWidth;
 
         &.delete-button {
@@ -300,15 +304,9 @@ h3, h4 {
     margin: 0 0 @distEight 0;
 }
 
-h6.menu-button {
+h6 {
     font-size: 1.4rem;
     line-height: 1.6rem;
-    margin: 0;
-    padding: 0;
-
-    &+ ul.menu {
-        display: none;
-    }
 }
 
 header {
@@ -362,6 +360,7 @@ header {
             display: flex;
             justify-content: space-between;
             flex-direction: column;
+            margin: 0;
             min-width: 50px;
             padding: @distEight;
             width: 50px;
@@ -451,6 +450,18 @@ header {
     }
 }
 
+.menu-button {
+    margin: 0 0 @distFour 0;
+    padding: 0;
+
+    &+ ul.menu {
+        display: none;
+        list-style-type: none;
+        margin: 0;
+        padding: 0 0 @distFour 0;
+    }
+}
+
 .message {
     margin: 0 0 @distFour 0;
     padding: @distEight @distSixteen;
@@ -499,16 +510,21 @@ table {
             &.action-column {
                 font-size: 0;
                 line-height: 0;
+                padding-bottom: 0;
                 text-align: center;
                 width: 4rem;
 
-                div {
+                ul {
                     display: flex;
                     justify-content: space-between;
                     flex-direction: column;
 
-                    a:not(last-of-type) {
+                    li {
                         margin: 0 0 @distFour 0;
+                    }
+
+                    li:last-of-type {
+                        margin: 0;
                     }
 
                     // > div {
@@ -517,11 +533,6 @@ table {
                     //     width: 100%;
                     // }
                 }
-            }
-
-            p:last-of-type {
-                margin-bottom: 0;
-                padding-bottom: 0;
             }
         }
 

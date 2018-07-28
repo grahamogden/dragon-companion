@@ -45,7 +45,7 @@ class TimelineSegmentsController extends AppController
 
         $timelineSegments = $this->paginate($timelineSegments);
 
-        $this->set(compact('timelineSegments'));
+        $this->set('childTimelineSegments', $timelineSegments);
     }
 
     /**

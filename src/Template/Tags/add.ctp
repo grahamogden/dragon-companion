@@ -8,6 +8,8 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('List Tags'), ['action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('List Timeline Segments'), ['controller' => 'TimelineSegments', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Timeline Segment'), ['controller' => 'TimelineSegments', 'action' => 'add']) ?></li>
     </ul>
 </nav>
 <div class="tags form large-9 medium-8 columns content">
@@ -16,6 +18,9 @@
         <legend><?= __('Add Tag') ?></legend>
         <?php
             echo $this->Form->control('title');
+            echo $this->Form->control('description');
+            echo $this->Form->control('slug');
+            echo $this->Form->control('timeline_segments._ids', ['options' => $timelineSegments]);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

@@ -8,6 +8,8 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('New Tag'), ['action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Timeline Segments'), ['controller' => 'TimelineSegments', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Timeline Segment'), ['controller' => 'TimelineSegments', 'action' => 'add']) ?></li>
     </ul>
 </nav>
 <div class="tags index large-9 medium-8 columns content">
@@ -17,6 +19,7 @@
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('title') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('slug') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
@@ -27,6 +30,7 @@
             <tr>
                 <td><?= $this->Number->format($tag->id) ?></td>
                 <td><?= h($tag->title) ?></td>
+                <td><?= h($tag->slug) ?></td>
                 <td><?= h($tag->created) ?></td>
                 <td><?= h($tag->modified) ?></td>
                 <td class="actions">

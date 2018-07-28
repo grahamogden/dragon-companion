@@ -14,6 +14,20 @@ class TagsController extends AppController
 {
 
     /**
+     * Initialises the class, including authentication
+     * 
+     * @return void
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+
+        $this->loadComponent('Paginator');
+        $this->loadComponent('Flash');
+        $this->Auth->allow();
+    }
+
+    /**
      * Index method
      *
      * @return \Cake\Http\Response|void
@@ -35,7 +49,7 @@ class TagsController extends AppController
     public function view($id = null)
     {
         $tag = $this->Tags->get($id, [
-            'contain' => ['TimelineSegmentTags']
+            'contain' => ['TimelineSegments']
         ]);
 
         $this->set('tag', $tag);
@@ -58,7 +72,8 @@ class TagsController extends AppController
             }
             $this->Flash->error(__('The tag could not be saved. Please, try again.'));
         }
-        $this->set(compact('tag'));
+        $timelineSegments = $this->Tags->TimelineSegments->find('list', ['limit' => 200]);
+        $this->set(compact('tag', 'timelineSegments'));
     }
 
     /**
@@ -71,7 +86,7 @@ class TagsController extends AppController
     public function edit($id = null)
     {
         $tag = $this->Tags->get($id, [
-            'contain' => []
+            'contain' => ['TimelineSegments']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $tag = $this->Tags->patchEntity($tag, $this->request->getData());
@@ -82,7 +97,8 @@ class TagsController extends AppController
             }
             $this->Flash->error(__('The tag could not be saved. Please, try again.'));
         }
-        $this->set(compact('tag'));
+        $timelineSegments = $this->Tags->TimelineSegments->find('list', ['limit' => 200]);
+        $this->set(compact('tag', 'timelineSegments'));
     }
 
     /**

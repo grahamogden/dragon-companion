@@ -105,6 +105,11 @@ Router::scope('/', function (RouteBuilder $routes) {
         ])
         ->setPass(['id']);
 
+    $routes->connect(
+        '/tags/:action/',
+        ['controller' => 'Tags']
+    );
+
     /**
      * Connect catchall routes for all controllers.
      *

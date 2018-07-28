@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * Tags Model
  *
- * @property |\Cake\ORM\Association\BelongsToMany $TimelineSegments
+ * @property \App\Model\Table\TimelineSegmentsTable|\Cake\ORM\Association\BelongsToMany $TimelineSegments
  *
  * @method \App\Model\Entity\Tag get($primaryKey, $options = [])
  * @method \App\Model\Entity\Tag newEntity($data = null, array $options = [])
@@ -49,6 +49,23 @@ class TagsTable extends Table
     }
 
     /**
+     * Before saving
+     * 
+     * @param type $event 
+     * @param type $entity 
+     * @param type $options 
+     * @return type
+     */
+    public function beforeSave($event, $entity, $options)
+    {
+        if ($entity->isNew() && !$entity->slug) {
+            $sluggedTitle = Text::slug(strtolower($entity->title));
+            // trim slug to maximum length defined in schema
+            $entity->slug = substr($sluggedTitle, 0, 250);
+        }
+    }
+
+    /**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -66,6 +83,17 @@ class TagsTable extends Table
             ->requirePresence('title', 'create')
             ->notEmpty('title')
             ->add('title', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        $validator
+            ->scalar('description')
+            ->requirePresence('description', 'create')
+            ->notEmpty('description');
+
+        $validator
+            ->scalar('slug')
+            ->maxLength('slug', 250)
+            ->requirePresence('slug', 'create')
+            ->notEmpty('slug');
 
         return $validator;
     }

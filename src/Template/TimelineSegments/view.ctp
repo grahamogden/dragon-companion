@@ -40,84 +40,9 @@
             <th scope="col" colspan="2"><?= __('Segments'); ?></th>
             <!-- <th scope="col" class="actions"><?= __('Actions'); ?></th> -->
         </tr>
-        <?php
-        $childCounter = 0;
-        foreach ($timelineSegment->child_timeline_segments as $childTimelineSegments) {
-            $childCounter++;
-            ?>
-            <tr>
-                <!-- <td><?= h($childTimelineSegments->getId()); ?></td> -->
-                <td>
-                    <p>
-                        <?= $this->Html->link(
-                            $childTimelineSegments->title, [
-                                'action' => 'view',
-                                $childTimelineSegments->id,
-                            ]
-                        ); ?>
-                    </p>
-                    <p>
-                        <?= __($childTimelineSegments->body); ?>
-                    </p>
-                </td>
-                <td class="actions action-column">
-                    <div>
-                        <?= ($childCounter > 1
-                            ?
-                                $this->Form->postLink('', [
-                                        'action'    => 'moveUp',
-                                        $childTimelineSegments->getId(),
-                                    ], [
-                                        'class'   => [
-                                            'action',
-                                            'move-arrow',
-                                            'arrow-up'
-                                        ],
-                                    ]
-                                )
-                            :
-                                ''
-                        ); ?>
-                        <?= ($childCounter < count($timelineSegment->child_timeline_segments)
-                            ?
-                                $this->Form->postLink('', [
-                                    'action'    => 'moveDown',
-                                    $childTimelineSegments->getId(),
-                                ], [
-                                    'class'   => [
-                                        'action',
-                                        'move-arrow',
-                                        'arrow-down'
-                                    ],
-                                ])
-                            :
-                                ''
-                        ); ?>
-                        <?= $this->Html->link('', [
-                            'action' => 'edit',
-                            $childTimelineSegments->getId()
-                        ], [
-                            'class'   => [
-                                'action',
-                                'button',
-                                'edit-button'
-                            ],
-                        ]); ?>
-                        <?= $this->Form->postLink('', [
-                            'action' => 'delete',
-                            $childTimelineSegments->getId()
-                        ], [
-                            'class'   => [
-                                'action',
-                                'button',
-                                'delete-button'
-                            ],
-                            'confirm' => __('Are you sure you want to delete # {0}?', $childTimelineSegments->getId())
-                        ]); ?>
-                    </div>
-                </td>
-            </tr>
-        <?php } // endforeach; ?>
+        <?= $this->element('child-timeline-segment-rows', [
+            'childTimelineSegments' => $timelineSegment->child_timeline_segments,
+        ]); ?>
         <?= $this->element('add-item-row'); ?>
     </table>
 </div>

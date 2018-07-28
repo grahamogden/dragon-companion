@@ -24,6 +24,9 @@
                     <?=$this->Html->link('Timeline', ['controller' => 'TimelineSegments', 'action' => 'index'])?>
                 </li>
                 <li>
+                    <?=$this->Html->link('Tags', ['controller' => 'Tags', 'action' => 'index'])?>
+                </li>
+                <li>
                     <?=$this->Html->link('Characters', ['controller' => 'Characters', 'action' => 'index'])?>
                 </li>
             </ul>
