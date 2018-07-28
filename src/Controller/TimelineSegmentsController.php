@@ -91,15 +91,11 @@ class TimelineSegmentsController extends AppController
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
-        // $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('list', ['limit' => 200]);
-        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('treeList', [
-            'spacer' => '-',
-            'limit' => 200
-        ]);
+
         $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
         $tags = $this->TimelineSegments->Tags->find('list', ['limit' => 200]);
 
-        $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
+        $this->set(compact('timelineSegment', /*'parentTimelineSegments',*/ 'users', 'tags'));
     }
 
     /**
@@ -123,7 +119,10 @@ class TimelineSegmentsController extends AppController
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
-        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('list', ['limit' => 200]);
+        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('treeList', [
+            'limit' => 200,
+            'spacer' => '↳ ',
+        ]);
         $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
         $tags = $this->TimelineSegments->Tags->find('list', ['limit' => 200]);
 

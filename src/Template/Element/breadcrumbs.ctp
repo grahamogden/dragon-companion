@@ -7,6 +7,8 @@ if (isset($breadcrumbs)) {
             'action'     => 'index',
         ]
     ];
+
+    $breadcrumbCounter = 0;
     foreach($breadcrumbs as $breadcrumb) {
         $crumbs[] = [
             'title' => $breadcrumb->getTitle(),
@@ -16,9 +18,16 @@ if (isset($breadcrumbs)) {
                 $breadcrumb->getId(),
             ],
         ];
+        $breadcrumbCounter++;
     }
 
+    $crumbs[$breadcrumbCounter]['url'] = '';
+
     $this->Breadcrumbs->add($crumbs);
+    $this->Breadcrumbs->templates([
+        'itemWithoutLink' => '<li{{attrs}}><span{{innerAttrs}}>{{title}}</span></li>{{separator}}',
+        'separator'       => '',
+    ]);
 
     echo $this->Breadcrumbs->render(
         ['class' => 'breadcrumbs-trail'],

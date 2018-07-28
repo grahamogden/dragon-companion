@@ -5,13 +5,14 @@
  */
 ?>
 <h1>Add Timeline Segment</h1>
-<?= $this->element('sidenav'); ?>
 <div class="timelineSegments form large-9 medium-8 columns content">
     <?= $this->Form->create($timelineSegment); ?>
     <fieldset>
-        <legend><?= __('Add Timeline Segment'); ?></legend>
+        <!-- <legend><?= __('Add Timeline Segment'); ?></legend> -->
         <?php
-            echo $this->Form->control('parent_id', ['options' => $parentTimelineSegments, 'empty' => true]);
+            echo $this->Form->hidden('parent_id', [
+                'value'   => $this->request->getQuery('parent') ?? null,
+            ]);
             echo $this->Form->control('title');
             echo $this->Form->control('body', ['rows' => '7']);
             echo $this->Form->control('tags._ids', ['options' => $tags]);
