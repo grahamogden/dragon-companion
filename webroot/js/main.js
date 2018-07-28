@@ -10,40 +10,11 @@ jQuery(document).ready(function($) {
 
     let intervalTime = 7000; // 7 seconds
 
-    // let headerbackgroundChange = function (url) {
-    //     let headerImage = $("#header-background");
-    //     headerImage.css({
-    //             "background-image": "url('/img/backgrounds/" + url + "')",
-    //             // "background-position": "50% 40%",
-    //             backgroundPositionY: "40%",
-    //         })
-    //     console.log(headerImage['style']['background-position-y']);
-
-    //     let timeout = 100;
-    //     setTimeout(function () {
-    //         console.log(headerImage['style']['background-position-y']);
-    //         headerImage.animate({
-    //             // backgroundPositionX: "50%",
-    //             backgroundPositionY: "60%",
-    //         }, intervalTime - timeout, "linear");
-    //         console.log(headerImage['style']['background-position-y']);
-    //     }, timeout);
-    // }
-
     /**
      * Randomly selects and image from the array and returns the string
      */
     let pickBackgroundImage = function (currentUrl) {
-        // let returnUrl = '';
-        // console.log('----------------------------------------------------------');
-        // console.log('Current: ' + currentUrl);
-        // do {
-            returnUrl = backgroundImages[Math.floor(Math.random()*backgroundImages.length)];
-            // console.log('Return: ' + returnUrl);
-        //     console.log(returnUrl.indexOf(currentUrl) >= 0);
-        // } while (returnUrl.indexOf(currentUrl) >= 0);
-        // console.log('Using: ' + returnUrl)
-        return returnUrl;
+        return backgroundImages[Math.floor(Math.random()*backgroundImages.length)];
     }
 
     /**

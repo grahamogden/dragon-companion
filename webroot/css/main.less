@@ -588,6 +588,25 @@ ul {
     margin: 0 0 @distEight 0;
     padding: 0 @distEight 0 @distThirtyTwo;
 
+    &.ui-autocomplete {
+        background-color: rgba(255, 255, 255, 1);
+        border-width: 0 1px 1px 1px;
+        border-color: @colorGrey;
+        border-style: solid;
+        box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.3);
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        li .ui-menu-item-wrapper {
+            padding: @distSix;
+
+            &.ui-state-active {
+                background-color: rgba(240, 240, 240, 1);
+            }
+        }
+    }
+
     &.breadcrumbs-trail {
         border-width: 0 1px 0 1px;
         border-style: solid;

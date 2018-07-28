@@ -25,7 +25,7 @@ class TimelineSegmentsController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        $this->Auth->allow(['tags','reorder']);
+        $this->Auth->allow(['tags','reorder','getTags']);
     }
 
     /**
@@ -95,7 +95,7 @@ class TimelineSegmentsController extends AppController
         $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
         $tags = $this->TimelineSegments->Tags->find('list', ['limit' => 200]);
 
-        $this->set(compact('timelineSegment', /*'parentTimelineSegments',*/ 'users', 'tags'));
+        $this->set(compact('timelineSegment', 'users', 'tags'));
     }
 
     /**
@@ -110,6 +110,7 @@ class TimelineSegmentsController extends AppController
         $timelineSegment = $this->TimelineSegments->get($id, [
             'contain' => ['Tags']
         ]);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
             if ($this->TimelineSegments->save($timelineSegment)) {
@@ -126,9 +127,7 @@ class TimelineSegmentsController extends AppController
         $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
         $tags = $this->TimelineSegments->Tags->find('list', ['limit' => 200]);
 
-        // if ($parentId) {
-            $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
-        // }
+        $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
         $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
     }
 
@@ -164,7 +163,7 @@ class TimelineSegmentsController extends AppController
         $action = $this->request->getParam('action');
         // The add and tags actions are always allowed to logged in users
         if (in_array($action, [
-            'add', 'tags'
+            'add', 'tags', 'getTags',
         ])) {
             return true;
         }
@@ -206,5 +205,41 @@ class TimelineSegmentsController extends AppController
             $this->Flash->error('The timeline segment could not be moved down. Please, try again.');
         }
         return $this->redirect($this->referer(['action' => 'index']));
+    }
+
+    /**
+     * Looks up tags based on a wildcard search term,
+     * starting with at least three character
+     * 
+     * @return string
+     */
+    public function getTags()
+    {
+        $this->autoRender = false;
+
+        $term = $this->request->getQuery('term');
+
+        if ($this->request->is('ajax') && strlen($term) >= 3) {
+            $results = $this->TimelineSegments->Tags->find('all', [
+                'conditions' => ['Tags.title LIKE' => $term . '%']
+            ]);
+
+            $tags = [];
+            foreach ($results as $result) {
+                $tags[] = [
+                    'responseCode' => 200,
+                    'label'        => $result->title,
+                    'value'        => $result->title,
+                ];
+            }
+        } else {
+            $tags = [
+                'responseCode' => 404,
+                'label'        => 'No results found',
+                'value'        => '',
+            ];
+        }
+
+        echo json_encode($tags);
     }
 }

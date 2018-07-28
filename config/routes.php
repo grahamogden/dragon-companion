@@ -129,6 +129,8 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
+Router::extensions('json');
+
 // New route we're adding for our tagged action.
 // The trailing `*` tells CakePHP that this action has
 // passed parameters.

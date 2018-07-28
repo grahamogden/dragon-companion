@@ -94,12 +94,6 @@ class TimelineSegmentsTable extends Table
             ->requirePresence('body', 'create')
             ->notEmpty('body');
 
-        // $validator
-        //     ->scalar('slug')
-        //     ->maxLength('slug', 250)
-        //     ->requirePresence('slug', 'create')
-        //     ->notEmpty('slug');
-
         return $validator;
     }
 
@@ -113,15 +107,11 @@ class TimelineSegmentsTable extends Table
      */
     public function beforeSave($event, $entity, $options)
     {
-        if ($entity->tag_string) {
-            $entity->tags = $this->_buildTags($entity->tag_string);
-        }
+        $entity->tags = $this->_buildTags($entity->tag_string);
 
-        if ($entity->isNew() && !$entity->slug) {
-            $sluggedTitle = Text::slug(strtolower($entity->title));
-            // trim slug to maximum length defined in schema
-            $entity->slug = substr($sluggedTitle, 0, 250);
-        }
+        $sluggedTitle = Text::slug(strtolower($entity->title));
+        // trim slug to maximum length defined in schema
+        $entity->slug = substr($sluggedTitle, 0, 250);
     }
 
     /**
@@ -203,6 +193,7 @@ class TimelineSegmentsTable extends Table
         foreach ($newTags as $tag) {
             $out[] = $this->Tags->newEntity(['title' => $tag]);
         }
+
         return $out;
     }
 }

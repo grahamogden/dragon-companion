@@ -15,7 +15,12 @@
             ]);
             echo $this->Form->control('title');
             echo $this->Form->control('body', ['rows' => '7']);
-            echo $this->Form->control('tags._ids', ['options' => $tags]);
+            echo $this->Form->control('tag_string', [
+                'type'   => 'autocomplete',
+                'source' => [
+                    'controller' => 'TimelineSegments',
+                    'action'     => 'getTags'],
+            ]);
         ?>
     </fieldset>
     <?= $this->Form->submit(__('Save')); ?>
