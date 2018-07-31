@@ -9,7 +9,7 @@
                             'action' => 'view',
                             $childTimelineSegment->id,
                         ]); ?></p>
-                    <p><?= __($childTimelineSegment->body) ?></p>
+                    <p><?= $this->Text->autoParagraph(__($childTimelineSegment->body)) ?></p>
                 </td>
                 <td class="actions action-column">
                     <div>

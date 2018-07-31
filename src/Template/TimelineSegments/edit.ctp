@@ -12,7 +12,10 @@
         <?php
             echo $this->Form->control('parent_id', ['options' => $parentTimelineSegments, 'empty' => true]);
             echo $this->Form->control('title');
-            echo $this->Form->control('body');
+            // echo $this->Form->control('body');
+            echo $this->Form->control('body', [
+                'type' => 'textareaeditor',
+            ]);
             // echo $this->Form->control('tags._ids', ['options' => $tags]);
             // echo $this->Form->input('tags._ids', ['class' => 'autocomplete autocomplete-tags']);
             // echo $this->Form->control('tag_string', ['type' => 'text']);

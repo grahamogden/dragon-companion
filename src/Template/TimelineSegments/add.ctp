@@ -14,7 +14,10 @@
                 'value'   => $this->request->getQuery('parent') ?? null,
             ]);
             echo $this->Form->control('title');
-            echo $this->Form->control('body', ['rows' => '7']);
+            // echo $this->Form->control('body', ['rows' => '7']);
+            echo $this->Form->control('body', [
+                'type' => 'textareaeditor',
+            ]);
             echo $this->Form->control('tag_string', [
                 'type'   => 'autocomplete',
                 'source' => [

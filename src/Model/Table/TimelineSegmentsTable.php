@@ -107,7 +107,9 @@ class TimelineSegmentsTable extends Table
      */
     public function beforeSave($event, $entity, $options)
     {
-        $entity->tags = $this->_buildTags($entity->tag_string);
+        if ($entity->tag_string) {
+            $entity->tags = $this->_buildTags($entity->tag_string);
+        }
 
         $sluggedTitle = Text::slug(strtolower($entity->title));
         // trim slug to maximum length defined in schema

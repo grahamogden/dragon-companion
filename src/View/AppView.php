@@ -43,5 +43,9 @@ class AppView extends View
             'autocomplete',
             ['Autocomplete', 'text', 'label']
         );
+        $this->Form->addWidget(
+            'textareaeditor',
+            ['TextareaEditor', 'label']
+        );
     }
 }
