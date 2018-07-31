@@ -10,7 +10,9 @@
     <fieldset>
         <!-- <legend><?= __('Add Timeline Segment'); ?></legend> -->
         <?php
-            echo $this->Form->hidden('parent_id', [
+            echo $this->Form->control('parent_id', [
+                'options' => $parentTimelineSegments,
+                'empty' => true,
                 'value'   => $this->request->getQuery('parent') ?? null,
             ]);
             echo $this->Form->control('title');

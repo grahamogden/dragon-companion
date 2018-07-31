@@ -1,8 +1,21 @@
 var textAreaMode = false;
 var textareaCombinationKeys = {
-    b: 'bold',
-    i: 'italic',
-    u: 'underline',
+    b: {
+        command: 'bold',
+        preventDefault: true,
+    },
+    i: {
+        command: 'italic',
+        preventDefault: true,
+    },
+    u: {
+        command: 'underline',
+        preventDefault: true,
+    },
+    v: {
+        command: 'paste',
+        preventDefault: false,
+    }
 };
 var editorTextareas = {};
 
@@ -16,6 +29,7 @@ jQuery(document).ready(function($) {
         "fantasy_asian_by_macduykhanh121094-da50lyq.jpg",
     ];
 
+    let transitionTime = 200; // 0.2 seconds
     let intervalTime = 7000; // 7 seconds
 
     /**
@@ -57,7 +71,7 @@ jQuery(document).ready(function($) {
     });
 
     $('.menu-button').click(function(){
-        $(this).siblings('ul').slideToggle(); // toggleClass('open');
+        $(this).siblings('ul').slideToggle(transitionTime);
     });
 
     // let list = $('table tbody.sortable');
@@ -90,7 +104,7 @@ jQuery(document).ready(function($) {
         // Bind on key down to allow users to use ctrl + B to bolden text, etc.
         $(this).on('keydown', function(event) {
             if (combinationKeyCheck(event)) {
-                formatDoc(textareaCombinationKeys[event.key], $(this).attr('id'));
+                formatDoc(textareaCombinationKeys[event.key].command);
             }
         });
     });
@@ -100,7 +114,8 @@ jQuery(document).ready(function($) {
      * to bolden the text, we can prevent it from opening their bookmarks
      */
     $(document).on('keydown', function(event) {
-        if (combinationKeyCheck(event)) {
+        // Only prevent default if we have specified it in the combination keys list
+        if (combinationKeyCheck(event) && textareaCombinationKeys[event.key].preventDefault) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -112,8 +127,18 @@ jQuery(document).ready(function($) {
      */
     $('form').on('submit', function() {
         $('.textarea-editor').each(function() {
-            let $content = $(this).children('.textarea-editor-content');
-            $('#' + $content.data('for')).val($content.html().replace(/((\>)\s*)/g,'$2').replace(/(\s*(\<))/g,'$1'));
+            let editorContent = $(this).children('.textarea-editor-content');
+
+            $(editorContent).find('*').filter(function(){
+                return $.trim(this.innerHTML) === ""
+            }).remove();
+
+            let html = editorContent
+                .html()
+                .replace(/\<br.*?\/?\>/g,'') // remove br tags
+                .replace(/((\>)\s*)/g,'$2')
+                .replace(/(\s*(\<))/g,'$1');
+            $('#' + editorContent.data('for')).val(html);
         });
     });
 
@@ -152,10 +177,9 @@ let initTextareaEditor = function($element) {
  * 
  * @return void
  */
-let formatDoc = function(cmd, elementId, value) {
+let formatDoc = function(cmd, value) {
     if (validateMode()) {
         document.execCommand(cmd, false, value);
-        editorTextareas[elementId].focus();
     }
 }
 

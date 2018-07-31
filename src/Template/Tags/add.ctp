@@ -14,6 +14,6 @@
             echo $this->Form->control('timeline_segments._ids', ['options' => $timelineSegments]);
         ?>
     </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+    <?= $this->Form->submit(__('Save')) ?>
     <?= $this->Form->end() ?>
 </div>

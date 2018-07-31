@@ -66,7 +66,7 @@ class TagsController extends AppController
         if ($this->request->is('post')) {
             $tag = $this->Tags->patchEntity($tag, $this->request->getData());
             if ($this->Tags->save($tag)) {
-                $this->Flash->success(__('The tag has been saved.'));
+                $this->Flash->success(__('The tag, {0}, has been saved.', $tag->title));
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -91,7 +91,7 @@ class TagsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $tag = $this->Tags->patchEntity($tag, $this->request->getData());
             if ($this->Tags->save($tag)) {
-                $this->Flash->success(__('The tag has been saved.'));
+                $this->Flash->success(__('The tag, {0}, has been saved.', $tag->title));
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -113,7 +113,7 @@ class TagsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $tag = $this->Tags->get($id);
         if ($this->Tags->delete($tag)) {
-            $this->Flash->success(__('The tag has been deleted.'));
+            $this->Flash->success(__('The tag, {0}, has been deleted.', $tag->title));
         } else {
             $this->Flash->error(__('The tag could not be deleted. Please, try again.'));
         }

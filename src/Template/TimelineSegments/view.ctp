@@ -9,26 +9,28 @@
     $this->Html->link(__('Edit'), ['action' => 'edit', $timelineSegment->getId()])
 ); ?></h1>
 <div class="timelineSegments view columns content">
-    <div class="segment-row">
-        <h3><?= __('Title'); ?></h3>
-        <p class="item"><?= h($timelineSegment->title); ?></p>
-    </div>
     <!-- <div class="segment-row">
         <h3><?= __('Created'); ?></h3>
         <p class="item"><?= h($timelineSegment->created); ?></p>
     </div> -->
     <div class="segment-row">
         <h3><?= __('Body'); ?></h3>
-        <?= $this->Text->autoParagraph(h($timelineSegment->body)); ?>
+        <?= $this->Text->autoParagraph($timelineSegment->body); ?>
     </div>
     <?php if (!empty($timelineSegment->tags)) { ?>
         <div class="segment-row">
             <h3><?= __('Tags'); ?></h3>
-            <?php foreach ($timelineSegment->tags as $tags) { ?>
-                <div class="tag">
-                    <p><?= h($tags->title); ?></p>
-                </div>
-            <?php } // endforeach; ?>
+            <div class="tags-container">
+                <?php foreach ($timelineSegment->tags as $tags) { ?>
+                    <div class="tag">
+                        <?= $this->Form->postLink($tags->title, [
+                            'action' => 'removeTag',
+                        ], [
+                            'confirm' => 'Are you sure you want to remove this tag?',
+                        ]); ?>
+                    </div>
+                <?php } // endforeach; ?>
+            </div>
         </div>
     <?php } // endif; ?>
 </div>

@@ -18,5 +18,5 @@
     <?= $this->Html->css('base.css') ?>
     <?= $this->Html->css('main.css?'.filemtime('css/main.css')) ?>
 
-    <?= $this->Html->script('main.js') ?>
+    <?= $this->Html->script('main.js?'.filemtime('js/main.js')) ?>
 </head>
