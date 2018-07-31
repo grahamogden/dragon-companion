@@ -1,3 +1,5 @@
+@import url(//fonts.googleapis.com/css?family=Open+Sans);
+
 /*
  * Mixins
  */
@@ -66,6 +68,39 @@
     color: rgb(255, 255, 255);
 }
 
+
+.intLink {
+    cursor: pointer;
+}
+
+img.intLink {
+    border: 0;
+}
+
+#toolBar1 select {
+    font-size:10px;
+}
+
+#textBox {
+  width: 540px;
+  height: 200px;
+  border: 1px #000000 solid;
+  padding: 12px;
+  overflow: scroll;
+}
+
+#textBox #sourceText {
+  padding: 0;
+  margin: 0;
+  min-width: 498px;
+  min-height: 200px;
+}
+
+#editMode label {
+    cursor: pointer;
+}
+
+
 /*
  * Generic Styles
  */
@@ -73,11 +108,13 @@
  * {
     background-repeat: no-repeat;
     box-sizing: border-box;
+    outline: none;
  }
 
 html {
-    font-family: Arial;
+    font-family: 'Open Sans', Arial;
     font-size: 62.5%;
+    letter-spacing: 0.02rem;
 }
 
 body {
@@ -85,6 +122,17 @@ body {
     line-height: 1.8rem;
 }
 
+ul, ol {
+    ul, li ul {
+        list-style-type: circle;
+
+        ul, li ul {
+            list-style-type: square;
+        }
+    }
+}
+
+// Set a standard margin at the bottom for everything that needs it
 div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row, ul.breadcrumbs-trail {
     margin: 0 0 @distSixteen 0;
     padding-bottom: 0;
@@ -211,11 +259,45 @@ a {
     }
 }
 
+.autocomplete-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+
+    .autocomplete-results {
+        position: absolute;
+        top: calc(100% - 2px);
+        width: 100%;
+
+        ul.ui-autocomplete {
+            background-color: rgba(255, 255, 255, 1);
+            border-width: 0 1px 1px 1px;
+            border-style: solid;
+            border-top: 3px double;
+            border-color: @colorGrey;
+            list-style-type: none;
+            margin: 0;
+            max-width: 100%;
+            padding: 0;
+            width: 100%;
+
+            li .ui-menu-item-wrapper {
+                padding: @distSix;
+
+                &.ui-state-active {
+                    background-color: rgba(240, 240, 240, 1);
+                }
+            }
+        }
+    }
+}
+
 button, .button, input[type=submit], input[type=button] {
     border: 1px solid; // border must be set before the border color, otherwise it returns to default
     .background-border-color(rgba(240, 240, 240, 1));
     .border-radius();
-    margin: 0;// @distSixteen 0 0;
+    margin: 0;
     padding: @distEight @distSixteen;
     text-decoration: none;
 
@@ -224,7 +306,6 @@ button, .button, input[type=submit], input[type=button] {
     }
 
     &[type=submit], &.submit {
-        // .background-border-color(rgba());
         .green-item();
     }
 }
@@ -244,12 +325,10 @@ div.input {
     flex-direction: column;
     justify-content: space-evently;
 
-    label {
-        padding: 0 0 @distFour 0;
-        width: 100%;
-    }
-
-    input:not([type=submit]), select, textarea {
+    input:not([type=submit]),
+    select,
+    textarea,
+    div.textarea-editor-content {
         .border-radius();
         background-color: rgba(255, 255, 255, 1);
         border: 1px solid @colorGrey;
@@ -259,9 +338,22 @@ div.input {
         width: 100%;
 
         &:focus {
-            // background-color: rgba(254, 254, 254, 1);
             box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.15);
         }
+    }
+
+    div.textarea-editor {
+        width: 100%;
+
+        div.textarea-editor-content {
+            display: inline-block;
+            height: 150px;
+        }
+    }
+
+    label {
+        padding: 0 0 @distFour 0;
+        width: 100%;
     }
 
     textarea {
@@ -277,13 +369,7 @@ div.submit {
 fieldset {
     border-color: @colorGrey;
     border-radius: 0 5px 0 0 ;
-    // margin-top: @distThirtyTwo;
     position: relative;
-
-    // legend {
-    //     position: absolute;
-    //     top: -@distTwentyFour;
-    // }
 }
 
 h1 {
@@ -314,7 +400,6 @@ header {
     position: relative; // sticky;
 
     #header-background {
-        // animation: move-header 10s linear in§nite;
         display: block;
         background-image: url('/img/backgrounds/battle_of_four_armies_by_jasonengle.jpg');
         background-position: center center;
@@ -323,7 +408,6 @@ header {
         // filter: blur(2px);
         height: 100%;
         position: absolute;
-        // transition: all 10s linear;
         top: 0;
         width: 100%;
         z-index: -1;
@@ -348,7 +432,7 @@ header {
             width: 100%;
 
             a {
-                background-color: transparent; // rgba(0, 0, 0, 0.6);
+                background-color: transparent;
                 color: rgb(255, 255, 255);
                 text-decoration: none;
             }
@@ -373,14 +457,6 @@ header {
                 transform-origin: center;
                 transition: all @transitionSpeedSlow ease;
                 width: 100%;
-
-                // &:before, &:after {
-                //     background-color: rgba(255, 255, 255, 1);
-                //     content: '';
-                //     display: block;
-                //     height: 0.2em;
-                //     width: 100%;
-                // }
             }
 
             &.open .bar1 {
@@ -401,7 +477,6 @@ header {
 
     nav, .nav {
         background-color: rgba(70, 70, 70, 1);
-        // max-height: 0;
         padding: 0;
         position: absolute;
         transform: scaleY(0);
@@ -411,7 +486,6 @@ header {
         z-index: 10;
 
         &.open {
-            // max-height: 100%;
             transform: scaleY(1);
         }
 
@@ -475,8 +549,6 @@ header {
 
     &.success {
         .green-item();
-        // background-color: rgba(35, 215, 75, 1);
-        // color: rgb(255, 255, 255);
     }
 }
 
@@ -569,17 +641,6 @@ table {
         &.item-row-placeholder td {
             content: 'Pick a place!';
             padding: @distEight @distFour;
-        }
-    }
-
-    &.insert-table {
-        tbody tr td:last-of-type:before {
-            // background-color: rgba(210, 230, 255, 1);
-            // border-radius: 0 50% 50% 50%;
-            // content: '';
-            // height: 2rem;
-            // position: absolute;
-            // width: 2rem;
         }
     }
 }
@@ -718,78 +779,30 @@ footer {
 
 
 @media all and (min-width: @widthMinDesktop) {
-    // a {
-    //     display: inline-block;
-    //     padding: @distFour;
-    // }
+    div.input {
+        flex-direction: row;
+        justify-content: center;
 
-    // button, .button {
-    //     .style-button();
-    //     text-decoration: none;
+        input:not([type=submit]),
+        select,
+        textarea,
+        div.textarea-editor {
+            margin: 0 0 0 @distSixteen;
+            padding: @distEight;
+            width: 60%;
+        }
 
-    //     &.red-button {
-    //         .red-item();
-
-    //         // &:hover {
-    //         //     .background-border-color($background-color - 20)
-    //         // }
-    //     }
-    // }
-
-    // div.container {
-    //     padding: 0 @distEight;
-    // }
-
-    form {
-        div.input {
-            flex-direction: row;
-            justify-content: center;
-
-            label {
-                text-align: right;
-                width: 15%;
+        div.textarea-editor {
+            padding: 0;
+            div.textarea-editor-content {
             }
+        }
 
-            input:not([type=submit]), select, textarea {
-    //             .border-radius();
-    //             background-color: rgba(255, 255, 255, 1);
-    //             border: 1px solid rgba(230, 230, 230, 1);
-                margin: 0 0 0 @distSixteen;
-                padding: @distEight;
-    //             transition: all 0.1s ease;
-                width: 60%;
-
-    //             &:focus {
-    //                 background-color: rgba(255, 255, 254, 1);
-    //                 box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.1);
-    //             }
-            }
-
-    //         textarea {
-    //             min-width: 60%;
-    //         }
+        label {
+            text-align: right;
+            width: 15%;
         }
     }
-
-    // h1 {
-    //     font-size: 2.2em;
-    //     margin: 0;
-    // }
-
-    // h2 {
-    //     font-size: 2em;
-    //     margin: 0;
-    // }
-
-    // h3 {
-    //     font-size: 1.8em;
-    //     margin: 0;
-    // }
-
-    // h4 {
-    //     font-size: 1.6em;
-    //     margin: 0;
-    // }
 
     header {
 
@@ -837,56 +850,6 @@ footer {
             }
         }
     }
-
-    // p, ul {
-    //     margin: 0 0 @distEight 0;
-    //     padding: 0 @distEight 0 @distThirtyTwo;
-    // }
-
-    // table {
-    //     border: none;
-    //     border-radius: 30px;
-    //     margin: 0 auto @distSixteen 0;
-    //     width: 100%;
-
-    //     tbody {
-
-    //         tr {
-    //             background-color: transparent;
-    //             border: none;
-    //             border-bottom: 1px solid rgba(250, 250, 255, 1);
-
-    //             td, th {
-    //                 border: none;
-    //                 padding: @distEight @distSixteen;
-    //             }
-
-    //             th {
-    //                 background-color: rgba(235, 235, 250, 1);
-    //             }
-    //         }
-    //     }
-    // }
-
-    // footer {
-
-    //     ul.nav-list {
-    //         .nav();
-    //         justify-content: center;
-    //         list-style-type: none;
-    //         margin: 0;
-    //         padding: 0;
-
-    //         li {
-    //             padding: @distEight @distSixteen;
-
-    //             a, p {
-    //                 margin: 0;
-    //                 padding: @distEight;
-    //             }
-    //         }
-    //     }
-    // }
 }
 
 /**

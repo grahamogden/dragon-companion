@@ -78,6 +78,7 @@ class TagsTable extends Table
 
         $validator
             ->scalar('title')
+            ->minLength('title', 3)
             ->maxLength('title', 255)
             ->requirePresence('title', 'create')
             ->notEmpty('title')
@@ -86,7 +87,6 @@ class TagsTable extends Table
         $validator
             ->scalar('slug')
             ->maxLength('slug', 250)
-            ->requirePresence('slug', 'create')
             ->notEmpty('slug');
 
         return $validator;

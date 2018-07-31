@@ -49,7 +49,8 @@ class TimelineSegment extends Entity
         'parent_timeline_segment' => true,
         'user' => true,
         'child_timeline_segments' => true,
-        'tags' => true
+        // 'tags' => true,
+        'tag_string' => true,
     ];
 
     /**
@@ -88,6 +89,6 @@ class TimelineSegment extends Entity
         $str = $tags->reduce(function ($string, $tag) {
             return $string . $tag->title . ', ';
         }, '');
-        return trim($str, ', ');
+        return $str;
     }
 }
