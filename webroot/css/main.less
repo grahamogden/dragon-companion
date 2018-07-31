@@ -1,3 +1,5 @@
+@import url(//fonts.googleapis.com/css?family=Open+Sans);
+
 /*
  * Mixins
  */
@@ -110,8 +112,9 @@ img.intLink {
  }
 
 html {
-    font-family: Arial;
+    font-family: 'Open Sans', Arial;
     font-size: 62.5%;
+    letter-spacing: 0.02rem;
 }
 
 body {
@@ -119,6 +122,17 @@ body {
     line-height: 1.8rem;
 }
 
+ul, ol {
+    ul, li ul {
+        list-style-type: circle;
+
+        ul, li ul {
+            list-style-type: square;
+        }
+    }
+}
+
+// Set a standard margin at the bottom for everything that needs it
 div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row, ul.breadcrumbs-trail {
     margin: 0 0 @distSixteen 0;
     padding-bottom: 0;
@@ -311,11 +325,6 @@ div.input {
     flex-direction: column;
     justify-content: space-evently;
 
-    label {
-        padding: 0 0 @distFour 0;
-        width: 100%;
-    }
-
     input:not([type=submit]),
     select,
     textarea,
@@ -333,14 +342,23 @@ div.input {
         }
     }
 
+    div.textarea-editor {
+        width: 100%;
+
+        div.textarea-editor-content {
+            display: inline-block;
+            height: 150px;
+        }
+    }
+
+    label {
+        padding: 0 0 @distFour 0;
+        width: 100%;
+    }
+
     textarea {
         width: 100%;
     }
-}
-
-div.textarea-editor-content {
-    display: inline-block;
-    height: 150px;
 }
 
 div.submit {
@@ -761,24 +779,28 @@ footer {
 
 
 @media all and (min-width: @widthMinDesktop) {
-    form {
-        div.input {
-            flex-direction: row;
-            justify-content: center;
+    div.input {
+        flex-direction: row;
+        justify-content: center;
 
-            label {
-                text-align: right;
-                width: 15%;
-            }
+        input:not([type=submit]),
+        select,
+        textarea,
+        div.textarea-editor {
+            margin: 0 0 0 @distSixteen;
+            padding: @distEight;
+            width: 60%;
+        }
 
-            input:not([type=submit]),
-            select,
-            textarea,
+        div.textarea-editor {
+            padding: 0;
             div.textarea-editor-content {
-                margin: 0 0 0 @distSixteen;
-                padding: @distEight;
-                width: 60%;
             }
+        }
+
+        label {
+            text-align: right;
+            width: 15%;
         }
     }
 

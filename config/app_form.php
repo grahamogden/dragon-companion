@@ -87,6 +87,9 @@ return [
             <img class="intLink" title="Dotted list" onclick="formatDoc(\'insertunorderedlist\');"
             src="data:image/gif;base64,R0lGODlhFgAWAMIGAAAAAB1ChF9vj1iE33mOrqezxv///////yH5BAEAAAcALAAAAAAWABYAAAMyeLrc/jDKSesppNhGRlBAKIZRERBbqm6YtnbfMY7lud64UwiuKnigGQliQuWOyKQykgAAOw=="
             />
+            <img class="intLink" title="Delete indentation" onclick="formatDoc(\'outdent\');"
+            src="data:image/gif;base64,R0lGODlhFgAWAMIHAAAAADljwliE35GjuaezxtDV3NHa7P///yH5BAEAAAcALAAAAAAWABYAAAM2eLrc/jDKCQG9F2i7u8agQgyK1z2EIBil+TWqEMxhMczsYVJ3e4ahk+sFnAgtxSQDqWw6n5cEADs="
+            />
             <img class="intLink" title="Add indentation" onclick="formatDoc(\'indent\');"
             src="data:image/gif;base64,R0lGODlhFgAWAOMIAAAAADljwl9vj1iE35GjuaezxtDV3NHa7P///////////////////////////////yH5BAEAAAgALAAAAAAWABYAAAQ7EMlJq704650B/x8gemMpgugwHJNZXodKsO5oqUOgo5KhBwWESyMQsCRDHu9VOyk5TM9zSpFSr9gsJwIAOw=="
             />
@@ -103,7 +106,7 @@ return [
             src="data:image/gif;base64,R0lGODlhFgAWAIQUAD04KTRLY2tXQF9vj414WZWIbXmOrpqbmpGjudClFaezxsa0cb/I1+3YitHa7PrkIPHvbuPs+/fvrvv8/f///////////////////////////////////////////////yH5BAEAAB8ALAAAAAAWABYAAAWN4CeOZGmeaKqubGsusPvBSyFJjVDs6nJLB0khR4AkBCmfsCGBQAoCwjF5gwquVykSFbwZE+AwIBV0GhFog2EwIDchjwRiQo9E2Fx4XD5R+B0DDAEnBXBhBhN2DgwDAQFjJYVhCQYRfgoIDGiQJAWTCQMRiwwMfgicnVcAAAMOaK+bLAOrtLUyt7i5uiUhADs="
             />
         </div>
-        <div contenteditable="true" class="textarea-editor-content" id="textarea-{{name}}" name="textarea-{{name}}" {{attrs}}></div>
-        <input id="{{name}}" name="{{name}}" class="textarea-editor-value" type="hidden" value="{{value}}"/>
+        <div contenteditable="true" class="textarea-editor-content" data-for="input-textarea-editor-{{name}}" {{attrs}}></div>
+        <input id="input-textarea-editor-{{name}}" name="{{name}}" class="textarea-editor-value" type="hidden" value="{{value}}"/>
     </div>',
 ];

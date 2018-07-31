@@ -16,7 +16,7 @@
     <?= $this->fetch('script') ?>
 
     <?= $this->Html->css('base.css') ?>
-    <?= $this->Html->css('main.css') ?>
+    <?= $this->Html->css('main.css?'.filemtime('css/main.css')) ?>
 
     <?= $this->Html->script('main.js') ?>
 </head>
