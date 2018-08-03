@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-// use Cake\View\Helper\BreadcrumbsHelper;
 
 /**
  * TimelineSegments Controller
@@ -13,6 +12,8 @@ use App\Controller\AppController;
  */
 class TimelineSegmentsController extends AppController
 {
+    /** @var Session */
+    private $session;
 
     /**
      * Initialises the class, including authentication
@@ -26,6 +27,8 @@ class TimelineSegmentsController extends AppController
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
         $this->Auth->allow(['tags','reorder','getTags']);
+
+        $this->session = $this->getRequest()->getSession();
     }
 
     /**
@@ -35,6 +38,12 @@ class TimelineSegmentsController extends AppController
      */
     public function index(): void
     {
+        $this->session->write('referer', [
+            'controller' => 'TimelineSegments',
+            'action' => ($id ? 'view' : 'index'),
+            $id ?: null,
+        ]);
+
         $this->paginate = [
             'contain' => ['ParentTimelineSegments', 'Users']
         ];
@@ -57,6 +66,12 @@ class TimelineSegmentsController extends AppController
      */
     public function view(int $id = null)
     {
+        $this->session->write('referer', [
+            'controller' => 'TimelineSegments',
+            'action' => ($id ? 'view' : 'index'),
+            $id ?: null,
+        ]);
+
         $timelineSegment = $this->TimelineSegments->get($id, [
             'contain' => [
                 'ParentTimelineSegments',
@@ -85,9 +100,9 @@ class TimelineSegmentsController extends AppController
             $timelineSegment->user_id = $this->Auth->user('id');
 
             if ($this->TimelineSegments->save($timelineSegment)) {
-                $this->Flash->success(__('The timeline segment has been saved.'));
+                $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect($this->session->read('referer'));//['action' => 'index']);
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
@@ -121,9 +136,9 @@ class TimelineSegmentsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
             if ($this->TimelineSegments->save($timelineSegment)) {
-                $this->Flash->success(__('The timeline segment has been saved.'));
+                $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect($this->session->read('referer'));//['action' => 'index']);
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
@@ -153,12 +168,12 @@ class TimelineSegmentsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $timelineSegment = $this->TimelineSegments->get($id);
         if ($this->TimelineSegments->delete($timelineSegment)) {
-            $this->Flash->success(__('The timeline segment has been deleted.'));
+            $this->Flash->success(__('The timeline segment, {0}, has been deleted.', $timelineSegment->title));
         } else {
             $this->Flash->error(__('The timeline segment could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->session->read('referer') ?: ['action' => 'index']);
     }
 
     /**

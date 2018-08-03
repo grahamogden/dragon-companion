@@ -98,7 +98,8 @@ jQuery(document).ready(function($) {
      */
     $('.textarea-editor-content').each(function() {
         // Grab the data from the hidden input and put it in the "content"
-        $(this).html($('#' + $(this).data('for')).val());
+        let html = $('#' + $(this).data('for')).val();
+        $(this).html(html);
         // init the text area editor
         initTextareaEditor($(this));
         // Bind on key down to allow users to use ctrl + B to bolden text, etc.
@@ -129,7 +130,7 @@ jQuery(document).ready(function($) {
         $('.textarea-editor').each(function() {
             let editorContent = $(this).children('.textarea-editor-content');
 
-            $(editorContent).find('*').filter(function(){
+            $(editorContent).find('*:not(td)').filter(function(){
                 return $.trim(this.innerHTML) === ""
             }).remove();
 
@@ -148,7 +149,8 @@ jQuery(document).ready(function($) {
  * Checks to see if the user has hit the ctrl (windows)/cmd(mac) key and
  * a key that we know the user might be trying to perform, such as B for bold
  */
-let combinationKeyCheck = function (event) {
+var combinationKeyCheck = function (event) {
+    console.log('ctrl|meta: ' + (event.ctrlKey || event.metaKey) + '; ' + event.key);
     return ((event.ctrlKey || event.metaKey)
         && textareaCombinationKeys[event.key] !== undefined
     ) ? true : false;
@@ -161,7 +163,7 @@ let combinationKeyCheck = function (event) {
  * 
  * @return void
  */
-let initTextareaEditor = function($element) {
+var initTextareaEditor = function($element) {
     document.execCommand("defaultParagraphSeparator", false, "p");
     editorTextareas[$element.attr('id')] = $element;
     if (textAreaMode) {
@@ -177,7 +179,7 @@ let initTextareaEditor = function($element) {
  * 
  * @return void
  */
-let formatDoc = function(cmd, value) {
+var formatDoc = function(cmd, value) {
     if (validateMode()) {
         document.execCommand(cmd, false, value);
     }
@@ -188,7 +190,7 @@ let formatDoc = function(cmd, value) {
  * 
  * @return bool
  */
-let validateMode = function() {
+var validateMode = function() {
     if (!textAreaMode) {
         return true;
     }
@@ -204,7 +206,7 @@ let validateMode = function() {
  * @param bool   setToSourceMode - true = Sets the element to display as HTML source; false = Display as text
  * @param string elementId       - The target element ID
  */
-let setTextareaMode = function(setToSourceMode, elementid) {
+var setTextareaMode = function(setToSourceMode, elementid) {
     let content;
 
     if (setToSourceMode) {

@@ -80,6 +80,7 @@
  }
 
 html {
+    color: rgb(15, 15, 15);
     font-family: 'Open Sans', Arial;
     font-size: 62.5%;
     letter-spacing: 0.02rem;
@@ -341,6 +342,7 @@ div.input {
             line-height: 1.8rem;
             padding: @distEight;
             overflow-y: scroll;
+            resize: vertical;
         }
     }
 
@@ -557,7 +559,7 @@ p {
 
 strike {
     position: relative;
-    text-decoration: none;
+    // text-decoration: none;
 
     &:before {
         content: '';
@@ -566,7 +568,6 @@ strike {
         position: absolute;
         top: 50%;
         width: calc(100% + 3px);
-        z-index: -1;
     }
 }
 
