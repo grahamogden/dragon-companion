@@ -1,4 +1,15 @@
-@import url(//fonts.googleapis.com/css?family=Open+Sans);
+/*
+ * Fonts
+ */
+
+// @import url(//fonts.googleapis.com/css?family=Open+Sans);
+// @import url(/../font/Open_Sans/OpenSans-Regular.ttf);
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(../font/Open_Sans/OpenSans-Regular.ttf) format('truetype')
+}
 
 /*
  * Mixins
@@ -867,7 +878,7 @@ footer {
             bottom: 0;
             display: block;
             height: auto;
-            position: sticky;
+            position: relative; // sticky;
             transform: scaleY(1);
 
             h1 {
