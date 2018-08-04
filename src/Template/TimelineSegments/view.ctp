@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
+use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
 <h1><?= sprintf('%s Timeline Segment (%s)',
     h($timelineSegment->title),
@@ -15,7 +16,7 @@
     </div> -->
     <div class="segment-row">
         <h3><?= __('Body'); ?></h3>
-        <?= $this->Text->autoParagraph($timelineSegment->body); ?>
+        <?= dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body)); ?>
     </div>
     <?php if (!empty($timelineSegment->tags)) { ?>
         <div class="segment-row">
