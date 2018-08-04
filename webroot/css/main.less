@@ -538,7 +538,7 @@ header {
         display: none;
         list-style-type: none;
         margin: 0;
-        padding: 0 0 @distFour 0;
+        // padding: 0 0 @distFour 0;
     }
 }
 
@@ -602,29 +602,30 @@ table {
             &.action-column {
                 font-size: 0;
                 line-height: 0;
-                padding-bottom: 0;
+                // padding-bottom: 0;
                 text-align: center;
                 width: 4rem;
 
-                ul {
-                    display: flex;
-                    justify-content: space-between;
-                    flex-direction: column;
-                    list-style-type: none;
+                div {
 
-                    li {
-                        margin: 0 0 @distFour 0;
+                    &.horizontal {
+                        ul {
+                            flex-direction: row;
+                        }
                     }
 
-                    li:last-of-type {
+                    ul {
+                        display: flex;
+                        justify-content: space-between;
+                        flex-direction: column;
+                        list-style-type: none;
                         margin: 0;
-                    }
+                        padding: 0;
 
-                    // > div {
-                    //     display: flex;
-                    //     height: 100%;
-                    //     width: 100%;
-                    // }
+                        li {
+                            margin: @distFour;
+                        }
+                    }
                 }
             }
         }

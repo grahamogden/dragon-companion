@@ -11,7 +11,6 @@
         <thead>
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('title'); ?></th>
-                <th scope="col">slug</th>
                 <th scope="col" class="actions">Actions</th>
             </tr>
         </thead>
@@ -19,14 +18,16 @@
             <?php foreach ($tags as $tag): ?>
             <tr>
                 <td>
-                    <?= $this->Html->link(h($tag->title), [
-                        'action' => 'view',
-                        $tag->id,
-                    ]); ?>
+                    <p><?= sprintf('%s - %s',
+                        $this->Html->link($tag->title, [
+                            'action' => 'view',
+                            $tag->id,
+                        ]),
+                        h($tag->slug)); ?></p>
+                    <p><?= h($tag->description) ?></p>
                 </td>
-                <td><?= h($tag->slug) ?></td>
                 <td class="actions action-column">
-                    <div>
+                    <div class="horizontal">
                         <ul>
                             <li>
                                 <?= $this->Html->link('', [
