@@ -40,8 +40,8 @@ class TimelineSegmentsController extends AppController
     {
         $this->session->write('referer', [
             'controller' => 'TimelineSegments',
-            'action' => ($id ? 'view' : 'index'),
-            $id ?: null,
+            'action' => (isset($id) ? 'view' : 'index'),
+            isset($id) ?: null,
         ]);
 
         $this->paginate = [
@@ -68,8 +68,8 @@ class TimelineSegmentsController extends AppController
     {
         $this->session->write('referer', [
             'controller' => 'TimelineSegments',
-            'action' => ($id ? 'view' : 'index'),
-            $id ?: null,
+            'action' => (isset($id) ? 'view' : 'index'),
+            isset($id) ?: null,
         ]);
 
         $timelineSegment = $this->TimelineSegments->get($id, [

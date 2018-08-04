@@ -27,7 +27,7 @@
                     <?=$this->Html->link('Tags', ['controller' => 'Tags', 'action' => 'index'])?>
                 </li>
                 <li>
-                    <?=$this->Html->link('Characters', ['controller' => 'Characters', 'action' => 'index'])?>
+                    <?=$this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index'])?>
                 </li>
             </ul>
         </nav>
