@@ -13,9 +13,9 @@
         <h3><?= __('Created'); ?></h3>
         <p class="item"><?= h($timelineSegment->created); ?></p>
     </div> -->
-    <div class="segment-row">
+    <div class="segment-row show-more-container">
         <h3><?= __('Body'); ?></h3>
-        <?= $this->Text->autoParagraph($timelineSegment->body); ?>
+        <div class="show-more-content"><?= $this->Text->autoParagraph($timelineSegment->body); ?></div>
     </div>
     <?php if (!empty($timelineSegment->tags)) { ?>
         <div class="segment-row">

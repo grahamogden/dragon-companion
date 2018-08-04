@@ -91,10 +91,6 @@ class NonPlayableCharactersTable extends Table
             ->requirePresence('alignment', 'create')
             ->notEmpty('alignment');
 
-        $validator
-            ->scalar('notes')
-            ->requirePresence('notes', 'create')
-            ->notEmpty('notes');
 
         return $validator;
     }

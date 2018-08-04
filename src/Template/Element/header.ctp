@@ -14,13 +14,6 @@
             <!-- </ul> -->
             <ul class="nav-list">
                 <li>
-                    <?php if ($this->request->getSession()->read('Auth.User')) { ?>
-                        <?=$this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout'])?>
-                    <?php } else { ?>
-                        <?=$this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login'])?>
-                    <?php } ?>
-                </li>
-                <li>
                     <?=$this->Html->link('Timeline', ['controller' => 'TimelineSegments', 'action' => 'index'])?>
                 </li>
                 <li>
@@ -28,6 +21,13 @@
                 </li>
                 <li>
                     <?=$this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index'])?>
+                </li>
+                <li>
+                    <?php if ($this->request->getSession()->read('Auth.User')) { ?>
+                        <?=$this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout'])?>
+                    <?php } else { ?>
+                        <?=$this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login'])?>
+                    <?php } ?>
                 </li>
             </ul>
         </nav>
