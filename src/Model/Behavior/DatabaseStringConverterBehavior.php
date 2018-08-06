@@ -16,10 +16,12 @@ class DatabaseStringConverterBehavior extends Behavior
         'i',
         'li',
         'ol',
+        'p',
         'span',
         'strike',
         'strong',
         'table',
+        'tbody',
         'td',
         'th',
         'tr',
@@ -39,10 +41,9 @@ class DatabaseStringConverterBehavior extends Behavior
         //     ],
         //     $string
         // );
-        
         $string = preg_replace(
-            '/\<[' . implode(self::WHITE_LIST_HTML_TAGS) . '](.*?)\>/m',
-            '<$1>',
+            '/\<(\/?(' . implode('|', self::WHITE_LIST_HTML_TAGS) . '))(.*?)\>/m',
+            '{{$1}}',
             $string
         );
         $string = htmlentities(
@@ -56,17 +57,17 @@ class DatabaseStringConverterBehavior extends Behavior
 
     public static function fromDatabase($string)
     {
+        $string = str_replace(
+            [
+                '{{',
+                '}}',
+            ], [
+                '<',
+                '>',
+            ],
+            $string
+        );
         $string = addslashes($string);
-        // $string = str_replace(
-        //     [
-        //         '{{',
-        //         '}}',
-        //     ], [
-        //         '<',
-        //         '>',
-        //     ],
-        //     $string
-        // );
         return $string;
     }
 

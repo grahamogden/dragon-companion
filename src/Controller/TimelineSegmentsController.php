@@ -76,9 +76,11 @@ class TimelineSegmentsController extends AppController
             'contain' => [
                 'ParentTimelineSegments',
                 'Users',
-                'Tags',
+                'Tags' => [
+                    'sort' => ['title' => 'ASC',],
+                ],
                 'ChildTimelineSegments' => [
-                    'sort' => ['lft' => 'ASC']
+                    'sort' => ['lft' => 'ASC',],
             ]],
         ]);
 
