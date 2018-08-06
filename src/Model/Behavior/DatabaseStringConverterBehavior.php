@@ -11,16 +11,38 @@ use Cake\Utility\Text;
 
 class DatabaseStringConverterBehavior extends Behavior
 {
+    const WHITE_LIST_HTML_TAGS = [
+        'b',
+        'i',
+        'li',
+        'ol',
+        'span',
+        'strike',
+        'strong',
+        'table',
+        'td',
+        'th',
+        'tr',
+        'u',
+        'ul',
+    ];
+
     public static function toDatabase($string)
     {
-        $string = str_replace(
-            [
-                '<',
-                '>',
-            ], [
-                '{{',
-                '}}',
-            ],
+        // $string = str_replace(
+        //     [
+        //         '<',
+        //         '>',
+        //     ], [
+        //         '{{',
+        //         '}}',
+        //     ],
+        //     $string
+        // );
+        
+        $string = preg_replace(
+            '/\<[' . implode(self::WHITE_LIST_HTML_TAGS) . '](.*?)\>/m',
+            '<$1>',
             $string
         );
         $string = htmlentities(
@@ -35,16 +57,16 @@ class DatabaseStringConverterBehavior extends Behavior
     public static function fromDatabase($string)
     {
         $string = addslashes($string);
-        $string = str_replace(
-            [
-                '{{',
-                '}}',
-            ], [
-                '<',
-                '>',
-            ],
-            $string
-        );
+        // $string = str_replace(
+        //     [
+        //         '{{',
+        //         '}}',
+        //     ], [
+        //         '<',
+        //         '>',
+        //     ],
+        //     $string
+        // );
         return $string;
     }
 
