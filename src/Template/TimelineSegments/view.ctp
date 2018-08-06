@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
+
 use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
 <h1><?= sprintf('%s Timeline Segment (%s)',

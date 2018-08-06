@@ -113,12 +113,6 @@ ul, ol {
     }
 }
 
-// Set a standard margin at the bottom for everything that needs it
-div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row, ul.breadcrumbs-trail {
-    margin: 0 0 @distSixteen 0;
-    padding-bottom: 0;
-}
-
 /*
  * Specific Styles
  */
@@ -375,6 +369,7 @@ div.submit {
 fieldset {
     border-color: @colorGrey;
     border-radius: 0 5px 0 0 ;
+    padding: @distEight;
     position: relative;
 }
 
@@ -904,6 +899,13 @@ footer {
             }
         }
     }
+}
+
+
+// Set a standard margin at the bottom for everything that needs it
+div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row, ul.breadcrumbs-trail {
+    margin: 0 0 @distEight 0;
+    padding-bottom: 0;
 }
 
 /**
