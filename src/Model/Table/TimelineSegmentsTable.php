@@ -7,6 +7,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 // the Text class
 use Cake\Utility\Text;
+use App\Model\Behavior\DatabaseStringConverterBehavior;
 // the QueryExpressions class
 // use Cake\Database\Expression\QueryExpression;
 
@@ -47,6 +48,7 @@ class TimelineSegmentsTable extends Table
         $this->setDisplayField('title');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('DatabaseStringConverter');
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree', [
             'level' => 'level'
