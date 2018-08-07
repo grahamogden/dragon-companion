@@ -11,22 +11,28 @@ use Cake\Utility\Text;
 
 class DatabaseStringConverterBehavior extends Behavior
 {
+    /**
+     * List of HTML tags that can be allowed to be stored
+     * They must be ordered by longest to shortest, otherwise
+     * there is a risk of a tag being targeted as something such
+     * as "u" before it is targeted as "ul"
+     */
     const WHITE_LIST_HTML_TAGS = [
-        'b',
-        'i',
-        'li',
-        'ol',
-        'p',
         'span',
         'strike',
         'strong',
         'table',
         'tbody',
+        'li',
+        'ol',
         'td',
         'th',
         'tr',
-        'u',
         'ul',
+        'b',
+        'i',
+        'p',
+        'u',
     ];
 
     public static function toDatabase($string)
