@@ -1,196 +1,272 @@
 <?php
-
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\View\Helper\BreadcrumbsHelper;
 
+/**
+ * TimelineSegments Controller
+ *
+ * @property \App\Model\Table\TimelineSegmentsTable $TimelineSegments
+ *
+ * @method \App\Model\Entity\TimelineSegment[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ */
 class TimelineSegmentsController extends AppController
 {
+    /** @var Session */
+    private $session;
 
-    public function initialize()
+    /**
+     * Initialises the class, including authentication
+     * 
+     * @return void
+     */
+    public function initialize(): void
     {
         parent::initialize();
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        $this->Auth->allow(['tags']);
-    }
+        $this->Auth->allow(['tags','reorder','getTags']);
 
-    public function index()
-    {
-        $parentId = $this->request->getQuery('parentId');
-        if (!isset($parentId)) {
-            $parentId = 0;
-        }
-
-        $timelineSegments = $this->TimelineSegments->find('ByParentId', [
-            'parentId' => $parentId,
-        ]);
-
-        $breadcrumbs = [];
-
-        while ($parentId != 0) {
-            $item = $this->TimelineSegments->find('AncestorByParentId', [
-                'parentId' => $parentId,
-            ]);
-
-            $breadcrumbs[] = [
-                'title' => substr($item->title, 0, 17) . '...',
-                'url' => [
-                    'controller' => 'timeline-segments',
-                    'action' => 'index',
-                    'parentId' => $item->parent_id,
-                ],
-            ];
-
-            $parentId = $item->parent_id;
-        }
-
-        // $timelineSegments = $this->Paginator->paginate($this->TimelineSegments->find());
-        $this->set('parentId', $parentId);
-        $this->set('breadcrumbs', $breadcrumbs);
-        $this->set(compact('timelineSegments'));
-    }
-
-    public function view($id)
-    {
-        $timelineSegment = $this->TimelineSegments->findById($id)->firstOrFail();
-        $this->set(compact('timelineSegment'));
+        $this->session = $this->getRequest()->getSession();
     }
 
     /**
-     * Add route
-     * 
-     * @return void|\Cake\Http\Response|null
+     * Index method
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function index(): void
+    {
+        $this->session->write('referer', [
+            'controller' => 'TimelineSegments',
+            'action' => ($id ? 'view' : 'index'),
+            $id ?: null,
+        ]);
+
+        $this->paginate = [
+            'contain' => ['ParentTimelineSegments', 'Users']
+        ];
+        $timelineSegments = $this->TimelineSegments
+            ->find()
+            ->where(['TimelineSegments.parent_id IS' => null])
+            ->order('TimelineSegments.lft asc');
+
+        $timelineSegments = $this->paginate($timelineSegments);
+
+        $this->set('childTimelineSegments', $timelineSegments);
+    }
+
+    /**
+     * View method
+     *
+     * @param int $id Timeline Segment id.
+     * @return \Cake\Http\Response|void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view(int $id = null)
+    {
+        $this->session->write('referer', [
+            'controller' => 'TimelineSegments',
+            'action' => ($id ? 'view' : 'index'),
+            $id ?: null,
+        ]);
+
+        $timelineSegment = $this->TimelineSegments->get($id, [
+            'contain' => [
+                'ParentTimelineSegments',
+                'Users',
+                'Tags' => [
+                    'sort' => ['title' => 'ASC',],
+                ],
+                'ChildTimelineSegments' => [
+                    'sort' => ['lft' => 'ASC',],
+            ]],
+        ]);
+
+        $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
+        $this->set('timelineSegment', $timelineSegment);
+    }
+
+    /**
+     * Add method
+     *
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
         $timelineSegment = $this->TimelineSegments->newEntity();
         if ($this->request->is('post')) {
             $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
-            $parentId = $this->request->getQuery('parentId');
-
-            if ($parentId) {
-                $timelineSegment->parent_id = $parentId;
-            }
-
+            // Set the user ID on the item
             $timelineSegment->user_id = $this->Auth->user('id');
 
             if ($this->TimelineSegments->save($timelineSegment)) {
-                $this->Flash->success(__('Your timelineSegment has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
+
+                return $this->redirect($this->session->read('referer'));//['action' => 'index']);
             }
-            $this->Flash->error(__('Unable to add your timelineSegment.'));
+            $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
-        // Get a list of tags.
-        $tags = $this->TimelineSegments->Tags->find('list');
 
-        // Set tags to the view context
-        $this->set('tags', $tags);
+        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('treeList', [
+            'limit' => 200,
+            'spacer' => '↳ ',
+        ]);
+        $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
+        $tags = $this->TimelineSegments->Tags->find('list', [
+            'limit' => 200,
+            'order' => ['Tags.title' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
+        ]);
 
-        $this->set('timelineSegment', $timelineSegment);
+        $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
     }
 
     /**
-     * Edit route
-     * 
-     * @param int $id 
-     * @return void|\Cake\Http\Response|null
+     * Edit method
+     *
+     * @param int $id Timeline Segment id.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit(int $id)
+    public function edit(int $id = null)
     {
-        $timelineSegment = $this->TimelineSegments
-            ->findById($id)
-            ->contain('Tags') // load associated Tags
-            ->firstOrFail();
+        $timelineSegment = $this->TimelineSegments->get($id, [
+            'contain' => ['Tags']
+        ]);
 
-        if ($this->request->is(['post', 'put'])) {
-            $this->TimelineSegments->patchEntity(
-                $timelineSegment,
-                $this->request->getData(),
-                [
-                    // Added: Disable modification of user_id.
-                    'accessibleFields' => ['user_id' => false]
-                ]
-            );
-
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
             if ($this->TimelineSegments->save($timelineSegment)) {
-                $this->Flash->success(__('Your timelineSegment has been updated.'));
-                return $this->redirect(['action' => 'index']);
+                $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
+
+                return $this->redirect($this->session->read('referer'));//['action' => 'index']);
             }
-            $this->Flash->error(__('Unable to update your timelineSegment.'));
+            $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
+        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find('treeList', [
+            'limit' => 200,
+            'spacer' => '↳ ',
+        ]);
+        $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
+        $tags = $this->TimelineSegments->Tags->find('list', [
+            'limit' => 200,
+            'order' => ['Tags.title' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
+        ]);
 
-        // Get a list of tags.
-        $tags = $this->TimelineSegments->Tags->find('list');
-
-        // Set tags to the view context
-        $this->set('tags', $tags);
-
-        $this->set('timelineSegment', $timelineSegment);
-        $this->render('/TimelineSegments/add');
-        // $this->viewBuilder()->setLayout('add');
+        $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
+        $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
     }
 
-    public function delete($id)
+    /**
+     * Delete method
+     *
+     * @param int $id Timeline Segment id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete(int $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-
-        $timelineSegment = $this->TimelineSegments->findById($id)->firstOrFail();
+        $timelineSegment = $this->TimelineSegments->get($id);
         if ($this->TimelineSegments->delete($timelineSegment)) {
-            $this->Flash->success(__('The {0} timeline Segment has been deleted.', $timelineSegment->title));
-            return $this->redirect(['action' => 'index']);
+            $this->Flash->success(__('The timeline segment, {0}, has been deleted.', $timelineSegment->title));
+        } else {
+            $this->Flash->error(__('The timeline segment could not be deleted. Please, try again.'));
         }
+
+        return $this->redirect($this->session->read('referer') ?: ['action' => 'index']);
     }
 
-    public function tags(...$tags)
-    {
-        // Use the TimelineSegmentsTable to find tagged timelineSegments.
-        $timelineSegments = $this->TimelineSegments->find('tagged', [
-            'tags' => $tags,
-        ]);
-
-        // Pass variables into the view template context.
-        $this->set([
-            'timelineSegments' => $timelineSegments,
-            'tags' => $tags,
-        ]);
-    }
-
-    public function segments($parentId)
-    {
-        $timelineSegments = $this->TimelineSegments->find('ByParentId', [
-            'parentId' => $parentId
-        ]);
-
-        $this->set('timelineSegments', $timelineSegments);
-        $this->set('parentId', $parentId);
-
-        // $this->render('/TimelineSegments/index');
-        $this->viewBuilder()->setLayout('index');
-    }
-
-    public function isAuthorized($user)
+    /**
+     * Determines whether the user is authorised to be able to use this action
+     * 
+     * @param type $user
+     * 
+     * @return bool
+     */
+    public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
-        // The add and tags actions are always allowed to logged in users.
-        if (in_array($action, ['add', 'tags'])) {
+        // The add and tags actions are always allowed to logged in users
+        if (in_array($action, [
+            'add', 'tags', 'getTags',
+        ])) {
             return true;
         }
 
-        // All other actions require a ID.
-        $id = $this->request->getParam('pass.0');
+        // All other actions require an item ID
+        $id = $this->request->getParam('id');
+
         if (!$id) {
             return false;
         }
 
-        $this->set('userId', $id);
-
-        // Check that the timelineSegment belongs to the current user.
-        $timelineSegment = $this->TimelineSegments->findById($id)->first();
+        // Check that the timelineSegment belongs to the current user
+        $timelineSegment = $this->TimelineSegments->findById($id)->firstOrFail();
 
         return $timelineSegment->user_id === $user['id'];
     }
 
+
+    public function moveUp(int $id = null)
+    {
+        $this->request->allowMethod(['post', 'put']);
+        $timelineSegment = $this->TimelineSegments->get($id);
+        if ($this->TimelineSegments->moveUp($timelineSegment)) {
+            $this->Flash->success('The timeline segment has been moved Up.');
+        } else {
+            $this->Flash->error('The timeline segment could not be moved up. Please, try again.');
+        }
+        return $this->redirect($this->referer(['action' => 'index']));
+    }
+
+
+    public function moveDown(int $id = null)
+    {
+        $this->request->allowMethod(['post', 'put']);
+        $timelineSegment = $this->TimelineSegments->get($id);
+        if ($this->TimelineSegments->moveDown($timelineSegment)) {
+            $this->Flash->success('The timeline segment has been moved down.');
+        } else {
+            $this->Flash->error('The timeline segment could not be moved down. Please, try again.');
+        }
+        return $this->redirect($this->referer(['action' => 'index']));
+    }
+
+    /**
+     * Looks up tags based on a wildcard search term,
+     * starting with at least three character
+     * 
+     * @return string
+     */
+    public function getTags()
+    {
+        $this->autoRender = false;
+
+        $term = $this->request->getQuery('term');
+
+        if ($this->request->is('ajax') && strlen($term) >= 3) {
+            $results = $this->TimelineSegments->Tags->find('all', [
+                'conditions' => ['Tags.title LIKE' => '%' . $term . '%']
+            ]);
+
+            $tags = [];
+            foreach ($results as $result) {
+                $tags[] = [
+                    'responseCode' => 200,
+                    'label'        => $result->title,
+                    'value'        => $result->title,
+                ];
+            }
+        } else {
+            $tags = [
+                'responseCode' => 404,
+                'label'        => 'No results found',
+                'value'        => '',
+            ];
+        }
+
+        echo json_encode($tags);
+    }
 }

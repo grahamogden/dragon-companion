@@ -4,33 +4,80 @@
  * @var \App\Model\Entity\Tag $tag
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Tag'), ['action' => 'edit', $tag->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Tag'), ['action' => 'delete', $tag->id], ['confirm' => __('Are you sure you want to delete # {0}?', $tag->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Tags'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Tag'), ['action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="tags view large-9 medium-8 columns content">
-    <h3><?= h($tag->title) ?></h3>
+<div class="tags view columns content">
+    <h3><?= sprintf('%s (%s)',
+        $tag->title,
+        $this->Html->link(__('edit'), ['action' => 'edit', $tag->id])
+        ); ?></h3>
     <table class="vertical-table">
         <tr>
             <th scope="row"><?= __('Title') ?></th>
-            <td><?= h($tag->title) ?></td>
+            <td><?= $tag->title; ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($tag->id) ?></td>
+            <th scope="row"><?= __('Slug') ?></th>
+            <td><?= $tag->slug; ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Created') ?></th>
-            <td><?= h($tag->created) ?></td>
+            <td><?= $tag->created; ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Modified') ?></th>
-            <td><?= h($tag->modified) ?></td>
+            <td><?= $tag->modified; ?></td>
         </tr>
     </table>
+    <div class="row">
+        <h4><?= __('Description') ?></h4>
+        <?= $this->Text->autoParagraph($tag->description); ?>
+    </div>
+    <div class="related">
+        <h4><?= __('Related Timeline Segments') ?></h4>
+        <?php if (!empty($tag->timeline_segments)) { ?>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th scope="col"><?= __('Tag'); ?></th>
+                <th scope="col"><?= __('Level'); ?></th>
+                <th scope="col" class="actions"><?= __('Actions'); ?></th>
+            </tr>
+            <?php foreach ($tag->timeline_segments as $timelineSegment) { ?>
+            <tr>
+                <td><p><?= $this->Html->link($timelineSegment->title, [
+                        'controller' => 'TimelineSegments',
+                        'action'     => 'view',
+                        $timelineSegment->id
+                    ]); ?></p>
+                    <?= $this->Text->autoParagraph($timelineSegment->body); ?>
+                </td>
+                <td><?= $timelineSegment->level; ?></td>
+                <td class="actions">
+                    <?= $this->Html->link('', [
+                        'controller' => 'TimelineSegments',
+                        'action' => 'edit',
+                        $timelineSegment->id,
+                    ], [
+                        'class'   => [
+                            'action',
+                            'button',
+                            'edit-button',
+                        ],
+                    ]); ?>
+                    <?= $this->Form->postLink('', [
+                        'controller' => 'TimelineSegments',
+                        'action' => 'delete',
+                        $timelineSegment->id,
+                    ], [
+                        'confirm' => __('Are you sure you want to delete # {0}?', $timelineSegment->id),
+                        'class'   => [
+                            'action',
+                            'button',
+                            'delete-button'
+                        ],
+                    ]); ?>
+                </td>
+            </tr>
+            <?php } // endforeach; ?>
+        </table>
+        <?php } // endif; ?>
+    </div>
 </div>

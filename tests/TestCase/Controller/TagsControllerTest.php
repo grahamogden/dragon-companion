@@ -17,7 +17,8 @@ class TagsControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'app.tags',
-        'app.timeline_segment_tags'
+        'app.timeline_segments',
+        'app.tags_timeline_segments'
     ];
 
     /**

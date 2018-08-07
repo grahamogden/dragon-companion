@@ -5,11 +5,12 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Text;
 
 /**
  * Tags Model
  *
- * @property |\Cake\ORM\Association\BelongsToMany $TimelineSegments
+ * @property \App\Model\Table\TimelineSegmentsTable|\Cake\ORM\Association\BelongsToMany $TimelineSegments
  *
  * @method \App\Model\Entity\Tag get($primaryKey, $options = [])
  * @method \App\Model\Entity\Tag newEntity($data = null, array $options = [])
@@ -49,6 +50,21 @@ class TagsTable extends Table
     }
 
     /**
+     * Before saving
+     * 
+     * @param type $event 
+     * @param type $entity 
+     * @param type $options 
+     * @return type
+     */
+    public function beforeSave($event, $entity, $options)
+    {
+        $sluggedTitle = Text::slug(strtolower($entity->title));
+        // trim slug to maximum length defined in schema
+        $entity->slug = substr($sluggedTitle, 0, 250);
+    }
+
+    /**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -62,10 +78,16 @@ class TagsTable extends Table
 
         $validator
             ->scalar('title')
+            ->minLength('title', 3)
             ->maxLength('title', 255)
             ->requirePresence('title', 'create')
             ->notEmpty('title')
             ->add('title', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        $validator
+            ->scalar('slug')
+            ->maxLength('slug', 250)
+            ->notEmpty('slug');
 
         return $validator;
     }

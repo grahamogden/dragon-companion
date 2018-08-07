@@ -38,3 +38,9 @@ nbproject/*
 .vscode
 # Sass preprocessor
 .sass-cache/
+
+
+# User Files #
+##############
+/webroot/img/backgrounds/*
+notes.txt
