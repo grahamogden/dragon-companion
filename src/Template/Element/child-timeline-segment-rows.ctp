@@ -1,4 +1,6 @@
 <?php
+use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
+
 $childCounter = 0;
 foreach ($childTimelineSegments as $childTimelineSegment) {
     $childCounter++;
@@ -9,7 +11,7 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                     'action' => 'view',
                     $childTimelineSegment->id,
                 ]); ?></p>
-            <?= $this->Text->autoParagraph($childTimelineSegment->body) ?>
+            <?= dbConverter::fromDatabase($this->Text->autoParagraph($childTimelineSegment->body)); ?>
         </td>
         <td class="actions action-column">
             <div>

@@ -3,6 +3,8 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
+
+use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
 <h1>Edit Timeline Segment</h1>
 <div class="timelineSegments form large-9 medium-8 columns content">
@@ -15,6 +17,7 @@
             // echo $this->Form->control('body');
             echo $this->Form->control('body', [
                 'type' => 'textareaeditor',
+                'val'  => dbConverter::fromDatabase($timelineSegment->body)
             ]);
             // echo $this->Form->control('tags._ids', ['options' => $tags]);
             // echo $this->Form->input('tags._ids', ['class' => 'autocomplete autocomplete-tags']);
