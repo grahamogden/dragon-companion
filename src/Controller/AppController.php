@@ -82,4 +82,39 @@ class AppController extends Controller
         // By default deny access.
         return false;
     }
+
+    /**
+     * Generates a json encoded string using the results
+     * 
+     * @param  Query  $results
+     * @return string
+     */
+    protected function formatJsonResponse(
+        $search,
+        $term,
+        array $conditions,
+        $field
+    ): string {
+
+        if ($this->request->is('ajax') && strlen($term) >= 3) {
+            $results = $search->find('all', [
+                'conditions' => $conditions
+            ]);
+
+            $return = [];
+            foreach ($results as $result) {
+                $return[] = [
+                    'label'        => $result->$field,
+                    'value'        => $result->$field,
+                ];
+            }
+        } else {
+            $return = [
+                'label'        => 'No results found',
+                'value'        => 'No results found',
+            ];
+        }
+        
+        return json_encode($return);
+    }
 }
