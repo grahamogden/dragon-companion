@@ -25,7 +25,7 @@ class NonPlayableCharactersTableTest extends TestCase
      */
     public $fixtures = [
         'app.non_playable_characters',
-        'app.tags'
+        'app.timeline_segments'
     ];
 
     /**

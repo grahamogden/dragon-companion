@@ -26,7 +26,12 @@ class TimelineSegmentsController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        $this->Auth->allow(['tags','reorder','getTags']);
+        $this->Auth->allow([
+            'tags',
+            'reorder',
+            'getTags',
+            'getNonPlayableCharacters'
+        ]);
 
         $this->session = $this->getRequest()->getSession();
     }
@@ -79,6 +84,9 @@ class TimelineSegmentsController extends AppController
                 'Tags' => [
                     'sort' => ['title' => 'ASC',],
                 ],
+                'NonPlayableCharacters' => [
+                    'sort' => ['name' => 'ASC',],
+                ],
                 'ChildTimelineSegments' => [
                     'sort' => ['lft' => 'ASC',],
             ]],
@@ -118,8 +126,18 @@ class TimelineSegmentsController extends AppController
             'limit' => 200,
             'order' => ['Tags.title' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
         ]);
+        $nonPlayableCharacters = $this->TimelineSegments->NonPlayableCharacters->find('list', [
+            'limit' => 200,
+            'order' => ['NonPlayableCharacters.name' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
+        ]);
 
-        $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
+        $this->set(compact(
+            'timelineSegment',
+            'parentTimelineSegments',
+            'users',
+            'tags',
+            'nonPlayableCharacters'
+        ));
     }
 
     /**
@@ -153,9 +171,19 @@ class TimelineSegmentsController extends AppController
             'limit' => 200,
             'order' => ['Tags.title' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
         ]);
+        $nonPlayableCharacters = $this->TimelineSegments->NonPlayableCharacters->find('list', [
+            'limit' => 200,
+            'order' => ['NonPlayableCharacters.name' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
+        ]);
 
         $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
-        $this->set(compact('timelineSegment', 'parentTimelineSegments', 'users', 'tags'));
+        $this->set(compact(
+            'timelineSegment',
+            'parentTimelineSegments',
+            'users',
+            'tags',
+            'nonPlayableCharacters'
+        ));
     }
 
     /**
@@ -190,7 +218,7 @@ class TimelineSegmentsController extends AppController
         $action = $this->request->getParam('action');
         // The add and tags actions are always allowed to logged in users
         if (in_array($action, [
-            'add', 'tags', 'getTags',
+            'add', 'tags', 'getTags', 'getNonPlayableCharacters',
         ])) {
             return true;
         }
@@ -246,27 +274,31 @@ class TimelineSegmentsController extends AppController
 
         $term = $this->request->getQuery('term');
 
-        if ($this->request->is('ajax') && strlen($term) >= 3) {
-            $results = $this->TimelineSegments->Tags->find('all', [
-                'conditions' => ['Tags.title LIKE' => '%' . $term . '%']
-            ]);
+        echo $this->formatJsonResponse(
+            $this->TimelineSegments->Tags,
+            $term,
+            ['Tags.title LIKE' => '%' . $term . '%'],
+            'title'
+        );
+    }
 
-            $tags = [];
-            foreach ($results as $result) {
-                $tags[] = [
-                    'responseCode' => 200,
-                    'label'        => $result->title,
-                    'value'        => $result->title,
-                ];
-            }
-        } else {
-            $tags = [
-                'responseCode' => 404,
-                'label'        => 'No results found',
-                'value'        => '',
-            ];
-        }
+    /**
+     * Looks up tags based on a wildcard search term,
+     * starting with at least three character
+     * 
+     * @return string
+     */
+    public function getNonPlayableCharacters()
+    {
+        $this->autoRender = false;
 
-        echo json_encode($tags);
+        $term = $this->request->getQuery('term');
+
+        echo $this->formatJsonResponse(
+            $this->TimelineSegments->NonPlayableCharacters,
+            $term,
+            ['NonPlayableCharacters.name LIKE' => '%' . $term . '%'],
+            'name'
+        );
     }
 }

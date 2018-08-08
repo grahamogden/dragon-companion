@@ -29,6 +29,12 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                     'action'     => 'getTags'],
                 'val' => $timelineSegment->tag_string,
             ]);
+            echo $this->Form->control('non_playable_character_string', [
+                'type'   => 'autocomplete',
+                'source' => [
+                    'controller' => 'TimelineSegments',
+                    'action'     => 'getNonPlayableCharacters'],
+            ]);
         ?>
     </fieldset>
     <?= $this->Form->submit(__('Save')); ?>

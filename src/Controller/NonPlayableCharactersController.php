@@ -34,9 +34,6 @@ class NonPlayableCharactersController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Tags']
-        ];
         $nonPlayableCharacters = $this->paginate($this->NonPlayableCharacters);
 
         $this->set(compact('nonPlayableCharacters'));
@@ -52,7 +49,7 @@ class NonPlayableCharactersController extends AppController
     public function view($id = null)
     {
         $nonPlayableCharacter = $this->NonPlayableCharacters->get($id, [
-            'contain' => ['Tags']
+            'contain' => ['TimelineSegments']
         ]);
 
         $this->set('nonPlayableCharacter', $nonPlayableCharacter);
@@ -75,8 +72,8 @@ class NonPlayableCharactersController extends AppController
             }
             $this->Flash->error(__('The non playable character could not be saved. Please, try again.'));
         }
-        $tags = $this->NonPlayableCharacters->Tags->find('list', ['limit' => 200]);
-        $this->set(compact('nonPlayableCharacter', 'tags'));
+        $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
+        $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
     }
 
     /**
@@ -100,8 +97,8 @@ class NonPlayableCharactersController extends AppController
             }
             $this->Flash->error(__('The non playable character could not be saved. Please, try again.'));
         }
-        $tags = $this->NonPlayableCharacters->Tags->find('list', ['limit' => 200]);
-        $this->set(compact('nonPlayableCharacter', 'tags'));
+        $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
+        $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
     }
 
     /**

@@ -35,6 +35,22 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
             </div>
         </div>
     <?php } // endif; ?>
+    <?php if (!empty($timelineSegment->non_playable_characters)) { ?>
+        <div class="segment-row">
+            <h3><?= __('Non Playable Characters'); ?></h3>
+            <div class="non-playable-characters-container">
+                <?php foreach ($timelineSegment->non_playable_characters as $nonPlayableCharacters) { ?>
+                    <div class="tag">
+                        <?= $this->Form->postLink($nonPlayableCharacters->name, [
+                            'action' => 'removeNonPlayableCharacter',
+                        ], [
+                            'confirm' => 'Are you sure you want to remove this tag?',
+                        ]); ?>
+                    </div>
+                <?php } // endforeach; ?>
+            </div>
+        </div>
+    <?php } // endif; ?>
 </div>
 <div class="related">
     <h4><?= __('Child Timeline Segments'); ?></h4>

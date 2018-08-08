@@ -15,9 +15,8 @@ use Cake\ORM\Entity;
  * @property string $history
  * @property int $alignment
  * @property string $notes
- * @property int $tag_id
  *
- * @property \App\Model\Entity\Tag $tag
+ * @property \App\Model\Entity\TimelineSegment[] $timeline_segments
  */
 class NonPlayableCharacter extends Entity
 {
@@ -40,7 +39,6 @@ class NonPlayableCharacter extends Entity
         'history' => true,
         'alignment' => true,
         'notes' => true,
-        'tag_id' => true,
-        'tag' => true
+        'timeline_segments' => true
     ];
 }

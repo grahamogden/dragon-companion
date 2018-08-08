@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * NonPlayableCharacters Model
  *
- * @property \App\Model\Table\TagsTable|\Cake\ORM\Association\BelongsTo $Tags
+ * @property \App\Model\Table\TimelineSegmentsTable|\Cake\ORM\Association\BelongsToMany $TimelineSegments
  *
  * @method \App\Model\Entity\NonPlayableCharacter get($primaryKey, $options = [])
  * @method \App\Model\Entity\NonPlayableCharacter newEntity($data = null, array $options = [])
@@ -37,8 +37,10 @@ class NonPlayableCharactersTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Tags', [
-            'foreignKey' => 'tag_id'
+        $this->belongsToMany('TimelineSegments', [
+            'foreignKey' => 'non_playable_character_id',
+            'targetForeignKey' => 'timeline_segment_id',
+            'joinTable' => 'non_playable_characters_timeline_segments'
         ]);
     }
 
@@ -93,19 +95,5 @@ class NonPlayableCharactersTable extends Table
 
 
         return $validator;
-    }
-
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules)
-    {
-        $rules->add($rules->existsIn(['tag_id'], 'Tags'));
-
-        return $rules;
     }
 }

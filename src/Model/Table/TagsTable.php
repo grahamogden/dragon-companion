@@ -85,6 +85,11 @@ class TagsTable extends Table
             ->add('title', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
+            ->scalar('description')
+            ->requirePresence('description', 'create')
+            ->notEmpty('description');
+
+        $validator
             ->scalar('slug')
             ->maxLength('slug', 250)
             ->notEmpty('slug');
