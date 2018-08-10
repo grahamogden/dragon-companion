@@ -7,6 +7,10 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
     ?>
     <tr>
         <th class="show-more-container">
+            <?= $this->Html->link($childTimelineSegment->title, [
+                'action' => 'view',
+                $childTimelineSegment->id,
+            ]); ?>
             <div class="actions">
                 <a class="menu-button action">. . .</a>
                 <ul class="menu">
@@ -65,10 +69,6 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                     ]); ?></li>
                 </ul>
             </div>
-            <?= $this->Html->link($childTimelineSegment->title, [
-                'action' => 'view',
-                $childTimelineSegment->id,
-            ]); ?>
         </th>
     </tr>
     <tr>

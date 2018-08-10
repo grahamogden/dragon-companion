@@ -71,6 +71,7 @@ jQuery(document).ready(function($) {
     });
 
     $('.menu-button').click(function(){
+        $(this).parent().toggleClass('open');
         $(this).siblings('ul').slideToggle(transitionTime);
     });
 
