@@ -72,6 +72,15 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                     ]); ?></li>
                 </ul>
             </div>
+            <?= $this->Html->link($childTimelineSegment->title, [
+                'action' => 'view',
+                $childTimelineSegment->id,
+            ]); ?>
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($childTimelineSegment->body)); ?></div>
         </td>
     </tr>
 <?php } // endforeach; ?>
