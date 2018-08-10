@@ -43,9 +43,9 @@ class TagsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsToMany('TimelineSegments', [
-            'foreignKey' => 'tag_id',
+            'foreignKey'       => 'tag_id',
             'targetForeignKey' => 'timeline_segment_id',
-            'joinTable' => 'tags_timeline_segments'
+            'joinTable'        => 'tags_timeline_segments'
         ]);
     }
 
@@ -83,6 +83,11 @@ class TagsTable extends Table
             ->requirePresence('title', 'create')
             ->notEmpty('title')
             ->add('title', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        $validator
+            ->scalar('description')
+            ->requirePresence('description', 'create')
+            ->notEmpty('description');
 
         $validator
             ->scalar('slug')

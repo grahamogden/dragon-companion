@@ -26,6 +26,12 @@
                     'controller' => 'TimelineSegments',
                     'action'     => 'getTags'],
             ]);
+            echo $this->Form->control('non_playable_character_string', [
+                'type'   => 'autocomplete',
+                'source' => [
+                    'controller' => 'TimelineSegments',
+                    'action'     => 'getNonPlayableCharacters'],
+            ]);
         ?>
     </fieldset>
     <?= $this->Form->submit(__('Save')); ?>

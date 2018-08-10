@@ -15,9 +15,9 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
         <h3><?= __('Created'); ?></h3>
         <p class="item"><?= h($timelineSegment->created); ?></p>
     </div> -->
-    <div class="segment-row">
+    <div class="segment-row show-more-container">
         <h3><?= __('Body'); ?></h3>
-        <?= dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body)); ?>
+        <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body)); ?></div>
     </div>
     <?php if (!empty($timelineSegment->tags)) { ?>
         <div class="segment-row">
@@ -35,18 +35,31 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
             </div>
         </div>
     <?php } // endif; ?>
+    <?php if (!empty($timelineSegment->non_playable_characters)) { ?>
+        <div class="segment-row">
+            <h3><?= __('Non Playable Characters'); ?></h3>
+            <div class="non-playable-characters-container">
+                <?php foreach ($timelineSegment->non_playable_characters as $nonPlayableCharacters) { ?>
+                    <div class="tag">
+                        <?= $this->Form->postLink($nonPlayableCharacters->name, [
+                            'action' => 'removeNonPlayableCharacter',
+                        ], [
+                            'confirm' => 'Are you sure you want to remove this tag?',
+                        ]); ?>
+                    </div>
+                <?php } // endforeach; ?>
+            </div>
+        </div>
+    <?php } // endif; ?>
 </div>
 <div class="related">
     <h4><?= __('Child Timeline Segments'); ?></h4>
     <table cellpadding="0" cellspacing="0">
-        <tr>
-            <!-- <th scope="col"><?= __('Id'); ?></th> -->
-            <th scope="col" colspan="2"><?= __('Segments'); ?></th>
-            <!-- <th scope="col" class="actions"><?= __('Actions'); ?></th> -->
-        </tr>
-        <?= $this->element('child-timeline-segment-rows', [
-            'childTimelineSegments' => $timelineSegment->child_timeline_segments,
-        ]); ?>
-        <?= $this->element('add-item-row'); ?>
+        <tbody>
+            <?= $this->element('child-timeline-segment-rows', [
+                'childTimelineSegments' => $timelineSegment->child_timeline_segments,
+            ]); ?>
+            <?= $this->element('add-item-row'); ?>
+        </tbody>
     </table>
 </div>

@@ -51,6 +51,7 @@ class TimelineSegment extends Entity
         'child_timeline_segments' => true,
         // 'tags' => true,
         'tag_string' => true,
+        'non_playable_character_string' => true,
     ];
 
     /**
@@ -88,6 +89,21 @@ class TimelineSegment extends Entity
         $tags = new Collection($this->tags);
         $str = $tags->reduce(function ($string, $tag) {
             return $string . $tag->title . ', ';
+        }, '');
+        return $str;
+    }
+
+    protected function _getNonPlayableCharacterString()
+    {
+        if (isset($this->_properties['non_playable_character_string'])) {
+            return $this->_properties['non_playable_character_string'];
+        }
+        if (empty($this->non_playable_characters)) {
+            return '';
+        }
+        $non_playable_characters = new Collection($this->non_playable_characters);
+        $str = $non_playable_characters->reduce(function ($string, $nonPlayableCharacter) {
+            return $string . $nonPlayableCharacter->name . ', ';
         }, '');
         return $str;
     }
