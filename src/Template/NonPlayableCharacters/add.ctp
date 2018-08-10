@@ -26,6 +26,6 @@
             echo $this->Form->control('notes');
         ?>
     </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+    <?= $this->Form->submit(__('Save')) ?>
     <?= $this->Form->end() ?>
 </div>

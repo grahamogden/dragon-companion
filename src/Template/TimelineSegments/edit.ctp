@@ -34,6 +34,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                 'source' => [
                     'controller' => 'TimelineSegments',
                     'action'     => 'getNonPlayableCharacters'],
+                'val' => $timelineSegment->non_playable_character_string,
             ]);
         ?>
     </fieldset>

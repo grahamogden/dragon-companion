@@ -55,14 +55,11 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 <div class="related">
     <h4><?= __('Child Timeline Segments'); ?></h4>
     <table cellpadding="0" cellspacing="0">
-        <tr>
-            <!-- <th scope="col"><?= __('Id'); ?></th> -->
-            <th scope="col" colspan="2"><?= __('Segments'); ?></th>
-            <!-- <th scope="col" class="actions"><?= __('Actions'); ?></th> -->
-        </tr>
-        <?= $this->element('child-timeline-segment-rows', [
-            'childTimelineSegments' => $timelineSegment->child_timeline_segments,
-        ]); ?>
-        <?= $this->element('add-item-row'); ?>
+        <tbody>
+            <?= $this->element('child-timeline-segment-rows', [
+                'childTimelineSegments' => $timelineSegment->child_timeline_segments,
+            ]); ?>
+            <?= $this->element('add-item-row'); ?>
+        </tbody>
     </table>
 </div>

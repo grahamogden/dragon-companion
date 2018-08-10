@@ -7,11 +7,6 @@
 <h1><?= __('Timeline Segments') ?></h1>
 <div class="timelineSegments index large-9 medium-8 columns content">
     <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th scope="col" colspan="2"><?= __('Timeline Segments') ?></th>
-            </tr>
-        </thead>
         <tbody>
             <?= $this->element('child-timeline-segment-rows'); ?>
             <?= $this->element('add-item-row'); ?>

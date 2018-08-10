@@ -103,7 +103,7 @@ class TimelineSegment extends Entity
         }
         $non_playable_characters = new Collection($this->non_playable_characters);
         $str = $non_playable_characters->reduce(function ($string, $nonPlayableCharacter) {
-            return $string . $nonPlayableCharacter->title . ', ';
+            return $string . $nonPlayableCharacter->name . ', ';
         }, '');
         return $str;
     }

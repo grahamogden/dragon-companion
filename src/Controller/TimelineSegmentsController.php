@@ -150,7 +150,7 @@ class TimelineSegmentsController extends AppController
     public function edit(int $id = null)
     {
         $timelineSegment = $this->TimelineSegments->get($id, [
-            'contain' => ['Tags']
+            'contain' => ['Tags', 'NonPlayableCharacters'],
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
