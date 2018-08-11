@@ -73,8 +73,8 @@ class TimelineSegmentsController extends AppController
     {
         $this->session->write('referer', [
             'controller' => 'TimelineSegments',
-            'action' => (isset($id) ? 'view' : 'index'),
-            isset($id) ?: null,
+            'action' => (isset($id) && !is_null($id) ? 'view' : 'index'),
+            isset($id) && !is_null($id) ? $id : null,
         ]);
 
         $timelineSegment = $this->TimelineSegments->get($id, [

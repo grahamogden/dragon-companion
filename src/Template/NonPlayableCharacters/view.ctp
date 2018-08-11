@@ -4,24 +4,12 @@
  * @var \App\Model\Entity\NonPlayableCharacter $nonPlayableCharacter
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Non Playable Character'), ['action' => 'edit', $nonPlayableCharacter->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Non Playable Character'), ['action' => 'delete', $nonPlayableCharacter->id], ['confirm' => __('Are you sure you want to delete # {0}?', $nonPlayableCharacter->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Non Playable Characters'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Non Playable Character'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Tags'), ['controller' => 'Tags', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Tag'), ['controller' => 'Tags', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
+<h1><?= sprintf('%s Timeline Segment (%s)',
+    h($nonPlayableCharacter->name),
+    $this->Html->link(__('Edit'), ['action' => 'edit', $nonPlayableCharacter->id])
+); ?></h1>
 <div class="nonPlayableCharacters view large-9 medium-8 columns content">
-    <h3><?= h($nonPlayableCharacter->name) ?></h3>
     <table class="vertical-table">
-        <tr>
-            <th scope="row"><?= __('Name') ?></th>
-            <td><?= h($nonPlayableCharacter->name) ?></td>
-        </tr>
         <tr>
             <th scope="row"><?= __('Occupation') ?></th>
             <td><?= h($nonPlayableCharacter->occupation) ?></td>
