@@ -33,4 +33,5 @@
         </nav>
         <div id="header-background"></div>
     </header>
+    <?= $this->Flash->render() ?>
     <?= $this->element('breadcrumbs'); ?>

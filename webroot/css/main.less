@@ -2,18 +2,20 @@
  * Fonts
  */
 
-// @import url(//fonts.googleapis.com/css?family=Open+Sans);
+@import url(//fonts.googleapis.com/css?family=Open+Sans);
 // @import url(/../font/Open_Sans/OpenSans-Regular.ttf);
-@font-face {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(../font/Open_Sans/OpenSans-Regular.ttf) format('truetype')
-}
+// @font-face {
+//     font-family: 'Open Sans';
+//     font-style: normal;
+//     font-weight: 400;
+//     src: local('Open Sans Regular'), local('OpenSans-Regular') format('truetype')
+// }
 
 /*
  * Mixins
  */
+
+@boxShadowSmall: 0 2px 2px 1px rgba(0, 0, 0, 0.1);
 
 @buttonIconHeight: 3rem;
 @buttonIconWidth:  3rem;
@@ -25,14 +27,15 @@
 
 @contentMaxWidth: 120rem;
 
-@distFour:       0.4rem;                   // 4px
-@distSix:        @distFour + 0.2rem;       // 6px
-@distEight:      @distFour * 2;            // 8px
-@distTwelve:     @distSix * 2;             // 12px
-@distSixteen:    @distFour * 4;            // 16px
-@distTwenty:     @distEight + @distTwelve; // 20px
-@distTwentyFour: @distTwelve * 2;          // 24px
-@distThirtyTwo:  @distSixteen * 2;         // 32px
+@distFour:        0.4rem;                   // 4px
+@distSix:         @distFour + 0.2rem;       // 6px
+@distEight:       @distFour * 2;            // 8px
+@distTwelve:      @distSix * 2;             // 12px
+@distSixteen:     @distFour * 4;            // 16px
+@distTwenty:      @distEight + @distTwelve; // 20px
+@distTwentyFour:  @distTwelve * 2;          // 24px
+@distThirtyTwo:   @distSixteen * 2;         // 32px
+@distFourtyEight: @distTwentyFour * 2;      // 48px
 
 @radiusOne:   0.2rem; // 2px
 @radiusSmall: 0.3rem; // 3px
@@ -111,8 +114,8 @@ html {
 }
 
 body {
-    font-size: 1.4rem;
-    line-height: 1.8rem;
+    font-size: 1.6rem;
+    line-height: 2rem;
 }
 
 ul, ol {
@@ -244,7 +247,7 @@ a {
     float: none;
     font-size: 0;
     line-height: 0;
-    padding: 0.8rem;
+    padding: @distSix;
     position: absolute;
     right: 0;
     transition: all @transitionSpeedFast linear;;
@@ -260,9 +263,9 @@ a {
     }
 
     &.open {
-        background: rgba(255, 255, 255, 1);
-        bordor-color: rgba(225, 225, 225, 1);
-        box-shadow: 0 1px 0px 2px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 1);
+        border-color: rgba(225, 225, 225, 1);
+        box-shadow: @boxShadowSmall;
     }
 
     ul {
@@ -297,6 +300,7 @@ a {
             border-style: solid;
             border-top: 3px double;
             border-color: @colorGrey;
+            box-shadow: @boxShadowSmall;
             list-style-type: none;
             margin: 0;
             max-width: 100%;
@@ -304,7 +308,7 @@ a {
             width: 100%;
 
             li .ui-menu-item-wrapper {
-                padding: @distSix;
+                padding: @distEight;
 
                 &.ui-state-active {
                     background-color: rgba(240, 240, 240, 1);
@@ -419,18 +423,18 @@ fieldset {
 }
 
 h1 {
-    font-size: 2rem;
-    line-height: 1.8rem;
+    font-size: 2.4rem;
+    line-height: 2.8rem;
 }
 
 h2 {
-    font-size: 1.8rem;
-    line-height: 1.6rem;
+    font-size: 2.2rem;
+    line-height: 2.4rem;
 }
 
 h3, h4, h6 {
-    font-size: 1.6rem;
-    line-height: 1.8rem;
+    font-size: 1.8rem;
+    line-height: 2.2rem;
 }
 
 header {
@@ -544,6 +548,7 @@ header {
                     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                     color: rgb(255, 255, 255);
                     display: block;
+                    font-weight: 400;
                     margin: 0;
                     padding: @distSixteen @distSixteen;
                     text-decoration: none;
@@ -583,7 +588,7 @@ header {
 }
 
 .message {
-    margin: 0 0 @distFour 0;
+    margin: 0;
     padding: @distEight @distSixteen;
     position: relative;
 
@@ -608,27 +613,42 @@ p {
     }
 }
 
-.show-more-container {
-    // padding-bottom: @distTwentyFour;
-    // position: relative;
+.show-more-container.active {
+    padding-bottom: @distTwentyFour;
+    position: relative;
 
-    // .show-more-content {
-    //     max-height: 200px;
-    //     overflow: hidden;
-    //     text-overflow: ellipsis;
-    //     white-space: nowrap;
-    // }
+    &.open {
+        .show-more-content {
+            max-height: none;
+        }
 
-    // &:before {
-    //     .link();
-    //     bottom: 0;
-    //     content: 'show more';
-    //     cursor: pointer;
-    //     position: absolute;
-    //     text-align: center;
-    //     text-transform: capitalize;
-    //     width: 100%;
-    // }
+        .show-more-link {
+            display: none;
+        }
+    }
+
+    .show-more-content {
+        max-height: 200px;
+        overflow: hidden;
+        transition: all @transitionSpeedTwo linear;
+    }
+
+    .show-more-link {
+        color: rgb(200, 200, 200);
+        cursor: pointer;
+        background: linear-gradient(rgba(255, 255, 255,0) 0%, rgba(255, 255, 255, 0.9) 40%, rgba(255, 255, 255, 1) 50%);
+        bottom: 0;
+        box-sizing: border-box;
+        content: 'show more';
+        font-weight: normal;
+        left: 0;
+        padding: @distThirtyTwo @distSix @distEight @distSix;
+        position: absolute;
+        text-align: center;
+        text-decoration: underline;
+        text-transform: capitalize;
+        width: 100%;
+    }
 }
 
 strike {
@@ -650,6 +670,12 @@ table {
     border-radius: 30px;
     margin: 0 auto @distEight auto;
     width: 100%;
+
+    &.actions-table {
+        th {
+            padding-right: @distFourtyEight;
+        }
+    }
 
     tr {
         background-color: transparent;
@@ -783,7 +809,12 @@ ul {
         overflow-x: scroll;
 
         li {
+            overflow: hidden;
             position: relative;
+
+            &:hover a, &:hover span, &:hover:before {
+                background-color: rgba(240, 240, 240, 1);
+            }
 
             &:first-of-type {
                 a, span {
@@ -796,12 +827,14 @@ ul {
                 a, span {
                     padding: @distFour @distEight;
                 }
+
             }
 
             a, span {
-                background-color: rgba(255, 255, 255, 1);
-                border: 1px solid @colorGrey;
-                border-radius: 10px 2px 2px 10px;
+                border-color: @colorGrey @colorGrey @colorGrey transparent;
+                border-style: solid;
+                border-width: 1px;
+                border-radius: 2px;
                 box-shadow: -3px 0 3px 0px rgba(0,0,0,.03);
                 display: inline-block;
                 font-size: 1.4rem;
@@ -809,17 +842,32 @@ ul {
                 margin: 0;
                 max-width: 16rem;
                 overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
                 padding: @distFour @distTwenty @distFour @distEight;
-
-                &:hover {
-                    background-color: rgba(240, 240, 240, 1);
-                }
+                text-overflow: ellipsis;
+                transition: all @transitionSpeedFast linear;
+                white-space: nowrap;
             }
 
             &+ li {
-                margin-left: -0.7rem;
+                margin-left: -@distSixteen;
+                padding-left: (@distEight) + (@distSix);
+
+                &:before {
+                    background-color: rgba(255, 255, 255, 1);
+                    border-color: @colorGrey;
+                    border-radius: 0 100% 0 0;
+                    border-style: solid;
+                    border-width: 0px 0px 1px 1px;
+                    content: '';
+                    height: 18px;
+                    left: 5px;
+                    position: absolute;
+                    top: 3px;
+                    transform: rotate(45deg);
+                    transform-origin: center;
+                    transition: all @transitionSpeedFast linear;
+                    width: 18px;
+                }
             }
         }
     }
@@ -903,10 +951,10 @@ footer {
         flex-direction: row;
         justify-content: center;
 
+        div.textarea-editor,
         input:not([type=submit]),
         select,
-        textarea,
-        div.textarea-editor {
+        textarea {
             margin: 0 0 0 @distSixteen;
             padding: @distEight;
             width: 60%;
@@ -915,6 +963,16 @@ footer {
         div.textarea-editor {
             padding: 0;
             div.textarea-editor-content {
+            }
+        }
+
+        .autocomplete-container {
+            margin: 0 0 0 @distSixteen;
+            width: 60%;
+
+            input.ui-autocomplete-input {
+                margin: 0;
+                width: 100%;
             }
         }
 
@@ -975,7 +1033,7 @@ footer {
 
 
 // Set a standard margin at the bottom for everything that needs it
-div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row, ul.breadcrumbs-trail {
+div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
     margin: 0 0 @distEight 0;
     padding-bottom: 0;
 }

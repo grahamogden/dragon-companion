@@ -6,7 +6,7 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
     $childCounter++;
     ?>
     <tr>
-        <th class="show-more-container">
+        <th>
             <?= $this->Html->link($childTimelineSegment->title, [
                 'action' => 'view',
                 $childTimelineSegment->id,
@@ -72,7 +72,7 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
         </th>
     </tr>
     <tr>
-        <td>
+        <td class="show-more-container">
             <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($childTimelineSegment->body)); ?></div>
         </td>
     </tr>

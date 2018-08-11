@@ -65,14 +65,27 @@ jQuery(document).ready(function($) {
 
     // backgroundSlider();
 
+    $('.menu-button').click(function(){
+        $(this).parent().toggleClass('open');
+        $(this).siblings('ul').slideToggle(transitionTime);
+    });
+
     $('#nav-menu-button').click(function(){
         $('header nav').toggleClass('open');
         $(this).toggleClass('open');
     });
 
-    $('.menu-button').click(function(){
-        $(this).parent().toggleClass('open');
-        $(this).siblings('ul').slideToggle(transitionTime);
+    $('.show-more-container').each(function() {
+        let height = parseInt($(this).css('height'));
+        if (height >= 200) {
+            $(this)
+                .addClass('active')
+                .append('<a class="show-more-link">show more</a>');
+        }
+    });
+
+    $('.show-more-link').on('click', function() {
+        $(this).parent('.show-more-container').toggleClass('open');
     });
 
     // let list = $('table tbody.sortable');
