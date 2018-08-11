@@ -213,7 +213,7 @@ Type::build('timestamp')
  * Debug Kit should not be installed on a production system
  */
 if (Configure::read('debug')) {
-    Plugin::load('DebugKit', ['bootstrap' => true]);
+    Plugin::load('DebugKit', ['bootstrap' => false]);
 }
 
 try {
@@ -223,6 +223,7 @@ try {
         'ini' => [
             'session.cookie_lifetime' => 259200,
         ],
+        'timeout' => 259200,
     ]);
 } catch(\Exception $e) {
     exit($e->getMessage() . "\n");
