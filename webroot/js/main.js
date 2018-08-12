@@ -80,12 +80,14 @@ jQuery(document).ready(function($) {
         if (height >= 200) {
             $(this)
                 .addClass('active')
-                .append('<a class="show-more-link">show more</a>');
+                .append('<a class="show-more-link"><span class="show">show</span><span class="hide">hide</span> more</a>');
         }
     });
 
     $('.show-more-link').on('click', function() {
-        $(this).parent('.show-more-container').toggleClass('open');
+        $(this)
+            .parent('.show-more-container')
+            .toggleClass('open');
     });
 
     // let list = $('table tbody.sortable');
