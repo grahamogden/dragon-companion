@@ -37,7 +37,7 @@
                         $this->Number->format($nonPlayableCharacter->age)
                     ); ?></td>
                     <td><?= h($nonPlayableCharacter->occupation); ?></td>
-                    <td class="actions">
+                    <td class="action-column">
                         <a class="menu-button action">. . .</a>
                         <ul class="menu">
                             <li><?= $this->Html->link('', [

@@ -1,17 +1,4 @@
 /*
- * Fonts
- */
-
-@import url(//fonts.googleapis.com/css?family=Open+Sans);
-// @import url(/../font/Open_Sans/OpenSans-Regular.ttf);
-// @font-face {
-//     font-family: 'Open Sans';
-//     font-style: normal;
-//     font-weight: 400;
-//     src: local('Open Sans Regular'), local('OpenSans-Regular') format('truetype')
-// }
-
-/*
  * Mixins
  */
 
@@ -110,7 +97,8 @@ html {
     color: rgb(15, 15, 15);
     font-family: 'Open Sans', Arial;
     font-size: 62.5%;
-    letter-spacing: 0.02rem;
+    letter-spacing: 0.01rem;
+    word-spacing: 0.05rem;
 }
 
 body {
@@ -255,12 +243,6 @@ a {
     top: 0;
     // width: 4rem;
 
-    &.horizontal {
-        ul {
-            flex-direction: row;
-        }
-    }
-
     &.open {
         background-color: rgba(255, 255, 255, 1);
         border-color: rgba(225, 225, 225, 1);
@@ -336,16 +318,15 @@ button, .button, input[type=submit], input[type=button] {
 }
 
 div.container {
-    border-width: 0 1px 0 1px;
-    border-style: solid;
-    border-color: @colorGrey;
     margin: 0 auto;
     max-width: @contentMaxWidth;
     padding: @distEight;
 }
 
 div.input {
-    align-items: center;
+    align-items: first baseline;
+    display: -webkit-flex;
+    display: -moz-flex;
     display: flex;
     flex-direction: column;
     justify-content: space-evently;
@@ -366,6 +347,10 @@ div.input {
         &:focus {
             box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.15);
         }
+
+        option {
+            white-space: normal;
+        }
     }
 
     div.textarea-editor {
@@ -377,13 +362,6 @@ div.input {
             border-bottom: 1px solid @colorGrey;
             display: block;
             width: 100%;
-
-            .intLink {
-                cursor: pointer;
-                height: 3rem;
-                padding: @distFour;
-                width: 3rem;
-            }
         }
 
         div.textarea-editor-content {
@@ -392,7 +370,7 @@ div.input {
             border-top-right-radius: 0;
             cursor: text;
             display: inline-block;
-            height: 350px;
+            height: 250px;
             line-height: 1.8rem;
             padding: @distEight;
             overflow-y: scroll;
@@ -403,6 +381,10 @@ div.input {
     label {
         padding: 0 0 @distFour 0;
         width: 100%;
+    }
+
+    select {
+        overflow-wrap: break-word;
     }
 
     textarea {
@@ -416,9 +398,8 @@ div.submit {
 }
 
 fieldset {
-    border-color: @colorGrey;
-    border-radius: 0 5px 0 0 ;
-    padding: @distEight;
+    border: none;
+    padding: 0;
     position: relative;
 }
 
@@ -465,8 +446,10 @@ header {
 
         h1 {
             font-size: 2rem;
+            font-weight: 600;
             line-height: 2.6rem;
-            margin: 0 0 0 0;
+            margin: 0;
+            padding: @distEight @distFour;
             text-align: left;
             text-shadow:
                 0 0 3px rgba(0, 0, 0, 1),
@@ -488,13 +471,13 @@ header {
             flex-direction: column;
             margin: 0;
             min-width: 50px;
-            padding: @distEight;
-            width: 50px;
+            padding: @distTwelve;
+            width: 70px;
 
             div {
                 background-color: rgba(255, 255, 255, 1);
                 display: block;
-                height: calc(100% / 6);
+                height: calc(100% / 7);
                 margin: 0;
                 transform-origin: center;
                 transition: all @transitionSpeedSlow ease;
@@ -502,8 +485,8 @@ header {
             }
 
             &.open .bar1 {
-                -webkit-transform: translate(0, 250%) rotate(-45deg);
-                transform: translate(0, 250%) rotate(-45deg);
+                -webkit-transform: translate(0, 13px) rotate(-45deg);
+                transform: translate(0, 13px) rotate(-45deg);
             }
 
             &.open .bar2 {
@@ -511,8 +494,8 @@ header {
             }
 
             &.open .bar3 {
-                -webkit-transform: translate(0, -250%) rotate(45deg);
-                transform: translate(0, -250%) rotate(45deg);
+                -webkit-transform: translate(0, -13px) rotate(45deg);
+                transform: translate(0, -13px) rotate(45deg);
             }
         }
     }
@@ -551,6 +534,7 @@ header {
                     font-weight: 400;
                     margin: 0;
                     padding: @distSixteen @distSixteen;
+                    text-align: center;
                     text-decoration: none;
 
                     &:hover {
@@ -564,6 +548,64 @@ header {
                 }
             }
         }
+    }
+}
+
+.icon {
+    background-clip: content-box;
+    background-image: url('/img/icon-spritesheet.png');
+    background-origin: content-box;
+    background-size: auto 6rem;
+    cursor: pointer;
+    display: inline-block;
+    height: 3rem;
+    margin: 0.5rem 0 0.5rem 0.5rem;
+    padding: 0;
+    width: 3rem;
+    user-select: none;
+
+    &.icon-bold { // 2
+        background-position: -6rem -3rem;
+    }
+
+    &.icon-inden { // 9
+        background-position: -24rem -3rem;
+    }
+
+    &.icon-ital { // 3
+        background-position: -9rem -3rem;
+    }
+
+    &.icon-ol { // 6
+        background-position: -18rem -3rem;
+    }
+
+    &.icon-redo { // 1
+        background-position: -3rem -3rem;
+    }
+
+    &.icon-strik { // 5
+        background-position: -15rem -3rem;
+    }
+
+    &.icon-unind { // 8
+        background-position: -27rem -3rem;
+    }
+
+    &.icon-ul { // 7
+        background-position: -21rem -3rem;
+    }
+
+    &.icon-under { // 4
+        background-position: -12rem -3rem;
+    }
+
+    &.icon-undo { // 0
+        background-position: 0 -3rem;
+    }
+
+    &:hover {
+        background-position-y: 0rem;
     }
 }
 
@@ -697,7 +739,6 @@ table {
     tr {
         background-color: transparent;
         border: none;
-        border-bottom: 1px solid rgba(210, 230, 255, 1);
 
         td, th {
             border: none;
@@ -737,8 +778,6 @@ table {
         }
 
         td {
-            vertical-align: top;
-
             a {
                 padding: 0;
             }
@@ -749,6 +788,9 @@ table {
         }
 
         &.add-item-row td {
+            border-color: rgba(210, 230, 255, 1);
+            border-style: solid;
+            border-width: 1px 0;
             padding: 0;
             text-align: center;
 
@@ -813,10 +855,6 @@ ul {
     padding: 0 @distEight 0 @distSixteen;
 
     &.breadcrumbs-trail {
-        border-width: 0 1px 0 1px;
-        border-style: solid;
-        border-color: @colorGrey;
-        display: flex;
         font-size: 0;
         line-height: 0;
         list-style-type: none;
@@ -824,8 +862,10 @@ ul {
         max-width: @contentMaxWidth;
         padding: 0;
         overflow-x: scroll;
+        white-space: nowrap;
 
         li {
+            display: inline-block;
             overflow: hidden;
             position: relative;
 
@@ -833,25 +873,18 @@ ul {
                 background-color: rgba(240, 240, 240, 1);
             }
 
-            &:first-of-type {
-                a, span {
-                    border-left: none;
-                    border-radius: 2px;
-                }
-            }
-
             &:last-of-type {
                 a, span {
-                    padding: @distFour @distEight;
+                    padding-right: @distEight;
                 }
 
             }
 
             a, span {
-                border-color: @colorGrey @colorGrey @colorGrey transparent;
+                border-color: @colorGrey;
                 border-style: solid;
-                border-width: 1px;
-                border-radius: 2px;
+                border-width: 0 1px 1px 1px;
+                border-radius: 0 0 2px 2px;
                 box-shadow: -3px 0 3px 0px rgba(0,0,0,.03);
                 display: inline-block;
                 font-size: 1.4rem;
@@ -859,7 +892,7 @@ ul {
                 margin: 0;
                 max-width: 16rem;
                 overflow: hidden;
-                padding: @distFour @distTwenty @distFour @distEight;
+                padding: @distSix @distTwenty @distSix @distEight;
                 text-overflow: ellipsis;
                 transition: all @transitionSpeedFast linear;
                 white-space: nowrap;
@@ -876,14 +909,14 @@ ul {
                     border-style: solid;
                     border-width: 0px 0px 1px 1px;
                     content: '';
-                    height: 18px;
+                    height: 21px;
                     left: 5px;
                     position: absolute;
                     top: 3px;
                     transform: rotate(45deg);
                     transform-origin: center;
                     transition: all @transitionSpeedFast linear;
-                    width: 18px;
+                    width: 21px;
                 }
             }
         }
@@ -975,7 +1008,7 @@ footer {
         textarea {
             margin: 0 0 0 @distSixteen;
             padding: @distEight;
-            width: 60%;
+            width: 90%;
         }
 
         div.textarea-editor {
@@ -986,7 +1019,7 @@ footer {
 
         .autocomplete-container {
             margin: 0 0 0 @distSixteen;
-            width: 60%;
+            width: 90%;
 
             input.ui-autocomplete-input {
                 margin: 0;
@@ -996,7 +1029,7 @@ footer {
 
         label {
             text-align: right;
-            width: 15%;
+            width: 10%;
         }
     }
 

@@ -11,7 +11,7 @@
         <thead>
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('title'); ?></th>
-                <th scope="col" class="actions">Actions</th>
+                <th scope="col" class="action-column">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +26,7 @@
                         h($tag->slug)); ?></p>
                     <p><?= h($tag->description) ?></p>
                 </td>
-                <td class="actions action-column">
+                <td class="action-column">
                     <div class="horizontal">
                         <ul>
                             <li>
