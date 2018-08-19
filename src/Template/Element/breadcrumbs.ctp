@@ -21,7 +21,9 @@ if (isset($breadcrumbs)) {
         ];
     }
 
-    $crumbs[$breadcrumbCounter - 1]['url'] = '';
+    if ($this->request->getParam('action') !== 'edit') {
+        $crumbs[$breadcrumbCounter - 1]['url'] = '';
+    }
 
     $this->Breadcrumbs->add($crumbs);
     $this->Breadcrumbs->setTemplates([

@@ -23,6 +23,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
             // echo $this->Form->input('tags._ids', ['class' => 'autocomplete autocomplete-tags']);
             // echo $this->Form->control('tag_string', ['type' => 'text']);
             echo $this->Form->control('tag_string', [
+                'label'  => 'Tag',
                 'type'   => 'autocomplete',
                 'source' => [
                     'controller' => 'TimelineSegments',
@@ -30,6 +31,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                 'val' => $timelineSegment->tag_string,
             ]);
             echo $this->Form->control('non_playable_character_string', [
+                'label'  => 'Non-Playable Characters',
                 'type'   => 'autocomplete',
                 'source' => [
                     'controller' => 'TimelineSegments',
