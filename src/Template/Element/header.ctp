@@ -1,6 +1,6 @@
     <header>
         <div id="top-bar">
-            <h1><?=$this->Html->link('Dragon Companion', ['controller' => '', 'action' => 'index'])?></h1>
+            <h1><?= $this->Html->link('Dragon Companion', ['controller' => '', 'action' => 'index']); ?></h1>
             <div id="nav-menu-button" class="menu-button">
                 <div class="bar1"></div>
                 <div class="bar2"></div>
@@ -14,21 +14,24 @@
             <!-- </ul> -->
             <ul class="nav-list">
                 <li>
-                    <?=$this->Html->link('Timeline', ['controller' => 'TimelineSegments', 'action' => 'index'])?>
+                    <?= $this->Html->link('Timeline', ['controller' => 'TimelineSegments', 'action' => 'index']); ?>
                 </li>
                 <li>
-                    <?=$this->Html->link('Tags', ['controller' => 'Tags', 'action' => 'index'])?>
+                    <?= $this->Html->link('Tags', ['controller' => 'Tags', 'action' => 'index']); ?>
                 </li>
                 <li>
-                    <?=$this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index'])?>
+                    <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index']); ?>
                 </li>
-                <li>
-                    <?php if ($this->request->getSession()->read('Auth.User')) { ?>
-                        <?=$this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout'])?>
-                    <?php } else { ?>
-                        <?=$this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login'])?>
-                    <?php } ?>
-                </li>
+                <?php if ($this->request->getSession()->read('Auth.User')) { ?>
+                    <li><a class="menu-button">Account</a>
+                        <ul class="menu">
+                            <li><label for="switch-color-scheme"><input type="checkbox" class="switch" id="switch-color-scheme" name="switch-color-scheme" />Switch Colour Scheme</label></li>
+                            <li><?= $this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout']); ?></li>
+                        </ul>
+                    </li>
+                <?php } else { ?>
+                    <li><?= $this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login']); ?></li>
+                <?php } ?>
             </ul>
         </nav>
         <div id="header-background"></div>
