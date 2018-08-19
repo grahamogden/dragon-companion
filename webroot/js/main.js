@@ -90,6 +90,28 @@ jQuery(document).ready(function($) {
             .toggleClass('open');
     });
 
+    var setDarkMode = function(isEnabled = false) {
+        if (isEnabled === true) {
+            console.log('enabling dark mode');
+            localStorage.darkMode = 'true';
+            $('body').addClass('dark-mode');
+            $('#switch-color-scheme').prop('checked', true);
+        } else {
+            console.log('disabling dark mode');
+            localStorage.removeItem('darkMode');
+            $('body').removeClass('dark-mode');
+            $('#switch-color-scheme').prop('checked', false);
+        }
+    }
+
+    $('#switch-color-scheme').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        console.log(isChecked);
+        setDarkMode(isChecked);
+    });
+
+    setDarkMode(localStorage.darkMode === 'true');
+
     // let list = $('table tbody.sortable');
     // list.sortable({
     //     cancel:'tr.add-item-row',

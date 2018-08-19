@@ -28,7 +28,7 @@
                 </td>
                 <td class="action-column">
                     <div class="horizontal">
-                        <ul>
+                        <ul class="actions">
                             <li>
                                 <?= $this->Html->link('', [
                                     'action' => 'edit',
