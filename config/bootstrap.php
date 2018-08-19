@@ -213,17 +213,17 @@ Type::build('timestamp')
  * Debug Kit should not be installed on a production system
  */
 if (Configure::read('debug')) {
-    Plugin::load('DebugKit', ['bootstrap' => true]);
+    Plugin::load('DebugKit', ['bootstrap' => false]);
 }
 
 try {
     Configure::write('Session', [
         'defaults' => 'php',
+        'cookie'   => 'dragon-companion',
         'ini' => [
-            // Invalidate the cookie after 30 minutes without visiting
-            // any page on the site.
-            'session.cookie_lifetime' => 1800
-        ]
+            'session.cookie_lifetime' => 259200,
+        ],
+        'timeout' => 259200,
     ]);
 } catch(\Exception $e) {
     exit($e->getMessage() . "\n");

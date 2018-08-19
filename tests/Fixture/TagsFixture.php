@@ -47,8 +47,8 @@ class TagsFixture extends TestFixture
                 'title' => 'Lorem ipsum dolor sit amet',
                 'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
                 'slug' => 'Lorem ipsum dolor sit amet',
-                'created' => '2018-07-28 11:54:09',
-                'modified' => '2018-07-28 11:54:09'
+                'created' => '2018-08-08 19:35:23',
+                'modified' => '2018-08-08 19:35:23'
             ],
         ];
         parent::init();

@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\TagsTable;
+use App\Model\Table\NonPlayableCharactersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\TagsTable Test Case
+ * App\Model\Table\NonPlayableCharactersTable Test Case
  */
-class TagsTableTest extends TestCase
+class NonPlayableCharactersTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\TagsTable
+     * @var \App\Model\Table\NonPlayableCharactersTable
      */
-    public $Tags;
+    public $NonPlayableCharacters;
 
     /**
      * Fixtures
@@ -24,7 +24,7 @@ class TagsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.tags',
+        'app.non_playable_characters',
         'app.timeline_segments'
     ];
 
@@ -36,8 +36,8 @@ class TagsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Tags') ? [] : ['className' => TagsTable::class];
-        $this->Tags = TableRegistry::getTableLocator()->get('Tags', $config);
+        $config = TableRegistry::getTableLocator()->exists('NonPlayableCharacters') ? [] : ['className' => NonPlayableCharactersTable::class];
+        $this->NonPlayableCharacters = TableRegistry::getTableLocator()->get('NonPlayableCharacters', $config);
     }
 
     /**
@@ -47,7 +47,7 @@ class TagsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Tags);
+        unset($this->NonPlayableCharacters);
 
         parent::tearDown();
     }
@@ -58,16 +58,6 @@ class TagsTableTest extends TestCase
      * @return void
      */
     public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test beforeSave method
-     *
-     * @return void
-     */
-    public function testBeforeSave()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

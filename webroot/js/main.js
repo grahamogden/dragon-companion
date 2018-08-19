@@ -65,14 +65,52 @@ jQuery(document).ready(function($) {
 
     // backgroundSlider();
 
+    $('.menu-button').click(function(){
+        $(this).parent().toggleClass('open');
+        $(this).siblings('ul').slideToggle(transitionTime);
+    });
+
     $('#nav-menu-button').click(function(){
         $('header nav').toggleClass('open');
         $(this).toggleClass('open');
     });
 
-    $('.menu-button').click(function(){
-        $(this).siblings('ul').slideToggle(transitionTime);
+    $('.show-more-container').each(function() {
+        let height = parseInt($(this).css('height'));
+        if (height >= 200) {
+            $(this)
+                .addClass('active')
+                .append('<a class="show-more-link"><span class="show">show</span><span class="hide">hide</span> more</a>');
+        }
     });
+
+    $('.show-more-link').on('click', function() {
+        $(this)
+            .parent('.show-more-container')
+            .toggleClass('open');
+    });
+
+    var setDarkMode = function(isEnabled = false) {
+        if (isEnabled === true) {
+            console.log('enabling dark mode');
+            localStorage.darkMode = 'true';
+            $('body').addClass('dark-mode');
+            $('#switch-color-scheme').prop('checked', true);
+        } else {
+            console.log('disabling dark mode');
+            localStorage.removeItem('darkMode');
+            $('body').removeClass('dark-mode');
+            $('#switch-color-scheme').prop('checked', false);
+        }
+    }
+
+    $('#switch-color-scheme').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        console.log(isChecked);
+        setDarkMode(isChecked);
+    });
+
+    setDarkMode(localStorage.darkMode === 'true');
 
     // let list = $('table tbody.sortable');
     // list.sortable({

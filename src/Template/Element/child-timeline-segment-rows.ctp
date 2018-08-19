@@ -6,15 +6,12 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
     $childCounter++;
     ?>
     <tr>
-        <td>
-            <p><?= $this->Html->link($childTimelineSegment->title, [
-                    'action' => 'view',
-                    $childTimelineSegment->id,
-                ]); ?></p>
-            <?= dbConverter::fromDatabase($this->Text->autoParagraph($childTimelineSegment->body)); ?>
-        </td>
-        <td class="actions action-column">
-            <div>
+        <th>
+            <?= $this->Html->link($childTimelineSegment->title, [
+                'action' => 'view',
+                $childTimelineSegment->id,
+            ]); ?>
+            <div class="actions">
                 <a class="menu-button action">. . .</a>
                 <ul class="menu">
                     <?= ($childCounter > 1
@@ -72,6 +69,11 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                     ]); ?></li>
                 </ul>
             </div>
+        </th>
+    </tr>
+    <tr>
+        <td class="show-more-container">
+            <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($childTimelineSegment->body)); ?></div>
         </td>
     </tr>
 <?php } // endforeach; ?>

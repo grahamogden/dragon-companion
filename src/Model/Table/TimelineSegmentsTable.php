@@ -55,21 +55,26 @@ class TimelineSegmentsTable extends Table
         ]);
 
         $this->belongsTo('ParentTimelineSegments', [
-            'className' => 'TimelineSegments',
+            'className'  => 'TimelineSegments',
             'foreignKey' => 'parent_id'
         ]);
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType'   => 'INNER'
         ]);
         $this->hasMany('ChildTimelineSegments', [
-            'className' => 'TimelineSegments',
+            'className'  => 'TimelineSegments',
             'foreignKey' => 'parent_id'
         ]);
         $this->belongsToMany('Tags', [
-            'foreignKey' => 'timeline_segment_id',
+            'foreignKey'       => 'timeline_segment_id',
             'targetForeignKey' => 'tag_id',
-            'joinTable' => 'tags_timeline_segments'
+            'joinTable'        => 'tags_timeline_segments'
+        ]);
+        $this->belongsToMany('NonPlayableCharacters', [
+            'foreignKey'       => 'timeline_segment_id',
+            'targetForeignKey' => 'non_playable_character_id',
+            'joinTable'        => 'non_playable_characters_timeline_segments'
         ]);
     }
 
@@ -111,6 +116,10 @@ class TimelineSegmentsTable extends Table
     {
         if ($entity->tag_string) {
             $entity->tags = $this->_buildTags($entity->tag_string);
+        }
+
+        if ($entity->non_playable_character_string) {
+            $entity->non_playable_characters = $this->_buildNonPlayableCharacters($entity->non_playable_character_string);
         }
 
         $sluggedTitle = Text::slug(strtolower($entity->title));
@@ -197,6 +206,45 @@ class TimelineSegmentsTable extends Table
         foreach ($newTags as $tag) {
             $out[] = $this->Tags->newEntity(['title' => $tag]);
         }
+
+        return $out;
+    }
+    
+    /**
+     * Description
+     * 
+     * @param type $nonPlayableCharacterString 
+     * @return type
+     */
+    protected function _buildNonPlayableCharacters($nonPlayableCharacterString)
+    {
+        // Trim nonPlayableCharacters
+        $newNonPlayableCharacters = array_map('trim', explode(',', $nonPlayableCharacterString));
+        // Remove all empty nonPlayableCharacters
+        $newNonPlayableCharacters = array_filter($newNonPlayableCharacters);
+        // Reduce duplicated nonPlayableCharacters
+        $newNonPlayableCharacters = array_unique($newNonPlayableCharacters);
+
+        $out = [];
+        $query = $this->NonPlayableCharacters->find()
+            ->where(['NonPlayableCharacters.name IN' => $newNonPlayableCharacters]);
+
+        // Remove existing nonPlayableCharacters from the list of new nonPlayableCharacters.
+        foreach ($query->extract('name') as $existing) {
+            $index = array_search($existing, $newNonPlayableCharacters);
+            if ($index !== false) {
+                unset($newNonPlayableCharacters[$index]);
+            }
+        }
+        // Add existing nonPlayableCharacters.
+        foreach ($query as $nonPlayableCharacter) {
+            $out[] = $nonPlayableCharacter;
+        }
+        // TODO: Return some kind of response that the user cannot create a character here
+        // Add new nonPlayableCharacters.
+        // foreach ($newNonPlayableCharacters as $nonPlayableCharacter) {
+        //     $out[] = $this->NonPlayableCharacters->newEntity(['name' => $nonPlayableCharacter]);
+        // }
 
         return $out;
     }

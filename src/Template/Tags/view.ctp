@@ -11,10 +11,6 @@
         ); ?></h3>
     <table class="vertical-table">
         <tr>
-            <th scope="row"><?= __('Title') ?></th>
-            <td><?= $tag->title; ?></td>
-        </tr>
-        <tr>
             <th scope="row"><?= __('Slug') ?></th>
             <td><?= $tag->slug; ?></td>
         </tr>

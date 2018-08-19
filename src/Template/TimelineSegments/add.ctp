@@ -21,10 +21,18 @@
                 'type' => 'textareaeditor',
             ]);
             echo $this->Form->control('tag_string', [
+                'label'  => 'Tag',
                 'type'   => 'autocomplete',
                 'source' => [
                     'controller' => 'TimelineSegments',
                     'action'     => 'getTags'],
+            ]);
+            echo $this->Form->control('non_playable_character_string', [
+                'label'  => 'Non-Playable Characters',
+                'type'   => 'autocomplete',
+                'source' => [
+                    'controller' => 'TimelineSegments',
+                    'action'     => 'getNonPlayableCharacters'],
             ]);
         ?>
     </fieldset>
