@@ -23,6 +23,7 @@ class DatabaseStringConverterBehavior extends Behavior
         'strong',
         'table',
         'tbody',
+        'hr',
         'li',
         'ol',
         'td',
@@ -37,16 +38,6 @@ class DatabaseStringConverterBehavior extends Behavior
 
     public static function toDatabase($string)
     {
-        // $string = str_replace(
-        //     [
-        //         '<',
-        //         '>',
-        //     ], [
-        //         '{{',
-        //         '}}',
-        //     ],
-        //     $string
-        // );
         $string = preg_replace(
             '/\<(\/?(' . implode('|', self::WHITE_LIST_HTML_TAGS) . '))(.*?)\>/m',
             '{{$1}}',
@@ -82,18 +73,8 @@ class DatabaseStringConverterBehavior extends Behavior
         EntityInterface $entity,
         ArrayObject $options
     ) {
-        // pr($entity->visibleProperties());
-        // foreach ($entity->visibleProperties() as $key => $value) {
-        //     pr($key);
-        //     pr($value);
-        //     if (isset($value) && is_string($value)) {
-        //         $entity->set($key, $this->toDatabase($value));
-        //     }
-        // }
         if ($entity->has('body')) {
             $entity->set('body', self::toDatabase($entity->get('body')));
         }
-        // pr($entity);
-        // exit;
     }
 }

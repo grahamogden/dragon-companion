@@ -169,11 +169,11 @@ class TimelineSegmentsController extends AppController
         $users = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
         $tags = $this->TimelineSegments->Tags->find('list', [
             'limit' => 200,
-            'order' => ['Tags.title' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
+            'order' => ['title' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
         ]);
         $nonPlayableCharacters = $this->TimelineSegments->NonPlayableCharacters->find('list', [
             'limit' => 200,
-            'order' => ['NonPlayableCharacters.name' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
+            'order' => ['name' => 'ASC'], // TODO: it appears as though the ordering is being ignored, need to look into this
         ]);
 
         $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
@@ -236,30 +236,64 @@ class TimelineSegmentsController extends AppController
         return $timelineSegment->user_id === $user['id'];
     }
 
-
-    public function moveUp(int $id = null)
+    /**
+     * Moves an item up or to the top
+     * 
+     * @param  int          $id ID of the item to move up
+     * @param  bool|boolean $top Determines if the item to should moved to top
+     * @return
+     */
+    public function moveUp(int $id, bool $top = false)
     {
         $this->request->allowMethod(['post', 'put']);
         $timelineSegment = $this->TimelineSegments->get($id);
-        if ($this->TimelineSegments->moveUp($timelineSegment)) {
-            $this->Flash->success('The timeline segment has been moved Up.');
+        if ($this->TimelineSegments->moveUp($timelineSegment, $top)) {
+            $this->Flash->success('The timeline segment has been moved up.');
         } else {
             $this->Flash->error('The timeline segment could not be moved up. Please, try again.');
         }
         return $this->redirect($this->referer(['action' => 'index']));
     }
 
+    /**
+     * Moves the item to the top - wraps around moveUp()
+     * 
+     * @param  int $id ID of item to move to bottom
+     * @return
+     */
+    public function moveUpTop(int $id)
+    {
+        return $this->moveUp($id, true);
+    }
 
-    public function moveDown(int $id = null)
+    /**
+     * Moves an item down or to the bottom
+     * 
+     * @param  int          $id     ID of the item to move down
+     * @param  bool|boolean $bottom Determines if the item to should moved to bottom
+     * @return
+     */
+    public function moveDown(int $id, bool $bottom = false)
     {
         $this->request->allowMethod(['post', 'put']);
         $timelineSegment = $this->TimelineSegments->get($id);
-        if ($this->TimelineSegments->moveDown($timelineSegment)) {
+        if ($this->TimelineSegments->moveDown($timelineSegment, $bottom)) {
             $this->Flash->success('The timeline segment has been moved down.');
         } else {
             $this->Flash->error('The timeline segment could not be moved down. Please, try again.');
         }
         return $this->redirect($this->referer(['action' => 'index']));
+    }
+
+    /**
+     * Moves the item to the bottom - wraps around moveDown()
+     * 
+     * @param  int $id ID of item to move to bottom
+     * @return
+     */
+    public function moveDownBottom(int $id)
+    {
+        return $this->moveDown($id, true);
     }
 
     /**

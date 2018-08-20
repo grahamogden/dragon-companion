@@ -16,8 +16,10 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
             echo $this->Form->control('title');
             // echo $this->Form->control('body');
             echo $this->Form->control('body', [
-                'type' => 'textareaeditor',
-                'val'  => dbConverter::fromDatabase($timelineSegment->body)
+                'type'         => 'textareaeditor',
+                'val'          => dbConverter::fromDatabase($timelineSegment->body),
+                'spellcheck'   => 'true',
+                'autoSaveName' => $timelineSegment->id
             ]);
             // echo $this->Form->control('tags._ids', ['options' => $tags]);
             // echo $this->Form->input('tags._ids', ['class' => 'autocomplete autocomplete-tags']);
@@ -28,7 +30,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                 'source' => [
                     'controller' => 'TimelineSegments',
                     'action'     => 'getTags'],
-                'val' => $timelineSegment->tag_string,
+                'val'        => $timelineSegment->tag_string,
+                'spellcheck' => 'true',
             ]);
             echo $this->Form->control('non_playable_character_string', [
                 'label'  => 'Non-Playable Characters',
@@ -36,7 +39,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                 'source' => [
                     'controller' => 'TimelineSegments',
                     'action'     => 'getNonPlayableCharacters'],
-                'val' => $timelineSegment->non_playable_character_string,
+                'val'        => $timelineSegment->non_playable_character_string,
+                'spellcheck' => 'true',
             ]);
         ?>
     </fieldset>

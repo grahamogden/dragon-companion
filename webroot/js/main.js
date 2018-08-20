@@ -93,12 +93,12 @@ jQuery(document).ready(function($) {
     var setDarkMode = function(isEnabled = false) {
         if (isEnabled === true) {
             console.log('enabling dark mode');
-            localStorage.darkMode = 'true';
+            window.localStorage.darkMode = 'true';
             $('body').addClass('dark-mode');
             $('#switch-color-scheme').prop('checked', true);
         } else {
             console.log('disabling dark mode');
-            localStorage.removeItem('darkMode');
+            window.localStorage.removeItem('darkMode');
             $('body').removeClass('dark-mode');
             $('#switch-color-scheme').prop('checked', false);
         }
@@ -110,7 +110,7 @@ jQuery(document).ready(function($) {
         setDarkMode(isChecked);
     });
 
-    setDarkMode(localStorage.darkMode === 'true');
+    setDarkMode(window.localStorage.darkMode === 'true');
 
     // let list = $('table tbody.sortable');
     // list.sortable({
@@ -123,6 +123,11 @@ jQuery(document).ready(function($) {
     //         });
     //     }
     // });
+    
+    let autoSave = function(content, name) {
+        console.log('autosave ' + name);
+        window.localStorage.setItem('autoSave-' + name, content);
+    }
 
     /**
      * Text areas START
@@ -144,6 +149,19 @@ jQuery(document).ready(function($) {
         $(this).on('keydown', function(event) {
             if (combinationKeyCheck(event)) {
                 formatDoc(textareaCombinationKeys[event.key].command);
+            } else {
+                autoSave($(this).html(), $(this).data('autoSaveName'));
+            }
+        });
+        // Bind on key up to autosave any content from the 
+        $(this).on('keyup', function(event) {
+            if (!combinationKeyCheck(event)) {
+                // autoSave($(this).html(), $(this).data('autoSaveName'));
+                clearInterval(autoSaveTimeout);
+                autoSaveTimeout = setInterval(function(content, name) {
+                    autoSave(content, name);
+                }, 3000);
+                // $('#' + $(this).data('for')).val($(this).html());
             }
         });
     });
@@ -167,17 +185,17 @@ jQuery(document).ready(function($) {
     $('form').on('submit', function() {
         $('.textarea-editor').each(function() {
             let editorContent = $(this).children('.textarea-editor-content');
-
-            $(editorContent).find('*:not(td)').filter(function(){
+            $(editorContent).find('*:not(td,hr)').filter(function(){
                 return $.trim(this.innerHTML) === ""
             }).remove();
 
             let html = editorContent
                 .html()
-                .replace(/\<br.*?\/?\>/g,'') // remove br tags
+                .replace(/(\<br.*?\/?\>|\n|\t)/g,'') // remove br tags
                 .replace(/((\>)\s*)/g,'$2')
                 .replace(/(\s*(\<))/g,'$1');
             $('#' + editorContent.data('for')).val(html);
+            window.localStorage.removeItem('autoSave-'+$(this).data('autoSaveName'));
         });
     });
 
@@ -188,7 +206,7 @@ jQuery(document).ready(function($) {
  * a key that we know the user might be trying to perform, such as B for bold
  */
 var combinationKeyCheck = function (event) {
-    console.log('ctrl|meta: ' + (event.ctrlKey || event.metaKey) + '; ' + event.key);
+    // console.log('ctrl|meta: ' + (event.ctrlKey || event.metaKey) + '; ' + event.key);
     return ((event.ctrlKey || event.metaKey)
         && textareaCombinationKeys[event.key] !== undefined
     ) ? true : false;
@@ -267,4 +285,10 @@ var setTextareaMode = function(setToSourceMode, elementid) {
         editorTextareas[elementId].contentEditable = true;
     }
     editorTextareas[elementId].focus();
+}
+
+var openAutoSave = function(name) {
+    let content = window.localStorage.getItem('autoSave-' + name)
+    $('#input-textarea-editor-' + name).val(content);
+    $('#' + name).html(content);
 }
