@@ -623,6 +623,14 @@ header {
 
     &.icon-full-screen {
         background-position-x: -36rem;
+
+        body.full-screen & {
+            background-position-y: -3rem;
+
+            &:hover {
+                background-position-y: 0;
+            }
+        }
     }
 
     &.icon-hr { // 10
@@ -645,7 +653,7 @@ header {
         background-position-x: -33rem;
 
         &.pulse {
-            animation: pulse linear 1s;
+            animation: pulseNotification ease-in-out 1s;
             animation-iteration-count: infinite;
         }
     }
@@ -1360,13 +1368,13 @@ div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
     }
 }
 
-@keyframes pulse {
+@keyframes pulseNotification {
     0% {
         box-shadow: 0 0 2px 0 rgba(90, 140, 255, 0.25);
     }
 
     50% {
-        box-shadow: 0 0 3px 0 rgba(90, 140, 255, 1);
+        box-shadow: 0 0 2px 1px rgba(90, 140, 255, 1);
     }
 
     100% {

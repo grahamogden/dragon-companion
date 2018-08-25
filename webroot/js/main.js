@@ -17,15 +17,10 @@ var textareaCombinationKeys = {
         preventDefault: false,
     }
 };
-var toolbarTags = [
-    'b',
-    'i',
-    'u',
-    'strike',
-];
 var editorTextareas = {};
 var backspaceIsPressed = false;
 var autoSaveTimeout;
+var autoSaveWaitTime = 1500;
 
 jQuery(document).ready(function($) {
     let backgroundImages = [
@@ -183,21 +178,11 @@ jQuery(document).ready(function($) {
                     }
                     autoSaveTimeout = setTimeout(function() {
                         autoSave(autoSaveName, autoSaveId, content)
-                    }, 3000);
+                    }, autoSaveWaitTime);
                 }
             })
             .on('focus', function(event) {
                 resizeTextareaEditor();
-            })
-            .on('keypress click', function(event) {
-                let node = $(window.getSelection().anchorNode.parentNode);
-                console.log(node);
-                let nodes = node.parentsUntil('.textarea-editor-content');
-                nodes.each(function() {
-                    if ($.inArray(node.tagName, toolbarTags)) {
-                        
-                    }
-            });
             });
 
 
