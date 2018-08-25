@@ -17,6 +17,12 @@ var textareaCombinationKeys = {
         preventDefault: false,
     }
 };
+var toolbarTags = [
+    'b',
+    'i',
+    'u',
+    'strike',
+];
 var editorTextareas = {};
 var backspaceIsPressed = false;
 var autoSaveTimeout;
@@ -182,6 +188,16 @@ jQuery(document).ready(function($) {
             })
             .on('focus', function(event) {
                 resizeTextareaEditor();
+            })
+            .on('keypress click', function(event) {
+                let node = $(window.getSelection().anchorNode.parentNode);
+                console.log(node);
+                let nodes = node.parentsUntil('.textarea-editor-content');
+                nodes.each(function() {
+                    if ($.inArray(node.tagName, toolbarTags)) {
+                        
+                    }
+            });
             });
 
 
