@@ -18,14 +18,20 @@ class TextareaEditorWidget implements WidgetInterface
     public function render(array $data, ContextInterface $context)
     {
         $data += [
-            'name'   => '',
-            'val' => '',
+            'name'         => '',
+            'val'          => '',
         ];
 
         return $this->_templates->format('textareaeditor', [
-            'name'   => $data['name'],
-            'value'  => $data['val'],
-            'attrs'  => $this->_templates->formatAttributes($data, ['name', 'source', 'val'])
+            'name'         => $data['name'],
+            'value'        => $data['val'],
+            'id'           => $data['id'],
+            'attrs'        => $this->_templates->formatAttributes($data, [
+                'name',
+                'source',
+                'val',
+                'id',
+            ])
         ]);
     }
 

@@ -126,14 +126,13 @@ jQuery(document).ready(function($) {
     //     }
     // });
     
-    let autoSave = function(name, content) {
-        console.log('autosave ' + name);
+    let autoSave = function(name, id, content) {
         let parent = $('#textarea-editor-' + name);
         parent.addClass('auto-saving');
         setTimeout(function() {
             $(parent).removeClass('auto-saving');
         }, 3000);
-        window.localStorage.setItem('autoSave-' + name, content);
+        window.localStorage.setItem('autoSave-' + name + '-' + id, content);
     }
 
     /**
@@ -150,40 +149,44 @@ jQuery(document).ready(function($) {
         // Grab the data from the hidden input and put it in the "content"
         let html = $('#' + $(this).data('for')).val();
         $(this).html(html);
-        // Get the Auto Save Name
-        let autoSaveName = $(this).data('autoSaveName');
+
+        // Get the autosave data
+        let editor       = $(this).parent('.textarea-editor');
+        let autoSaveName = editor.data('name');
+        let autoSaveId   = editor.data('id');
+        let autoSaveData = window.localStorage.getItem('autoSave-' + autoSaveName + '-' + autoSaveId);
+
         // init the text area editor
         initTextareaEditor($(this));
         // Bind on key down to allow users to use ctrl + B to bolden text, etc.
-        $(this).on('keydown', function(event) {
-            if (combinationKeyCheck(event)) {
-                formatDoc(textareaCombinationKeys[event.key].command);
-            // } else {
-            //     autoSave($(this).html(), $(this).data('autoSaveName'));
-            }
-        })
-        // Bind on key up to autosave any content from the 
-        .on('keyup', function(event) {
-            if (!combinationKeyCheck(event)) {
-                // autoSave($(this).html(), $(this).data('autoSaveName'));
-                let content = $(this).html();
-                if (autoSaveTimeout) {
-                    clearInterval(autoSaveTimeout);
+        $(this)
+            .on('keydown', function(event) {
+                if (combinationKeyCheck(event)) {
+                    formatDoc(textareaCombinationKeys[event.key].command);
+                // } else {
+                //     autoSave($(this).html(), $(this).data('autoSaveName'));
                 }
-                autoSaveTimeout = setTimeout(function() {
-                    autoSave(autoSaveName, content)
-                }, 3000);
-            }
-        })
-        .on('focus', function(event) {
-            resizeTextareaEditor();
-        });
+            })
+            // Bind on key up to autosave any content from the 
+            .on('keyup', function(event) {
+                if (!combinationKeyCheck(event)) {
+                    // autoSave($(this).html(), $(this).data('autoSaveName'));
+                    let content = $(this).html();
+                    if (autoSaveTimeout) {
+                        clearInterval(autoSaveTimeout);
+                    }
+                    autoSaveTimeout = setTimeout(function() {
+                        autoSave(autoSaveName, autoSaveId, content)
+                    }, 3000);
+                }
+            })
+            .on('focus', function(event) {
+                resizeTextareaEditor();
+            });
 
-        let autoSaveData = window.localStorage.getItem('autoSave-' + $(this).data('autoSaveName'));
 
         if (autoSaveData && $(this).html() !== autoSaveData) {
-            let editor = $(this).parent('.textarea-editor');
-            $(editor).find('.icon-restore').addClass('pulse');
+            editor.find('.icon-restore').addClass('pulse');
         }
     });
 
@@ -209,7 +212,10 @@ jQuery(document).ready(function($) {
      */
     $('form').on('submit', function() {
         $('.textarea-editor').each(function() {
+            let name          = $(this).data('name');
+            let id            = $(this).data('id');
             let editorContent = $(this).children('.textarea-editor-content');
+
             $(editorContent).find('*:not(td,hr)').filter(function(){
                 return $.trim(this.innerHTML) === ""
             }).remove();
@@ -219,9 +225,10 @@ jQuery(document).ready(function($) {
                 .replace(/(\<br.*?\/?\>|\n|\t)/g,'') // remove br tags
                 .replace(/((\>)\s*)/g,'$2')
                 .replace(/(\s*(\<))/g,'$1');
+            // Put the formatted string back into the hidden input
             $('#' + editorContent.data('for')).val(html);
-            console.log(editorContent.data('autoSaveName'));
-            window.localStorage.removeItem('autoSave-'+editorContent.data('autoSaveName'));
+
+            window.localStorage.removeItem('autoSave-' + name + '-' + id);
         });
     });
 
@@ -337,7 +344,6 @@ var setTextareaMode = function(setToSourceMode, elementid) {
 var fullscreen = function(id) {
     jQuery('#' + id).toggleClass('full-screen');
     jQuery('body').toggleClass('full-screen');
-    // jQuery('#' + id + ' .textarea-editor-toolbar').hide();
     resizeTextareaEditor(id);
 }
 
@@ -354,13 +360,16 @@ var resizeTextareaEditor = function(id) {
     }
 }
 
-var openAutoSave = function(name) {
-    let autoSaveData = window.localStorage.getItem('autoSave-' + name);
-
+var openAutoSave = function(name, id) {
+    // console.log(name + '-' + id);
+    let autoSaveData = window.localStorage.getItem('autoSave-' + name + '-' + id);
+    // console.log(autoSaveData);
     if (autoSaveData) {
-        let content = autoSaveData;
-        jQuery('#textarea-editor-input-' + name).val(content);
-        jQuery('#' + name).html(content);
+        console.log('Restoring auto save');
+        // Update the hidden input
+        jQuery('#textarea-editor-input-' + name).val(autoSaveData);
+        // Update the actual visible input
+        jQuery('#textarea-editor-content-' + name).html(autoSaveData);
         jQuery('#textarea-editor-' + name).find('.icon-restore').removeClass('pulse');
     }
 }

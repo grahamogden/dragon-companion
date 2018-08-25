@@ -19,6 +19,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                 'type'         => 'textareaeditor',
                 'val'          => dbConverter::fromDatabase($timelineSegment->body),
                 'spellcheck'   => 'true',
+                'id'   => $timelineSegment->id,
             ]);
             // echo $this->Form->control('tags._ids', ['options' => $tags]);
             // echo $this->Form->input('tags._ids', ['class' => 'autocomplete autocomplete-tags']);
