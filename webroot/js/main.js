@@ -18,6 +18,8 @@ var textareaCombinationKeys = {
     }
 };
 var editorTextareas = {};
+var backspaceIsPressed = false;
+var autoSaveTimeout;
 
 jQuery(document).ready(function($) {
     let backgroundImages = [
@@ -124,8 +126,13 @@ jQuery(document).ready(function($) {
     //     }
     // });
     
-    let autoSave = function(content, name) {
+    let autoSave = function(name, content) {
         console.log('autosave ' + name);
+        let parent = $('#textarea-editor-' + name);
+        parent.addClass('auto-saving');
+        setTimeout(function() {
+            $(parent).removeClass('auto-saving');
+        }, 3000);
         window.localStorage.setItem('autoSave-' + name, content);
     }
 
@@ -143,27 +150,41 @@ jQuery(document).ready(function($) {
         // Grab the data from the hidden input and put it in the "content"
         let html = $('#' + $(this).data('for')).val();
         $(this).html(html);
+        // Get the Auto Save Name
+        let autoSaveName = $(this).data('autoSaveName');
         // init the text area editor
         initTextareaEditor($(this));
         // Bind on key down to allow users to use ctrl + B to bolden text, etc.
         $(this).on('keydown', function(event) {
             if (combinationKeyCheck(event)) {
                 formatDoc(textareaCombinationKeys[event.key].command);
-            } else {
-                autoSave($(this).html(), $(this).data('autoSaveName'));
+            // } else {
+            //     autoSave($(this).html(), $(this).data('autoSaveName'));
             }
-        });
+        })
         // Bind on key up to autosave any content from the 
-        $(this).on('keyup', function(event) {
+        .on('keyup', function(event) {
             if (!combinationKeyCheck(event)) {
                 // autoSave($(this).html(), $(this).data('autoSaveName'));
-                clearInterval(autoSaveTimeout);
-                autoSaveTimeout = setInterval(function(content, name) {
-                    autoSave(content, name);
+                let content = $(this).html();
+                if (autoSaveTimeout) {
+                    clearInterval(autoSaveTimeout);
+                }
+                autoSaveTimeout = setTimeout(function() {
+                    autoSave(autoSaveName, content)
                 }, 3000);
-                // $('#' + $(this).data('for')).val($(this).html());
             }
+        })
+        .on('focus', function(event) {
+            resizeTextareaEditor();
         });
+
+        let autoSaveData = window.localStorage.getItem('autoSave-' + $(this).data('autoSaveName'));
+
+        if (autoSaveData && $(this).html() !== autoSaveData) {
+            let editor = $(this).parent('.textarea-editor');
+            $(editor).find('.icon-restore').addClass('pulse');
+        }
     });
 
     /**
@@ -171,8 +192,12 @@ jQuery(document).ready(function($) {
      * to bolden the text, we can prevent it from opening their bookmarks
      */
     $(document).on('keydown', function(event) {
+        // console.log(event.key);
         // Only prevent default if we have specified it in the combination keys list
-        if (combinationKeyCheck(event) && textareaCombinationKeys[event.key].preventDefault) {
+        if (
+            (combinationKeyCheck(event) && textareaCombinationKeys[event.key].preventDefault)
+            // || event.key.toLower() == 'backspace'
+        ) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -195,10 +220,32 @@ jQuery(document).ready(function($) {
                 .replace(/((\>)\s*)/g,'$2')
                 .replace(/(\s*(\<))/g,'$1');
             $('#' + editorContent.data('for')).val(html);
-            window.localStorage.removeItem('autoSave-'+$(this).data('autoSaveName'));
+            console.log(editorContent.data('autoSaveName'));
+            window.localStorage.removeItem('autoSave-'+editorContent.data('autoSaveName'));
         });
     });
 
+    $(window)
+        .keydown(function(event){
+            if (event.key.toLowerCase() == 'backspace') {
+                backspaceIsPressed = true;
+            }
+        })
+        .keyup(function(event){
+            if (event.key.toLowerCase() == 'backspace') {
+                backspaceIsPressed = false;
+            }
+        }).on('beforeunload', function() {
+            if (backspaceIsPressed) {
+                backspaceIsPressed = false
+                return 'It looks like you have been editing something, are you sure you want to contine? All unsaved changes will be lost!';
+            }
+        })
+        .resize(function() {
+            if ($('body').hasClass('full-screen')) {
+                resizeTextareaEditor();
+            }
+        });
 });
 
 /**
@@ -287,8 +334,33 @@ var setTextareaMode = function(setToSourceMode, elementid) {
     editorTextareas[elementId].focus();
 }
 
+var fullscreen = function(id) {
+    jQuery('#' + id).toggleClass('full-screen');
+    jQuery('body').toggleClass('full-screen');
+    // jQuery('#' + id + ' .textarea-editor-toolbar').hide();
+    resizeTextareaEditor(id);
+}
+
+var resizeTextareaEditor = function(id) {
+    let textareaEditor  = $('#' + id);
+    if ($('body').hasClass('full-screen')) {
+        let textareaToolbar = $(textareaEditor).children('.textarea-editor-toolbar');
+        let height          = textareaToolbar.height();
+        textareaEditor.css({
+            'padding-top'    : height + 'px'
+        });
+    } else {
+        textareaEditor.removeAttr('style');
+    }
+}
+
 var openAutoSave = function(name) {
-    let content = window.localStorage.getItem('autoSave-' + name)
-    $('#input-textarea-editor-' + name).val(content);
-    $('#' + name).html(content);
+    let autoSaveData = window.localStorage.getItem('autoSave-' + name);
+
+    if (autoSaveData) {
+        let content = autoSaveData;
+        jQuery('#textarea-editor-input-' + name).val(content);
+        jQuery('#' + name).html(content);
+        jQuery('#textarea-editor-' + name).find('.icon-restore').removeClass('pulse');
+    }
 }

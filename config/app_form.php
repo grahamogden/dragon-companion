@@ -64,11 +64,11 @@ return [
         } );
     </script>',
     'textareaeditor' => '
-    <div class="textarea-editor">
+    <div class="textarea-editor" id="textarea-editor-{{name}}">
         <div class="textarea-editor-toolbar">
-            <img class="icon icon-undo" title="Undo" onclick="formatDoc(\'undo\');"/><img class="icon icon-redo" title="Redo" onclick="formatDoc(\'redo\');"/><img class="icon icon-bold" title="Bold" onclick="formatDoc(\'bold\');"/><img class="icon icon-ital" title="Italic" onclick="formatDoc(\'italic\');"/><img class="icon icon-under" title="Underline" onclick="formatDoc(\'underline\');"/><img class="icon icon-strik" title="Strikethrough" onclick="formatDoc(\'strikeThrough\');"/><img class="icon icon-ol" title="Numbered list" onclick="formatDoc(\'insertorderedlist\');"/><img class="icon icon-ul" title="Dotted list" onclick="formatDoc(\'insertunorderedlist\');"/><img class="icon icon-unind" title="Delete indentation" onclick="formatDoc(\'outdent\');"/><img class="icon icon-inden" title="Add indentation" onclick="formatDoc(\'indent\');"/><img class="icon icon-hr" title="Add horizontal line rule" onclick="formatDoc(\'insertHorizontalRule\');"/><img class="icon icon-open" title="Open autosave" onclick="openAutoSave(\'{{name}}\');"/>
+            <img class="icon icon-undo" title="Undo" onclick="formatDoc(\'undo\');"/><img class="icon icon-redo" title="Redo" onclick="formatDoc(\'redo\');"/><img class="icon icon-bold" title="Bold" onclick="formatDoc(\'bold\');"/><img class="icon icon-italic" title="Italic" onclick="formatDoc(\'italic\');"/><img class="icon icon-underline" title="Underline" onclick="formatDoc(\'underline\');"/><img class="icon icon-strikethrough" title="Strikethrough" onclick="formatDoc(\'strikeThrough\');"/><img class="icon icon-ol" title="Numbered list" onclick="formatDoc(\'insertorderedlist\');"/><img class="icon icon-ul" title="Dotted list" onclick="formatDoc(\'insertunorderedlist\');"/><img class="icon icon-unindent" title="Delete indentation" onclick="formatDoc(\'outdent\');"/><img class="icon icon-indent" title="Add indentation" onclick="formatDoc(\'indent\');"/><img class="icon icon-hr" title="Add horizontal line rule" onclick="formatDoc(\'insertHorizontalRule\');"/><img class="icon icon-restore" title="Open autosave" onclick="openAutoSave(\'{{name}}\');"/><img class="icon icon-full-screen" title="Full screen" onclick="fullscreen(\'textarea-editor-{{name}}\');"/>
         </div>
-        <div contenteditable="true" class="textarea-editor-content" data-for="input-textarea-editor-{{name}}" data-auto-save-name="{{name}}" {{attrs}}></div>
-        <input id="input-textarea-editor-{{name}}" name="{{name}}" class="textarea-editor-value" type="hidden" value="{{value}}" />
+        <div contenteditable="true" class="textarea-editor-content" data-for="textarea-editor-input-{{name}}" data-auto-save-name="{{name}}" {{attrs}}></div>
+        <input id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor-value" type="hidden" value="{{value}}" />
     </div>',
 ];
