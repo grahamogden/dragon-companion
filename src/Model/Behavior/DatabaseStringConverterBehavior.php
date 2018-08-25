@@ -54,14 +54,9 @@ class DatabaseStringConverterBehavior extends Behavior
 
     public static function fromDatabase($string)
     {
-        $string = str_replace(
-            [
-                '{{',
-                '}}',
-            ], [
-                '<',
-                '>',
-            ],
+        $string = preg_replace(
+            '/\{\{(\/?(' . implode('|', self::WHITE_LIST_HTML_TAGS) . '))(.*?)\}\}/m',
+            '<$1>',
             $string
         );
         $string = addslashes($string);
