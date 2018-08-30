@@ -7,6 +7,7 @@
     </title>
 
     <link as="font" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i" rel="preload">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon/57.png" />
     <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon/72.png" />
