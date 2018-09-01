@@ -385,3 +385,7 @@ var openAutoSave = function(name, id) {
         jQuery('#textarea-editor-' + name).find('.icon-restore').removeClass('pulse');
     }
 }
+
+var switchAutoHeight = function(id) {
+    jQuery('#' + id).toggleClass('auto-height');
+}

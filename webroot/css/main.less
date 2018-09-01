@@ -8,10 +8,11 @@
 @buttonIconWidth:  3rem;
 
 @colorGrey:          rgba(200, 200, 200, 1);
+@colorBlue:          rgba( 40, 120, 250, 1);
 @colorBlueHighlight: rgba(240, 250, 255, 1);
 @colorLightBlue:     rgba(220, 230, 255, 1);
-@colorRed:           rgba(240, 70, 70, 1);
-@colorGreen:         rgba(35, 215, 75, 1);
+@colorRed:           rgba(240,  70,  70, 1);
+@colorGreen:         rgba( 35, 215,  75, 1);
 
 @contentMaxWidth: 120rem;
 
@@ -26,11 +27,12 @@
 @distForty:       4rem;   // 40px
 @distFourtyEight: 4.8rem; // 48px
 
+@fontSizeDefault: 1.6rem;
+
 @radiusOne:   0.2rem; // 2px
 @radiusSmall: 0.3rem; // 3px
 @radiusTwo:   0.5rem; // 5px
 @radiusThree: 1rem;   // 10px
-
 
 @transitionSpeedFast: 0.07s;
 @transitionSpeedTwo:  0.15s;
@@ -97,6 +99,15 @@
     }
 }
 
+.body-container-widths {
+    margin: 0 auto;
+    // max-width: @contentMaxWidth;
+    
+    @media all and (min-width: @widthMinDesktop) {
+        margin: 0 @distFourtyEight;
+    }
+}
+
 .border-radius(@radius: @radiusSmall) {
     border-radius: @radius;
 }
@@ -133,7 +144,7 @@ html {
 }
 
 body {
-    font-size: 1.6rem;
+    font-size: @fontSizeDefault;
     line-height: 2rem;
     background-color: rgba(250, 250, 250, 1);
     transition: background-color @transitionSpeedSlow linear;
@@ -392,8 +403,7 @@ button, .button,  {
 
 .container {
     .background-border-color(rgba(255, 255, 255, 1), true, false, true, true);
-    margin: 0 auto;
-    max-width: @contentMaxWidth;
+    .body-container-widths();
     padding: @distEight;
 }
 
@@ -465,15 +475,20 @@ header {
     }
 
     #top-bar {
+        background-color: transparent;
+        background-image: url('/img/apple-icon/144.png');
+        background-position: left center;
+        background-size: auto 100%;
         align-items: stretch;
         display: flex;
+        padding: 0 0 0 @distFourtyEight;
 
         h1 {
             font-size: 2rem;
             font-weight: 600;
             line-height: 2.6rem;
             margin: 0;
-            padding: @distEight @distEight;
+            padding: 0; //@distEight @distEight;
             text-align: left;
             text-shadow:
                 0 0 3px rgba(0, 0, 0, 1),
@@ -481,12 +496,8 @@ header {
             width: 100%;
 
             a {
-                background-color: transparent;
-                background-image: url('/img/apple-icon/144.png');
-                background-position: left center;
-                background-size: auto 100%;
                 color: rgb(255, 255, 255);
-                padding: @distFour 0 @distFour @distForty;
+                padding: @distTwelve @distSix;
                 text-decoration: none;
             }
         }
@@ -536,7 +547,7 @@ header {
         transform-origin: top;
         transition: all @transitionSpeedSlow ease;
         width: 100%;
-        z-index: 10;
+        z-index: 1;
 
         &.open {
             transform: scaleY(1);
@@ -628,40 +639,88 @@ header {
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
 
+    &.icon-auto-height {
+        background-position: -6rem -6rem;
+
+        &:hover {
+            background-position-y: -9rem;
+        }
+
+        .auto-height & {
+            background-position: -9rem -6rem;
+
+            &:hover {
+                background-position-y: -9rem;
+            }
+        }
+
+        .full-screen & {
+            display: none;
+        }
+    }
+
     &.icon-bold { // 2
-        background-position-x: -6rem;
+        background-position: -6rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-full-screen {
-        background-position-x: -36rem;
+        background-position: 0rem -6rem;
 
-        body.full-screen & {
-            background-position-y: -3rem;
+        &:hover {
+            background-position-y: -9rem;
+        }
+
+        .full-screen & {
+            background-position: -3rem -6rem;
 
             &:hover {
-                background-position-y: 0;
+                background-position-y: -9rem;
             }
         }
     }
 
     &.icon-hr { // 10
-        background-position-x: -30rem;
+        background-position: -30rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-indent { // 9
-        background-position-x: -24rem;
+        background-position: -24rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-italic { // 3
-        background-position-x: -9rem;
+        background-position: -9rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-ol { // 7
-        background-position-x: -21rem;
+        background-position: -21rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-restore { // 11
-        background-position-x: -33rem;
+        background-position: -33rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
 
         &.pulse {
             animation: pulseNotification ease-in-out 1s;
@@ -670,31 +729,51 @@ header {
     }
 
     &.icon-redo { // 1
-        background-position-x: -3rem;
+        background-position: -3rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-strikethrough { // 5
-        background-position-x: -15rem;
+        background-position: -15rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-unindent { // 8
-        background-position-x: -27rem;
+        background-position: -27rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-ul { // 6
-        background-position-x: -18rem;
+        background-position: -18rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-underline { // 4
-        background-position-x: -12rem;
+        background-position: -12rem 0rem;
+
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 
     &.icon-undo { // 0
-        background-position-x: 0;
-    }
+        background-position: 0rem 0rem;
 
-    &:hover {
-        background-position-y: -3rem;
+        &:hover {
+            background-position-y: -3rem;
+        }
     }
 }
 
@@ -728,7 +807,7 @@ input[type=submit], input[type=button] {
         &:focus {
             // animation: pulseInwards ease-in-out 4s;
             // animation-iteration-count: infinite;
-            .border-color(rgba(90, 140, 255, 1));
+            .border-color(@colorLightBlue);//rgba(90, 140, 255, 1));
             box-shadow: inset 0 0 2px 2px @colorLightBlue;
         }
 
@@ -738,11 +817,40 @@ input[type=submit], input[type=button] {
     }
 
     .textarea-editor {
+        font-size: 0;
         line-height: 0;
         overflow: hidden;
         padding: 0;
         position: relative;
         width: 100%;
+
+        &.auto-height .textarea-editor-content {
+            height: auto;
+        }
+
+        &.auto-height,
+        &.full-screen {
+            .textarea-editor-toolbar {
+                justify-content: space-evenly;
+                left: 0;
+                position: fixed;
+                transition: unset;
+                top: 0;
+                z-index: 2;
+
+                > * {
+                    margin: @distFour 3%;
+                }
+
+            }
+        }
+
+        &.auto-saving .textarea-editor-toolbar:after {
+            border-width: 0 0 1px 1px;
+            box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.3);
+            max-height: 100%;
+            padding: @distFour @distEight;
+        }
 
         &.full-screen {
             box-sizing: border-box;
@@ -765,20 +873,6 @@ input[type=submit], input[type=button] {
                 padding-bottom: @distFourtyEight;
                 // position: absolute; // Inline
                 resize: unset;
-            }
-
-            .textarea-editor-toolbar {
-                justify-content: space-evenly;
-                left: 0;
-                position: fixed;
-                transition: unset;
-                top: 0;
-                z-index: 2;
-
-                > * {
-                    margin: @distFour 3%;
-                }
-
             }
         }
 
@@ -806,19 +900,13 @@ input[type=submit], input[type=button] {
             }
         }
 
-        &.auto-saving .textarea-editor-toolbar:after {
-            border-width: 0 0 1px 1px;
-            box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.3);
-            max-height: 100%;
-            padding: @distFour @distEight;
-        }
-
         .textarea-editor-content {
             border: none;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
             cursor: text;
             display: inline-block;
+            font-size: @fontSizeDefault;
             height: 25rem;
             line-height: 2rem;
             padding: @distEight;
@@ -1152,11 +1240,10 @@ ul {
 
     &.breadcrumbs-trail {
         .background-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode);
+        .body-container-widths();
         font-size: 0;
         line-height: 0;
         list-style-type: none;
-        margin: 0 auto;
-        max-width: @contentMaxWidth;
         padding: 0;
         -webkit-overflow-scrolling: touch;
         overflow-x: scroll;
@@ -1270,6 +1357,7 @@ ul {
 @media all and (min-width: @widthMinTablet) {
     .input {
         .textarea-editor {
+            &.auto-height,
             &.full-screen {
                 .textarea-editor-content {
                 }
@@ -1334,12 +1422,11 @@ ul {
         }
 
         #top-bar {
-            padding: @distThirtyTwo @distThirtyTwo;
+            padding: @distThirtyTwo @distThirtyTwo @distThirtyTwo @distFourtyEight+@distFourtyEight+@distTwentyFour;
 
             h1 a {
                 font-size: 2.8rem;
                 line-height: 3.4rem;
-                padding: 0 0 0 @distFourtyEight;
             }
 
             #nav-menu-button {
