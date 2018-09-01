@@ -11,41 +11,65 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                 'action' => 'view',
                 $childTimelineSegment->id,
             ]); ?>
-            <div class="actions">
+            <div class="actions actions-fixed">
                 <a class="menu-button action">. . .</a>
                 <ul class="menu">
-                    <?= ($childCounter > 1
-                        ?
-                            sprintf('<li>%s</li>',
+                    <?php
+                        if ($childCounter > 1) {
+                            // Move to top
+                            echo sprintf('<li>%s</li>',
+                                $this->Form->postLink('', [
+                                        'action' => 'moveUpTop',
+                                        $childTimelineSegment->id,
+                                    ], [
+                                        'class' => [
+                                            'action',
+                                            'move-arrow',
+                                            'arrow-up',
+                                            'top',
+                                        ],
+                            ]));
+                            // Move up
+                            echo sprintf('<li>%s</li>',
                                 $this->Form->postLink('', [
                                         'action' => 'moveUp',
-                                        $childTimelineSegment->id
+                                        $childTimelineSegment->id,
                                     ], [
                                         'class' => [
                                             'action',
                                             'move-arrow',
-                                            'arrow-up'
+                                            'arrow-up',
                                         ],
-                            ]))
-                        :
-                            ''
-                    ); ?>
-                    <?= ($childCounter < count($childTimelineSegments)
-                        ?
-                            sprintf('<li>%s</li>',
+                            ]));
+                        }
+
+                        if ($childCounter < count($childTimelineSegments)) {
+                            // Move down
+                            echo sprintf('<li>%s</li>',
                                 $this->Form->postLink('', [
                                         'action' => 'moveDown',
-                                        $childTimelineSegment->id
+                                        $childTimelineSegment->id,
                                     ], [
                                         'class' => [
                                             'action',
                                             'move-arrow',
-                                            'arrow-down'
+                                            'arrow-down',
                                         ],
-                            ]))
-                        :
-                            ''
-                    ); ?>
+                            ]));
+                            // Move to bottom
+                            echo sprintf('<li>%s</li>',
+                                $this->Form->postLink('', [
+                                        'action' => 'moveDownBottom',
+                                        $childTimelineSegment->id,
+                                    ], [
+                                        'class' => [
+                                            'action',
+                                            'move-arrow',
+                                            'arrow-down',
+                                            'bottom',
+                                        ],
+                            ]));
+                    } ?>
                     <li><?= $this->Html->link('', [
                         'action' => 'edit',
                         $childTimelineSegment->id

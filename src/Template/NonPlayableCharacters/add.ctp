@@ -16,14 +16,38 @@
     <fieldset>
         <legend><?= __('Add Non Playable Character') ?></legend>
         <?php
-            echo $this->Form->control('name');
-            echo $this->Form->control('age');
-            echo $this->Form->control('appearance');
-            echo $this->Form->control('occupation');
-            echo $this->Form->control('personality');
-            echo $this->Form->control('history');
-            echo $this->Form->control('alignment');
-            echo $this->Form->control('notes');
+            echo $this->Form->control(
+                'name', [
+                    'spellcheck' => 'true']
+            );
+            echo $this->Form->control(
+                'age', [
+                    'spellcheck' => 'true']
+            );
+            echo $this->Form->control(
+                'appearance', [
+                    'spellcheck' => 'true']
+            );
+            echo $this->Form->control(
+                'occupation', [
+                    'spellcheck' => 'true']
+            );
+            echo $this->Form->control(
+                'personality', [
+                    'spellcheck' => 'true']
+            );
+            echo $this->Form->control(
+                'history', [
+                    'spellcheck' => 'true']
+            );
+            echo $this->Form->control(
+                'alignment', [
+                    'spellcheck' => 'true']
+            );
+            echo $this->Form->control(
+                'notes', [
+                    'spellcheck' => 'true']
+            );
         ?>
     </fieldset>
     <?= $this->Form->submit(__('Save')) ?>
