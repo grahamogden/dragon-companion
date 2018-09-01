@@ -15,15 +15,16 @@
 
 @contentMaxWidth: 120rem;
 
-@distFour:        0.4rem;                   // 4px
-@distSix:         @distFour + 0.2rem;       // 6px
-@distEight:       @distFour * 2;            // 8px
-@distTwelve:      @distSix * 2;             // 12px
-@distSixteen:     @distFour * 4;            // 16px
-@distTwenty:      @distEight + @distTwelve; // 20px
-@distTwentyFour:  @distTwelve * 2;          // 24px
-@distThirtyTwo:   @distSixteen * 2;         // 32px
-@distFourtyEight: @distTwentyFour * 2;      // 48px
+@distFour:        0.4rem; //  4px
+@distSix:         0.6rem; //  6px
+@distEight:       0.8rem; //  8px
+@distTwelve:      1.2rem; // 12px
+@distSixteen:     1.6rem; // 16px
+@distTwenty:      2rem;   // 20px
+@distTwentyFour:  2.4rem; // 24px
+@distThirtyTwo:   3.2rem; // 32px
+@distForty:       4rem;   // 40px
+@distFourtyEight: 4.8rem; // 48px
 
 @radiusOne:   0.2rem; // 2px
 @radiusSmall: 0.3rem; // 3px
@@ -39,14 +40,14 @@
 @widthMinTablet:  768px;
 @widthMinDesktop: 1024px;
 
-@transition: true;
+@transition:   true;
 @noTransition: false;
-@hover: true;
-@noHover: false;
-@darkMode: true;
-@noDarkMode: false;
-@textColor: true;
-@noTextColor: false;
+@hover:        true;
+@noHover:      false;
+@darkMode:     true;
+@noDarkMode:   false;
+@textColor:    true;
+@noTextColor:  false;
 
 /*
  * Reusable Classes
@@ -472,7 +473,7 @@ header {
             font-weight: 600;
             line-height: 2.6rem;
             margin: 0;
-            padding: @distEight @distFour;
+            padding: @distEight @distEight;
             text-align: left;
             text-shadow:
                 0 0 3px rgba(0, 0, 0, 1),
@@ -481,7 +482,11 @@ header {
 
             a {
                 background-color: transparent;
+                background-image: url('/img/apple-icon/144.png');
+                background-position: left center;
+                background-size: auto 100%;
                 color: rgb(255, 255, 255);
+                padding: @distFour 0 @distFour @distForty;
                 text-decoration: none;
             }
         }
@@ -508,8 +513,8 @@ header {
             }
 
             &.open .bar1 {
-                -webkit-transform: translate(0, 13px) rotate(-45deg);
-                transform: translate(0, 13px) rotate(-45deg);
+                -webkit-transform: translate(0, 11px) rotate(-45deg);
+                transform: translate(0, 11px) rotate(-45deg);
             }
 
             &.open .bar2 {
@@ -517,8 +522,8 @@ header {
             }
 
             &.open .bar3 {
-                -webkit-transform: translate(0, -13px) rotate(45deg);
-                transform: translate(0, -13px) rotate(45deg);
+                -webkit-transform: translate(0, -11px) rotate(45deg);
+                transform: translate(0, -11px) rotate(45deg);
             }
         }
     }
@@ -1333,6 +1338,8 @@ ul {
 
             h1 a {
                 font-size: 2.8rem;
+                line-height: 3.4rem;
+                padding: 0 0 0 @distFourtyEight;
             }
 
             #nav-menu-button {
