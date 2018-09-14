@@ -20,17 +20,20 @@ class TextareaEditorWidget implements WidgetInterface
         $data += [
             'name'         => '',
             'val'          => '',
+            'class'        => [],
         ];
 
         return $this->_templates->format('textareaeditor', [
             'name'         => $data['name'],
             'value'        => $data['val'],
             'id'           => $data['id'],
+            'class'      => implode(', ', $data['class']),
             'attrs'        => $this->_templates->formatAttributes($data, [
                 'name',
                 'source',
                 'val',
                 'id',
+                'class',
             ])
         ]);
     }
