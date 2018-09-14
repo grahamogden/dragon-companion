@@ -66,13 +66,25 @@
         transition: background-color @transitionSpeedSlow linear !important;
     }
 
+    &:hover when (@hoverVar = @hover) {
+        background-color: darken(@color, 10%);
+    }
+
     body.dark-mode & when (@darkModeVar = @darkMode) {
         & when (luma(@color) > 50%) {
             background-color: darken(@color, 80%);
+
+            &:hover when (@hoverVar = @hover) {
+                background-color: darken(@color, 70%);
+            }
         }
 
         & when (luma(@color) <= 50%) {
             background-color: lighten(@color, 80%);
+
+            &:hover when (@hoverVar = @hover) {
+                background-color: lighten(@color, 70%);
+            }
         }
 
         & when (@textColorVar = @textColor) {
@@ -81,22 +93,21 @@
     }
 }
 
-.border-color(@color, @darkModeVar: @noDarkMode) {
+.border-color(@color, @hoverVar: @noHover, @darkModeVar: @noDarkMode) {
     border-color: darken(@color, 20%);
 
     body.dark-mode & when (@darkModeVar = @darkMode) {
         border-color: (lighten((#fff - @color), 60%));
     }
+
+    &:hover when (@hoverVar = @hover) {
+        border-color: darken(@color, 10%);
+    }
 }
 
 .background-border-color(@color, @transitionVar: @noTransition, @hoverVar: @noHover, @darkModeVar: @noDarkMode, @textColorVar: @noTextColor) {
-    .background-color(@color, @transitionVar, @hover, @darkModeVar, @textColorVar);
-    .border-color(@color, @darkModeVar);
-
-    &:hover when (@hover = hover) {
-        .background-color(darken(@color, 10%));
-        .border-color(darken(@color, 10%));
-    }
+    .background-color(@color, @transitionVar, @hoverVar, @darkModeVar, @textColorVar);
+    .border-color(@color, @hoverVar, @darkModeVar);
 }
 
 .body-container-widths {
@@ -140,13 +151,19 @@ html {
     font-family: 'Open Sans', Arial;
     font-size: 62.5%;
     letter-spacing: 0.01rem;
+    min-height: 100%;
     word-spacing: 0.05rem;
 }
 
 body {
     font-size: @fontSizeDefault;
     line-height: 2rem;
+    background-attachment: fixed;
+    background-image: url('/img/bg.png');
+    background-position: bottom;
+    background-repeat: repeat-x;
     background-color: rgba(250, 250, 250, 1);
+    min-height: 100%;
     transition: background-color @transitionSpeedSlow linear;
 
     &.dark-mode {
@@ -374,7 +391,7 @@ a {
         z-index: 1;
 
         ul.ui-autocomplete {
-            background-color: rgba(255, 255, 255, 1);
+            background-color: transparent;
             border-width: 0 1px 1px 1px;
             border-style: solid;
             border-top: 3px double;
@@ -387,10 +404,12 @@ a {
             width: 100%;
 
             li .ui-menu-item-wrapper {
+                .background-color(rgba(255, 255, 255, 1), @noTransition, @hover, @darkMode);
+                cursor: pointer;
                 padding: @distEight;
 
                 &.ui-state-active {
-                    background-color: rgba(240, 240, 240, 1);
+                    // background-color: rgba(240, 240, 240, 1);
                 }
             }
         }
@@ -622,7 +641,7 @@ header {
     background-image: url('/img/icon-spritesheet.png');
     background-origin: border-box;
     background-position-y: 0rem;
-    background-size: 39rem auto;
+    background-size: 36rem auto;
     border: 1px solid rgba(150, 150, 150, 1);
     border-radius: 2px;
     cursor: pointer;
@@ -741,6 +760,14 @@ header {
 
         &:hover {
             background-position-y: -3rem;
+        }
+    }
+
+    &.icon-table {
+        background-position: -12rem -6rem;
+
+        &:hover {
+            background-position-y: -9rem;
         }
     }
 
@@ -1282,7 +1309,7 @@ ul {
             }
 
             &:before, a {
-                .background-border-color(rgba(255, 255, 255, 1), @transition, @hover, @darkMode);
+                .background-border-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode);
             }
 
             a, span {
@@ -1303,7 +1330,7 @@ ul {
             }
 
             span {
-                .background-border-color(rgba(255, 255, 255, 1), @transition, @hover, @darkMode, @textColor);
+                .background-border-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode, @textColor);
             }
         }
     }
