@@ -274,44 +274,44 @@ jQuery(document).ready(function($) {
     }
 
     $('.textarea-editor .icon-undo')
-        .click({cmd: 'undo'}, formatDoc);
+        .mousedown({cmd: 'undo'}, formatDoc);
     $('.textarea-editor .icon-redo')
-        .click({cmd: 'redo'}, formatDoc);
+        .mousedown({cmd: 'redo'}, formatDoc);
     $('.textarea-editor .icon-bold')
-        .click({cmd: 'bold'}, formatDoc);
+        .mousedown({cmd: 'bold'}, formatDoc);
     $('.textarea-editor .icon-italic')
-        .click({cmd: 'italic'}, formatDoc);
+        .mousedown({cmd: 'italic'}, formatDoc);
     $('.textarea-editor .icon-underline')
-        .click({cmd: 'underline'}, formatDoc);
+        .mousedown({cmd: 'underline'}, formatDoc);
     $('.textarea-editor .icon-strikethrough')
-        .click({cmd: 'strikeThrough'}, formatDoc);
+        .mousedown({cmd: 'strikeThrough'}, formatDoc);
     $('.textarea-editor .icon-ol')
-        .click({cmd: 'insertorderedlist'}, formatDoc);
+        .mousedown({cmd: 'insertorderedlist'}, formatDoc);
     $('.textarea-editor .icon-ul')
-        .click({cmd: 'insertunorderedlist'}, formatDoc);
+        .mousedown({cmd: 'insertunorderedlist'}, formatDoc);
     $('.textarea-editor .icon-unindent')
-        .click({cmd: 'outdent'}, formatDoc);
+        .mousedown({cmd: 'outdent'}, formatDoc);
     $('.textarea-editor .icon-indent')
-        .click({cmd: 'indent'}, formatDoc);
+        .mousedown({cmd: 'indent'}, formatDoc);
     $('.textarea-editor .icon-hr')
-        .click({cmd: 'insertHorizontalRule'}, formatDoc);
+        .mousedown({cmd: 'insertHorizontalRule'}, formatDoc);
     $('.textarea-editor .icon-table')
-        .click(function() {
+        .mousedown(function() {
             // insertTable('textarea-editor-content-' + $(this).closest('.textarea-editor').data('name'));
         });
     $('.textarea-editor .icon-restore')
-        .click(function() {
+        .mousedown(function() {
             let editor = $(this).closest('.textarea-editor');
             openAutoSave(
                 editor.data('name'),
                 editor.data('id'));
         });
     $('.textarea-editor .icon-full-screen')
-        .click(function() {
+        .mousedown(function() {
             fullscreen($('#textarea-editor-' + $(this).closest('.textarea-editor').data('name')));
         });
     $('.textarea-editor .icon-auto-height')
-        .click(function () {
+        .mousedown(function () {
             switchAutoHeight('textarea-editor-' + $(this).closest('.textarea-editor').data('name'));
         });
 
