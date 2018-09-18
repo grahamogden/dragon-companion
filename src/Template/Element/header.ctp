@@ -25,7 +25,7 @@
                 <?php if ($this->request->getSession()->read('Auth.User')) { ?>
                     <li><a class="menu-button">Account</a>
                         <ul class="menu">
-                            <li><label for="switch-color-scheme"><input type="checkbox" class="switch" id="switch-color-scheme" name="switch-color-scheme" />Switch Colour Scheme</label></li>
+                            <li><label for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode" />Switch Dark Mode</label></li>
                             <li><?= $this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout']); ?></li>
                         </ul>
                     </li>

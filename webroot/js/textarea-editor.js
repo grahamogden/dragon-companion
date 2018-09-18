@@ -82,7 +82,6 @@ jQuery(document).ready(function($) {
      * @return void
      */
     let formatDoc = function(event) {
-        console.log('formatDoc: ' + event.data.cmd);
         if (validateMode()) {
             document.execCommand(event.data.cmd, false, event.data.value);
         }
@@ -339,7 +338,7 @@ jQuery(document).ready(function($) {
         $(this)
             .on('keydown', function(event) {
                 if (combinationKeyCheck(event)) {
-                    formatDoc(textareaCombinationKeys[event.key].command);
+                    formatDoc({data: {cmd: textareaCombinationKeys[event.key].command}});
                 // } else {
                 //     autoSave($(this).html(), $(this).data('autoSaveName'));
                 }

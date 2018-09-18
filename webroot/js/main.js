@@ -71,21 +71,21 @@ jQuery(document).ready(function($) {
 
     let setDarkMode = function(isEnabled = false) {
         if (isEnabled === true) {
-            console.log('enabling dark mode');
+            // console.log('enabling dark mode');
             window.localStorage.darkMode = 'true';
             $('body').addClass('dark-mode');
-            $('#switch-color-scheme').prop('checked', true);
+            $('#switch-dark-mode').prop('checked', true);
         } else {
-            console.log('disabling dark mode');
+            // console.log('disabling dark mode');
             window.localStorage.removeItem('darkMode');
             $('body').removeClass('dark-mode');
-            $('#switch-color-scheme').prop('checked', false);
+            $('#switch-dark-mode').prop('checked', false);
         }
     }
 
-    $('#switch-color-scheme').on('change', function() {
+    $('#switch-dark-mode').on('change', function() {
         let isChecked = $(this).is(':checked');
-        console.log(isChecked);
+        // console.log(isChecked);
         setDarkMode(isChecked);
     });
 
