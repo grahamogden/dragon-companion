@@ -22,7 +22,7 @@ jQuery(document).ready(function($) {
      * Adds the animation CSS property and then sets the interval to replace the background image
      */
     let backgroundSlider = function() {
-        var backgroundHeader = $("#header-background");
+        let backgroundHeader = $("#header-background");
 
         backgroundHeader.css({
             animation: "move-header-mobile " + (intervalTime / 1000) + "s linear infinite",
@@ -30,7 +30,7 @@ jQuery(document).ready(function($) {
 
         // backgroundHeader.addClass('animate');
 
-        var url = '';
+        let url = '';
 
         setInterval(function() {
             let currentUrl = backgroundHeader.css('background-image');
@@ -69,7 +69,7 @@ jQuery(document).ready(function($) {
             .toggleClass('open');
     });
 
-    var setDarkMode = function(isEnabled = false) {
+    let setDarkMode = function(isEnabled = false) {
         if (isEnabled === true) {
             console.log('enabling dark mode');
             window.localStorage.darkMode = 'true';

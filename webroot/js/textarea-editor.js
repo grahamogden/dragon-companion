@@ -1,5 +1,5 @@
-var textAreaMode = false;
-var textareaCombinationKeys = {
+let textAreaMode = false;
+let textareaCombinationKeys = {
     b: {
         command: 'bold',
         preventDefault: true,
@@ -17,10 +17,32 @@ var textareaCombinationKeys = {
         preventDefault: false,
     }
 };
-var editorTextareas = {};
-var backspaceIsPressed = false;
-var autoSaveTimeout;
-var autoSaveWaitTime = 1500;
+let editorTextareas = {};
+let backspaceIsPressed = false;
+let autoSaveTimeout;
+let autoSaveWaitTime = 1500;
+
+/**
+ * Recalculates the margin of the top based on the size of the toolbar
+ * 
+ * @param  string id
+ * @param  string triggerClass - the class that determines how the toolbar should behave
+ * @return void
+ */
+let resizeTextareaEditor = function(editor, triggerClass) {
+    // console.log('resize');
+    let content = editor.find('.textarea-editor-content');
+    if (jQuery(editor).hasClass(triggerClass)) {
+        let toolbar        = editor.find('.textarea-editor-toolbar');
+        let toolbarHeight  = toolbar.height();
+        let newHeight      = window.innerHeight;
+        content.css({
+            'margin-top' : toolbarHeight + 'px',
+        });
+    } else {
+        content.removeAttr('style');
+    }
+}
 
 jQuery(document).ready(function($) {
 
@@ -144,7 +166,7 @@ jQuery(document).ready(function($) {
      * @return bool
      */
     let isOrContainsNode = function (ancestor, descendant) {
-        var node = descendant;
+        let node = descendant;
         while (node) {
             if (node === ancestor) return true;
             node = node.parentNode;
@@ -160,7 +182,7 @@ jQuery(document).ready(function($) {
      * @return void
      */
     let insertNodeOverSelection = function(node, containerNode) {
-        var sel, range, html;
+        let sel, range, html;
         if (window.getSelection) {
             sel = window.getSelection();
             if (sel.getRangeAt && sel.rangeCount) {
@@ -190,31 +212,11 @@ jQuery(document).ready(function($) {
      * @param  string id
      * @return void
      */
-    let fullscreen = function(id) {
-        jQuery('#' + id).toggleClass('full-screen');
-        jQuery('body').toggleClass('full-screen');
-        resizeTextareaEditor(id);
-    }
-
-    /**
-     * Recalculates the margin of the top based on the size of the toolbar
-     * 
-     * @param  string id
-     * @return void
-     */
-    let resizeTextareaEditor = function(id) {
-        let editor  = $('#' + id);
-        let content = editor.find('.textarea-editor-content');
-        if ($('body').hasClass('full-screen')) {
-            let toolbar        = editor.find('.textarea-editor-toolbar');
-            let toolbarHeight  = toolbar.height();
-            let newHeight      = window.innerHeight;
-            content.css({
-                'margin-top' : toolbarHeight + 'px',
-            });
-        } else {
-            content.removeAttr('style');
-        }
+    let fullscreen = function(editor) {
+        let triggerClass = 'full-screen';
+        $(editor).toggleClass(triggerClass);
+        $('body').toggleClass(triggerClass);
+        // resizeTextareaEditor(editor, triggerClass);
     }
     
     /**
@@ -251,7 +253,7 @@ jQuery(document).ready(function($) {
         let autoSaveData = window.localStorage.getItem('autoSave-' + name + '-' + id);
         // console.log(autoSaveData);
         if (autoSaveData) {
-            console.log('Restoring auto save');
+            // console.log('Restoring auto save');
             // Update the hidden input
             jQuery('#textarea-editor-input-' + name).val(autoSaveData);
             // Update the actual visible input
@@ -268,7 +270,7 @@ jQuery(document).ready(function($) {
      * @return void
      */
     let switchAutoHeight = function(id) {
-        console.log(id);
+        // console.log(id);
         jQuery('#' + id).toggleClass('auto-height');
     }
 
@@ -307,7 +309,7 @@ jQuery(document).ready(function($) {
         });
     $('.textarea-editor .icon-full-screen')
         .click(function() {
-            fullscreen('textarea-editor-' + $(this).closest('.textarea-editor').data('name'));
+            fullscreen($('#textarea-editor-' + $(this).closest('.textarea-editor').data('name')));
         });
     $('.textarea-editor .icon-auto-height')
         .click(function () {
@@ -355,9 +357,9 @@ jQuery(document).ready(function($) {
                     }, autoSaveWaitTime);
                 }
             })
-            .on('focus', function(event) {
+            /*.on('focus', function(event) {
                 resizeTextareaEditor();
-            });
+            })*/;
 
 
         if (autoSaveData && html !== autoSaveData) {
@@ -418,9 +420,9 @@ jQuery(document).ready(function($) {
                 return 'It looks like you have been editing something, are you sure you want to contine? All unsaved changes will be lost!';
             }
         })
-        .resize(function() {
+        /*.resize(function() {
             if ($('body').hasClass('full-screen')) {
                 resizeTextareaEditor();
             }
-        });
+        })*/;
 });
