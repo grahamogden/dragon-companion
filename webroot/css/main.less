@@ -26,6 +26,7 @@
 @distThirtyTwo:   3.2rem; // 32px
 @distForty:       4rem;   // 40px
 @distFourtyEight: 4.8rem; // 48px
+@distSixtyFour:   6.4rem; // 64px
 
 @fontSizeDefault: 1.6rem;
 
@@ -37,6 +38,7 @@
 @transitionSpeedFast: 0.07s;
 @transitionSpeedTwo:  0.15s;
 @transitionSpeedSlow: 0.3s;
+@transitionSpeedBackgroundColor: 0.2s;
 
 @widthMinMobile:  320px;
 @widthMinTablet:  768px;
@@ -63,16 +65,28 @@
     }
 
     & when (@transitionVar = @transition) {
-        transition: background-color @transitionSpeedSlow linear !important;
+        transition: background @transitionSpeedBackgroundColor ease-in-out !important;
+    }
+
+    &:hover when (@hoverVar = @hover) {
+        background-color: darken(@color, 10%);
     }
 
     body.dark-mode & when (@darkModeVar = @darkMode) {
         & when (luma(@color) > 50%) {
             background-color: darken(@color, 80%);
+
+            &:hover when (@hoverVar = @hover) {
+                background-color: darken(@color, 70%);
+            }
         }
 
         & when (luma(@color) <= 50%) {
             background-color: lighten(@color, 80%);
+
+            &:hover when (@hoverVar = @hover) {
+                background-color: lighten(@color, 70%);
+            }
         }
 
         & when (@textColorVar = @textColor) {
@@ -81,22 +95,21 @@
     }
 }
 
-.border-color(@color, @darkModeVar: @noDarkMode) {
+.border-color(@color, @hoverVar: @noHover, @darkModeVar: @noDarkMode) {
     border-color: darken(@color, 20%);
 
     body.dark-mode & when (@darkModeVar = @darkMode) {
         border-color: (lighten((#fff - @color), 60%));
     }
+
+    &:hover when (@hoverVar = @hover) {
+        border-color: darken(@color, 10%);
+    }
 }
 
 .background-border-color(@color, @transitionVar: @noTransition, @hoverVar: @noHover, @darkModeVar: @noDarkMode, @textColorVar: @noTextColor) {
-    .background-color(@color, @transitionVar, @hover, @darkModeVar, @textColorVar);
-    .border-color(@color, @darkModeVar);
-
-    &:hover when (@hover = hover) {
-        .background-color(darken(@color, 10%));
-        .border-color(darken(@color, 10%));
-    }
+    .background-color(@color, @transitionVar, @hoverVar, @darkModeVar, @textColorVar);
+    .border-color(@color, @hoverVar, @darkModeVar);
 }
 
 .body-container-widths {
@@ -140,14 +153,20 @@ html {
     font-family: 'Open Sans', Arial;
     font-size: 62.5%;
     letter-spacing: 0.01rem;
+    min-height: 100%;
     word-spacing: 0.05rem;
 }
 
 body {
     font-size: @fontSizeDefault;
     line-height: 2rem;
+    background-attachment: fixed;
+    background-image: url('/img/bg.png');
+    background-position: bottom;
+    background-repeat: repeat-x;
+    min-height: 100%;
     background-color: rgba(250, 250, 250, 1);
-    transition: background-color @transitionSpeedSlow linear;
+    transition: background @transitionSpeedBackgroundColor ease-in-out;
 
     &.dark-mode {
         background-color: rgba(30, 30, 30, 1);
@@ -183,7 +202,7 @@ a {
     display: inline-block;
     font-weight: 600;
     padding: @distSix;
-    transition: all @transitionSpeedFast linear;
+    // transition: all @transitionSpeedFast linear;
         text-decoration: none;
 
     &:hover {
@@ -208,19 +227,17 @@ a {
     padding: @distSix;
     text-align: center;
     top: 0;
-    z-index: 1;
 
     &.actions-fixed {
         position: absolute;
         right: 0;
-        transition: all @transitionSpeedFast linear;
+        transition: height @transitionSpeedFast linear;
     }
 
     &.open {
         .background-border-color(rgba(255, 255, 255, 1), @noTransition, @noHover, @darkMode);
-        // background-color: rgba(255, 255, 255, 1);
-        // border-color: rgba(225, 225, 225, 1);
         box-shadow: @boxShadowSmall;
+        z-index:1;
     }
 
     .action {
@@ -374,7 +391,7 @@ a {
         z-index: 1;
 
         ul.ui-autocomplete {
-            background-color: rgba(255, 255, 255, 1);
+            background-color: transparent;
             border-width: 0 1px 1px 1px;
             border-style: solid;
             border-top: 3px double;
@@ -387,10 +404,12 @@ a {
             width: 100%;
 
             li .ui-menu-item-wrapper {
+                .background-color(rgba(255, 255, 255, 1), @noTransition, @hover, @darkMode);
+                cursor: pointer;
                 padding: @distEight;
 
                 &.ui-state-active {
-                    background-color: rgba(240, 240, 240, 1);
+                    // background-color: rgba(240, 240, 240, 1);
                 }
             }
         }
@@ -547,7 +566,7 @@ header {
         transform-origin: top;
         transition: all @transitionSpeedSlow ease;
         width: 100%;
-        z-index: 1;
+        z-index: 5;
 
         &.open {
             transform: scaleY(1);
@@ -622,7 +641,7 @@ header {
     background-image: url('/img/icon-spritesheet.png');
     background-origin: border-box;
     background-position-y: 0rem;
-    background-size: 39rem auto;
+    background-size: 36rem auto;
     border: 1px solid rgba(150, 150, 150, 1);
     border-radius: 2px;
     cursor: pointer;
@@ -631,7 +650,6 @@ header {
     margin: 0.5rem 0 0.5rem 0.5rem;
     padding: 0;
     position: relative;
-    user-select: none;
     width: 3rem;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -744,6 +762,14 @@ header {
         }
     }
 
+    &.icon-table {
+        background-position: -12rem -6rem;
+
+        &:hover {
+            background-position-y: -9rem;
+        }
+    }
+
     &.icon-unindent { // 8
         background-position: -27rem 0rem;
 
@@ -801,14 +827,19 @@ input[type=submit], input[type=button] {
         .background-border-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode, @textColor);
         margin: 0;
         padding: @distEight;
-        transition: all @transitionSpeedFast linear;
+        // transition: all @transitionSpeedFast linear;
         width: 100%;
 
         &:focus {
             // animation: pulseInwards ease-in-out 4s;
             // animation-iteration-count: infinite;
-            .border-color(@colorLightBlue);//rgba(90, 140, 255, 1));
-            box-shadow: inset 0 0 2px 2px @colorLightBlue;
+            .border-color(@colorBlueHighlight);
+            // rgba(90, 140, 255, 1));
+            box-shadow: inset 0 0 2px 2px @colorBlueHighlight;
+        }
+
+        .dark-mode &:focus {
+            .border-color(@colorBlueHighlight)
         }
 
         option {
@@ -819,7 +850,7 @@ input[type=submit], input[type=button] {
     .textarea-editor {
         font-size: 0;
         line-height: 0;
-        overflow: hidden;
+        // overflow: hidden;
         padding: 0;
         position: relative;
         width: 100%;
@@ -831,16 +862,16 @@ input[type=submit], input[type=button] {
         &.auto-height,
         &.full-screen {
             .textarea-editor-toolbar {
-                justify-content: space-evenly;
-                left: 0;
-                position: fixed;
+                // left: 0;
+                position: sticky;
+                position: -webkit-sticky;
                 transition: unset;
                 top: 0;
                 z-index: 2;
 
-                > * {
-                    margin: @distFour 3%;
-                }
+                // > * {
+                //     margin: @distFour 3%;
+                // }
 
             }
         }
@@ -870,18 +901,23 @@ input[type=submit], input[type=button] {
                 overflow: visible;
                 // height: 100%; // Inline
                 // overflow-y: scroll; // Inline
-                padding-bottom: @distFourtyEight;
+                padding-bottom: @distSixtyFour;
                 // position: absolute; // Inline
                 resize: unset;
+            }
+
+            .textarea-editor-toolbar {
+                justify-content: space-evenly;
             }
         }
 
         .textarea-editor-toolbar {
-            .background-color(rgba(255, 255, 255, 1), @noTransition, @noHover, @darkMode);
+            .background-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode);
             border-bottom: 1px solid @colorGrey;
             display: flex;
             flex-wrap: wrap;
             position: relative;
+            top: 0;
             width: 100%;
 
             &:after {
@@ -897,7 +933,7 @@ input[type=submit], input[type=button] {
                 position: absolute;
                 right: 0;
                 top: 100%;
-                transition: all @transitionSpeedFast linear;
+                transition: max-height @transitionSpeedFast linear;
             }
         }
 
@@ -951,6 +987,12 @@ input[type=submit], input[type=button] {
 }
 
 label {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+
     > input[type=checkbox].switch {
         appearance: none;
         -moz-appearance: none;
@@ -972,7 +1014,7 @@ label {
             display: block;
             height: 1.6rem;
             position: absolute;
-            transition: all @transitionSpeedFast ease;
+            transition: transform @transitionSpeedFast ease;
             transform-origin: center;
             width: 1.6rem;
             z-index: 1;
@@ -1062,7 +1104,6 @@ p {
     .show-more-content {
         max-height: 20rem;
         overflow: hidden;
-        transition: all @transitionSpeedTwo linear;
     }
 
     .show-more-link {
@@ -1084,6 +1125,13 @@ p {
         body.dark-mode & {
             background: linear-gradient(rgba(51, 51, 51, 0) 0%, rgba(51, 51, 51, 0.9) 40%, rgba(51, 51, 51, 1) 50%);
         }
+    }
+}
+
+.sticky-element {
+    &.stuck {
+        position: fixed;
+        top: 0;
     }
 }
 
@@ -1171,7 +1219,6 @@ table {
             .background-color(rgba(235, 235, 250, 1), @transition, @noHover, @darkMode, @textColor);
 
             a {
-                display: block;
                 padding: @distTwelve;
             }
         }
@@ -1276,13 +1323,13 @@ ul {
                     top: 0.3rem;
                     transform: rotate(45deg);
                     transform-origin: center;
-                    transition: all @transitionSpeedFast linear;
+                    // transition: all @transitionSpeedFast linear;
                     width: 2.1rem;
                 }
             }
 
             &:before, a {
-                .background-border-color(rgba(255, 255, 255, 1), @transition, @hover, @darkMode);
+                .background-border-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode);
             }
 
             a, span {
@@ -1298,12 +1345,12 @@ ul {
                 overflow: hidden;
                 padding: @distSix @distTwenty @distSix @distEight;
                 text-overflow: ellipsis;
-                transition: all @transitionSpeedFast linear;
+                // transition: all @transitionSpeedFast linear;
                 white-space: nowrap;
             }
 
             span {
-                .background-border-color(rgba(255, 255, 255, 1), @transition, @hover, @darkMode, @textColor);
+                .background-border-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode, @textColor);
             }
         }
     }
@@ -1364,9 +1411,9 @@ ul {
                 }
                 .textarea-editor-toolbar {
                     justify-content: flex-start;
-                    > * {
-                        margin: 0.5rem 0.5rem;
-                    }
+                    // > * {
+                    //     margin: 0.5rem 0.5rem;
+                    // }
                 }
             }
         }

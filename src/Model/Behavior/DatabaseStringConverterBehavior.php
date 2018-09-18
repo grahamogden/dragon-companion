@@ -18,6 +18,7 @@ class DatabaseStringConverterBehavior extends Behavior
      * as "u" before it is targeted as "ul"
      */
     const WHITE_LIST_HTML_TAGS = [
+        'blockquote',
         'span',
         'strike',
         'strong',

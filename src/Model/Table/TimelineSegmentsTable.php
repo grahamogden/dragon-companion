@@ -116,10 +116,14 @@ class TimelineSegmentsTable extends Table
     {
         if ($entity->tag_string) {
             $entity->tags = $this->_buildTags($entity->tag_string);
+        } else {
+            $entity->tags = [];
         }
 
         if ($entity->non_playable_character_string) {
             $entity->non_playable_characters = $this->_buildNonPlayableCharacters($entity->non_playable_character_string);
+        } else {
+            $entity->non_playable_characters = [];
         }
 
         $sluggedTitle = Text::slug(strtolower($entity->title));

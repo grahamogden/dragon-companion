@@ -239,11 +239,12 @@ class TimelineSegmentsController extends AppController
     /**
      * Moves an item up or to the top
      * 
-     * @param  int          $id ID of the item to move up
-     * @param  bool|boolean $top Determines if the item to should moved to top
+     * @param  int      $id ID of the item to move up
+     * @param  bool|int $top Determines if the item to should moved to top - defaults to 1, as the integer
+     *                       is used for how many places to move the node by
      * @return
      */
-    public function moveUp(int $id, bool $top = false)
+    public function moveUp(int $id, $top = 1)
     {
         $this->request->allowMethod(['post', 'put']);
         $timelineSegment = $this->TimelineSegments->get($id);
@@ -269,11 +270,12 @@ class TimelineSegmentsController extends AppController
     /**
      * Moves an item down or to the bottom
      * 
-     * @param  int          $id     ID of the item to move down
-     * @param  bool|boolean $bottom Determines if the item to should moved to bottom
+     * @param  int      $id     ID of the item to move down
+     * @param  bool|int $bottom Determines if the item to should moved to bottom - defaults to 1, as the integer
+     *                          is used for how many places to move the node by
      * @return
      */
-    public function moveDown(int $id, bool $bottom = false)
+    public function moveDown(int $id, $bottom = 1)
     {
         $this->request->allowMethod(['post', 'put']);
         $timelineSegment = $this->TimelineSegments->get($id);
