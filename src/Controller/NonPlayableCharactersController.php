@@ -12,6 +12,13 @@ use App\Controller\AppController;
  */
 class NonPlayableCharactersController extends AppController
 {
+    const CONTROLLER_NAME = 'Non-Playable Characters';
+    public $paginate = [
+        'limit' => 50,
+        'order' => [
+            'NonPlayableCharacters.name' => 'asc'
+        ]
+    ];
 
     /**
      * Initialises the class, including authentication
@@ -37,6 +44,7 @@ class NonPlayableCharactersController extends AppController
         $nonPlayableCharacters = $this->paginate($this->NonPlayableCharacters);
 
         $this->set(compact('nonPlayableCharacters'));
+        $this->set('title', self::CONTROLLER_NAME);
     }
 
     /**
@@ -53,6 +61,11 @@ class NonPlayableCharactersController extends AppController
         ]);
 
         $this->set('nonPlayableCharacter', $nonPlayableCharacter);
+        $this->set('title', sprintf(
+            'View %s - %s',
+            self::CONTROLLER_NAME,
+            $nonPlayableCharacter->name
+        ));
     }
 
     /**
@@ -73,7 +86,13 @@ class NonPlayableCharactersController extends AppController
             $this->Flash->error(__('The non playable character could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
+
         $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
+        $this->set('title', sprintf(
+            'Add %s - %s',
+            self::CONTROLLER_NAME,
+            $nonPlayableCharacter->name
+        ));
     }
 
     /**
@@ -98,7 +117,13 @@ class NonPlayableCharactersController extends AppController
             $this->Flash->error(__('The non playable character could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
+
         $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
+        $this->set('title', sprintf(
+            'Edit %s - %s',
+            self::CONTROLLER_NAME,
+            $nonPlayableCharacter->name
+        ));
     }
 
     /**

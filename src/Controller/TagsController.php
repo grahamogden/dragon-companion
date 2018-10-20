@@ -12,6 +12,13 @@ use App\Controller\AppController;
  */
 class TagsController extends AppController
 {
+    const CONTROLLER_NAME = 'Tags';
+    public $paginate = [
+        'limit' => 50,
+        'order' => [
+            'Tags.title' => 'asc'
+        ]
+    ];
 
     /**
      * Initialises the class, including authentication
@@ -37,6 +44,7 @@ class TagsController extends AppController
         $tags = $this->paginate($this->Tags);
 
         $this->set(compact('tags'));
+        $this->set('title', self::CONTROLLER_NAME);
     }
 
     /**
@@ -53,6 +61,11 @@ class TagsController extends AppController
         ]);
 
         $this->set('tag', $tag);
+        $this->set('title', sprintf(
+            'View %s - %s',
+            self::CONTROLLER_NAME,
+            $tag->title
+        ));
     }
 
     /**
@@ -73,7 +86,13 @@ class TagsController extends AppController
             $this->Flash->error(__('The tag could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->Tags->TimelineSegments->find('list', ['limit' => 200]);
+
         $this->set(compact('tag', 'timelineSegments'));
+        $this->set('title', sprintf(
+            'Add %s - %s',
+            self::CONTROLLER_NAME,
+            $tag->title
+        ));
     }
 
     /**
@@ -98,7 +117,13 @@ class TagsController extends AppController
             $this->Flash->error(__('The tag could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->Tags->TimelineSegments->find('list', ['limit' => 200]);
+
         $this->set(compact('tag', 'timelineSegments'));
+        $this->set('title', sprintf(
+            'Edit %s - %s',
+            self::CONTROLLER_NAME,
+            $tag->title
+        ));
     }
 
     /**

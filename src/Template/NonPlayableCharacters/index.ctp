@@ -13,7 +13,7 @@
 </nav>
 <div class="nonPlayableCharacters index large-9 medium-8 columns content">
     <h3><?= __('Non Playable Characters') ?></h3>
-    <table cellpadding="0" cellspacing="0">
+    <table>
         <thead>
             <tr>
                 <th scope="col"><?= sprintf(
@@ -22,7 +22,7 @@
                     $this->Paginator->sort('age')
                 ); ?></th>
                 <th scope="col"><?= $this->Paginator->sort('occupation'); ?></th>
-                <th scope="col" class="action-column"><?= __('Actions'); ?></th>
+                <th scope="col"><?= __('Actions'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -31,16 +31,15 @@
                     <td><?= sprintf(
                         '%s (%s)',
                         $this->Html->link($nonPlayableCharacter->name, [
-                            'action' => 'view',
+                            'action' => 'edit',
                             $nonPlayableCharacter->id,
                         ]),
                         $this->Number->format($nonPlayableCharacter->age)
                     ); ?></td>
                     <td><?= h($nonPlayableCharacter->occupation); ?></td>
-                    <td class="action-column">
-                        <a class="menu-button action">. . .</a>
+                    <td class="actions">
                         <ul class="menu">
-                            <li><?= $this->Html->link('', [
+                            <!-- <li><?= $this->Html->link('', [
                                 'action' => 'edit',
                                 $nonPlayableCharacter->id
                             ], [
@@ -49,7 +48,7 @@
                                     'button',
                                     'edit-button'
                                 ],
-                            ]); ?></li>
+                            ]); ?></li> -->
                             <li><?= $this->Form->postLink('', [
                                 'action' => 'delete',
                                 $nonPlayableCharacter->id

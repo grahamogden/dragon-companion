@@ -26,6 +26,7 @@
                     <li><a class="menu-button">Account</a>
                         <ul class="menu">
                             <li><label for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode" />Switch Dark Mode</label></li>
+                            <li><!-- <label for="switch-header-slider"><input type="checkbox" class="switch" id="switch-header-slider" name="switch-header-slider" /> --><a href="#" id="switch-header-slider">Enable Header Slider</a><!-- </label> --></li>
                             <li><?= $this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout']); ?></li>
                         </ul>
                     </li>

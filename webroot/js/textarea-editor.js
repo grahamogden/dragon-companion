@@ -66,6 +66,7 @@ jQuery(document).ready(function($) {
      */
     let initTextareaEditor = function($element) {
         document.execCommand('defaultParagraphSeparator', false, 'p');
+        console.log('defaultParagraphSeparator');
         document.execCommand('enableInlineTableEditing', false, false);
         editorTextareas[$element.attr('id')] = $element;
         if (textAreaMode) {
@@ -217,6 +218,10 @@ jQuery(document).ready(function($) {
         $('body').toggleClass(triggerClass);
         // resizeTextareaEditor(editor, triggerClass);
     }
+
+    let toggleToolbar = function(editor) {
+        $(editor).toggleClass('show-toolbar');
+    }
     
     /**
      * Waits until the user has stopped interacting with editor
@@ -313,6 +318,10 @@ jQuery(document).ready(function($) {
     $('.textarea-editor .icon-auto-height')
         .mousedown(function () {
             switchAutoHeight('textarea-editor-' + $(this).closest('.textarea-editor').data('name'));
+        });
+    $('.textarea-editor .toggle-toolbar')
+        .mousedown(function() {
+            toggleToolbar($('#textarea-editor-' + $(this).closest('.textarea-editor').data('name')));
         });
 
     /**

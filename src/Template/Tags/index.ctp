@@ -20,7 +20,7 @@
                 <td>
                     <p><?= sprintf('%s - %s',
                         $this->Html->link($tag->title, [
-                            'action' => 'view',
+                            'action' => 'edit',
                             $tag->id,
                         ]),
                         h($tag->slug)); ?></p>
@@ -29,7 +29,7 @@
                 <td class="action-column">
                     <div class="horizontal">
                         <ul class="actions">
-                            <li>
+                            <!-- <li>
                                 <?= $this->Html->link('', [
                                     'action' => 'edit',
                                     $tag->id
@@ -40,7 +40,7 @@
                                         'edit-button'
                                     ],
                                 ]); ?>
-                            </li>
+                            </li> -->
                             <li>
                                 <?= $this->Form->postLink('', [
                                     'action' => 'delete',

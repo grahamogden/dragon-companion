@@ -4,17 +4,10 @@
  * @var \App\Model\Entity\NonPlayableCharacter $nonPlayableCharacter
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Non Playable Characters'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Timeline Segments'), ['controller' => 'TimelineSegments', 'action' => 'index']) ?></li>
-    </ul>
-</nav>
+<h1>Add Non Playable Character</h1>
 <div class="nonPlayableCharacters form large-9 medium-8 columns content">
     <?= $this->Form->create($nonPlayableCharacter) ?>
     <fieldset>
-        <legend><?= __('Add Non Playable Character') ?></legend>
         <?php
             echo $this->Form->control(
                 'name', [

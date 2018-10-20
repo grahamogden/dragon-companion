@@ -1,14 +1,14 @@
 <?php
 if (isset($breadcrumbs)) {
-    // $crumbs[] = [
-    //     'title' => 'Timeline Segments',
-    //     'url'   => [
-    //         'controller' => 'timeline-segments',
-    //         'action'     => 'index',
-    //     ]
-    // ];
+    $crumbs[] = [
+        'title' => 'Timeline Segments',
+        'url'   => [
+            'controller' => 'timeline-segments',
+            'action'     => 'index',
+        ],
+    ];
+    $breadcrumbCounter = 1; // Must be set to 0 if there is no origin crumb (the above one)
 
-    $breadcrumbCounter = 0;
     foreach($breadcrumbs as $breadcrumb) {
         $breadcrumbCounter++;
         $crumbs[] = [

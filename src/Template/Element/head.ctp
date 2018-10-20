@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <!-- <link rel="apple-touch-icon" href="/img/icons/HTML5_Badge_64.png" /> -->
     <title>
-        <?= $this->fetch('title') ?>
+        <?= trim('Dragon Companion - ' . ($title ?? $this->fetch('title'))) ?>
     </title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i" rel="stylesheet">

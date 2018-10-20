@@ -12,6 +12,7 @@ use App\Controller\AppController;
  */
 class TimelineSegmentsController extends AppController
 {
+    const CONTROLLER_NAME = 'Timeline Segments';
     /** @var Session */
     private $session;
 
@@ -60,6 +61,7 @@ class TimelineSegmentsController extends AppController
         $timelineSegments = $this->paginate($timelineSegments);
 
         $this->set('childTimelineSegments', $timelineSegments);
+        $this->set('title', self::CONTROLLER_NAME);
     }
 
     /**
@@ -94,6 +96,11 @@ class TimelineSegmentsController extends AppController
 
         $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
         $this->set('timelineSegment', $timelineSegment);
+        $this->set('title', sprintf(
+            'View %s - %s',
+            self::CONTROLLER_NAME,
+            $timelineSegment->title
+        ));
     }
 
     /**
@@ -137,6 +144,11 @@ class TimelineSegmentsController extends AppController
             'users',
             'tags',
             'nonPlayableCharacters'
+        ));
+        $this->set('title', sprintf(
+            'Add %s - %s',
+            self::CONTROLLER_NAME,
+            $timelineSegment->title
         ));
     }
 
@@ -183,6 +195,11 @@ class TimelineSegmentsController extends AppController
             'users',
             'tags',
             'nonPlayableCharacters'
+        ));
+        $this->set('title', sprintf(
+            'Edit %s - %s',
+            self::CONTROLLER_NAME,
+            $timelineSegment->title
         ));
     }
 
