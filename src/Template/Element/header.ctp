@@ -22,17 +22,17 @@
                 <li>
                     <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index']); ?>
                 </li>
-                <?php if ($this->request->getSession()->read('Auth.User')) { ?>
-                    <li><a class="menu-button">Account</a>
-                        <ul class="menu">
-                            <li><label for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode" />Switch Dark Mode</label></li>
-                            <li><!-- <label for="switch-header-slider"><input type="checkbox" class="switch" id="switch-header-slider" name="switch-header-slider" /> --><a href="#" id="switch-header-slider">Enable Header Slider</a><!-- </label> --></li>
+                <li><a class="menu-button">Account</a>
+                    <ul class="menu">
+                        <li><label for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode" />Switch Dark Mode</label></li>
+                        <li><!-- <label for="switch-header-slider"><input type="checkbox" class="switch" id="switch-header-slider" name="switch-header-slider" /> --><a href="#" id="switch-header-slider">Enable Header Slider</a><!-- </label> --></li>
+                        <?php if ($this->request->getSession()->read('Auth.User')) { ?>
                             <li><?= $this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout']); ?></li>
-                        </ul>
-                    </li>
-                <?php } else { ?>
-                    <li><?= $this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login']); ?></li>
-                <?php } ?>
+                        <?php } else { ?>
+                            <li><?= $this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login']); ?></li>
+                        <?php } ?>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <div id="header-background"></div>
