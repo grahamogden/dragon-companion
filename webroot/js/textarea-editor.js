@@ -44,6 +44,14 @@ let resizeTextareaEditor = function(editor, triggerClass) {
     }
 }
 
+let cleanHtml = function(html) {
+    return html
+        .replace(/(\<\/?(br|span).*?\/?\>|\n|\t)/g,'') // Remove br tags, new lines and tabs
+        .replace(/\&nbsp\;/g, ' ');
+        // .replace(/((\>)\s{2,})/g,'$2') // Remove spaces after tags
+        // .replace(/(\s{2,}(\<))/g,'$1'); // Remove spaces before tags
+}
+
 jQuery(document).ready(function($) {
 
     /**
@@ -84,6 +92,8 @@ jQuery(document).ready(function($) {
      */
     let formatDoc = function(event) {
         if (validateMode()) {
+            // console.log(event.data.cmd);
+            // console.log(event.data.value);
             document.execCommand(event.data.cmd, false, event.data.value);
         }
     }
@@ -135,28 +145,90 @@ jQuery(document).ready(function($) {
     }
 
     /**
-     * TODO: get inserting tables working
+     * Inserts a table into the textarea editor
+     * 
+     * @param  string id
+     * @param  int    rowMax
+     * @param  int    colMax
+     * @return void
+     */
+    let insertTable = function (id, rowMax = 2, colMax = 2) {
+        let i    = 0;
+        let rows  = '';
+        for (i = 0; i < rowMax; i++) {
+            let j = 0;
+            rows += '<tr>';
+            for (j = 0; j < colMax; j++) {
+                rows += '<td></td>';
+            }
+            rows += '</tr>';
+        }
+        table = '<table>' + rows + '</table>';
+        // Add the table
+        formatDoc({data:{
+            cmd: 'insertHTML',
+            value: table
+        }});
+    }
+
+    /**
+     * TODO: get inserting row working
      * 
      * @param  string id
      * @return void
      */
-    let insertTable = function (id) {
-        let i    = 0;
-        let rows  = '';
-        for (i = 0; i < 3; i++) {
-            let j = 0;
-            rows += '<tr>';
-            for (j = 0; j < 4; j++) {
-                rows += '<td></td>'
-            }
-            rows += '</tr>';
+    let insertRow = function (id) {
+        let parentNode    = window.getSelection().getRangeAt(0).commonAncestorContainer;
+        let tableBodyNode = getParentNode(parentNode, 'table');
+        let columnCount   = getParentNode(parentNode, 'tbody').children.length;
+        let cellString    = '';
+        let newRow = document.createElement('tr');
+        for (i = 0; i < columnCount; i++) {
+            newRow.appendChild(document.createElement('td'));
         }
-        table = document.createElement('table');
-        table.innerHTML = rows;
-        console.log(table);
-        console.log('table added');
         
-        insertNodeOverSelection(table, document.getElementById(id));
+        tableBodyNode.appendChild(newRow);
+        let table = getParentNode(tableBodyNode);
+
+        html = table.outerHTML;
+        html = cleanHtml(html);
+        console.log(html);
+        $(table).remove();
+
+        formatDoc({data:{
+            cmd: 'insertHTML',
+            value: html
+        }});
+    }
+
+    /**
+     * TODO: get inserting column working
+     * 
+     * @param  string id
+     * @return void
+     */
+    let insertColumn = function (id) {
+        let parentNode    = window.getSelection().getRangeAt(0).commonAncestorContainer;
+        let tableBodyNode = getParentNode(parentNode, 'table');
+        let rows          = tableBodyNode.children;
+
+        $(tableBodyNode).children('tr').each(function() {
+            // let rowNode = getParentNode(parentNode, 'tbody');
+            // rowNode.appendChild();
+            console.log($(this));
+            $(this).append($('<td></td>'));
+        });
+        // let table = getParentNode(tableBodyNode);
+
+        // html = table.outerHTML;
+        // html = cleanHtml(html);
+        // console.log(html);
+        // $(table).remove();
+
+        // formatDoc({data:{
+        //     cmd: 'insertHTML',
+        //     value: html
+        // }});
     }
 
     /**
@@ -206,6 +278,26 @@ jQuery(document).ready(function($) {
     }
 
     /**
+     * Finds the highest level node 
+     * @param  node currentNode
+     * @param  node parentTargetNodeName
+     * @return node
+     */
+    let getParentNode = function(currentNode, parentTargetNodeName = false) {
+        let parentNode = currentNode.parentElement;
+        // console.log(parentNode);
+        // console.log($(parentNode));
+        if ((parentTargetNodeName && 
+                parentNode.nodeName.toLowerCase() == parentTargetNodeName.toLowerCase())
+            || $(parentNode).hasClass('textarea-editor-content')
+        ) {
+            return currentNode;
+        } else {
+            return getParentNode(parentNode, parentTargetNodeName);
+        }
+    }
+
+    /**
      * Adds the full-screen class to the textarea editor and body,
      * so that the correct styles can be applied
      * 
@@ -216,7 +308,6 @@ jQuery(document).ready(function($) {
         let triggerClass = 'full-screen';
         $(editor).toggleClass(triggerClass);
         $('body').toggleClass(triggerClass);
-        // resizeTextareaEditor(editor, triggerClass);
     }
 
     let toggleToolbar = function(editor) {
@@ -302,7 +393,15 @@ jQuery(document).ready(function($) {
         .mousedown({cmd: 'insertHorizontalRule'}, formatDoc);
     $('.textarea-editor .icon-table')
         .mousedown(function() {
-            // insertTable('textarea-editor-content-' + $(this).closest('.textarea-editor').data('name'));
+            insertTable('textarea-editor-content-' + $(this).closest('.textarea-editor').data('name'));
+        });
+    $('.textarea-editor .icon-add-row')
+        .mousedown(function() {
+            insertRow('textarea-editor-content-' + $(this).closest('.textarea-editor').data('name'));
+        });
+    $('.textarea-editor .icon-add-column')
+        .mousedown(function() {
+            insertColumn('textarea-editor-content-' + $(this).closest('.textarea-editor').data('name'));
         });
     $('.textarea-editor .icon-restore')
         .mousedown(function() {
@@ -389,12 +488,8 @@ jQuery(document).ready(function($) {
                 return $.trim(this.innerHTML) === ""
             }).remove(); // Remove empty tags, which aren't TDs or HRs
 
-            let html = editorContent
-                .html()
-                .replace(/(\<\/?(br|span).*?\/?\>|\n|\t)/g,'') // Remove br tags, new lines and tabs
-                .replace(/\&nbsp\;/g, ' '); // Replace non-break spaces with normal spaces
-                // .replace(/((\>)\s{2,})/g,'$2') // Remove spaces after tags
-                // .replace(/(\s{2,}(\<))/g,'$1'); // Remove spaces before tags
+            let html = cleanHtml(editorContent
+                .html()); // Replace non-break spaces with normal spaces
             // Put the formatted string back into the hidden input
             $('#' + editorContent.data('for')).val(html);
 

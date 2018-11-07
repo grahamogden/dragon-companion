@@ -681,6 +681,26 @@ header {
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
 
+    &.icon-add-column {
+        // background-position: -12rem -6rem;
+        background-position: -(8 * @buttonIconWidth) -(2 * @buttonIconHeight);
+
+        &:hover {
+            // background-position-y: -9rem;
+            background-position-y: -(3 * @buttonIconHeight);
+        }
+    }
+
+    &.icon-add-row {
+        // background-position: -12rem -6rem;
+        background-position: -(5 * @buttonIconWidth) -(2 * @buttonIconHeight);
+
+        &:hover {
+            // background-position-y: -9rem;
+            background-position-y: -(3 * @buttonIconHeight);
+        }
+    }
+
     &.icon-auto-height {
         // background-position: -6rem -6rem;
         background-position: -(2 * @buttonIconWidth) -(2 * @buttonIconHeight);
@@ -920,6 +940,7 @@ input[type=submit], input[type=button] {
 
         &.auto-height .textarea-editor-content {
             height: auto;
+            overflow-y: visible;
         }
 
         &.auto-height,
