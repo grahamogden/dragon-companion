@@ -1,6 +1,5 @@
 jQuery(document).ready(function($) {
-    let backgroundImages = [
-        {
+    let backgroundImages = [{
             url: 'battle_of_four_armies_by_jasonengle.jpg',
             slcted: true,
         },
@@ -26,8 +25,8 @@ jQuery(document).ready(function($) {
         },
     ];
 
-    let transitionTime = 200;  // 0.2 seconds
-    let intervalTime   = 7000; // 7 seconds
+    let transitionTime = 200; // 0.2 seconds
+    let intervalTime = 7000; // 7 seconds
 
     let setCookie = function(key, value) {
         var expires = new Date();
@@ -45,7 +44,7 @@ jQuery(document).ready(function($) {
      * 
      * @return object
      */
-    let getSelectedBackgroundImage = function () {
+    let getSelectedBackgroundImage = function() {
         let image;
         let i = 0;
         do {
@@ -60,15 +59,15 @@ jQuery(document).ready(function($) {
      * 
      * @return string
      */
-    let pickBackgroundImage = function () {
+    let pickBackgroundImage = function() {
         let image;
         do {
-            image = backgroundImages[Math.floor(Math.random()*backgroundImages.length)]
+            image = backgroundImages[Math.floor(Math.random() * backgroundImages.length)]
         } while (image.slcted === true);
 
-        currentImage        = getSelectedBackgroundImage();
+        currentImage = getSelectedBackgroundImage();
         currentImage.slcted = false;
-        image.slcted        = true;
+        image.slcted = true;
 
         return image.url;
     }
@@ -124,7 +123,7 @@ jQuery(document).ready(function($) {
      * Toggles the header images to animate - currently only enables, cannot disable
      * @return void
      */
-    let toggleHeaderSlider = function () {
+    let toggleHeaderSlider = function() {
         backgroundSlider();
     }
 
@@ -137,17 +136,17 @@ jQuery(document).ready(function($) {
     // });
 
     // backgroundSlider();
-    
+
     $('#switch-header-slider').click(function() {
         toggleHeaderSlider();
     });
 
-    $('.menu-button').click(function(){
+    $('.menu-button').click(function() {
         $(this).parent().toggleClass('open');
         $(this).siblings('ul').slideToggle(transitionTime);
     });
 
-    $('#nav-menu-button').click(function(){
+    $('#nav-menu-button').click(function() {
         $('header nav').toggleClass('open');
         $(this).toggleClass('open');
     });
@@ -186,7 +185,7 @@ jQuery(document).ready(function($) {
     //         });
     //     }
     // });
-    
+
     // tinymce.init({
     //     menubar: false,
     //     plugins: [
@@ -199,6 +198,22 @@ jQuery(document).ready(function($) {
     //     statusbar: false,
     //     toolbar: 'undo redo | styleselect | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview | restoredraft code'
     // });
-    
-    
+
+    var options = {
+        debug: 'error',
+        // modules: {
+        //     toolbar: '#toolbar'
+        // },
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, false] }],
+                ['bold', 'italic', 'underline'],
+                ['image', 'code-block']
+            ]
+        },
+        scrollingContainer: '.textarea-editor-2-content',
+        placeholder: 'Compose an epic...',
+        theme: 'snow'
+    };
+    var editor = new Quill('.textarea-editor-2-content', options); // First matching element will be used
 });

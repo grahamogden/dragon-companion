@@ -59,14 +59,16 @@ return [
             });
         } );
     </script>',
-    // 'textareaeditor' => '<textarea id="{{id}}" class="textarea-editor {{class}}" {{attrs}}>{{value}}</textarea>',
-    'textareaeditor' => '
-    <div id="textarea-editor-{{name}}" class="textarea-editor" data-name="{{name}}" data-id="{{id}}">
-        <div class="textarea-editor-toolbar sticky-element">
-            <i class="icon icon-undo" title="Undo"></i><i class="icon icon-redo" title="Redo"></i><i class="icon icon-bold" title="Bold"></i><i class="icon icon-italic" title="Italic"></i><i class="icon icon-underline" title="Underline"></i><i class="icon icon-strikethrough" title="Strikethrough"></i><i class="icon icon-ol" title="Numbered list"></i><i class="icon icon-ul" title="Dotted list"></i><i class="icon icon-unindent" title="Delete indentation"></i><i class="icon icon-indent" title="Add indentation"></i><i class="icon icon-hr" title="Add horizontal line rule"></i><i class="icon icon-table" title="Add table"></i><i class="icon icon-add-row"></i><i class="icon icon-add-column"></i><i class="icon icon-restore" title="Open autosave"></i><i class="icon icon-full-screen" title="Full screen"></i><i class="icon icon-auto-height" title="Auto height"></i>
-            <a class="toggle-toolbar"></a>
-        </div>
-        <div contenteditable="true" id="textarea-editor-content-{{name}}" class="textarea-editor-content" data-for="textarea-editor-input-{{name}}" {{attrs}}></div>
-        <input id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor-value" type="hidden" value="{{value}}" />
-    </div>',
+    'textareaeditor' => '<div id="textarea-editor-{{name}}" class="textarea-editor-2" data-name="{{name}}" data-id="{{id}}">
+            <div id="textarea-editor-content-{{name}}" class="textarea-editor-2-content" data-for="textarea-editor-input-{{name}}" {{attrs}}>{{value}}</div>
+        </div>',
+    // 'textareaeditor' => '
+    // <div id="textarea-editor-{{name}}" class="textarea-editor" data-name="{{name}}" data-id="{{id}}">
+    //     <div class="textarea-editor-toolbar sticky-element">
+    //         <i class="icon icon-undo" title="Undo"></i><i class="icon icon-redo" title="Redo"></i><i class="icon icon-bold" title="Bold"></i><i class="icon icon-italic" title="Italic"></i><i class="icon icon-underline" title="Underline"></i><i class="icon icon-strikethrough" title="Strikethrough"></i><i class="icon icon-ol" title="Numbered list"></i><i class="icon icon-ul" title="Dotted list"></i><i class="icon icon-unindent" title="Delete indentation"></i><i class="icon icon-indent" title="Add indentation"></i><i class="icon icon-hr" title="Add horizontal line rule"></i><i class="icon icon-table" title="Add table"></i><i class="icon icon-add-row"></i><i class="icon icon-add-column"></i><i class="icon icon-restore" title="Open autosave"></i><i class="icon icon-full-screen" title="Full screen"></i><i class="icon icon-auto-height" title="Auto height"></i>
+    //         <a class="toggle-toolbar"></a>
+    //     </div>
+    //     <div contenteditable="true" id="textarea-editor-content-{{name}}" class="textarea-editor-content" data-for="textarea-editor-input-{{name}}" {{attrs}}></div>
+    //     <input id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor-value" type="hidden" value="{{value}}" />
+    // </div>',
 ];

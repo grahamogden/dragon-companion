@@ -21,7 +21,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                 'type'         => 'textareaeditor',
                 'val'          => dbConverter::fromDatabase($timelineSegment->body),
                 'spellcheck'   => 'true',
-                'id'   => $timelineSegment->id,
+                'id'           => $timelineSegment->id,
             ]);
             echo $this->Form->control('tag_string', [
                 'label'  => 'Tag',
