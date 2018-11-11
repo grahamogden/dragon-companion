@@ -439,7 +439,9 @@ div.error {
     & > select,
     & > textarea,
     & > .textarea-editor,
-    & > .textarea-editor > .textarea-editor-content {
+    & > .textarea-editor-2,
+    & > .textarea-editor > .textarea-editor-content,
+    & > .textarea-editor-2 > .textarea-editor-2-content {
         .border-color(@colorRed);
     }
 
@@ -899,7 +901,9 @@ input[type=submit], input[type=button] {
     select,
     textarea,
     .textarea-editor,
-    .textarea-editor-content {
+    .textarea-editor-2,
+    .textarea-editor-content,
+    .textarea-editor-2-content {
         border: 1px solid;
         .border-radius();
         .background-border-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode, @textColor);
@@ -927,11 +931,13 @@ input[type=submit], input[type=button] {
     }
 
     textarea,
-    .textarea-editor-content {
+    .textarea-editor-content,
+    .textarea-editor-2-content {
         resize: vertical;
     }
 
-    .textarea-editor {
+    .textarea-editor,
+    .textarea-editor-2 {
         font-size: 0;
         line-height: 0;
         padding: 0;
@@ -945,7 +951,8 @@ input[type=submit], input[type=button] {
 
         &.auto-height,
         &.full-screen {
-            .textarea-editor-toolbar {
+            .textarea-editor-toolbar,
+            .textarea-editor-2-toolbar {
                 box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.15);
                 position: sticky;
                 position: -webkit-sticky;
@@ -973,14 +980,16 @@ input[type=submit], input[type=button] {
             z-index: 10;
             -webkit-overflow-scrolling: touch;
 
-            .textarea-editor-content {
+            .textarea-editor-content,
+            .textarea-editor-2-content {
                 height: auto;
                 min-height: 100%;
                 overflow: visible;
                 padding-bottom: @distSixtyFour;
             }
 
-            .textarea-editor-toolbar {
+            .textarea-editor-toolbar,
+            .textarea-editor-2-toolbar {
                 transform: translate(0, -100%);
                 transition: transform linear @transitionSpeedFast 0s;
 
@@ -989,7 +998,8 @@ input[type=submit], input[type=button] {
                 }
             }
 
-            &.show-toolbar .textarea-editor-toolbar {
+            &.show-toolbar .textarea-editor-toolbar,
+            &.show-toolbar .textarea-editor-2-toolbar {
                 transform: translate(0, 0);
 
                 .toggle-toolbar:before {
@@ -998,7 +1008,8 @@ input[type=submit], input[type=button] {
             }
         }
 
-        .textarea-editor-content {
+        .textarea-editor-content,
+        .textarea-editor-2-content {
             border: none;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
@@ -1022,7 +1033,8 @@ input[type=submit], input[type=button] {
             }
         }
 
-        .textarea-editor-toolbar {
+        .textarea-editor-toolbar ,
+        .textarea-editor-2-toolbar {
             .background-color(rgba(255, 255, 255, 1), @noTransition, @noHover, @darkMode);
             border-bottom: 1px solid @colorGrey;
             display: flex;
@@ -1527,12 +1539,14 @@ ul {
 
 @media all and (min-width: @widthMinTablet) {
     .input {
-        .textarea-editor {
+        .textarea-editor,
+        .textarea-editor-2 {
             &.auto-height,
             &.full-screen {
                 .textarea-editor-content {
                 }
-                .textarea-editor-toolbar {
+                .textarea-editor-toolbar,
+                .textarea-editor-2-toolbar {
                     transform: unset;
 
                     .toggle-toolbar {
@@ -1552,6 +1566,7 @@ ul {
         justify-content: center;
 
         div.textarea-editor,
+        div.textarea-editor-2,
         input:not([type=submit]),
         select,
         textarea {
@@ -1560,10 +1575,12 @@ ul {
             width: 90%;
         }
 
-        div.textarea-editor {
+        div.textarea-editor,
+        div.textarea-editor-2 {
             padding: 0;
 
-            div.textarea-editor-content {
+            div.textarea-editor-content,
+            div.textarea-editor-2-content {
                 height: 50rem;
             }
         }

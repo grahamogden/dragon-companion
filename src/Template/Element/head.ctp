@@ -24,7 +24,8 @@
     <?= $this->Html->script('libs/jquery-3.3.1.min.js') ?>
     <?= $this->Html->script('libs/jquery-ui.min.js') ?>
     <!-- <?= $this->Html->script('libs/tinymce/tinymce.min.js') ?> -->
-    <?= $this->Html->script('http://cdn.quilljs.com/1.3.6/quill.min.js') ?>
+    <!-- <?= $this->Html->script('http://cdn.quilljs.com/1.3.6/quill.min.js') ?> -->
+    <?= $this->Html->script('https://cdn.quilljs.com/2.0.0-dev.2/quill.js') ?>
     <?= $this->Html->css('http://cdn.quilljs.com/1.3.6/quill.snow.css') ?>
 
     <?= $this->fetch('css') ?>

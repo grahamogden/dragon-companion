@@ -206,10 +206,31 @@ jQuery(document).ready(function($) {
         // },
         modules: {
             toolbar: [
-                [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['image', 'code-block']
-            ]
+                [{
+                    header: [1, 2, false]
+                }],
+                []
+                [
+                    'bold',
+                    'italic',
+                    'underline',
+                    'strike'
+                ],
+                [
+                    { 'list': 'ordered'},
+                    { 'list': 'bullet' }
+                ],
+                [
+                    { 'indent': '-1'},
+                    { 'indent': '+1' }
+                ],
+                [
+                    'table'
+                    // 'image',
+                    // 'code-block'
+                ],
+            ],
+            table: true
         },
         scrollingContainer: '.textarea-editor-2-content',
         placeholder: 'Compose an epic...',

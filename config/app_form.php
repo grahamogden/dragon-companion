@@ -60,7 +60,18 @@ return [
         } );
     </script>',
     'textareaeditor' => '<div id="textarea-editor-{{name}}" class="textarea-editor-2" data-name="{{name}}" data-id="{{id}}">
+            <div class="textarea-editor-2-toolbar sticky-element">
+                  <button id="insert-table" class="icon icon-table">Insert Table</button>
+                  <button id="insert-row-above" class="icon icon-add-row">Insert Row Above</button>
+                  <button id="insert-row-below" class="icon icon-add-row">Insert Row Below</button>
+                  <button id="insert-column-left" class="icon icon-add-column">Insert Column Left</button>
+                  <button id="insert-column-right" class="icon icon-add-column">Insert Column Right</button>
+                  <button id="delete-row" class="icon icon-delete-row">Delete Row</button>
+                  <button id="delete-column" class="icon icon-delete-column">Delete Column</button>
+                  <button id="delete-table" class="icon icon-delete-table">Delete Table</button>
+            </div>
             <div id="textarea-editor-content-{{name}}" class="textarea-editor-2-content" data-for="textarea-editor-input-{{name}}" {{attrs}}>{{value}}</div>
+            {{vale}}
         </div>',
     // 'textareaeditor' => '
     // <div id="textarea-editor-{{name}}" class="textarea-editor" data-name="{{name}}" data-id="{{id}}">
