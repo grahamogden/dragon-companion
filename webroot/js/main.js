@@ -29,6 +29,17 @@ jQuery(document).ready(function($) {
     let transitionTime = 200;  // 0.2 seconds
     let intervalTime   = 7000; // 7 seconds
 
+    let setCookie = function(key, value) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+    }
+
+    let getCookie = function(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
     /**
      * Retrieves the currently selected header background image
      * 
@@ -97,11 +108,13 @@ jQuery(document).ready(function($) {
      */
     let setDarkMode = function(isEnabled = false) {
         if (isEnabled === true) {
-            window.localStorage.darkMode = 'true';
+            window.localStorage.darkMode = 1;
+            setCookie('darkMode', 1);
             $('body').addClass('dark-mode');
             $('#switch-dark-mode').prop('checked', true);
         } else {
             window.localStorage.removeItem('darkMode');
+            setCookie('darkMode', 0);
             $('body').removeClass('dark-mode');
             $('#switch-dark-mode').prop('checked', false);
         }
@@ -122,8 +135,6 @@ jQuery(document).ready(function($) {
     //         "background-image": "url('/img/backgrounds/" + url + "')"
     //     });
     // });
-
-    setDarkMode(window.localStorage.darkMode === 'true');
 
     // backgroundSlider();
     
@@ -155,6 +166,8 @@ jQuery(document).ready(function($) {
             .parent('.show-more-container')
             .toggleClass('open');
     });
+
+    // setDarkMode(getCookie('darkMode'));
 
     $('#switch-dark-mode').on('change', function() {
         let isChecked = $(this).is(':checked');

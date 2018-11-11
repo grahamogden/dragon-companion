@@ -14,11 +14,15 @@
  */
 
 $cakeDescription = 'CakePHP: the rapid development php framework';
+$bodyClasses = [];
+if ($this->request->getCookie('darkMode')) {
+    $bodyClasses[] = 'dark-mode';
+}
 ?>
 <!DOCTYPE html>
 <html>
 <?= $this->element('head') ?>
-<body>
+<body class="<?= implode(' ', $bodyClasses); ?>">
     <?= $this->element('header') ?>
     <?= $this->Flash->render() ?>
     <div class="container clearfix">
