@@ -133,9 +133,9 @@
     padding: @distEight @distSixteen;
     text-decoration: none;
 
-    &:last-of-type {
-        margin: 0;
-    }
+    // &:last-of-type {
+    //     margin: 0;
+    // }
 }
 
 /*
@@ -737,6 +737,33 @@ header {
         }
     }
 
+    &.icon-delete-column {
+        background-position: -(9 * @buttonIconWidth) -(2 * @buttonIconHeight);
+
+        &:hover {
+            // background-position-y: -9rem;
+            background-position-y: -(3 * @buttonIconHeight);
+        }
+    }
+
+    &.icon-delete-row {
+        background-position: -(7 * @buttonIconWidth) -(2 * @buttonIconHeight);
+
+        &:hover {
+            // background-position-y: -9rem;
+            background-position-y: -(3 * @buttonIconHeight);
+        }
+    }
+
+    &.icon-delete-table {
+        background-position: -(4 * @buttonIconWidth) -(2 * @buttonIconHeight);
+
+        &:hover {
+            // background-position-y: -9rem;
+            background-position-y: -(3 * @buttonIconHeight);
+        }
+    }
+
     &.icon-full-screen {
         // background-position: 0rem -6rem;
         background-position: (0 * @buttonIconWidth) -(2 * @buttonIconHeight);
@@ -1191,6 +1218,23 @@ label {
 
 p {
     padding: 0;
+}
+
+.ql-editor {
+    margin: 0;
+    padding: 0;
+    position: relative;
+
+    &.ql-blank::before {
+        left: 0;
+        right: 0;
+    }
+}
+
+.ql-toolbar.ql-snow {
+    border-top: none;
+    border-left: none;
+    border-right: none;
 }
 
 .segment-row {

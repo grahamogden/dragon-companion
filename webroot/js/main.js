@@ -198,43 +198,4 @@ jQuery(document).ready(function($) {
     //     statusbar: false,
     //     toolbar: 'undo redo | styleselect | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview | restoredraft code'
     // });
-
-    var options = {
-        debug: 'error',
-        // modules: {
-        //     toolbar: '#toolbar'
-        // },
-        modules: {
-            toolbar: [
-                [{
-                    header: [1, 2, false]
-                }],
-                []
-                [
-                    'bold',
-                    'italic',
-                    'underline',
-                    'strike'
-                ],
-                [
-                    { 'list': 'ordered'},
-                    { 'list': 'bullet' }
-                ],
-                [
-                    { 'indent': '-1'},
-                    { 'indent': '+1' }
-                ],
-                [
-                    'table'
-                    // 'image',
-                    // 'code-block'
-                ],
-            ],
-            table: true
-        },
-        scrollingContainer: '.textarea-editor-2-content',
-        placeholder: 'Compose an epic...',
-        theme: 'snow'
-    };
-    var editor = new Quill('.textarea-editor-2-content', options); // First matching element will be used
 });

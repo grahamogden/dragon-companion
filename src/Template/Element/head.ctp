@@ -35,5 +35,6 @@
     <?= $this->Html->css('main.css') ?>
 
     <?= $this->Html->script('main.js') ?>
+    <?= $this->Html->script('quilljs-link.js') ?>
     <!-- <?= $this->Html->script('textarea-editor.js') ?> -->
 </head>

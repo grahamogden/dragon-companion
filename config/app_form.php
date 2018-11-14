@@ -61,17 +61,56 @@ return [
     </script>',
     'textareaeditor' => '<div id="textarea-editor-{{name}}" class="textarea-editor-2" data-name="{{name}}" data-id="{{id}}">
             <div class="textarea-editor-2-toolbar sticky-element">
-                  <button id="insert-table" class="icon icon-table">Insert Table</button>
-                  <button id="insert-row-above" class="icon icon-add-row">Insert Row Above</button>
-                  <button id="insert-row-below" class="icon icon-add-row">Insert Row Below</button>
-                  <button id="insert-column-left" class="icon icon-add-column">Insert Column Left</button>
-                  <button id="insert-column-right" class="icon icon-add-column">Insert Column Right</button>
-                  <button id="delete-row" class="icon icon-delete-row">Delete Row</button>
-                  <button id="delete-column" class="icon icon-delete-column">Delete Column</button>
-                  <button id="delete-table" class="icon icon-delete-table">Delete Table</button>
+                <button id="insert-table"
+                    class="icon icon-table"
+                    type="button">
+                </button>
+                <button id="insert-row-above"
+                    class="icon icon-add-row"
+                    type="button">
+                </button>
+                <button id="insert-row-below"
+                    class="icon icon-add-row"
+                    type="button">
+                </button>
+                <button id="insert-column-left"
+                    class="icon icon-add-column"
+                    type="button">
+                </button>
+                <button id="insert-column-right"
+                    class="icon icon-add-column"
+                    type="button">
+                </button>
+                <button id="delete-row"
+                    class="icon icon-delete-row"
+                    type="button">
+                </button>
+                <button id="delete-column"
+                    class="icon icon-delete-column"
+                    type="button">
+                </button>
+                <button id="delete-table"
+                    class="icon icon-delete-table"
+                    type="button">
+                </button>
+                <button id="insert-horizontal-rule"
+                    class="icon icon-hr"
+                    title="Add horizontal line rule"
+                    type="button">
+                </button>
+                <button id="full-screen"
+                    class="icon icon-full-screen"
+                    title="Full screen"
+                    type="button">
+                </button>
+                <button id="auto-height"
+                    class="icon icon-auto-height"
+                    title="Auto height"
+                    type="button">
+                </button>
             </div>
             <div id="textarea-editor-content-{{name}}" class="textarea-editor-2-content" data-for="textarea-editor-input-{{name}}" {{attrs}}>{{value}}</div>
-            {{vale}}
+            <input id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor-value" type="hidden" value="{{value}}" />
         </div>',
     // 'textareaeditor' => '
     // <div id="textarea-editor-{{name}}" class="textarea-editor" data-name="{{name}}" data-id="{{id}}">
