@@ -2,7 +2,21 @@
  * Mixins
  */
 
-@boxShadowSmall: 0 2px 2px 1px rgba(0, 0, 0, 0.1);
+@distOne:         0.1rem; //  1px
+@distTwo:         0.2rem; //  2px
+@distFour:        0.4rem; //  4px
+@distSix:         0.6rem; //  6px
+@distEight:       0.8rem; //  8px
+@distTwelve:      1.2rem; // 12px
+@distSixteen:     1.6rem; // 16px
+@distTwenty:      2rem;   // 20px
+@distTwentyFour:  2.4rem; // 24px
+@distThirtyTwo:   3.2rem; // 32px
+@distForty:       4rem;   // 40px
+@distFourtyEight: 4.8rem; // 48px
+@distSixtyFour:   6.4rem; // 64px
+
+@boxShadowSmall: 0 @distTwo @distTwo @distOne rgba(0, 0, 0, 0.1);
 
 @buttonIconHeight: 3.6rem;
 @buttonIconWidth:  3.6rem;
@@ -16,21 +30,9 @@
 
 @contentMaxWidth: 120rem;
 
-@distFour:        0.4rem; //  4px
-@distSix:         0.6rem; //  6px
-@distEight:       0.8rem; //  8px
-@distTwelve:      1.2rem; // 12px
-@distSixteen:     1.6rem; // 16px
-@distTwenty:      2rem;   // 20px
-@distTwentyFour:  2.4rem; // 24px
-@distThirtyTwo:   3.2rem; // 32px
-@distForty:       4rem;   // 40px
-@distFourtyEight: 4.8rem; // 48px
-@distSixtyFour:   6.4rem; // 64px
-
 @fontSizeDefault: 1.6rem;
 
-@radiusOne:   0.2rem; // 2px
+@radiusOne:   0.2rem; // @distTwo
 @radiusSmall: 0.3rem; // 3px
 @radiusTwo:   0.5rem; // 5px
 @radiusThree: 1rem;   // 10px
@@ -126,7 +128,7 @@
 }
 
 .button() {
-    border: 1px solid;
+    border: @distOne solid;
     .background-border-color(rgba(240, 240, 240, 1), @noTransition, @hover);
     .border-radius();
     margin: 0;
@@ -194,7 +196,7 @@ ul, ol {
  */
 
 a {
-    // border-bottom: 1px solid;
+    // border-bottom: @distOne solid;
     color: rgb(40, 120, 250);
     cursor: pointer;
     // background-color: rgba(70, 70, 70, 1);
@@ -222,7 +224,7 @@ a {
 .actions {
 
     &.actions-fixed {
-        border: 1px solid transparent;
+        border: @distOne solid transparent;
         float: none;
         font-size: 0;
         line-height: 0;
@@ -242,7 +244,7 @@ a {
 
     .action {
         color: rgb(0, 0, 0);
-        border: 1px solid;
+        border: @distOne solid;
         .border-radius();
         .background-border-color(rgba(240, 240, 240, 1), @noTransition, @hover);
         font-size: 1.4rem;
@@ -394,13 +396,13 @@ a {
 
     .autocomplete-results {
         position: absolute;
-        top: calc(100% - 2px);
+        top: calc(100% - @distTwo);
         width: 100%;
         z-index: 1;
 
         ul.ui-autocomplete {
             background-color: transparent;
-            border-width: 0 1px 1px 1px;
+            border-width: 0 @distOne @distOne @distOne;
             border-style: solid;
             border-top: 3px double;
             border-color: @colorGrey;
@@ -504,8 +506,8 @@ header {
         background-image: url('/img/backgrounds/battle_of_four_armies_by_jasonengle.jpg');
         background-position: center center;
         background-size: 110% auto;
-        // -webkit-filter: blur(2px);
-        // filter: blur(2px);
+        // -webkit-filter: blur(@distTwo);
+        // filter: blur(@distTwo);
         height: 100%;
         position: absolute;
         top: 0;
@@ -607,7 +609,7 @@ header {
             width: 100%;
 
             li {
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                border-bottom: @distOne solid rgba(255, 255, 255, 0.1);
                 color: rgb(255, 255, 255);
                 font-weight: 400;
                 margin: 0;
@@ -648,7 +650,7 @@ header {
                 ul {
                     background-color: darken(rgba(70, 70, 70, 1), 10%);
                     border: none;
-                    border-top: 1px solid rgba(150, 150, 150, 1);
+                    border-top: @distOne solid rgba(150, 150, 150, 1);
                     margin: 0;
                     overflow: hidden;
                     padding: 0;
@@ -666,8 +668,8 @@ header {
     background-origin: border-box;
     background-position-y: 0rem;
     background-size: (12 * @buttonIconWidth) auto;
-    border: 1px solid rgba(150, 150, 150, 1);
-    border-radius: 2px;
+    border: @distOne solid rgba(150, 150, 150, 1);
+    border-radius: @distTwo;
     cursor: pointer;
     display: inline-block;
     height: @buttonIconHeight;
@@ -896,12 +898,20 @@ input[type=submit], input[type=button] {
     justify-content: space-evently;
 
     input:not([type=submit]),
+    .mce-container,
     select,
     textarea,
     .textarea-editor,
     .textarea-editor-content {
-        border: 1px solid;
         .border-radius();
+    }
+
+    input:not([type=submit]),
+    select,
+    textarea,
+    .textarea-editor,
+    .textarea-editor-content {
+        border: @distOne solid;
         .background-border-color(rgba(255, 255, 255, 1), @transition, @noHover, @darkMode, @textColor);
         line-height: 2.2rem;
         margin: 0;
@@ -914,7 +924,7 @@ input[type=submit], input[type=button] {
             // animation-iteration-count: infinite;
             .border-color(@colorBlueHighlight);
             // rgba(90, 140, 255, 1));
-            box-shadow: inset 0 0 2px 2px @colorBlueHighlight;
+            box-shadow: inset 0 0 @distTwo @distTwo @colorBlueHighlight;
         }
 
         .dark-mode &:focus {
@@ -946,7 +956,7 @@ input[type=submit], input[type=button] {
         &.auto-height,
         &.full-screen {
             .textarea-editor-toolbar {
-                box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 4px @distTwo -@distTwo rgba(0, 0, 0, 0.15);
                 position: sticky;
                 position: -webkit-sticky;
                 top: 0;
@@ -955,8 +965,8 @@ input[type=submit], input[type=button] {
         }
 
         &.auto-saving .textarea-editor-toolbar:after {
-            border-width: 0 0 1px 1px;
-            box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.15);
+            border-width: 0 0 @distOne @distOne;
+            box-shadow: 0 3px @distTwo 0 rgba(0, 0, 0, 0.15);
             max-height: 100%;
             padding: @distFour @distEight;
         }
@@ -1016,7 +1026,7 @@ input[type=submit], input[type=button] {
 
                 tr {
                     td, th {
-                        border: 1px solid rgba(200, 200, 200, 1);
+                        border: @distOne solid rgba(200, 200, 200, 1);
                     }
                 }
             }
@@ -1024,7 +1034,7 @@ input[type=submit], input[type=button] {
 
         .textarea-editor-toolbar {
             .background-color(rgba(255, 255, 255, 1), @noTransition, @noHover, @darkMode);
-            border-bottom: 1px solid @colorGrey;
+            border-bottom: @distOne solid @colorGrey;
             display: flex;
             flex-wrap: wrap;
             position: relative;
@@ -1048,11 +1058,11 @@ input[type=submit], input[type=button] {
             }
 
             .toggle-toolbar {
-                border: 1px solid;
+                border: @distOne solid;
                 border-top: none;
                 .background-border-color(rgba(255, 255, 255, 1), @noTransition, @noHover, @darkMode);
                 border-radius: 0 0 @distEight @distEight;
-                box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.15);
+                box-shadow: 0 3px @distTwo 0 rgba(0, 0, 0, 0.15);
                 box-sizing: content-box;
                 display: none;
                 height: @distTwelve;
@@ -1263,7 +1273,7 @@ p {
 
 //     &:before {
 //         content: '';
-//         border-top: 1px solid;
+//         border-top: @distOne solid;
 //         left: -1px;
 //         position: absolute;
 //         top: 50%;
@@ -1273,7 +1283,6 @@ p {
 
 table {
     border: none;
-    border-radius: 30px;
     margin: 0 auto @distEight auto;
     width: 100%;
 
@@ -1286,7 +1295,7 @@ table {
     tr {
         background-color: transparent;
         border: none;
-        border-bottom: 1px solid @colorGrey;
+        border-bottom: @distOne solid @colorGrey;
 
         td, th {
             border: none;
@@ -1344,7 +1353,7 @@ table {
         &.add-item-row td {
             border-color: rgba(210, 230, 255, 1);
             border-style: solid;
-            border-width: 1px 0;
+            border-width: @distOne 0;
             padding: 0;
             text-align: center;
 
@@ -1375,7 +1384,7 @@ table {
         margin: @distFour;
 
         a {
-            border: 1px solid;
+            border: @distOne solid;
             .border-color(@colorLightBlue);
             border-radius: @distSixteen 0 0 @distSixteen;
             overflow: hidden;
@@ -1386,7 +1395,7 @@ table {
             white-space: nowrap;
 
             &:before {
-                border: 1px solid;
+                border: @distOne solid;
                 .border-color(@colorLightBlue);
                 border-radius: 100%;
                 content: '';
@@ -1436,8 +1445,8 @@ ul {
                 > *:before {
                     border-radius: 0 100% 0 0;
                     border-style: solid;
-                    border-width: 0px 0px 1px 1px;
-                    box-shadow: -2px 2px 3px 0px rgba(0,0,0,.03);
+                    border-width: 0px 0px @distOne @distOne;
+                    box-shadow: -@distTwo @distTwo 3px 0px rgba(0,0,0,.03);
                     content: '';
                     height: 2.1rem;
                     left: 0.7rem;
@@ -1452,8 +1461,8 @@ ul {
             a,
             span {
                 border-style: solid;
-                border-width: 0 1px 1px 1px;
-                border-radius: 0 0 2px 2px;
+                border-width: 0 @distOne @distOne @distOne;
+                border-radius: 0 0 @distTwo @distTwo;
                 display: inline-block;
                 font-size: 1.4rem;
                 line-height: 1.6rem;
@@ -1676,15 +1685,15 @@ div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
 
 @keyframes pulseNotification {
     0% {
-        box-shadow: 0 0 2px 0 rgba(90, 140, 255, 0.25);
+        box-shadow: 0 0 @distTwo 0 rgba(90, 140, 255, 0.25);
     }
 
     50% {
-        box-shadow: 0 0 2px 1px rgba(90, 140, 255, 1);
+        box-shadow: 0 0 @distTwo @distOne rgba(90, 140, 255, 1);
     }
 
     100% {
-        box-shadow: 0 0 2px 0 rgba(90, 140, 255, 0.25);
+        box-shadow: 0 0 @distTwo 0 rgba(90, 140, 255, 0.25);
     }
 }
 
