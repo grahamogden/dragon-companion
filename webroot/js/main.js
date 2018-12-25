@@ -30,9 +30,10 @@ jQuery(document).ready(function($) {
     let intervalTime   = 7000; // 7 seconds
 
     let setCookie = function(key, value) {
-        var expires = new Date();
+        let expires = new Date();
         expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
-        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+        // let path = /((http\:\/\/)[a-z0-9:]*)/gm.exec(window.location.href)[0];
+        document.cookie = key + '=' + value + ';path=/;expires=' + expires.toUTCString();
     }
 
     let getCookie = function(key) {
