@@ -23,7 +23,7 @@
     
     <?= $this->Html->script('libs/jquery-3.3.1.min.js') ?>
     <?= $this->Html->script('libs/jquery-ui.min.js') ?>
-    <!-- <?= $this->Html->script('libs/tinymce/tinymce.min.js') ?> -->
+    <?= $this->Html->script('libs/tinymce/tinymce.min.js') ?>
 
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
