@@ -1,3 +1,15 @@
+var setCookie = function(key, value) {
+    let expires = new Date();
+    expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
+    // let path = /((http\:\/\/)[a-z0-9:]*)/gm.exec(window.location.href)[0];
+    document.cookie = key + '=' + value + ';path=/;expires=' + expires.toUTCString();
+}
+
+var getCookie = function(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
 jQuery(document).ready(function($) {
     let backgroundImages = [
         {
@@ -28,18 +40,6 @@ jQuery(document).ready(function($) {
 
     let transitionTime = 200;  // 0.2 seconds
     let intervalTime   = 7000; // 7 seconds
-
-    let setCookie = function(key, value) {
-        let expires = new Date();
-        expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
-        // let path = /((http\:\/\/)[a-z0-9:]*)/gm.exec(window.location.href)[0];
-        document.cookie = key + '=' + value + ';path=/;expires=' + expires.toUTCString();
-    }
-
-    let getCookie = function(key) {
-        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
-        return keyValue ? keyValue[2] : null;
-    }
 
     /**
      * Retrieves the currently selected header background image
