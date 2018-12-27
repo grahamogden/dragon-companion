@@ -898,7 +898,6 @@ input[type=submit], input[type=button] {
     justify-content: space-evently;
 
     input:not([type=submit]),
-    .mce-container,
     select,
     textarea,
     .textarea-editor,
@@ -1093,6 +1092,11 @@ input[type=submit], input[type=button] {
     label {
         padding: 0 0 @distFour 0;
         width: 100%;
+    }
+
+    .mce-tinymce {
+        border: none;
+        box-shadow: none;
     }
 
     select {
@@ -1564,7 +1568,6 @@ ul {
         input:not([type=submit]),
         select,
         textarea {
-            margin: 0 0 0 @distSixteen;
             padding: @distEight;
             width: 90%;
         }
@@ -1578,7 +1581,6 @@ ul {
         }
 
         .autocomplete-container {
-            margin: 0 0 0 @distSixteen;
             width: 90%;
 
             input.ui-autocomplete-input {
@@ -1588,6 +1590,7 @@ ul {
         }
 
         label {
+            margin: 0 @distSixteen 0 0;
             text-align: right;
             width: 10%;
         }

@@ -59,7 +59,7 @@ return [
             });
         } );
     </script>',
-    'textareaeditor' => '<textarea id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor {{class}}" {{attrs}}>{{value}}</textarea>',
+    'textareaeditor' => '<div class="textarea-editor"><textarea id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor-content {{class}}" {{attrs}}>{{value}}</textarea></div>',
     // 'textareaeditor' => '
     // <div id="textarea-editor-{{name}}" class="textarea-editor" data-name="{{name}}" data-id="{{id}}">
     //     <div class="textarea-editor-toolbar sticky-element">
