@@ -8,7 +8,8 @@ var mceConfig = {
     ],
     formats: {
         underline: {inline : 'u'/*, 'classes' : 'underline'*/, exact : true},
-        strikethrough: {inline : 'strike'},
+        strikethrough: {inline : 'strike', exact: true},
+        strike: {inline : 'strike', exact: true},
     },
     menubar: false,
     mobile: {
@@ -19,7 +20,7 @@ var mceConfig = {
         toolbar: ['undo', 'redo', 'bold', 'italic', 'underline', 'strikethrough', 'bulllist', 'numlist', 'outdent', 'indent', 'autosave'],
     },
     plugins: [
-        'advlist autosave autolink lists link image charmap print preview anchor textcolor',
+        'advlist autosave autolink lists link image charmap print preview anchor textcolor legacyoutput',
         'searchreplace visualblocks code fullscreen',
         'insertdatetime media table contextmenu paste code help wordcount',
         'print preview searchreplace autolink directionality visualblocks visualchars template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help'
@@ -29,6 +30,12 @@ var mceConfig = {
     toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent | hr | table | removeformat | fullscreen | restoredraft | code',
     force_br_newlines : true,
     invalid_elements : 'br',
+    invalid_children : 'br',
+    setup: function(editor) {
+        editor.on('keyup', function (e) {
+            console.log(editor.getContent());
+        });
+    },
 };
 
 if (getCookie('darkMode') == 1) {
@@ -43,3 +50,10 @@ if (getCookie('darkMode') == 1) {
 }
 
 tinymce.init(mceConfig);
+
+$(function() {
+    $('form').on('submit', function (e) {
+        e.preventDefault();
+        return false;
+    });
+});
