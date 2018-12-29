@@ -31,11 +31,6 @@ var mceConfig = {
     force_br_newlines : true,
     invalid_elements : 'br',
     invalid_children : 'br',
-    setup: function(editor) {
-        editor.on('keyup', function (e) {
-            console.log(editor.getContent());
-        });
-    },
 };
 
 if (getCookie('darkMode') == 1) {
@@ -50,10 +45,3 @@ if (getCookie('darkMode') == 1) {
 }
 
 tinymce.init(mceConfig);
-
-$(function() {
-    $('form').on('submit', function (e) {
-        e.preventDefault();
-        return false;
-    });
-});
