@@ -6,6 +6,10 @@ var mceConfig = {
         '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
         '/css/mce.css?' + new Date().getTime()
     ],
+    formats: {
+        underline: {inline : 'u'/*, 'classes' : 'underline'*/, exact : true},
+        strikethrough: {inline : 'strike'},
+    },
     menubar: false,
     mobile: {
         theme: 'mobile',
