@@ -126,6 +126,13 @@ class TimelineSegmentsTable extends Table
             $entity->non_playable_characters = [];
         }
 
+        if ($entity->body) {
+            // Ridiculous hack because TinyMCE adds new lines and using the \n
+            // to remove it, is not working on its own
+            $entity->body = preg_replace('/\n/m', '{--', $entity->body);
+            $entity->body = preg_replace('/\s\{\-\-/m', '', $entity->body);
+        }
+
         $sluggedTitle = Text::slug(strtolower($entity->title));
         // trim slug to maximum length defined in schema
         $entity->slug = substr($sluggedTitle, 0, 250);

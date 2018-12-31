@@ -24,6 +24,7 @@ class DatabaseStringConverterBehavior extends Behavior
         'strong',
         'table',
         'tbody',
+        'em',
         'hr',
         'li',
         'ol',
