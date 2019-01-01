@@ -155,7 +155,7 @@ jQuery(document).ready(function($) {
 
     $('.show-more-container').each(function() {
         let height = parseInt($(this).css('height'));
-        if (height >= 200) {
+        if (height >= 260) {
             $(this)
                 .addClass('active')
                 .append('<a class="show-more-link"><span class="show">show</span><span class="hide">hide</span> more</a>');

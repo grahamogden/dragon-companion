@@ -4,15 +4,9 @@
  * @var \App\Model\Entity\NonPlayableCharacter[]|\Cake\Collection\CollectionInterface $nonPlayableCharacters
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Non Playable Character'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Tags'), ['controller' => 'Tags', 'action' => 'index']) ?></li>
-    </ul>
-</nav>
 <div class="nonPlayableCharacters index large-9 medium-8 columns content">
     <h3><?= __('Non Playable Characters') ?></h3>
+    <?= $this->Html->link(__('New Non Playable Character'), ['action' => 'add']) ?>
     <table>
         <thead>
             <tr>

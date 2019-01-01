@@ -5,9 +5,9 @@
  */
 ?>
 <div class="tags index large-9 medium-8 columns content">
-    <h3>Tags</h3>
+    <h3><?= __('Tags') ?></h3>
     <?= $this->Html->link(__('New Tag'), ['action' => 'add']); ?>
-    <table cellpadding="0" cellspacing="0">
+    <table>
         <thead>
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('title'); ?></th>
