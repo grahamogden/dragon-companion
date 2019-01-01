@@ -22,6 +22,9 @@
                 <li>
                     <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index']); ?>
                 </li>
+                <li>
+                    <?= $this->Html->link('Puzzles', ['controller' => 'Puzzles', 'action' => 'index']); ?>
+                </li>
                 <li><a class="menu-button">Account</a>
                     <ul class="menu">
                         <li><label for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode"<?= ($this->request->getCookie('darkMode') ? 'checked="checked"' : ''); ?> />Switch Dark Mode</label></li>
