@@ -147,6 +147,7 @@
  * {
     background-repeat: no-repeat;
     box-sizing: border-box;
+    letter-spacing: 0.01rem;
     outline: none;
  }
 
@@ -154,7 +155,6 @@ html {
     color: rgb(15, 15, 15);
     font-family: 'Open Sans', Arial;
     font-size: 62.5%;
-    letter-spacing: 0.01rem;
     min-height: 100%;
     word-spacing: 0.05rem;
 }
@@ -618,6 +618,8 @@ header {
                 position: relative;
                 text-align: center;
                 text-decoration: none;
+                user-select: none;
+                -webkit-user-select: none;
                 width: 100%;
 
                 &:hover {
@@ -1358,7 +1360,7 @@ table {
             border-color: rgba(210, 230, 255, 1);
             border-style: solid;
             border-width: @distOne 0;
-            padding: 0;
+            padding: @distEight;
             text-align: center;
 
             a {
@@ -1391,6 +1393,7 @@ table {
             border: @distOne solid;
             .border-color(@colorLightBlue);
             border-radius: @distSixteen 0 0 @distSixteen;
+            box-shadow: @distTwo @distTwo @distTwo 0 rgba(0, 0, 0, 0.1);
             overflow: hidden;
             padding: @distFour @distEight @distFour @distTwentyFour;
             position: relative;
@@ -1402,11 +1405,13 @@ table {
                 border: @distOne solid;
                 .border-color(@colorLightBlue);
                 border-radius: 100%;
+                box-shadow: inset @distTwo @distTwo @distTwo 0 rgba(0, 0, 0, 0.1);
                 content: '';
                 height: @distEight;
                 left: @distEight;
                 position: absolute;
-                top: @distEight;
+                top: 50%;
+                transform: translateY(-50%);
                 width: @distEight;
             }
         }
@@ -1593,6 +1598,10 @@ ul {
             margin: 0 @distSixteen 0 0;
             text-align: right;
             width: 10%;
+        }
+
+        textarea {
+            height: 50rem;
         }
     }
 
