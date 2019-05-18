@@ -618,6 +618,8 @@ header {
                 position: relative;
                 text-align: center;
                 text-decoration: none;
+                user-select: none;
+                -webkit-user-select: none;
                 width: 100%;
 
                 &:hover {
@@ -1403,6 +1405,7 @@ table {
                 border: @distOne solid;
                 .border-color(@colorLightBlue);
                 border-radius: 100%;
+                box-shadow: inset @distTwo @distTwo @distTwo 0 rgba(0, 0, 0, 0.1);
                 content: '';
                 height: @distEight;
                 left: @distEight;
@@ -1595,6 +1598,10 @@ ul {
             margin: 0 @distSixteen 0 0;
             text-align: right;
             width: 10%;
+        }
+
+        textarea {
+            height: 50rem;
         }
     }
 
