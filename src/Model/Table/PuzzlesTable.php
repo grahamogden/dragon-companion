@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Text;
 
 /**
  * Puzzles Model
@@ -48,6 +49,21 @@ class PuzzlesTable extends Table
     }
 
     /**
+     * Before saving
+     * 
+     * @param type $event 
+     * @param type $entity 
+     * @param type $options 
+     * @return type
+     */
+    public function beforeSave($event, $entity, $options)
+    {
+        $sluggedTitle = Text::slug(strtolower($entity->title));
+        // trim slug to maximum length defined in schema
+        $entity->slug = substr($sluggedTitle, 0, 250);
+    }
+
+    /**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -61,6 +77,7 @@ class PuzzlesTable extends Table
 
         $validator
             ->scalar('title')
+            ->minLength('title', 3)
             ->maxLength('title', 255)
             ->requirePresence('title', 'create')
             ->notEmpty('title');
@@ -72,9 +89,7 @@ class PuzzlesTable extends Table
 
         $validator
             ->scalar('slug')
-            ->maxLength('slug', 250)
-            ->requirePresence('slug', 'create')
-            ->notEmpty('slug');
+            ->maxLength('slug', 250);
 
         return $validator;
     }

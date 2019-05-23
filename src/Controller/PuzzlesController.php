@@ -81,6 +81,8 @@ class PuzzlesController extends AppController
         $puzzle = $this->Puzzles->newEntity();
         if ($this->request->is('post')) {
             $puzzle = $this->Puzzles->patchEntity($puzzle, $this->request->getData());
+            // Set the user ID on the item
+            $puzzle->user_id = $this->Auth->user('id');
             if ($this->Puzzles->save($puzzle)) {
                 $this->Flash->success(__('The puzzle, {0}, has been saved.', $puzzle->title));
 
@@ -112,6 +114,8 @@ class PuzzlesController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $puzzle = $this->Puzzles->patchEntity($puzzle, $this->request->getData());
+            // Set the user ID on the item
+            // $puzzle->user_id = $this->Auth->user('id');
             if ($this->Puzzles->save($puzzle)) {
                 $this->Flash->success(__('The puzzle, {0}, has been saved.', $puzzle->title));
 

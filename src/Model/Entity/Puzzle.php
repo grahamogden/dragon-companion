@@ -29,12 +29,13 @@ class Puzzle extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'title' => true,
+        'user_id'     => true,
+        'title'       => true,
         'description' => true,
-        'slug' => true,
-        'created' => true,
-        'modified' => true,
-        'user' => true
+        'slug'        => true,
+        'created'     => true,
+        'modified'    => true,
+        'user'        => true,
+        'map'         => true,
     ];
 }
