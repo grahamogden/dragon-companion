@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-    var map = '';
+    var map = [];
     var noOfCols = 0;
     var noOfRows = 0;
     // var radioButtons =
@@ -9,17 +9,80 @@ jQuery(document).ready(function($) {
     //     '<input type="radio" class="puzzle-radio square-spawner" id="spawner" name="{{row}}|{{col}}" value="2" />'+
     //     '<input type="radio" class="puzzle-radio square-stairs" id="stairs" name="{{row}}|{{col}}" value="3" />'+
     //     '<input type="radio" class="puzzle-radio square-door" id="door" name="{{row}}|{{col}}" value="4" />';
-    var radioButtonTemplate = '<input type="radio" class="puzzle-radio puzzle-{{id}}" id="{{id}}" name="{{row}}|{{col}}" value="{{value}}" {{checked}} />';
+    var radioButtonTemplate = '<input type="radio" class="puzzle-radio puzzle-{{id}}" id="{{id}}" name="{{row}}|{{col}}" value="{{value}}" />';
+    var tileHtmlTemplate = '';
     var labelTemplate = '<label for="{{row}}|{{col}}" class="puzzle-label" data-for="{{row}}|{{col}}"></label>';
-    var radioButtonValues = [
-        'none',
-        'corridor',
-        'spawner',
-        'stairs',
-        'door',
-        'start'
+    var tileOptions = [
+        {
+            name: 'none',
+            value: 0,
+            empty: false
+        },{
+            name: 'corridor',
+            value: 1,
+            empty: true
+        },{
+            name: 'stairs',
+            value: 2,
+            empty: true
+        },{
+            name: 'door',
+            value: 3,
+            empty: false
+        },{
+            name: 'hidden',
+            value: 4,
+            empty: false
+        },{
+            name: 'spawner',
+            value: 5,
+            empty: true
+        },{
+            name: 'start',
+            value: 6,
+            empty: true
+        }
     ];
     var isViewing = false;
+
+    var getTileOptionByName = function (name) {
+        return tileOptions.find(x => x.name === name);//tileOptions.indexOf(name);
+    }
+
+    var getTileOptionByValue = function (value) {
+        return tileOptions.find(x => x.value === parseInt(value));//tileOptions.indexOf(name);
+    }
+
+    var activateTile = function (x, y, value) {
+        // console.log('You clicked - X:'+x+'; Y:'+y+'; Value:'+value+'; Target - X:'+(x+1)+'; Y:'+(y+1)+';');
+        ++x;
+        ++y;
+        // console.log($('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') input[type=radio][value='+value+']'));
+        $('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') input[type=radio][value='+value+']').click();
+    }
+
+    var activateAllTiles = function () {
+        // console.log('You clicked - X:'+x+'; Y:'+y+'; Value:'+value+'; Target - X:'+(x+1)+'; Y:'+(y+1)+';');
+        // ++x;
+        // ++y;
+        // console.log($('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') input[type=radio][value='+value+']'));
+        let $puzzleTable = $('#puzzle-table');
+        for (let y = 0; y < noOfRows; ++y) {
+            let $row = $($puzzleTable).find('tr:nth-of-type('+(y+1)+')');
+            for (let x = 0; x < noOfCols; ++x) {
+                let value = null;
+                if (map !== undefined && map[y] !== undefined) {
+                    if (map[y].length > 1) {
+                        value = map[y][x];
+                    } else {
+                        value = map[y];
+                    }
+                }
+                $($row).find('td:nth-of-type('+(x+1)+') input[type=radio][value="'+value+'"]').click();
+                // activateTile(x, y, value);
+            }
+        }
+    }
 
     var resetTable = function() {
         $('#puzzle-table tr').remove();
@@ -28,66 +91,82 @@ jQuery(document).ready(function($) {
         noOfCols = 0;
     }
 
-    var getMapValue = function (x, y) {
-        return 
+    var resetTiles = function() {
+        $('#puzzle-table tr td input[type=radio][value="0"]').click();
     }
 
-    var buildRadioButtons = function(rowCount, colCount) {
-        let radioButtons = labelTemplate;
-        for (var i = 0; i < radioButtonValues.length; i++) {
-            let radio = radioButtonTemplate;
-            radio = radio
-            .replace(/{{id}}/g, radioButtonValues[i])
-            .replace(/{{value}}/g, i);
-            if (i === 0) {
-                radio = radio.replace(/{{checked}}/g, 'checked="checked"');
-            }
-            radioButtons += radio;
-        }
-        radioButtons = radioButtons
+    var generateTile = function(rowCount, colCount) {
+        let tileHtml = tileHtmlTemplate;
+        // // for (var i = 0; i < tileOptions.length; i++) {
+        // $(tileOptions).each(function() {
+        //     let radio = radioButtonTemplate;
+        //     radio = radio
+        //     .replace(/{{id}}/g, this.name)
+        //     .replace(/{{value}}/g, this.value);
+        //     if (this.value === 0) {
+        //         radio = radio.replace(/{{checked}}/g, 'checked="checked"');
+        //     }
+        //     radioButtons += radio;
+        // });
+        // console.log(tileHtml);
+        return tileHtml
             .replace(/{{row}}/g, rowCount)
             .replace(/{{col}}/g, colCount)
             .replace(/{{.*?}}/g, '');
-        return radioButtons;
+        // console.log(return2);
+        // return return2;
+    }
+
+    var generateTiles = function () {
+        tileHtmlTemplate += labelTemplate;
+        $(tileOptions).each(function() {
+            let radio = radioButtonTemplate;
+            tileHtmlTemplate += radio
+                .replace(/{{id}}/g, this.name)
+                .replace(/{{value}}/g, this.value);
+        });
+        // console.log(tileHtmlTemplate);
     }
 
     var addColumn = function() {
         // console.log('add column');
-        ++noOfCols;
-        let rowCount = 1;
-        $('#puzzle-table tr').each(function(rowCount) {
+        let rowCount = 0;
+        $('#puzzle-table tr').each(function() {
             // console.log('----------');
             // console.log(rowCount);
             // console.log(noOfCols);
             // let radios = '';
-            // for (var i = 0; i <= radioButtonValues.length; i++) {
+            // for (var i = 0; i <= tileOptions.length; i++) {
             //     let radio = radioButtonTemplate;
             //     radios += radio
-            //     .replace(/{{id}}/g, radioButtonValues[i])
+            //     .replace(/{{id}}/g, tileOptions[i])
             //     .replace(/{{row}}/g, rowCount)
             //     .replace(/{{col}}/g, noOfCols);
             // }
-            radios = buildRadioButtons(rowCount, noOfCols);
+            radios = generateTile(rowCount, noOfCols);
             $(this).append('<td>' + radios + '</td>');
             rowCount++;
-        }, rowCount);
+        });
+        ++noOfCols;
     };
 
     var addRow = function() {
         // console.log('add row');
-        ++noOfRows;
+        // console.log(noOfRows);
         $('#puzzle-table').append('<tr></tr>');
         for (let i = 0; i < noOfCols; i++) {
             // let radios = radioButtons
             //     .replace(/{{col}}/g, i)
             //     .replace(/{{row}}/g, noOfRows);
-            radios = buildRadioButtons(noOfRows, i);
+            radios = generateTile(noOfRows, i);
             $('#puzzle-table tr:last-child').append('<td>' + radios + '</td>');
         }
+        ++noOfRows;
     };
 
     var reveal = function(x, y) {
-        console.log('x:' + x +'; y: '+ y);
+        // console.time('Reveal');
+        // console.log('x:' + x +'; y: '+ y);
         if (y > 1) {
             revealUp(x, y);
         }
@@ -103,123 +182,213 @@ jQuery(document).ready(function($) {
         if (x < noOfCols) {
             revealRight(x, y);
         }
+        // console.timeEnd('Reveal');
     }
 
     var revealUp = function(x, y) {
+        // console.log('revealUp');
         let $table = $('#puzzle-table');
-        for(let i = y; i > 0; i--) {
+        // let tileOption = getTileOptionByName('corridor');
+        for (let i = y; i >= 0; --i) {
+            let value = null;
+            if (map !== undefined && map[i] !== undefined && map[i].length > 1) {
+                value = map[i][x];
+            } else {
+                value = map[i];
+            }
             // $($table).find('tr:nth-of-type('+i+') td:nth-of-type('+x+') input[type=radio]:checked').val()
-            // let position = 
-            if (map[i]) {
-                continue;
+            let tileOption = getTileOptionByValue(value);
+            // console.log(tileOption);
+            // if (map[i][x] == tileOption.value) {
+            if (tileOption.empty) {
+                activateTile(x, i, tileOption.value);
+            } else if (i != y) {
+                activateTile(x, i, tileOption.value);
+                break;
             }
         }
     }
 
     var revealDown = function(x, y) {
-        
+        // console.log('revealDown');
+        let $table = $('#puzzle-table');
+        // console.log('X:'+x+';Y:'+y+';noOfRows:'+noOfRows+';');
+        for (let i = y; i < noOfRows; ++i) {
+            // console.log(i);
+            let value = null;
+            if (map !== undefined && map[i] !== undefined && map[i].length > 1) {
+                value = map[i][x];
+            } else {
+                value = map[i];
+            }
+            let tileOption = getTileOptionByValue(value);
+            // console.log(tileOption);
+            if (tileOption.empty) {
+                activateTile(x, i, tileOption.value);
+            } else if (i != y) {
+                activateTile(x, i, tileOption.value);
+                break;
+            }
+        }
     }
 
     var revealLeft = function(x, y) {
-        
+        // console.log('revealLeft');
+        let $table = $('#puzzle-table');
+        // let tileOption = getTileOptionByName('corridor');
+        for (let i = x; i >= 0; --i) {
+            let value = null;
+            if (map !== undefined && map[y] !== undefined && map[y].length > 1) {
+                value = map[y][i];
+            } else {
+                value = map[y];
+            }
+            // console.log(value);
+            // $($table).find('tr:nth-of-type('+i+') td:nth-of-type('+x+') input[type=radio]:checked').val()
+            let tileOption = getTileOptionByValue(value);
+            // console.log(tileOption);
+            // if (map[i][x] == tileOption.value) {
+            if (tileOption.empty) {
+                activateTile(i, y, tileOption.value);
+            } else if (i != x) {
+                activateTile(i, y, tileOption.value);
+                break;
+            }
+        }
     }
 
     var revealRight = function(x, y) {
-        
+        // console.log('revealRight');
+        let $table = $('#puzzle-table');
+        for (let i = x; i < noOfCols; ++i) {
+            let value = null;
+            if (map !== undefined && map[y] !== undefined && map[y].length > 1) {
+                value = map[y][i];
+            } else {
+                value = map[y];
+            }
+            let tileOption = getTileOptionByValue(value);
+            if (tileOption.empty) {
+                activateTile(i, y, tileOption.value);
+            } else if (i != x) {
+                activateTile(i, y, tileOption.value);
+                break;
+            }
+        }
     }
 
     var updateToCode = function() {
-        map = '';
-
-        map += noOfRows + '|' + noOfCols + '|';
+        // map = noOfRows + '|' + noOfCols + '|';
 
         // for(let row = 0; row < noOfRows; ++row) {
             // for (let col = 0; col < noOfCols; ++col) {
+        map = [];
+        var rowCounter = 0;
+        var colCounter = 0;
         $('#puzzle-table tr').each(function() {
             $(this).find('td').each(function() {
-                map += $(this).find('input[type=radio]:checked').val();
+                if (map[rowCounter] === undefined) {
+                    map[rowCounter] = '';
+                }
+                // console.log('-------------');
+                // console.log(rowCounter);
+                // console.log(colCounter);
+                map[rowCounter] += $(this).find('input[type=radio]:checked').val() ? $(this).find('input[type=radio]:checked').val() : 0;
+                ++colCounter;
             });
+            colCounter = 0;
+            ++rowCounter;
         });
 
-        $('#map').val(map);
+        $('#map').val(noOfRows + '|' + noOfCols + '|' + map.join(''));
     };
 
     var updateFromCode = function() {
-        map = $('#map').val().split("|");
-        // console.log(map);
-        let rowLimit = parseInt(map[0]);
-        let colLimit = parseInt(map[1]);
-        map = map[2];
+        let mapString = $('#map').val().split("|");
+        // console.log(mapString);
+        
+        // Set the row and col limit from the stored string
+        let rowLimit = parseInt(mapString[0] ?mapString[0]: 0);
+        let colLimit = parseInt(mapString[1] ?mapString[1]: 0);
+        mapString = mapString[2] ?mapString[2]: '';
         // console.log(rowLimit);
         // console.log(colLimit);
-        // console.log(map);
-        // console.log(map.length);
+        // console.log(mapString);
+        // console.log(mapString.length);
 
-        if ((rowLimit * colLimit) !== map.length) {
+        // Check that we have the right number of everything
+        if ((rowLimit * colLimit) !== mapString.length) {
             console.log('Invalid');
+            console.log('Row limit: '+rowLimit);
+            console.log('Col limit: '+colLimit);
+            console.log('MapString: '+mapString.length+' - '+mapString);
             return;
         }
 
-        resetTable();
+        // Set the counters
+        let rowCounter = 0;
+        let colCounter = 0;
+        map = [];
 
+        for (let key = 0; key < mapString.length; key++) {
+            if (colCounter < colLimit) {
+                ++colCounter;
+            } else {
+                colCounter = 1;
+                ++rowCounter;
+            }
+            if (map[rowCounter] === undefined) {
+                map[rowCounter] = '';
+            }
+            map[rowCounter] += mapString.charAt(key);
+        }
+        // console.log(map);
+
+        resetTable();
+// console.time('Add row');
         for(let row = 0; row < rowLimit; ++row) {
             addRow();
         }
+// console.timeEnd('Add row');
+// console.time('Add col');
         for (let col = 0; col < colLimit; ++col) {
             addColumn();
-        // $('#puzzle-table tr').each(function() {
-        //     $(this).find('td').each(function() {
-        //         map += $(this).find('input[type=radio]:checked').val();
-        //     });
-        // });
         }
-
+// console.timeEnd('Add col');
+// console.time('Reset tiles');
+        resetTiles();
+// console.timeEnd('Reset tiles');
+// console.time('Activate');
         if (isViewing) {
-            // console.log(radioButtonValues.indexOf('start'));
-            let key = map.indexOf(radioButtonValues.indexOf('start')) + 1;
-            // console.log(map);
-            // console.log('key: ' + key);
-            // console.log('noOfCols: ' + noOfCols);
-            // console.log('noOfRows: ' + noOfRows);
-
-            if (key !== -1) {
-                let row = Math.floor(key / noOfCols) + 1;
-                let col = key - ((row - 1) * noOfCols);
-                // console.log('row:' + row);
-                // console.log('col:' + col);
-                // console.log($('#puzzle-table tr:nth-of-type('+row+') td:nth-of-type('+col+')'));
-                $('#puzzle-table tr:nth-of-type('+row+') td:nth-of-type('+col+') #start').click();
+            let tileOption = getTileOptionByName('start');
+            for (let y = 0; y < rowLimit; ++y) {
+                for (let x = 0; x < colLimit; ++x) {
+                    if (map[y][x] == tileOption.value) {
+                        let value = null;
+                        if (map !== undefined && map[y] !== undefined && map[y].length > 1) {
+                            value = map[y][x];
+                        } else {
+                            value = map[y];
+                        }
+                        activateTile(x, y, value);//$('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') #start').click();
+                        reveal(x, y);
+                    }
+                }
             }
         } else {
-            let rowCount = 1;
-            let colCount = 1;
-
-            for (let key = 0; key < map.length; key++) {
-                // console.log('Key:'+map[key]+';Row:'+rowCount+';Col:'+colCount);
-                let $radios = $('#puzzle-table tr:nth-of-type('+rowCount+') td:nth-of-type('+colCount+') input[type=radio]');
-                // :nth-of-type('+map[key]+')').click();
-                $($radios).each(function() {
-                    // console.log('Map value:'+map[key]);
-                    if ($(this).val() == map[key]) {
-                        $(this).click();
-                    }
-                });
-                if (colCount >= colLimit) {
-                    // console.log('reset col, increase row');
-                    colCount = 0;
-                    rowCount++;
-                }
-                colCount++;
-            }
+            activateAllTiles();
         }
+// console.timeEnd('Activate');
     };
 
     var init = function() {
-        if ($('#generate-from').length == 0) {
+        // console.time('generateTiles');
+        generateTiles();
+        // console.timeEnd('generateTiles');
+        if ($('.puzzle.view').length == 0) {
             isViewing = true; // Awful way to set this, but currently no other way!
+            // updateFromCode();
         }
-
-        updateFromCode();
     }
 
     $(document).on('click', '.puzzle-label', function(e) {
@@ -230,14 +399,19 @@ jQuery(document).ready(function($) {
             let coord = $(this).data('for').split('|');
             let x = coord[1];
             let y = coord[0];
-
-            reveal(x, y);
+            let tileOption = getTileOptionByName('none');
+            // console.log($(this).parent('td').find('input[type=radio]:checked').val());
+            // console.log(tileOption.value);
+            // console.log($(this).parent('td').find('input[type=radio]:checked').val() != tileOption.value);
+            if ($(this).parent('td').find('input[type=radio]:checked').val() != tileOption.value) {
+                reveal(x, y);
+            }
         } else {
             // console.log(parent);
             let checkedRadio = $(parent).find('input[type=radio]:checked');
             // console.log(checkedRadio);
             let checkValue = parseInt($(checkedRadio).val());
-            let maxValue = radioButtonValues.length - 1;
+            let maxValue = tileOptions.length - 1;
             // console.log(checkValue);
             // console.log(maxValue);
 
@@ -254,10 +428,12 @@ jQuery(document).ready(function($) {
 
     $('#add-column').click(function() {
         addColumn();
+        updateToCode();
     });
 
     $('#add-row').click(function() {
         addRow();
+        updateToCode();
     });
 
     $('#generate-code').click(function() {
@@ -268,9 +444,9 @@ jQuery(document).ready(function($) {
         updateFromCode();
     });
 
+    $('#reset-tiles').click(function() {
+        resetTiles();
+    });
+
     init();
 });
-
-// Example map code
-// Number of Rows | Number of Columns | values of each tile
-// 11|27|111111111111100000000000002000010000000100000000000000000020000000100000000000000000000111110100000001101100000000111110100000014414410000000113114100000014444410000000111110000000001444100000000111110000000000141000000000000000000000000010000000000000000000000000000000000000000000000000003000004

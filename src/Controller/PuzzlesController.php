@@ -31,7 +31,7 @@ class PuzzlesController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        $this->Auth->allow();
+        // $this->Auth->allow();
     }
 
     /**
@@ -83,6 +83,7 @@ class PuzzlesController extends AppController
             $puzzle = $this->Puzzles->patchEntity($puzzle, $this->request->getData());
             // Set the user ID on the item
             $puzzle->user_id = $this->Auth->user('id');
+            // echo'<pre>';var_dump($puzzle);exit;
             if ($this->Puzzles->save($puzzle)) {
                 $this->Flash->success(__('The puzzle, {0}, has been saved.', $puzzle->title));
 
@@ -152,4 +153,36 @@ class PuzzlesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    /**
+     * Determines whether the user is authorised to be able to use this action
+     * 
+     * @param type $user
+     * 
+     * @return bool
+     */
+    public function isAuthorized($user): bool
+    {
+        $action = $this->request->getParam('action');
+        // The add and tags actions are always allowed to logged in users
+        if (in_array($action, [
+            'add', 'edit',
+        ])) {
+            return true;
+        }
+
+        // All other actions require an item ID
+        $id = $this->request->getParam('id');
+
+        if (!$id) {
+            return false;
+        }
+
+        // Check that the puzzle belongs to the current user
+        $puzzle = $this->Puzzle->findById($id)->firstOrFail();
+
+        return $puzzle->user_id === $user['id'];
+    }
 }
+
+//29|29|000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011100000000000000000000000001010000011110000000000000000101000001001000001000000000010100011100100000100000000001010001000040000010000000000001000101111111421000000000000111110111111100100110000000000000011000114110010000000000100001100011000001000000000011110110001100000100000000000001011111110000011411111110000041111111000000001111111000001000000000000110110001100000101111000000001011000110000010010100000000101100011000001111010000000010111111100000000001000000001411111114100000100011100000100000000010000011100010000010022000001000001010001000001141100000111111100000000000000220000000100011111111000000000000000050000000000000

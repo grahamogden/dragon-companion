@@ -1757,6 +1757,12 @@ div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
 
 .puzzles {
 
+    &.view {
+        .textarea {
+            display: none;
+        }
+    }
+
     #map {
         height: 10rem;
     }
@@ -1807,11 +1813,13 @@ div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
                     input[type=radio] {
                         appearance: none;
                         -webkit-appearance: none;
+                        border-radius: 0;
                         display: none;
                         height: @distSixteen;
                         width: @distSixteen;
                         z-index: -1;
 
+                        &.puzzle-hidden,
                         &.puzzle-none {
                             background-color: rgba(70, 70, 70, 1);
                         }

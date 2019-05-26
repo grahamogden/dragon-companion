@@ -16,9 +16,12 @@ echo $this->Html->script('puzzles.js');
 <div class="puzzles view large-9 medium-8 columns content">
     <h3>Puzzle <?php //h($puzzle->title) ?></h3>
     <div id="puzzle-container">
+        <?php $this->Form->create($puzzle); ?>
+        <?= $this->Form->control('map'); ?>
+            <div id="puzzle-controls">
+                <div id="generate-from" class="button">Generate from</div>
+            </div>
         <table id="puzzle-table">
-            <?php $this->Form->create($puzzle); ?>
-            <?= $this->Form->control('map'); ?>
             <!-- <tr>
                 <th scope="row"><?= __('User') ?></th>
                 <td><?= $puzzle->has('user') ? $this->Html->link($puzzle->user->id, ['controller' => 'Users', 'action' => 'view', $puzzle->user->id]) : '' ?></td>
