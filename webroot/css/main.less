@@ -892,7 +892,7 @@ input[type=submit], input[type=button] {
 }
 
 .input {
-    align-items: first baseline;
+    // align-items: first baseline;
     display: -webkit-flex;
     display: -moz-flex;
     display: flex;
@@ -1353,6 +1353,7 @@ table {
 
             a {
                 padding: @distTwelve;
+                display: block;
             }
         }
 
@@ -1438,6 +1439,7 @@ ul {
             overflow: hidden;
             position: relative;
             user-select: none;
+            -webkit-user-select: none;
 
             &:last-of-type {
                 a,
@@ -1575,6 +1577,11 @@ ul {
         textarea {
             padding: @distEight;
             width: 90%;
+
+            &#username,
+            &#password {
+                width: 25%;
+            }
         }
 
         div.textarea-editor {
@@ -1750,3 +1757,110 @@ div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
 //   100% {
 //   }
 // }
+
+.clear {
+    clear: both;
+}
+
+.puzzles {
+
+    &.view {
+        .textarea {
+            display: none;
+        }
+    }
+
+    #map {
+        height: 10rem;
+    }
+
+    #puzzle-container {
+
+        .button {
+            border: @distOne solid rgb(180, 180, 180);
+            border-radius: @distTwo;
+            cursor: pointer;
+            display: inline-block;
+            padding: @distTwelve @distTwenty;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #puzzle-controls {
+            float: left;
+            width: 20%;
+        }
+
+        #puzzle-table {
+            border: @distOne solid;
+            border-collapse: collapse;
+            float: left;
+            max-width: 80%;
+            width: auto;
+
+            tr {
+
+                td {
+                    border: @distOne solid;
+                    padding: 0;
+
+                    label {
+                        background-color: transparent;
+                        border-radius: 0;
+                        cursor: pointer;
+                        display: block;
+                        height: 100%;
+                        left: 0;
+                        position: absolute;
+                        top: 0;
+                        width: 100%;
+                        z-index: 1;
+                    }
+
+                    input[type=radio] {
+                        appearance: none;
+                        -webkit-appearance: none;
+                        border-radius: 0;
+                        display: none;
+                        height: @distSixteen;
+                        width: @distSixteen;
+                        z-index: -1;
+
+                        &.puzzle-hidden,
+                        &.puzzle-none {
+                            background-color: rgba(50, 50, 50, 1);
+                        }
+
+                        &.puzzle-corridor {
+                            background-color: rgba(200, 200, 200, 1);
+                        }
+
+                        &.puzzle-spawner {
+                            background-color: rgba(80, 90, 180, 1);
+                        }
+
+                        &.puzzle-stairs {
+                            background-image: linear-gradient(
+                                to bottom,
+                                rgba(70, 70, 70, 1),
+                                rgba(200, 200, 200, 1)
+                            );
+                        }
+
+                        &.puzzle-start {
+                            background-color: rgba(255, 255, 255, 1);
+                        }
+
+                        &.puzzle-door {
+                            background-color: rgba(80, 150, 80, 1);
+                        }
+
+                        &:checked {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
