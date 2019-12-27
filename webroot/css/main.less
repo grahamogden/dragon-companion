@@ -1298,64 +1298,66 @@ table {
         }
     }
 
-    tr {
-        background-color: transparent;
+    &.timelinesegments {
+        th a {
+            padding: @distTwelve;
+            display: block;
+        }
+    }
+
+    td, th {
         border: none;
-        border-bottom: @distOne solid @colorGrey;
+        position: relative;
+        word-break: normal;
+        word-wrap: break-word;
 
-        td, th {
-            border: none;
-            position: relative;
-            word-break: normal;
-            word-wrap: break-word;
+        &.action-column {
+            font-size: 0;
+            line-height: 0;
+            text-align: center;
+            width: 4rem;
 
-            &.action-column {
-                font-size: 0;
-                line-height: 0;
-                text-align: center;
-                width: 4rem;
+            div {
 
-                div {
-
-                    &.horizontal {
-                        ul {
-                            flex-direction: row;
-                        }
-                    }
-
+                &.horizontal {
                     ul {
-                        display: flex;
-                        justify-content: space-between;
-                        flex-direction: column;
-                        list-style-type: none;
-                        margin: 0;
-                        padding: 0;
+                        flex-direction: row;
+                    }
+                }
 
-                        li {
-                            margin: @distFour;
-                        }
+                ul {
+                    display: flex;
+                    justify-content: space-between;
+                    flex-direction: column;
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+
+                    li {
+                        margin: @distFour;
                     }
                 }
             }
         }
+    }
 
-        td {
-            padding: @distSix;
+    td {
+        padding: @distSix;
 
-            a {
-                padding: 0;
-            }
+        a {
+            padding: 0;
         }
+    }
 
-        th {
-            // .background-color(rgba(235, 235, 250, 1), @transition, @noHover, @darkMode, @textColor);
-            .background-color(rgba(240, 240, 240, 1), @transition, @noHover, @darkMode, @textColor);
+    th {
+        // .background-color(rgba(235, 235, 250, 1), @transition, @noHover, @darkMode, @textColor);
+        .background-color(rgba(240, 240, 240, 1), @transition, @noHover, @darkMode, @textColor);
+    }
 
-            a {
-                padding: @distTwelve;
-                display: block;
-            }
-        }
+    tr {
+        background-color: transparent;
+        border: none;
+        border-bottom: @distOne solid @colorGrey;
 
         &.add-item-row td {
             border-color: rgba(210, 230, 255, 1);
