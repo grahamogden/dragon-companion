@@ -66,10 +66,35 @@ jQuery(document).ready(function($) {
         // ++x;
         // ++y;
         // console.log($('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') input[type=radio][value='+value+']'));
+        console.time('get puzzle table');
         let $puzzleTable = $('#puzzle-table');
+        console.timeEnd('get puzzle table');
+        console.time('Loop rows');
+        // for (let y = 0; y < noOfRows; ++y) {
+        //     let $row = $($puzzleTable).find('tr:nth-of-type('+(y+1)+')');
+        //     console.time('Loop cols');
+        //     for (let x = 0; x < noOfCols; ++x) {
+        //         console.time('click value');
+        //         let value = null;
+        //         if (map !== undefined && map[y] !== undefined) {
+        //             if (map[y].length > 1) {
+        //                 value = map[y][x];
+        //             } else {
+        //                 value = map[y];
+        //             }
+        //         }
+        //         $($row).find('td:nth-of-type('+(x+1)+') input[type=radio][value="'+value+'"]').click();
+        //         // activateTile(x, y, value);
+        //         console.timeEnd('click value');
+        //     }
+        //     console.timeEnd('Loop cols');
+        // }
+
         for (let y = 0; y < noOfRows; ++y) {
             let $row = $($puzzleTable).find('tr:nth-of-type('+(y+1)+')');
+            console.time('Loop cols');
             for (let x = 0; x < noOfCols; ++x) {
+                console.time('click value');
                 let value = null;
                 if (map !== undefined && map[y] !== undefined) {
                     if (map[y].length > 1) {
@@ -78,10 +103,13 @@ jQuery(document).ready(function($) {
                         value = map[y];
                     }
                 }
-                $($row).find('td:nth-of-type('+(x+1)+') input[type=radio][value="'+value+'"]').click();
+                $($row).find('td:nth-of-type('+(x+1)+')').find('input[type=radio][value="'+value+'"]').click();
                 // activateTile(x, y, value);
+                console.timeEnd('click value');
             }
+            console.timeEnd('Loop cols');
         }
+        console.timeEnd('Loop rows');
     }
 
     var resetTable = function() {
@@ -92,7 +120,7 @@ jQuery(document).ready(function($) {
     }
 
     var resetTiles = function() {
-        $('#puzzle-table tr td input[type=radio][value="0"]').click();
+        $('#puzzle-table').find('tr td').find('input[type=radio][value="0"]').click();
     }
 
     var generateTile = function(rowCount, colCount) {
@@ -304,6 +332,7 @@ jQuery(document).ready(function($) {
     };
 
     var updateFromCode = function() {
+        console.time('start up');
         let mapString = $('#map').val().split("|");
         // console.log(mapString);
         
@@ -343,22 +372,23 @@ jQuery(document).ready(function($) {
             map[rowCounter] += mapString.charAt(key);
         }
         // console.log(map);
+        console.timeEnd('start up');
 
         resetTable();
-// console.time('Add row');
+console.time('Add row');
         for(let row = 0; row < rowLimit; ++row) {
             addRow();
         }
-// console.timeEnd('Add row');
-// console.time('Add col');
+console.timeEnd('Add row');
+console.time('Add col');
         for (let col = 0; col < colLimit; ++col) {
             addColumn();
         }
-// console.timeEnd('Add col');
-// console.time('Reset tiles');
+console.timeEnd('Add col');
+console.time('Reset tiles');
         resetTiles();
-// console.timeEnd('Reset tiles');
-// console.time('Activate');
+console.timeEnd('Reset tiles');
+console.time('Activate');
         if (isViewing) {
             let tileOption = getTileOptionByName('start');
             for (let y = 0; y < rowLimit; ++y) {
@@ -378,14 +408,14 @@ jQuery(document).ready(function($) {
         } else {
             activateAllTiles();
         }
-// console.timeEnd('Activate');
+console.timeEnd('Activate');
     };
 
     var init = function() {
         // console.time('generateTiles');
         generateTiles();
         // console.timeEnd('generateTiles');
-        if ($('.puzzle.view').length == 0) {
+        if ($('.puzzles.view').length > 0) {
             isViewing = true; // Awful way to set this, but currently no other way!
             // updateFromCode();
         }

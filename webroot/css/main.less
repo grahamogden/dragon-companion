@@ -1353,6 +1353,7 @@ table {
 
             a {
                 padding: @distTwelve;
+                display: block;
             }
         }
 
@@ -1438,6 +1439,7 @@ ul {
             overflow: hidden;
             position: relative;
             user-select: none;
+            -webkit-user-select: none;
 
             &:last-of-type {
                 a,
@@ -1575,6 +1577,11 @@ ul {
         textarea {
             padding: @distEight;
             width: 90%;
+
+            &#username,
+            &#password {
+                width: 25%;
+            }
         }
 
         div.textarea-editor {
@@ -1821,7 +1828,7 @@ div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
 
                         &.puzzle-hidden,
                         &.puzzle-none {
-                            background-color: rgba(70, 70, 70, 1);
+                            background-color: rgba(50, 50, 50, 1);
                         }
 
                         &.puzzle-corridor {
@@ -1845,7 +1852,7 @@ div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
                         }
 
                         &.puzzle-door {
-                            background-color: rgba(150, 80, 80, 1);
+                            background-color: rgba(80, 150, 80, 1);
                         }
 
                         &:checked {
