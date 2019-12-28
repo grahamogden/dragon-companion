@@ -214,9 +214,9 @@ class TimelineSegmentsTable extends Table
             $out[] = $tag;
         }
         // Add new tags.
-        foreach ($newTags as $tag) {
-            $out[] = $this->Tags->newEntity(['title' => $tag]);
-        }
+        // foreach ($newTags as $tag) {
+        //     $out[] = $this->Tags->newEntity(['title' => $tag]);
+        // }
 
         return $out;
     }

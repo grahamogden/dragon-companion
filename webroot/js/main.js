@@ -153,10 +153,11 @@ jQuery(document).ready(function($) {
         $(this).toggleClass('open');
     });
 
-    $('.show-more-container').each(function() {
+    $('.show-more-content').each(function() {
         let height = parseInt($(this).css('height'));
         if (height >= 260) {
             $(this)
+                .parent()
                 .addClass('active')
                 .append('<a class="show-more-link"><span class="show">show</span><span class="hide">hide</span> more</a>');
         }

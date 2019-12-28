@@ -35,7 +35,7 @@ var mceConfig = {
     ],
     selector: '.textarea-editor-content',
     // toolbar: 'insert | undo redo | formatselect | bold italic underline strikethrough | table | bullist numlist outdent indent | removeformat | help',
-    toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent | hr | table | removeformat | fullscreen autoresize | restoredraft | code',
+    toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent blockquote | hr | table | removeformat | fullscreen autoresize | restoredraft | code',
 };
 
 if (getCookie('darkMode') == 1) {

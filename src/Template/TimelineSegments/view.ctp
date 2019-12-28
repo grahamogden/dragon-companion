@@ -18,6 +18,11 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
     <div class="segment-row show-more-container">
         <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body)); ?></div>
     </div>
+    <hr>
+    <div class="segment-row show-more-container">
+        <h3><?= __('Child Timeline Segment Synopsis'); ?></h3>
+        <div class="show-more-content"><?= $childTimelineParts; ?></div>
+    </div>
     <?php if (!empty($timelineSegment->tags)) { ?>
         <div class="segment-row">
             <h3><?= __('Tags'); ?></h3>

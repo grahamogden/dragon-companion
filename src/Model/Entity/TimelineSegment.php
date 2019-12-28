@@ -78,6 +78,14 @@ class TimelineSegment extends Entity
         return $this->title;
     }
 
+    /**
+     * @return string
+     */
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
     protected function _getTagString()
     {
         if (isset($this->_properties['tag_string'])) {

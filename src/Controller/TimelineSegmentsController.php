@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
+use App\Model\Entity\TimelineSegment as TimelineSegmentEntity;
 
 /**
  * TimelineSegments Controller
@@ -96,6 +98,7 @@ class TimelineSegmentsController extends AppController
 
         $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
         $this->set('timelineSegment', $timelineSegment);
+        $this->set('childTimelineParts', $this->getChildTimelineParts($timelineSegment));
         $this->set('title', sprintf(
             'View %s - %s',
             self::CONTROLLER_NAME,
@@ -162,7 +165,18 @@ class TimelineSegmentsController extends AppController
     public function edit(int $id = null)
     {
         $timelineSegment = $this->TimelineSegments->get($id, [
-            'contain' => ['Tags', 'NonPlayableCharacters'],
+            'contain' => [
+                'ParentTimelineSegments',
+                'Users',
+                'Tags' => [
+                    'sort' => ['title' => 'ASC',],
+                ],
+                'NonPlayableCharacters' => [
+                    'sort' => ['name' => 'ASC',],
+                ],
+                'ChildTimelineSegments' => [
+                    'sort' => ['lft' => 'ASC',],
+            ]],
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -196,6 +210,7 @@ class TimelineSegmentsController extends AppController
             'tags',
             'nonPlayableCharacters'
         ));
+        $this->set('childTimelineParts', $this->getChildTimelineParts($timelineSegment));
         $this->set('title', sprintf(
             'Edit %s - %s',
             self::CONTROLLER_NAME,
@@ -353,5 +368,46 @@ class TimelineSegmentsController extends AppController
             ['NonPlayableCharacters.name LIKE' => '%' . $term . '%'],
             'name'
         );
+    }
+
+    /**
+     * Uses a regular expression to extract any content that is within a <blockquote> element
+     * 
+     * @param  TimeLineSegment $timeline The timeline segment object
+     * 
+     * @return string
+     */
+    private function getChildTimelineParts(TimelineSegmentEntity $timelineSegment): string
+    {
+        $content = '';
+        $timelinePartsArray = [];
+        $timelineParts = '';
+
+        if ($timelineSegment->child_timeline_segments) {
+            // echo '<pre>';
+            /** @var TimelineSegment $childTimeline */
+            foreach ($timelineSegment->child_timeline_segments as $childTimeline) {
+                // var_dump($childTimeline->body);
+                preg_match_all('/\{\{blockquote\}\}(\{\{p\}\})?(.*?)(\{\{\/p\}\})?\{\{\/blockquote\}\}/i', $childTimeline->body, $out);
+                // if (!empty($out[2])) {
+                //     // var_dump($out,'-----------------------------------');
+                //     $timelinePartsArray[] = implode(' | ', $out[2]);
+                // }
+
+                if (!empty($out[2])) {
+                    $timelinePartsArray[] = sprintf(
+                        '<h6>%s</h6><ul><li>%s</li></ul>',
+                        $childTimeline->title,
+                        implode('</li><li>', $out[2])
+                    );
+                }
+            }
+
+            // var_dump($timelineSegment);exit();
+        // } else {
+            // $content = dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body));
+        }
+
+        return implode('', $timelinePartsArray);
     }
 }

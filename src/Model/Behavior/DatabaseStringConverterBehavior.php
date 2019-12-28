@@ -23,6 +23,7 @@ class DatabaseStringConverterBehavior extends Behavior
         'strike',
         'strong',
         'table',
+        'thead',
         'tbody',
         'em',
         'hr',
