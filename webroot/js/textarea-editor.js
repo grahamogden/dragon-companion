@@ -23,9 +23,9 @@ var mceConfig = {
         content_css: [],
         theme: 'mobile',
         plugins: [
-            'autosave', 'advlist',
+            'advlist',
         ],
-        toolbar: ['undo', 'redo', 'bold', 'italic', 'underline', 'strikethrough', 'bulllist', 'numlist', 'outdent', 'indent', 'autosave'],
+        toolbar: ['undo', 'redo', 'bold', 'italic', 'underline', 'strikethrough', 'bulllist', 'numlist', 'outdent', 'indent'],
     },
     plugins: [
         'advlist autosave autolink autoresize lists link image charmap print preview anchor textcolor legacyoutput',
@@ -34,6 +34,11 @@ var mceConfig = {
         'print preview searchreplace autolink directionality visualblocks visualchars template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help'
     ],
     selector: '.textarea-editor-content',
+    setup: function(editor) {
+        editor.on('change', function () {
+            tinymce.triggerSave();
+        });
+    },
     // toolbar: 'insert | undo redo | formatselect | bold italic underline strikethrough | table | bullist numlist outdent indent | removeformat | help',
     toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent blockquote | hr | table | removeformat | fullscreen autoresize | restoredraft | code',
 };
