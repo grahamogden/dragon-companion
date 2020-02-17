@@ -29,12 +29,6 @@ class TimelineSegmentsController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        $this->Auth->allow([
-            'tags',
-            'reorder',
-            'getTags',
-            'getNonPlayableCharacters'
-        ]);
 
         $this->session = $this->getRequest()->getSession();
     }
@@ -55,9 +49,13 @@ class TimelineSegmentsController extends AppController
         $this->paginate = [
             'contain' => ['ParentTimelineSegments', 'Users']
         ];
+
+        $user = $this->getUserOrRedirect();
+
         $timelineSegments = $this->TimelineSegments
             ->find()
             ->where(['TimelineSegments.parent_id IS' => null])
+            ->where(['TimelineSegments.user_id =' => $user['id']])
             ->order('TimelineSegments.lft asc');
 
         $timelineSegments = $this->paginate($timelineSegments);
@@ -248,9 +246,15 @@ class TimelineSegmentsController extends AppController
     public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
+
         // The add and tags actions are always allowed to logged in users
-        if (in_array($action, [
-            'add', 'tags', 'getTags', 'getNonPlayableCharacters',
+        if (
+            in_array($action, [
+            'add',
+            'index',
+            'tags',
+            'getTags',
+            'getNonPlayableCharacters',
         ])) {
             return true;
         }

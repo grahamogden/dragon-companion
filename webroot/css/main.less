@@ -430,6 +430,10 @@ button, .button,  {
     .button();
 }
 
+.center {
+    text-align: center;
+}
+
 .container {
     .background-border-color(rgba(255, 255, 255, 1), true, false, true, true);
     .body-container-widths();
@@ -1172,6 +1176,11 @@ label {
 
 .menu-button {
 
+    &:after {
+        content: '\025BE';
+        margin: 0 0 0 @distFour;
+    }
+
     &+ ul.menu {
         display: none;
         list-style-type: none;
@@ -1577,8 +1586,9 @@ ul {
 
 @media all and (min-width: @widthMinDesktop) {
     div.input {
+        align-items: center;
         flex-direction: row;
-        justify-content: center;
+        justify-content: left;
 
         div.textarea-editor,
         input:not([type=submit]),
@@ -1589,7 +1599,7 @@ ul {
 
             &#username,
             &#password {
-                width: 25%;
+                width: 33%;
             }
         }
 
@@ -1611,9 +1621,11 @@ ul {
         }
 
         label {
+            display: inline-block;
             margin: 0 @distSixteen 0 0;
+            padding: 0;
             text-align: right;
-            width: 10%;
+            width: 33%;
         }
 
         textarea {
@@ -1680,9 +1692,17 @@ ul {
     }
 }
 
-
 // Set a standard margin at the bottom for everything that needs it
-div.input, fieldset, h1, h2, h3, h4, h6, nav#actions-side-nav, p, .segment-row {
+div.input,
+fieldset,
+h1,
+h2,
+h3,
+h4,
+h6,
+nav#actions-side-nav,
+p,
+.segment-row {
     margin: 0 0 @distEight 0;
     padding-bottom: 0;
 }

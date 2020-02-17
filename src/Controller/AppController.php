@@ -74,13 +74,7 @@ class AppController extends Controller
 
         // Allow the display action so our PagesController
         // continues to work. Also enable the read only actions.
-        $this->Auth->allow(['display', 'view', 'index']);
-    }
-
-    public function isAuthorized($user)
-    {
-        // By default deny access.
-        return false;
+        $this->Auth->allow(['display']);
     }
 
     /**
@@ -116,5 +110,27 @@ class AppController extends Controller
         }
         
         return json_encode($return);
+    }
+
+
+    /**
+     * Retrieves the User array from Auth or redirects the user
+     * @return array
+     */
+    protected function getUserOrRedirect(): array
+    {
+        $user = $this->Auth->user();
+
+        if (null === $user || empty($user)) {
+            $this->redirect($this->Auth->logout());
+        }
+
+        return $user;
+    }
+
+    public function isAuthorized($user): bool
+    {
+        // By default deny access.
+        return false;
     }
 }

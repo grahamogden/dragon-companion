@@ -17,7 +17,10 @@ class PuzzlesController extends AppController
         'limit' => 50,
         'order' => [
             'Puzzles.title' => 'asc'
-        ]
+        ],
+        'sortWhitelist' => [
+            'Puzzles.title',
+        ],
     ];
 
     /**
@@ -31,7 +34,6 @@ class PuzzlesController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        // $this->Auth->allow();
     }
 
     /**
@@ -41,10 +43,13 @@ class PuzzlesController extends AppController
      */
     public function index()
     {
-        // $this->paginate = [
-        //     'contain' => ['Users']
-        // ];
-        $puzzles = $this->paginate($this->Puzzles);
+        $user = $this->getUserOrRedirect();
+
+        $puzzles = $this->Puzzles
+            ->find()
+            ->where(['puzzles.user_id =' => $user['id']]);
+
+        $puzzles = $this->paginate($puzzles);
 
         $this->set(compact('puzzles'));
         $this->set('title', self::CONTROLLER_NAME);
@@ -166,7 +171,8 @@ class PuzzlesController extends AppController
         $action = $this->request->getParam('action');
         // The add and tags actions are always allowed to logged in users
         if (in_array($action, [
-            'add', 'edit',
+            'add',
+            'index',
         ])) {
             return true;
         }
@@ -179,7 +185,7 @@ class PuzzlesController extends AppController
         }
 
         // Check that the puzzle belongs to the current user
-        $puzzle = $this->Puzzle->findById($id)->firstOrFail();
+        $puzzle = $this->Puzzles->findById($id)->firstOrFail();
 
         return $puzzle->user_id === $user['id'];
     }

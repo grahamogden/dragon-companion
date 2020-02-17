@@ -15,7 +15,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
             'empty' => true
         ]) ?>
         <?= $this->Form->control('title') ?>
-        <?= $this->Form->control('tag_string', [
+<!--         <?= $this->Form->control('tag_string', [
             'label'  => 'Tag',
             'type'   => 'autocomplete',
             'source' => [
@@ -32,7 +32,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                 'action'     => 'getNonPlayableCharacters'],
             'val'        => $timelineSegment->non_playable_character_string,
             'spellcheck' => 'true',
-        ]) ?>
+        ]) ?> -->
         <?= $this->Form->control('body', [
             'type'         => 'textareaeditor',
             'val'          => dbConverter::fromDatabase($timelineSegment->getBody()),
@@ -43,7 +43,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
             <h3><?= __('Child Timeline Segment Synopsis'); ?></h3>
             <div><?= $childTimelineParts; ?></div>
         </div>
+        <?= $this->Form->submit(__('Save')); ?>
     </fieldset>
-    <?= $this->Form->submit(__('Save')); ?>
     <?= $this->Form->end(); ?>
 </div>

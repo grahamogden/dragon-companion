@@ -77,6 +77,12 @@ Router::scope('/', function (RouteBuilder $routes) {
     );
 
     $routes->connect(
+        'users/register',
+        ['controller' => 'Users', 'action' => 'add'],
+        ['_name' => 'register']
+    );
+
+    $routes->connect(
         '/logout',
         ['controller' => 'Users', 'action' => 'logout'],
         ['_name' => 'logout']
@@ -106,9 +112,19 @@ Router::scope('/', function (RouteBuilder $routes) {
         ->setPass(['id']);
 
     $routes->connect(
-        '/tags/:action/',
-        ['controller' => 'Tags']
-    );
+        '/tags/:action/:id',
+        ['controller' => 'Tags'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/non-playable-characters/:action/:id',
+        ['controller' => 'NonPlayableCharacters'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/puzzles/:action/:id',
+        ['controller' => 'Puzzles'])
+        ->setPass(['id']);
 
     /**
      * Connect catchall routes for all controllers.

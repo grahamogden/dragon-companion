@@ -3,8 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
-
-
 ?>
 <h1>Add Timeline Segment</h1>
 <div class="timelineSegments form large-9 medium-8 columns content">
@@ -20,7 +18,7 @@
             'type'         => 'textareaeditor',
             'spellcheck'   => 'true',
         ]) ?>
-        <?= $this->Form->control('tag_string', [
+<!--         <?= $this->Form->control('tag_string', [
             'label'  => 'Tag',
             'type'   => 'autocomplete',
             'source' => [
@@ -33,8 +31,8 @@
             'source' => [
                 'controller' => 'TimelineSegments',
                 'action'     => 'getNonPlayableCharacters'],
-        ]) ?>
+        ]) ?> -->
+        <?= $this->Form->submit(__('Save')); ?>
     </fieldset>
-    <?= $this->Form->submit(__('Save')); ?>
     <?= $this->Form->end(); ?>
 </div>
