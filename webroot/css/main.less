@@ -1833,42 +1833,32 @@ p,
                     border: @distOne solid;
                     padding: 0;
 
-                    label {
+                    div.puzzle-piece {
                         background-color: transparent;
                         border-radius: 0;
                         cursor: pointer;
                         display: block;
-                        height: 100%;
+                        height: 2rem;
                         left: 0;
-                        position: absolute;
                         top: 0;
-                        width: 100%;
+                        width: 2rem;
                         z-index: 1;
-                    }
 
-                    input[type=radio] {
-                        appearance: none;
-                        -webkit-appearance: none;
-                        border-radius: 0;
-                        display: none;
-                        height: @distSixteen;
-                        width: @distSixteen;
-                        z-index: -1;
-
-                        &.puzzle-hidden,
-                        &.puzzle-none {
+                        &.puzzle-piece-hidden,
+                        &.puzzle-piece-none,
+                        &.puzzle-piece-wall {
                             background-color: rgba(50, 50, 50, 1);
                         }
 
-                        &.puzzle-corridor {
+                        &.puzzle-piece-corridor {
                             background-color: rgba(200, 200, 200, 1);
                         }
 
-                        &.puzzle-spawner {
+                        &.puzzle-piece-spawner {
                             background-color: rgba(80, 90, 180, 1);
                         }
 
-                        &.puzzle-stairs {
+                        &.puzzle-piece-stairs {
                             background-image: linear-gradient(
                                 to bottom,
                                 rgba(70, 70, 70, 1),
@@ -1876,16 +1866,12 @@ p,
                             );
                         }
 
-                        &.puzzle-start {
+                        &.puzzle-piece-start {
                             background-color: rgba(255, 255, 255, 1);
                         }
 
-                        &.puzzle-door {
+                        &.puzzle-piece-door {
                             background-color: rgba(80, 150, 80, 1);
-                        }
-
-                        &:checked {
-                            display: block;
                         }
                     }
                 }

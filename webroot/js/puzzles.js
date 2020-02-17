@@ -1,20 +1,9 @@
 jQuery(document).ready(function($) {
-    var map = [];
-    var noOfCols = 0;
-    var noOfRows = 0;
-    // var radioButtons =
-    //     '<label for="{{row}}{{col}}" class="puzzle-square" id="square" data-checked="0" data-max="4" data-for="{{row}}|{col}}"/>'+
-    //     '<input type="radio" class="puzzle-radio square-none" id="none" name="{{row}}|{{col}}" value="0" checked="checked"/>'+
-    //     '<input type="radio" class="puzzle-radio square-corridor" id="corridor" name="{{row}}|{{col}}" value="1" />'+
-    //     '<input type="radio" class="puzzle-radio square-spawner" id="spawner" name="{{row}}|{{col}}" value="2" />'+
-    //     '<input type="radio" class="puzzle-radio square-stairs" id="stairs" name="{{row}}|{{col}}" value="3" />'+
-    //     '<input type="radio" class="puzzle-radio square-door" id="door" name="{{row}}|{{col}}" value="4" />';
-    var radioButtonTemplate = '<input type="radio" class="puzzle-radio puzzle-{{id}}" id="{{id}}" name="{{row}}|{{col}}" value="{{value}}" />';
-    var tileHtmlTemplate = '';
-    var labelTemplate = '<label for="{{row}}|{{col}}" class="puzzle-label" data-for="{{row}}|{{col}}"></label>';
+    var mapJson;
+    var tileTemplate = '<div class="puzzle-piece" data-row="{{row}}" data-col="{{col}}" data-coordinate-value="{{value}}"></div>';
     var tileOptions = [
         {
-            name: 'none',
+            name: 'wall',
             value: 0,
             empty: false
         },{
@@ -53,416 +42,305 @@ jQuery(document).ready(function($) {
         return tileOptions.find(x => x.value === parseInt(value));//tileOptions.indexOf(name);
     }
 
-    var activateTile = function (x, y, value) {
+    var activateTile = function (colKey, $row, value) {
         // console.log('You clicked - X:'+x+'; Y:'+y+'; Value:'+value+'; Target - X:'+(x+1)+'; Y:'+(y+1)+';');
-        ++x;
-        ++y;
-        // console.log($('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') input[type=radio][value='+value+']'));
-        $('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') input[type=radio][value='+value+']').click();
+        colFindKey     = ++colKey;
+        $puzzlePiece   = $($row).find('td:nth-of-type('+colFindKey+')').find('div.puzzle-piece');        
+        let tileOption = getTileOptionByValue(value);
+        $($puzzlePiece)
+            .addClass('puzzle-piece-'+tileOption.name)
+            .data('coordinateValue', value)
+            .attr('data-coordinate-value', value);
     }
 
-    var activateAllTiles = function () {
-        // console.log('You clicked - X:'+x+'; Y:'+y+'; Value:'+value+'; Target - X:'+(x+1)+'; Y:'+(y+1)+';');
-        // ++x;
-        // ++y;
-        // console.log($('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') input[type=radio][value='+value+']'));
-        console.time('get puzzle table');
-        let $puzzleTable = $('#puzzle-table');
-        console.timeEnd('get puzzle table');
-        console.time('Loop rows');
-        // for (let y = 0; y < noOfRows; ++y) {
-        //     let $row = $($puzzleTable).find('tr:nth-of-type('+(y+1)+')');
-        //     console.time('Loop cols');
-        //     for (let x = 0; x < noOfCols; ++x) {
-        //         console.time('click value');
-        //         let value = null;
-        //         if (map !== undefined && map[y] !== undefined) {
-        //             if (map[y].length > 1) {
-        //                 value = map[y][x];
-        //             } else {
-        //                 value = map[y];
-        //             }
-        //         }
-        //         $($row).find('td:nth-of-type('+(x+1)+') input[type=radio][value="'+value+'"]').click();
-        //         // activateTile(x, y, value);
-        //         console.timeEnd('click value');
-        //     }
-        //     console.timeEnd('Loop cols');
-        // }
+    var activateAllTilesForEditing = function (mapJson, $puzzleTable) {
+        // console.time('Loop rows');
+        $(mapJson.coordinateValues).each(function(rowKey, rowValue) {
+        // for (let rowKey = 0; rowKey < mapJson.rowCount; ++ rowKey) {
+        //     let rowValue = mapJson.coordinateValues[rowKey];
+            let $row = $($puzzleTable).find('tr:nth-of-type('+(rowKey+1)+')');
+            // console.time('Loop cols');
+            for (let colKey = 0; colKey < mapJson.colCount; ++colKey) {
+                let coordinateValue = rowValue.charAt(colKey);
+                // console.time('activate tile');
+                activateTile(colKey, $row, coordinateValue);
+                // console.timeEnd('activate tile');
+            };
+            // console.timeEnd('Loop cols');
+        });
+        // console.timeEnd('Loop rows');
+    }
 
-        for (let y = 0; y < noOfRows; ++y) {
-            let $row = $($puzzleTable).find('tr:nth-of-type('+(y+1)+')');
-            console.time('Loop cols');
-            for (let x = 0; x < noOfCols; ++x) {
-                console.time('click value');
-                let value = null;
-                if (map !== undefined && map[y] !== undefined) {
-                    if (map[y].length > 1) {
-                        value = map[y][x];
-                    } else {
-                        value = map[y];
-                    }
+    var activateAllTilesForViewing = function (mapJson, $puzzleTable) {
+        let tileOption = getTileOptionByName('start');
+        $(mapJson.coordinateValues).each(function(rowKey, rowValue) {
+            let rowFindKey = rowKey + 1;
+            let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
+
+            for (let colKey = 0; colKey < mapJson.colCount; ++colKey) {
+                coordinateValue = rowValue.charAt(colKey);
+
+                if (coordinateValue == tileOption.value) {
+                    activateTile(colKey, $row, coordinateValue);//$('#puzzle-table tr:nth-of-type('+rowKey+') td:nth-of-type('+colKey+') #start').click();
+                    reveal($puzzleTable, mapJson, colKey, rowKey);
+                } else {
+                    activateTile(colKey, $row, 0);
                 }
-                $($row).find('td:nth-of-type('+(x+1)+')').find('input[type=radio][value="'+value+'"]').click();
-                // activateTile(x, y, value);
-                console.timeEnd('click value');
             }
-            console.timeEnd('Loop cols');
-        }
-        console.timeEnd('Loop rows');
+        });
     }
 
-    var resetTable = function() {
-        $('#puzzle-table tr').remove();
+    var generateTile = function(rowCount, colCount) {
+        return tileTemplate
+            .replace(/{{row}}/g, rowCount)
+            .replace(/{{col}}/g, colCount)
+            .replace(/{{value}}/g, '0')
+            .replace(/{{.*?}}/g, '');
+    }
+
+    var addColumn = function($puzzleTable, mapJson) {
+        let $rows = $($puzzleTable).find('tr');
+        let rowCount = 0;
+        $($rows).each(function() {
+            let tile = generateTile(rowCount, mapJson.colCount);
+            $(this).append('<td>' + tile + '</td>');
+            rowCount++;
+        });
+    };
+
+    var addRow = function($puzzleTable, mapJson) {
+        $($puzzleTable).append('<tr></tr>');
+        let colCount = 0;
+        let $row = $($puzzleTable).find('tr:last-child');
+        for (let i = 0; i < mapJson.colCount; i++) {
+            let tile = generateTile(mapJson.rowCount, i);
+            $($row).append('<td>' + tile + '</td>');
+        }
+    };
+
+    var resetTable = function($puzzleTable, mapJson) {
+        $($puzzleTable).find('tr').remove();
 
         noOfRows = 0;
         noOfCols = 0;
     }
 
-    var resetTiles = function() {
-        $('#puzzle-table').find('tr td').find('input[type=radio][value="0"]').click();
-    }
-
-    var generateTile = function(rowCount, colCount) {
-        let tileHtml = tileHtmlTemplate;
-        // // for (var i = 0; i < tileOptions.length; i++) {
-        // $(tileOptions).each(function() {
-        //     let radio = radioButtonTemplate;
-        //     radio = radio
-        //     .replace(/{{id}}/g, this.name)
-        //     .replace(/{{value}}/g, this.value);
-        //     if (this.value === 0) {
-        //         radio = radio.replace(/{{checked}}/g, 'checked="checked"');
-        //     }
-        //     radioButtons += radio;
-        // });
-        // console.log(tileHtml);
-        return tileHtml
-            .replace(/{{row}}/g, rowCount)
-            .replace(/{{col}}/g, colCount)
-            .replace(/{{.*?}}/g, '');
-        // console.log(return2);
-        // return return2;
-    }
-
-    var generateTiles = function () {
-        tileHtmlTemplate += labelTemplate;
-        $(tileOptions).each(function() {
-            let radio = radioButtonTemplate;
-            tileHtmlTemplate += radio
-                .replace(/{{id}}/g, this.name)
-                .replace(/{{value}}/g, this.value);
+    var resetTiles = function($puzzleTable) {
+        let puzzlePieces = $($puzzleTable).find('tr td').find('div.puzzle-piece');
+        $(puzzlePieces).each(function() {
+            let pieceValue = $(this).data('coordinateValue');
+            if (pieceValue) {
+                $(this).removeClass('puzzle-piece-'+getTileOptionByValue(pieceValue).name);
+                $(this).data('coordinateValue', null);
+            }
         });
-        // console.log(tileHtmlTemplate);
     }
 
-    var addColumn = function() {
-        // console.log('add column');
-        let rowCount = 0;
-        $('#puzzle-table tr').each(function() {
-            // console.log('----------');
-            // console.log(rowCount);
-            // console.log(noOfCols);
-            // let radios = '';
-            // for (var i = 0; i <= tileOptions.length; i++) {
-            //     let radio = radioButtonTemplate;
-            //     radios += radio
-            //     .replace(/{{id}}/g, tileOptions[i])
-            //     .replace(/{{row}}/g, rowCount)
-            //     .replace(/{{col}}/g, noOfCols);
-            // }
-            radios = generateTile(rowCount, noOfCols);
-            $(this).append('<td>' + radios + '</td>');
-            rowCount++;
-        });
-        ++noOfCols;
-    };
-
-    var addRow = function() {
-        // console.log('add row');
-        // console.log(noOfRows);
-        $('#puzzle-table').append('<tr></tr>');
-        for (let i = 0; i < noOfCols; i++) {
-            // let radios = radioButtons
-            //     .replace(/{{col}}/g, i)
-            //     .replace(/{{row}}/g, noOfRows);
-            radios = generateTile(noOfRows, i);
-            $('#puzzle-table tr:last-child').append('<td>' + radios + '</td>');
-        }
-        ++noOfRows;
-    };
-
-    var reveal = function(x, y) {
-        // console.time('Reveal');
+    var reveal = function($puzzleTable, mapJson, x, y) {
+        console.time('Reveal');
         // console.log('x:' + x +'; y: '+ y);
-        if (y > 1) {
-            revealUp(x, y);
+        if (y > 0) {
+            revealUp($puzzleTable, mapJson, x, y);
         }
 
-        if (y < noOfRows) {
-            revealDown(x, y);
+        if (y < mapJson.rowCount) {
+            revealDown($puzzleTable, mapJson, x, y);
         }
 
-        if (x > 1) {
-            revealLeft(x, y);
+        if (x > 0) {
+            revealLeft($puzzleTable, mapJson, x, y);
         }
 
-        if (x < noOfCols) {
-            revealRight(x, y);
+        if (x < mapJson.colCount) {
+            revealRight($puzzleTable, mapJson, x, y);
         }
-        // console.timeEnd('Reveal');
+        console.timeEnd('Reveal');
     }
 
-    var revealUp = function(x, y) {
-        // console.log('revealUp');
-        let $table = $('#puzzle-table');
-        // let tileOption = getTileOptionByName('corridor');
-        for (let i = y; i >= 0; --i) {
-            let value = null;
-            if (map !== undefined && map[i] !== undefined && map[i].length > 1) {
-                value = map[i][x];
-            } else {
-                value = map[i];
-            }
-            // $($table).find('tr:nth-of-type('+i+') td:nth-of-type('+x+') input[type=radio]:checked').val()
+    var revealUp = function($puzzleTable, mapJson, selectedCol, selectedRow) {
+        for (let i = selectedRow; i >= 0; --i) {
+            let value      = mapJson.coordinateValues[i].charAt(selectedCol);
             let tileOption = getTileOptionByValue(value);
-            // console.log(tileOption);
-            // if (map[i][x] == tileOption.value) {
+            let rowFindKey = i + 1;
+            let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
+
             if (tileOption.empty) {
-                activateTile(x, i, tileOption.value);
-            } else if (i != y) {
-                activateTile(x, i, tileOption.value);
+                activateTile(selectedCol, $row, tileOption.value);
+            } else if (i != selectedRow) {
+                activateTile(selectedCol, $row, tileOption.value);
                 break;
             }
         }
     }
 
-    var revealDown = function(x, y) {
-        // console.log('revealDown');
-        let $table = $('#puzzle-table');
-        // console.log('X:'+x+';Y:'+y+';noOfRows:'+noOfRows+';');
-        for (let i = y; i < noOfRows; ++i) {
-            // console.log(i);
-            let value = null;
-            if (map !== undefined && map[i] !== undefined && map[i].length > 1) {
-                value = map[i][x];
-            } else {
-                value = map[i];
-            }
+    var revealDown = function($puzzleTable, mapJson, selectedCol, selectedRow) {
+        for (let i = selectedRow; i < noOfRows; ++i) {
+            let value      = mapJson.coordinateValues[i].charAt(selectedCol);
             let tileOption = getTileOptionByValue(value);
-            // console.log(tileOption);
+            let rowFindKey = i + 1;
+            let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
+
             if (tileOption.empty) {
-                activateTile(x, i, tileOption.value);
-            } else if (i != y) {
-                activateTile(x, i, tileOption.value);
+                activateTile(selectedCol, $row, tileOption.value);
+            } else if (i != selectedRow) {
+                activateTile(selectedCol, $row, tileOption.value);
                 break;
             }
         }
     }
 
-    var revealLeft = function(x, y) {
-        // console.log('revealLeft');
-        let $table = $('#puzzle-table');
-        // let tileOption = getTileOptionByName('corridor');
-        for (let i = x; i >= 0; --i) {
-            let value = null;
-            if (map !== undefined && map[y] !== undefined && map[y].length > 1) {
-                value = map[y][i];
-            } else {
-                value = map[y];
-            }
-            // console.log(value);
-            // $($table).find('tr:nth-of-type('+i+') td:nth-of-type('+x+') input[type=radio]:checked').val()
+    var revealLeft = function($puzzleTable, mapJson, selectedCol, selectedRow) {
+        let rowFindKey = selectedRow + 1;
+        let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
+        for (let i = selectedCol; i >= 0; --i) {
+            let value      = mapJson.coordinateValues[selectedRow].charAt(i);
             let tileOption = getTileOptionByValue(value);
-            // console.log(tileOption);
-            // if (map[i][x] == tileOption.value) {
+
             if (tileOption.empty) {
-                activateTile(i, y, tileOption.value);
-            } else if (i != x) {
-                activateTile(i, y, tileOption.value);
+                activateTile(i, $row, tileOption.value);
+            } else if (i != selectedCol) {
+                activateTile(i, $row, tileOption.value);
                 break;
             }
         }
     }
 
-    var revealRight = function(x, y) {
-        // console.log('revealRight');
-        let $table = $('#puzzle-table');
-        for (let i = x; i < noOfCols; ++i) {
-            let value = null;
-            if (map !== undefined && map[y] !== undefined && map[y].length > 1) {
-                value = map[y][i];
-            } else {
-                value = map[y];
-            }
+    var revealRight = function($puzzleTable, mapJson, selectedCol, selectedRow) {
+        let rowFindKey = selectedRow + 1;
+        let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
+        for (let i = selectedCol; i < noOfCols; ++i) {
+            let value      = mapJson.coordinateValues[selectedRow].charAt(i);
             let tileOption = getTileOptionByValue(value);
             if (tileOption.empty) {
-                activateTile(i, y, tileOption.value);
-            } else if (i != x) {
-                activateTile(i, y, tileOption.value);
+                activateTile(i, $row, tileOption.value);
+            } else if (i != selectedCol) {
+                activateTile(i, $row, tileOption.value);
                 break;
             }
         }
     }
 
-    var updateToCode = function() {
-        // map = noOfRows + '|' + noOfCols + '|';
-
-        // for(let row = 0; row < noOfRows; ++row) {
-            // for (let col = 0; col < noOfCols; ++col) {
+    var updateToCode = function($puzzleTable) {
+        mapJson = {
+            "rowCount": 0,
+            "colCount": 0,
+            "coordinateValues": []
+        }
         map = [];
-        var rowCounter = 0;
-        var colCounter = 0;
-        $('#puzzle-table tr').each(function() {
-            $(this).find('td').each(function() {
-                if (map[rowCounter] === undefined) {
-                    map[rowCounter] = '';
-                }
-                // console.log('-------------');
-                // console.log(rowCounter);
-                // console.log(colCounter);
-                map[rowCounter] += $(this).find('input[type=radio]:checked').val() ? $(this).find('input[type=radio]:checked').val() : 0;
-                ++colCounter;
+        $($puzzleTable).find('tr').each(function() {
+            mapJson.colCount = 0;
+            mapJson.coordinateValues[mapJson.rowCount] = '';
+            $(this).find('div.puzzle-piece').each(function() {
+                mapJson.coordinateValues[mapJson.rowCount] += $(this).data('coordinateValue');
+                ++mapJson.colCount;
             });
-            colCounter = 0;
-            ++rowCounter;
+            ++mapJson.rowCount;
         });
 
-        $('#map').val(noOfRows + '|' + noOfCols + '|' + map.join(''));
+        $('#map').val(JSON.stringify(mapJson));
     };
 
     var updateFromCode = function() {
         console.time('start up');
-        let mapString = $('#map').val().split("|");
-        // console.log(mapString);
-        
-        // Set the row and col limit from the stored string
-        let rowLimit = parseInt(mapString[0] ?mapString[0]: 0);
-        let colLimit = parseInt(mapString[1] ?mapString[1]: 0);
-        mapString = mapString[2] ?mapString[2]: '';
-        // console.log(rowLimit);
-        // console.log(colLimit);
-        // console.log(mapString);
-        // console.log(mapString.length);
 
-        // Check that we have the right number of everything
-        if ((rowLimit * colLimit) !== mapString.length) {
-            console.log('Invalid');
-            console.log('Row limit: '+rowLimit);
-            console.log('Col limit: '+colLimit);
-            console.log('MapString: '+mapString.length+' - '+mapString);
-            return;
+        mapJson = JSON.parse($('#map').val());
+        console.log(mapJson);
+
+        if (!validateMapJson(mapJson)) {
+            console.log('Sorry, not valid JSON');
+            return false;
         }
 
-        // Set the counters
-        let rowCounter = 0;
-        let colCounter = 0;
-        map = [];
+        let $puzzleTable = $('#puzzle-table');
 
-        for (let key = 0; key < mapString.length; key++) {
-            if (colCounter < colLimit) {
-                ++colCounter;
-            } else {
-                colCounter = 1;
-                ++rowCounter;
-            }
-            if (map[rowCounter] === undefined) {
-                map[rowCounter] = '';
-            }
-            map[rowCounter] += mapString.charAt(key);
-        }
-        // console.log(map);
-        console.timeEnd('start up');
+        // Reset the whole table for the puzzle
+        resetTable($puzzleTable);
 
-        resetTable();
-console.time('Add row');
-        for(let row = 0; row < rowLimit; ++row) {
-            addRow();
+        // Add all of the rows first - for optimised performance
+        console.time('Add rows');
+        for(let row = 0; row < mapJson.rowCount; ++row) {
+            addRow($puzzleTable, mapJson);
         }
-console.timeEnd('Add row');
-console.time('Add col');
-        for (let col = 0; col < colLimit; ++col) {
-            addColumn();
-        }
-console.timeEnd('Add col');
-console.time('Reset tiles');
-        resetTiles();
-console.timeEnd('Reset tiles');
-console.time('Activate');
+        console.timeEnd('Add rows');
+
+        // Reset the tiles on the puzzle
+        console.time('Reset tiles');
+        resetTiles($puzzleTable);
+        console.timeEnd('Reset tiles');
+
+        // Activate the tiles we need for if this is editing or viewing it
+        console.time('Activate');
+        console.log(isViewing);
         if (isViewing) {
-            let tileOption = getTileOptionByName('start');
-            for (let y = 0; y < rowLimit; ++y) {
-                for (let x = 0; x < colLimit; ++x) {
-                    if (map[y][x] == tileOption.value) {
-                        let value = null;
-                        if (map !== undefined && map[y] !== undefined && map[y].length > 1) {
-                            value = map[y][x];
-                        } else {
-                            value = map[y];
-                        }
-                        activateTile(x, y, value);//$('#puzzle-table tr:nth-of-type('+y+') td:nth-of-type('+x+') #start').click();
-                        reveal(x, y);
-                    }
-                }
-            }
+            activateAllTilesForViewing(mapJson, $puzzleTable);
         } else {
-            activateAllTiles();
+            activateAllTilesForEditing(mapJson, $puzzleTable);
         }
-console.timeEnd('Activate');
+        console.timeEnd('Activate');
     };
 
+    var validateMapJson = function(mapJson) {
+        // Check that we have the right number of everything
+        if (mapJson.coordinateValues.length !== mapJson.rowCount) {
+            console.log('Invalid row count');
+            console.log('Row count specified: '+mapJson.rowCount);
+            console.log('Actual row count: '+mapJson.coordinateValues.length);
+            return false;
+        }
+
+        $(mapJson.coordinateValues).each(function (key, value) {
+            if (value.length !== mapJson.colCount) {
+                console.log('Invalid');
+                console.log('Col count specified: '+colCount);
+                console.log('Actual col count: '+value.length);
+                return false;
+            }
+        });
+
+        return true;
+    }
+
     var init = function() {
-        // console.time('generateTiles');
-        generateTiles();
-        // console.timeEnd('generateTiles');
         if ($('.puzzles.view').length > 0) {
             isViewing = true; // Awful way to set this, but currently no other way!
-            // updateFromCode();
         }
     }
 
-    $(document).on('click', '.puzzle-label', function(e) {
-        e.preventDefault();
-        // console.log('click!');
-        let parent = $(this).parent('td');
+    $(document).on('click', '.puzzle-piece', function(e) {
+        let $puzzleTable = $('#puzzle-table');
         if (isViewing) {
-            let coord = $(this).data('for').split('|');
-            let x = coord[1];
-            let y = coord[0];
-            let tileOption = getTileOptionByName('none');
-            // console.log($(this).parent('td').find('input[type=radio]:checked').val());
-            // console.log(tileOption.value);
-            // console.log($(this).parent('td').find('input[type=radio]:checked').val() != tileOption.value);
-            if ($(this).parent('td').find('input[type=radio]:checked').val() != tileOption.value) {
-                reveal(x, y);
-            }
-        } else {
-            // console.log(parent);
-            let checkedRadio = $(parent).find('input[type=radio]:checked');
-            // console.log(checkedRadio);
-            let checkValue = parseInt($(checkedRadio).val());
-            let maxValue = tileOptions.length - 1;
-            // console.log(checkValue);
-            // console.log(maxValue);
+            let coordinateValue = parseInt($(this).data('coordinateValue'));
+            let x = parseInt($(this).data('col'));
+            let y = parseInt($(this).data('row'));
+            let tileOption = getTileOptionByValue(coordinateValue);
 
-            let nextRadio = $(checkedRadio).next(':radio');
-            if (checkValue === maxValue) {
-                // console.log('Reset');
-                nextRadio = $(parent).find('input[type=radio]:first');
+            reveal($puzzleTable, mapJson, x, y);
+        } else {
+            let coordinateValue = parseInt($(this).data('coordinateValue'));
+            let x = parseInt($(this).data('col'));
+            let y = parseInt($(this).data('row'));
+            let maxValue = tileOptions.length - 1;
+            let nextCoordinateValueSelection = coordinateValue + 1;
+            if (nextCoordinateValueSelection > maxValue) {
+                nextCoordinateValueSelection = 0;
             }
-            // console.log(nextRadio);
-            $(nextRadio).click();//attr('checked', 'checked');
-            updateToCode();
+            tileOption = getTileOptionByValue(coordinateValue);
+            $(this).removeClass('puzzle-piece-'+tileOption.name);
+            let $row = $(this).closest('tr');
+            activateTile(x, $row, nextCoordinateValueSelection);
+            updateToCode($puzzleTable);
         }
     });
 
     $('#add-column').click(function() {
-        addColumn();
+        ++mapJson.colCount;
+        addColumn($('#puzzle-table'), mapJson);
         updateToCode();
     });
 
     $('#add-row').click(function() {
-        addRow();
+        ++mapJson.rowCount;
+        addRow($('#puzzle-table'), mapJson);
         updateToCode();
     });
 

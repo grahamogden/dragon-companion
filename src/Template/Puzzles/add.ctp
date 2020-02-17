@@ -9,18 +9,9 @@ echo $this->Html->script('puzzles.js');
     <?= $this->Form->create($puzzle) ?>
     <fieldset>
         <legend><?= __('Add Puzzle') ?></legend>
-        <?php
-            echo $this->Form->control('title');
-            echo $this->Form->control('description');
-            // echo $this->Form->control('parent_id', [
-            //     'options' => $parentTimelineSegments,
-            //     'empty'   => true,
-            //     'value'   => $this->request->getQuery('parent') ?? null, // Automatically fill this value in for the user
-            // ]);
-            echo $this->Form->control('map', [
-                'value' => '1|1|0',
-            ]);
-        ?>
+        <?= $this->Form->control('title') ?>
+        <?= $this->Form->control('description') ?>
+        <?= $this->Form->control('map', ['value' => '1|1|0',]) ?>
         <div id="puzzle-container">
             <div id="puzzle-controls">
                 <div id="add-column" class="button">
