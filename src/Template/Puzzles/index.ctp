@@ -5,7 +5,7 @@
  */
 ?>
 <div class="puzzles index large-9 medium-8 columns content">
-    <h3><?= __('Puzzles') ?></h3>
+    <h1><?= __('Puzzles') ?></h1>
     <?= $this->Html->link(__('New Puzzle'), ['action' => 'add']) ?>
     <table cellpadding="0" cellspacing="0">
         <thead>

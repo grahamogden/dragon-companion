@@ -55,13 +55,11 @@ jQuery(document).ready(function($) {
 
     var activateAllTilesForEditing = function (mapJson, $puzzleTable) {
         // console.time('Loop rows');
-        $(mapJson.coordinateValues).each(function(rowKey, rowValue) {
-        // for (let rowKey = 0; rowKey < mapJson.rowCount; ++ rowKey) {
-        //     let rowValue = mapJson.coordinateValues[rowKey];
+        $(mapJson.coordinateValues).each(function(rowKey, rowArray) {
             let $row = $($puzzleTable).find('tr:nth-of-type('+(rowKey+1)+')');
             // console.time('Loop cols');
             for (let colKey = 0; colKey < mapJson.colCount; ++colKey) {
-                let coordinateValue = rowValue.charAt(colKey);
+                let coordinateValue = rowArray[colKey];
                 // console.time('activate tile');
                 activateTile(colKey, $row, coordinateValue);
                 // console.timeEnd('activate tile');
@@ -73,12 +71,12 @@ jQuery(document).ready(function($) {
 
     var activateAllTilesForViewing = function (mapJson, $puzzleTable) {
         let tileOption = getTileOptionByName('start');
-        $(mapJson.coordinateValues).each(function(rowKey, rowValue) {
+        $(mapJson.coordinateValues).each(function(rowKey, rowArray) {
             let rowFindKey = rowKey + 1;
             let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
 
             for (let colKey = 0; colKey < mapJson.colCount; ++colKey) {
-                coordinateValue = rowValue.charAt(colKey);
+                coordinateValue = rowArray[colKey];
 
                 if (coordinateValue == tileOption.value) {
                     activateTile(colKey, $row, coordinateValue);//$('#puzzle-table tr:nth-of-type('+rowKey+') td:nth-of-type('+colKey+') #start').click();
@@ -98,22 +96,21 @@ jQuery(document).ready(function($) {
             .replace(/{{.*?}}/g, '');
     }
 
-    var addColumn = function($puzzleTable, mapJson) {
+    var addColumn = function($puzzleTable, colNumber) {
         let $rows = $($puzzleTable).find('tr');
         let rowCount = 0;
         $($rows).each(function() {
-            let tile = generateTile(rowCount, mapJson.colCount);
+            let tile = generateTile(rowCount, colNumber);
             $(this).append('<td>' + tile + '</td>');
             rowCount++;
         });
     };
 
-    var addRow = function($puzzleTable, mapJson) {
+    var addRow = function($puzzleTable, rowNumber, colCount) {
         $($puzzleTable).append('<tr></tr>');
-        let colCount = 0;
         let $row = $($puzzleTable).find('tr:last-child');
-        for (let i = 0; i < mapJson.colCount; i++) {
-            let tile = generateTile(mapJson.rowCount, i);
+        for (let i = 0; i < colCount; i++) {
+            let tile = generateTile(rowNumber, i);
             $($row).append('<td>' + tile + '</td>');
         }
     };
@@ -138,7 +135,7 @@ jQuery(document).ready(function($) {
 
     var reveal = function($puzzleTable, mapJson, x, y) {
         console.time('Reveal');
-        // console.log('x:' + x +'; y: '+ y);
+        console.log('x:' + x +'; y: '+ y);
         if (y > 0) {
             revealUp($puzzleTable, mapJson, x, y);
         }
@@ -159,7 +156,7 @@ jQuery(document).ready(function($) {
 
     var revealUp = function($puzzleTable, mapJson, selectedCol, selectedRow) {
         for (let i = selectedRow; i >= 0; --i) {
-            let value      = mapJson.coordinateValues[i].charAt(selectedCol);
+            let value      = mapJson.coordinateValues[i][selectedCol];
             let tileOption = getTileOptionByValue(value);
             let rowFindKey = i + 1;
             let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
@@ -174,8 +171,14 @@ jQuery(document).ready(function($) {
     }
 
     var revealDown = function($puzzleTable, mapJson, selectedCol, selectedRow) {
-        for (let i = selectedRow; i < noOfRows; ++i) {
-            let value      = mapJson.coordinateValues[i].charAt(selectedCol);
+        for (let i = selectedRow; i < mapJson.rowCount; ++i) {
+            console.log('i '+i);
+            console.log('selectedCol '+selectedCol);
+            console.log(mapJson);
+            console.log(mapJson.coordinateValues);
+            console.log(mapJson.coordinateValues[i]);
+            console.log(mapJson.coordinateValues[i][selectedCol]);
+            let value      = mapJson.coordinateValues[i][selectedCol];
             let tileOption = getTileOptionByValue(value);
             let rowFindKey = i + 1;
             let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
@@ -193,7 +196,7 @@ jQuery(document).ready(function($) {
         let rowFindKey = selectedRow + 1;
         let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
         for (let i = selectedCol; i >= 0; --i) {
-            let value      = mapJson.coordinateValues[selectedRow].charAt(i);
+            let value      = mapJson.coordinateValues[selectedRow][i];
             let tileOption = getTileOptionByValue(value);
 
             if (tileOption.empty) {
@@ -208,9 +211,10 @@ jQuery(document).ready(function($) {
     var revealRight = function($puzzleTable, mapJson, selectedCol, selectedRow) {
         let rowFindKey = selectedRow + 1;
         let $row       = $($puzzleTable).find('tr:nth-of-type('+rowFindKey+')');
-        for (let i = selectedCol; i < noOfCols; ++i) {
-            let value      = mapJson.coordinateValues[selectedRow].charAt(i);
+        for (let i = selectedCol; i <= mapJson.colCount; ++i) {
+            let value      = mapJson.coordinateValues[selectedRow][i];
             let tileOption = getTileOptionByValue(value);
+
             if (tileOption.empty) {
                 activateTile(i, $row, tileOption.value);
             } else if (i != selectedCol) {
@@ -222,16 +226,16 @@ jQuery(document).ready(function($) {
 
     var updateToCode = function($puzzleTable) {
         mapJson = {
-            "rowCount": 0,
             "colCount": 0,
+            "rowCount": 0,
             "coordinateValues": []
         }
         map = [];
         $($puzzleTable).find('tr').each(function() {
             mapJson.colCount = 0;
-            mapJson.coordinateValues[mapJson.rowCount] = '';
+            mapJson.coordinateValues[mapJson.rowCount] = new Array();
             $(this).find('div.puzzle-piece').each(function() {
-                mapJson.coordinateValues[mapJson.rowCount] += $(this).data('coordinateValue');
+                mapJson.coordinateValues[mapJson.rowCount].push($(this).data('coordinateValue'));
                 ++mapJson.colCount;
             });
             ++mapJson.rowCount;
@@ -259,7 +263,7 @@ jQuery(document).ready(function($) {
         // Add all of the rows first - for optimised performance
         console.time('Add rows');
         for(let row = 0; row < mapJson.rowCount; ++row) {
-            addRow($puzzleTable, mapJson);
+            addRow($puzzleTable, row, mapJson.colCount);
         }
         console.timeEnd('Add rows');
 
@@ -270,7 +274,6 @@ jQuery(document).ready(function($) {
 
         // Activate the tiles we need for if this is editing or viewing it
         console.time('Activate');
-        console.log(isViewing);
         if (isViewing) {
             activateAllTilesForViewing(mapJson, $puzzleTable);
         } else {
@@ -334,13 +337,13 @@ jQuery(document).ready(function($) {
 
     $('#add-column').click(function() {
         ++mapJson.colCount;
-        addColumn($('#puzzle-table'), mapJson);
+        addColumn($('#puzzle-table'), mapJson.colCount);
         updateToCode();
     });
 
     $('#add-row').click(function() {
         ++mapJson.rowCount;
-        addRow($('#puzzle-table'), mapJson);
+        addRow($('#puzzle-table'), mapJson.rowCount, mapJson.colCount);
         updateToCode();
     });
 

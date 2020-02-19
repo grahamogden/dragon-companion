@@ -6,9 +6,9 @@
 echo $this->Html->script('puzzles.js');
 ?>
 <div class="puzzles form large-9 medium-8 columns content">
+    <h1><?= __('Add Puzzle') ?></h1>
     <?= $this->Form->create($puzzle) ?>
-    <fieldset>
-        <legend><?= __('Add Puzzle') ?></legend>
+        <fieldset>
         <?= $this->Form->control('title') ?>
         <?= $this->Form->control('description') ?>
         <?= $this->Form->control('map', ['value' => '1|1|0',]) ?>

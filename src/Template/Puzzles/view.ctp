@@ -14,7 +14,7 @@ echo $this->Html->script('puzzles.js');
     </ul>
 </nav> -->
 <div class="puzzles view large-9 medium-8 columns content">
-    <h3>Puzzle <?php //h($puzzle->title) ?></h3>
+    <h1>Puzzle <?php //echo h($puzzle->title) ?></h1>
     <div id="puzzle-container">
         <?php $this->Form->create($puzzle); ?>
         <?= $this->Form->control('map'); ?>
