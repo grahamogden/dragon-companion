@@ -23,28 +23,47 @@ $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
                     <?= $this->Html->link('Home', ['controller' => '', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
                 </li>
                 <?php if ($userIsLoggedIn) { ?>
-                    <li class="nav-item">
-                        <?= $this->Html->link('Timeline', ['controller' => 'TimelineSegments', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-center dropdown-toggle" href="#" id="navbarPlayableCharacterDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Players</a>
+                        <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="navbarPlayableCharacterDropdownMenuLink">
+                            <li class="nav-item">
+                                <?= $this->Html->link('Playable Characters', ['controller' => 'PlayableCharacters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                            </li>
+                            <li class="nav-item">
+                                <?= $this->Html->link('Classes', ['controller' => 'PlayableCharacterClasses', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                            </li>
+                            <li class="nav-item">
+                                <?= $this->Html->link('Races', ['controller' => 'PlayableCharacterRaces', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                            </li>
+                        </ul>
                     </li>
-                <?php } ?>
-                <?php if ($userIsLoggedIn) { ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-center dropdown-toggle" href="#" id="navbarMonsterDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dungeon Masters</a>
+                        <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="navbarMonsterDropdownMenuLink">
+                            <li class="nav-item">
+                                <?= $this->Html->link('Campaigns', ['controller' => 'TimelineSegments', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                            </li>
+                            <li class="nav-item">
+                                <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                            </li>
+                            <li class="nav-item">
+                                <?= $this->Html->link('Combat Encounters', ['controller' => 'CombatEncounters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                            </li>
+                            <li class="nav-item">
+                                <?= $this->Html->link('Monsters', ['controller' => 'Monsters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                            </li>
+                            <li class="nav-item">
+                                <?= $this->Html->link('Named Monsters', ['controller' => 'MonsterInstances', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <?= $this->Html->link('Tags', ['controller' => 'Tags', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
                     </li>
                 <?php } ?>
-                <?php if ($userIsLoggedIn) { ?>
-                    <li class="nav-item">
-                        <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
-                    </li>
-                <?php } ?>
-                <?php if ($userIsLoggedIn) { ?>
-                    <li class="nav-item">
-                        <?= $this->Html->link('Puzzles', ['controller' => 'Puzzles', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
-                    </li>
-                <?php } ?>
                 <li class="nav-item dropdown">
-                    <a class="nav-link text-center dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
-                    <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="nav-link text-center dropdown-toggle" href="#" id="navbarAccountDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                    <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="navbarAccountDropdownMenuLink">
                         <li><label class="dropdown-item text-center nav-link" for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode"<?= ($this->request->getCookie('darkMode') ? 'checked="checked"' : ''); ?> />Switch Dark Mode</label></li>
                         <!-- <li class="nav-item"><a href="#" id="switch-header-slider">Enable Header Slider</a></li> -->
                         <?php if ($userIsLoggedIn) { ?>
@@ -58,7 +77,7 @@ $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
         </nav>
         <!-- <div id="header-background"></div> -->
     </header>
-    <?= $this->Flash->render() ?>
     <div class="container bg-white p-0">
+        <?= $this->Flash->render() ?>
         <?= $this->element('breadcrumbs'); ?>
     </div>

@@ -126,6 +126,36 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['controller' => 'Puzzles'])
         ->setPass(['id']);
 
+    $routes->connect(
+        '/playable-characters/:action/:id',
+        ['controller' => 'PlayableCharacters'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/character-classes/:action/:id',
+        ['controller' => 'PlayableCharactersClasses'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/character-races/:action/:id',
+        ['controller' => 'PlayableCharacterRaces'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/monsters/:action/:id',
+        ['controller' => 'Monsters'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/monster-instances/:action/:id',
+        ['controller' => 'MonsterInstances'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/combat-encounters/:action/:id',
+        ['controller' => 'CombatEncounters'])
+        ->setPass(['id']);
+
     /**
      * Connect catchall routes for all controllers.
      *

@@ -166,7 +166,7 @@ class NonPlayableCharactersController extends AppController
     public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
-        // The add and tags actions are always allowed to logged in users
+        // The add and index actions are always allowed to logged in users
         if (in_array($action, [
             'add',
             'index',
