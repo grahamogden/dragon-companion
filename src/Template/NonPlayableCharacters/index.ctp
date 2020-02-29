@@ -4,19 +4,21 @@
  * @var \App\Model\Entity\NonPlayableCharacter[]|\Cake\Collection\CollectionInterface $nonPlayableCharacters
  */
 ?>
-<div class="nonPlayableCharacters index large-9 medium-8 columns content">
-    <h3><?= __('Non Playable Characters') ?></h3>
-    <?= $this->Html->link(__('New Non Playable Character'), ['action' => 'add']) ?>
-    <table>
+<div class="nonPlayableCharacters index content">
+    <h1>Non Playable Characters</h1>
+    <div class="form-group">
+        <?= $this->Html->link('New Non Playable Character', ['action' => 'add'], ['class' => 'btn btn-outline-success']) ?>
+    </div>
+    <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col"><?= sprintf(
+                <th><?= sprintf(
                     '%s (%s)',
                     $this->Paginator->sort('name'),
                     $this->Paginator->sort('age')
                 ); ?></th>
-                <th scope="col"><?= $this->Paginator->sort('occupation'); ?></th>
-                <th scope="col"><?= __('Actions'); ?></th>
+                <th><?= $this->Paginator->sort('occupation'); ?></th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -32,29 +34,16 @@
                     ); ?></td>
                     <td><?= h($nonPlayableCharacter->occupation); ?></td>
                     <td class="actions">
-                        <ul class="menu">
-                            <!-- <li><?= $this->Html->link('', [
-                                'action' => 'edit',
-                                $nonPlayableCharacter->id
-                            ], [
-                                'class'   => [
-                                    'action',
-                                    'button',
-                                    'edit-button'
-                                ],
-                            ]); ?></li> -->
-                            <li><?= $this->Form->postLink('', [
-                                'action' => 'delete',
-                                $nonPlayableCharacter->id
-                            ], [
-                                'class'   => [
-                                    'action',
-                                    'button',
-                                    'delete-button'
-                                ],
-                                'confirm' => __('Are you sure you want to delete # {0}?', $nonPlayableCharacter->id),
-                            ]); ?></li>
-                        </ul>
+                        <?= $this->Form->postLink('Delete', [
+                            'action' => 'delete',
+                            $nonPlayableCharacter->id
+                        ], [
+                            'class'   => [
+                                'btn',
+                                'btn-outline-danger'
+                            ],
+                            'confirm' => sprintf('Are you sure you want to delete #%d - %s?', $nonPlayableCharacter->id, $nonPlayableCharacter->title),
+                        ]); ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

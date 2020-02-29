@@ -1,12 +1,12 @@
 <?php if ($this->Paginator->total() > 1) { ?>
     <div class="paginator">
-        <ul class="pagination">
+        <div class="pagination btn-group" role="group" aria-label="Pagination">
             <?= $this->Paginator->first(__('First')) ?>
             <?= $this->Paginator->prev(__('Previous')) ?>
-            <?= $this->Paginator->numbers() ?>
+            <?= $this->Paginator->numbers(['modulus' => 2]) ?>
             <?= $this->Paginator->next(__('Next')) ?>
             <?= $this->Paginator->last(__('Last')) ?>
-        </ul>
+        </div>
     </div>
 <?php } ?>
-    <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+    <div><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></div>

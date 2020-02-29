@@ -39,6 +39,9 @@ class AppView extends View
         $this->loadHelper('Form', [
             'templates' => 'app_form',
         ]);
+        $this->loadHelper('Paginator', [
+            'templates' => 'paginator-templates',
+        ]);
         $this->Form->addWidget(
             'autocomplete',
             ['Autocomplete', 'text', 'label']

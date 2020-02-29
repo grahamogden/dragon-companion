@@ -7,14 +7,15 @@
 use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
 <h1>Edit Timeline Segment</h1>
-<div class="timelineSegments form large-9 medium-8 columns content">
+<div class="timelineSegments form content">
     <?= $this->Form->create($timelineSegment); ?>
     <fieldset>
         <?= $this->Form->control('parent_id', [
             'options' => $parentTimelineSegments,
-            'empty' => true
+            'empty'   => true,
+            'class'   => ['form-control'],
         ]) ?>
-        <?= $this->Form->control('title') ?>
+        <?= $this->Form->control('title', ['class' => ['form-control']]) ?>
 <!--         <?= $this->Form->control('tag_string', [
             'label'  => 'Tag',
             'type'   => 'autocomplete',
@@ -37,13 +38,14 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
             'type'         => 'textareaeditor',
             'val'          => dbConverter::fromDatabase($timelineSegment->getBody()),
             'spellcheck'   => 'true',
-            'id'   => $timelineSegment->getId(),
+            'id'           => $timelineSegment->getId(),
+            'class'        => ['form-control'],
         ]) ?>
         <div class="segment-row">
-            <h3><?= __('Child Timeline Segment Synopsis'); ?></h3>
+            <h3>Child Timeline Segment Synopsis</h3>
             <div><?= $childTimelineParts; ?></div>
         </div>
-        <?= $this->Form->submit(__('Save')); ?>
+        <?= $this->Form->submit('Save', ['class' => ['btn','btn-lg','btn-block','btn-success']]); ?>
     </fieldset>
     <?= $this->Form->end(); ?>
 </div>

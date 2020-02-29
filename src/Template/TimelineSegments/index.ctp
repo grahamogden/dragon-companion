@@ -5,8 +5,8 @@
  */
 ?>
 <h1><?= __('Timeline Segments') ?></h1>
-<div class="timelineSegments index large-9 medium-8 columns content">
-    <table cellpadding="0" cellspacing="0" class="actions-table">
+<div class="timelineSegments index content">
+    <table class="table table-hover timeline-segments">
         <tbody>
             <?= $this->element('child-timeline-segment-rows'); ?>
             <?= $this->element('add-item-row'); ?>

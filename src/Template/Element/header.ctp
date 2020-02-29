@@ -1,58 +1,64 @@
 <?php
 $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
 ?>
-    <header>
-        <div id="top-bar">
-            <h1><?= $this->Html->link('Dragon Companion', ['controller' => '', 'action' => 'index']); ?></h1>
-            <div id="nav-menu-button" class="menu-button">
-                <div class="bar1"></div>
-                <div class="bar2"></div>
-                <div class="bar3"></div>
-            </div>
-        </div>
-        <nav>
+    <header class="navbar navbar-dark bg-dark sticky-top navbar-expand-md p-2">
+            <!-- <div id="top-bar" class="container-fluid"> -->
+        <?= $this->Html->link($this->Html->image('apple-icon/144.png', ['alt'=>'Dragon Companion']) . ' Dragon Companion', ['controller' => '', 'action' => 'index'], ['class'=>'navbar-brand', 'escape' => false]); ?>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-controls="navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+                <!-- <div id="nav-menu-button" class="menu-button">
+                    <div class="bar1"></div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                </div> -->
+            <!-- </div> -->
+        <nav class="collapse navbar-collapse" id="navbar-collapse-1">
             <!-- <ul class="title-area large-3 medium-4 columns"> -->
                 <!-- <li class="name"> -->
                 <!-- </li> -->
             <!-- </ul> -->
-            <ul class="nav-list">
-                <li>
-                    <?= $this->Html->link('Home', ['controller' => '', 'action' => 'index']); ?>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <?= $this->Html->link('Home', ['controller' => '', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
                 </li>
                 <?php if ($userIsLoggedIn) { ?>
-                    <li>
-                        <?= $this->Html->link('Timeline', ['controller' => 'TimelineSegments', 'action' => 'index']); ?>
+                    <li class="nav-item">
+                        <?= $this->Html->link('Timeline', ['controller' => 'TimelineSegments', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
                     </li>
                 <?php } ?>
                 <?php if ($userIsLoggedIn) { ?>
-                    <li>
-                        <?= $this->Html->link('Tags', ['controller' => 'Tags', 'action' => 'index']); ?>
+                    <li class="nav-item">
+                        <?= $this->Html->link('Tags', ['controller' => 'Tags', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
                     </li>
                 <?php } ?>
                 <?php if ($userIsLoggedIn) { ?>
-                    <li>
-                        <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index']); ?>
+                    <li class="nav-item">
+                        <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
                     </li>
                 <?php } ?>
                 <?php if ($userIsLoggedIn) { ?>
-                    <li>
-                        <?= $this->Html->link('Puzzles', ['controller' => 'Puzzles', 'action' => 'index']); ?>
+                    <li class="nav-item">
+                        <?= $this->Html->link('Puzzles', ['controller' => 'Puzzles', 'action' => 'index'], ['class' => 'nav-link text-center']); ?>
                     </li>
                 <?php } ?>
-                <li><a class="menu-button">Account</a>
-                    <ul class="menu">
-                        <li><label for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode"<?= ($this->request->getCookie('darkMode') ? 'checked="checked"' : ''); ?> />Switch Dark Mode</label></li>
-                        <!-- <li><a href="#" id="switch-header-slider">Enable Header Slider</a></li> -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-center dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                    <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="navbarDropdownMenuLink">
+                        <li><label class="dropdown-item text-center nav-link" for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode"<?= ($this->request->getCookie('darkMode') ? 'checked="checked"' : ''); ?> />Switch Dark Mode</label></li>
+                        <!-- <li class="nav-item"><a href="#" id="switch-header-slider">Enable Header Slider</a></li> -->
                         <?php if ($userIsLoggedIn) { ?>
-                            <li><?= $this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout']); ?></li>
+                            <li><?= $this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout'], ['class' => 'dropdown-item text-center nav-link']); ?></li>
                         <?php } else { ?>
-                            <li><?= $this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login']); ?></li>
+                            <li><?= $this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login'], ['class' => 'dropdown-item text-center nav-link']); ?></li>
                         <?php } ?>
                     </ul>
                 </li>
             </ul>
         </nav>
-        <div id="header-background"></div>
+        <!-- <div id="header-background"></div> -->
     </header>
     <?= $this->Flash->render() ?>
-    <?= $this->element('breadcrumbs'); ?>
+    <div class="container bg-white p-0">
+        <?= $this->element('breadcrumbs'); ?>
+    </div>

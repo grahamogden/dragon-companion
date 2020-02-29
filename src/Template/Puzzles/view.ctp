@@ -13,40 +13,15 @@ echo $this->Html->script('puzzles.js');
         <li><?= $this->Html->link(__('List Puzzles'), ['action' => 'index']) ?> </li>
     </ul>
 </nav> -->
-<div class="puzzles view large-9 medium-8 columns content">
+<div class="puzzles view content">
     <h1>Puzzle <?php //echo h($puzzle->title) ?></h1>
     <div id="puzzle-container">
         <?php $this->Form->create($puzzle); ?>
         <?= $this->Form->control('map'); ?>
-            <div id="puzzle-controls">
-                <div id="generate-from" class="button">Generate from</div>
-            </div>
-        <table id="puzzle-table">
-            <!-- <tr>
-                <th scope="row"><?= __('User') ?></th>
-                <td><?= $puzzle->has('user') ? $this->Html->link($puzzle->user->id, ['controller' => 'Users', 'action' => 'view', $puzzle->user->id]) : '' ?></td>
-            </tr>
-            <tr>
-                <th scope="row"><?= __('Title') ?></th>
-                <td><?= h($puzzle->title) ?></td>
-            </tr>
-            <tr>
-                <th scope="row"><?= __('Slug') ?></th>
-                <td><?= h($puzzle->slug) ?></td>
-            </tr>
-            <tr>
-                <th scope="row"><?= __('Id') ?></th>
-                <td><?= $this->Number->format($puzzle->id) ?></td>
-            </tr>
-            <tr>
-                <th scope="row"><?= __('Created') ?></th>
-                <td><?= h($puzzle->created) ?></td>
-            </tr>
-            <tr>
-                <th scope="row"><?= __('Modified') ?></th>
-                <td><?= h($puzzle->modified) ?></td>
-            </tr> -->
-        </table>
-        <div class="clear"></div>
+        <div id="puzzle-container" class="form-group">
+            <table id="puzzle-table" class="mx-auto">
+            </table>
+        </div>
+        <?php $this->Form->end(); ?>
     </div>
 </div>

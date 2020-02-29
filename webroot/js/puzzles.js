@@ -307,6 +307,8 @@ jQuery(document).ready(function($) {
         if ($('.puzzles.view').length > 0) {
             isViewing = true; // Awful way to set this, but currently no other way!
         }
+
+        updateFromCode();
     }
 
     $(document).on('click', '.puzzle-piece', function(e) {

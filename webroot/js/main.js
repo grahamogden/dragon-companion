@@ -144,8 +144,8 @@ jQuery(document).ready(function($) {
     });
 
     $('.menu-button').click(function(){
-        $(this).parent().toggleClass('open');
-        $(this).siblings('ul').slideToggle(transitionTime);
+        $(this).parent('.actions').toggleClass('open');
+        // $(this).siblings('.menu').slideToggle(transitionTime);
     });
 
     $('#nav-menu-button').click(function(){

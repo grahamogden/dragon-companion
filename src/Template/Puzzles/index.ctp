@@ -4,13 +4,14 @@
  * @var \App\Model\Entity\Puzzle[]|\Cake\Collection\CollectionInterface $puzzles
  */
 ?>
-<div class="puzzles index large-9 medium-8 columns content">
-    <h1><?= __('Puzzles') ?></h1>
-    <?= $this->Html->link(__('New Puzzle'), ['action' => 'add']) ?>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
+<div class="puzzles index content">
+    <h1>Puzzles</h1>
+    <div class="form-group">
+        <?= $this->Html->link('New Puzzle', ['action' => 'add'], ['class' => ['btn','btn-outline-success']]) ?>
+    </div>
+    <table class="table table-hover" cellpadding="0" cellspacing="0">
+        <thead class="thead-light">
             <tr>
-                <th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('title') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('description') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
@@ -19,13 +20,18 @@
         <tbody>
             <?php foreach ($puzzles as $puzzle): ?>
             <tr>
-                <td><?= $puzzle->has('user') ? $this->Html->link($puzzle->user->id, ['controller' => 'Users', 'action' => 'view', $puzzle->user->id]) : '' ?></td>
-                <td><?= h($puzzle->title) ?></td>
+                <td><?= $this->Html->link(h($puzzle->title), ['action' => 'edit', $puzzle->id]) ?></td>
                 <td><?= h($puzzle->description) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $puzzle->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $puzzle->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $puzzle->id], ['confirm' => __('Are you sure you want to delete # {0}?', $puzzle->id)]) ?>
+                    <?= $this->Html->link('Present', ['action' => 'view', $puzzle->id], ['class' => ['btn','btn-outline-primary']]) ?>
+                    <?= $this->Form->postLink(
+                        'Delete',
+                        ['action' => 'delete', $puzzle->id],
+                        [
+                            'confirm' => sprintf('Are you sure you want to delete #%d - %s?', $puzzle->id, $puzzle->title),
+                            'class' => ['btn','btn-outline-danger']
+                        ]
+                    ) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

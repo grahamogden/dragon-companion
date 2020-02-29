@@ -4,14 +4,14 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
-<h1><?= __('Register') ?></h1>
-<div class="users form large-9 medium-8 columns content">
+<h1>Register</h1>
+<div class="users form content">
     <?= $this->Form->create($user) ?>
-    <fieldset>
-        <?= $this->Form->control('username'); ?>
-        <?= $this->Form->control('password'); ?>
-        <?= $this->Form->submit(__('Register')) ?>
-        <p class="center">Already got an account? <?= $this->Html->link('login', ['action' => 'login']) ?> here!</p>
-    </fieldset>
+        <fieldset>
+            <p class="center">Already got an account? <?= $this->Html->link('login', ['action' => 'login']) ?> here!</p>
+            <?= $this->Form->control('username', ['class' => ['form-control']]); ?>
+            <?= $this->Form->control('password', ['class' => ['form-control']]); ?>
+            <?= $this->Form->submit('Register', ['class' => ['btn','btn-lg','btn-block btn-success']]) ?>
+        </fieldset>
     <?= $this->Form->end() ?>
 </div>

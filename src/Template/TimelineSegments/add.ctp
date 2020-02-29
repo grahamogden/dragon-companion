@@ -5,18 +5,20 @@
  */
 ?>
 <h1>Add Timeline Segment</h1>
-<div class="timelineSegments form large-9 medium-8 columns content">
+<div class="timelineSegments form content">
     <?= $this->Form->create($timelineSegment); ?>
     <fieldset>
         <?= $this->Form->control('parent_id', [
             'options' => $parentTimelineSegments,
             'empty'   => true,
             'value'   => $this->request->getQuery('parent') ?? null, // Automatically fill this value in for the user
+            'class'   => ['form-control'],
         ]) ?>
-        <?= $this->Form->control('title') ?>
+        <?= $this->Form->control('title', ['class'   => ['form-control']]) ?>
         <?= $this->Form->control('body', [
             'type'         => 'textareaeditor',
             'spellcheck'   => 'true',
+            'class'   => ['form-control'],
         ]) ?>
 <!--         <?= $this->Form->control('tag_string', [
             'label'  => 'Tag',
@@ -32,7 +34,7 @@
                 'controller' => 'TimelineSegments',
                 'action'     => 'getNonPlayableCharacters'],
         ]) ?> -->
-        <?= $this->Form->submit(__('Save')); ?>
+        <?= $this->Form->submit('Save', ['class' => ['btn','btn-lg','btn-block','btn-success']]); ?>
     </fieldset>
     <?= $this->Form->end(); ?>
 </div>

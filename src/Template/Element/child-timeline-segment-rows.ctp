@@ -6,13 +6,108 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
     $childCounter++;
     ?>
     <tr>
-        <th>
+        <th class="align-items-center d-flex bg-light">
             <?= $this->Html->link($childTimelineSegment->title, [
                 'action' => 'view',
                 $childTimelineSegment->id,
             ]); ?>
-            <div class="actions actions-fixed">
-                <a class="menu-button action">. . .</a>
+            <div class="dropdown d-inline-block ml-auto">
+                <button class="btn btn-secondary dropdown-toggle shadow-none" type="button" id="timelineDropdownMenuButton<?=$childCounter?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</button>
+                <div class="dropdown-menu dropdown-menu-right flex-column" aria-labelledby="timelineDropdownMenuButton<?=$childCounter?>">
+                    <?php if ($childCounter > 1) { ?>
+                        <?php // Move to top ?>
+                        <?= $this->Form->postLink('Move to top', [
+                            'action' => 'moveUpTop',
+                            $childTimelineSegment->id,
+                        ], [
+                            'class' => [
+                                'btn',
+                                'btn-info',
+                                'mb-2'
+                            ],
+                            'role' => 'button',
+                        ]); ?>
+
+                        <?php // Move up ?>
+                        <?= $this->Form->postLink('Move up', [
+                            'action' => 'moveUp',
+                            $childTimelineSegment->id,
+                        ], [
+                            'class' => [
+                                'btn',
+                                'btn-info',
+                                'mb-2'
+                            ],
+                            'role' => 'button',
+                        ]); ?>
+                    <?php } ?>
+
+                    <?php if (/*$childCounter > 1 &&*/ $childCounter < count($childTimelineSegments)) { ?>
+                        <?php // Move down ?>
+                        <?= $this->Form->postLink('Move down', [
+                            'action' => 'moveDown',
+                            $childTimelineSegment->id,
+                        ], [
+                            'class' => [
+                                'btn',
+                                'btn-info',
+                                'mb-2'
+                            ],
+                            'role' => 'button',
+                        ]); ?>
+
+                        <?php // Move to bottom ?>
+                        <?= $this->Form->postLink('Move to bottom', [
+                            'action' => 'moveDownBottom',
+                            $childTimelineSegment->id,
+                        ], [
+                            'class' => [
+                                'btn',
+                                'btn-info',
+                                'mb-2'
+                            ],
+                            'role' => 'button',
+                        ]); ?>
+                    <?php } ?>
+
+                    <?= $this->Html->link('Edit', [
+                        'action' => 'edit',
+                        $childTimelineSegment->id
+                    ], [
+                        'class'   => [
+                            'btn',
+                            'btn-primary',
+                            'mb-2'
+                        ],
+                        'role' => 'button',
+                    ]); ?>
+
+                    <?= $this->Form->postLink('Delete', [
+                        'action' => 'delete',
+                        $childTimelineSegment->id
+                    ], [
+                        'class'   => [
+                            'btn',
+                            'btn-danger',
+                        ],
+                        'role' => 'button',
+                        'confirm' => __('Are you sure you want to delete # {0}?', $childTimelineSegment->id),
+                    ]); ?>
+                </div>
+            </div>
+        </th>
+    </tr>
+    <tr>
+        <td class="show-more-container">
+            <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($childTimelineSegment->body)); ?></div>
+        </td>
+    </tr>
+<?php } // endforeach; ?>
+
+
+
+<?php
+/*
                 <ul class="menu">
                     <?php
                         if ($childCounter > 1) {
@@ -27,6 +122,7 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                                             'move-arrow',
                                             'arrow-up',
                                             'top',
+                                            'btn-info',
                                         ],
                             ]));
                             // Move up
@@ -39,6 +135,7 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                                             'action',
                                             'move-arrow',
                                             'arrow-up',
+                                            'btn-info',
                                         ],
                             ]));
                         }
@@ -54,6 +151,7 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                                             'action',
                                             'move-arrow',
                                             'arrow-down',
+                                            'btn-info',
                                         ],
                             ]));
                             // Move to bottom
@@ -67,6 +165,7 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                                             'move-arrow',
                                             'arrow-down',
                                             'bottom',
+                                            'btn-info',
                                         ],
                             ]));
                     } ?>
@@ -77,7 +176,8 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                         'class'   => [
                             'action',
                             'button',
-                            'edit-button'
+                            'edit-button',
+                            'btn-primary',
                         ],
                     ]); ?></li>
                     <li><?= $this->Form->postLink('', [
@@ -87,17 +187,11 @@ foreach ($childTimelineSegments as $childTimelineSegment) {
                         'class'   => [
                             'action',
                             'button',
-                            'delete-button'
+                            'delete-button',
+                            'btn-danger',
                         ],
                         'confirm' => __('Are you sure you want to delete # {0}?', $childTimelineSegment->id),
                     ]); ?></li>
                 </ul>
-            </div>
-        </th>
-    </tr>
-    <tr>
-        <td class="show-more-container">
-            <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($childTimelineSegment->body)); ?></div>
-        </td>
-    </tr>
-<?php } // endforeach; ?>
+*/
+?>

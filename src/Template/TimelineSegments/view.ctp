@@ -8,24 +8,20 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
 <h1><?= sprintf('%s Timeline Segment (%s)',
     h($timelineSegment->title),
-    $this->Html->link(__('Edit'), ['action' => 'edit', $timelineSegment->getId()])
+    $this->Html->link('Edit', ['action' => 'edit', $timelineSegment->getId()])
 ); ?></h1>
 <div class="timelineSegments view columns content">
-    <!-- <div class="segment-row">
-        <h3><?= __('Created'); ?></h3>
-        <p class="item"><?= h($timelineSegment->created); ?></p>
-    </div> -->
     <div class="segment-row show-more-container">
         <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body)); ?></div>
     </div>
     <hr>
     <div class="segment-row show-more-container">
-        <h3><?= __('Child Timeline Segment Synopsis'); ?></h3>
+        <h3>Child Timeline Segment Synopsis</h3>
         <div class="show-more-content"><?= $childTimelineParts; ?></div>
     </div>
     <?php if (!empty($timelineSegment->tags)) { ?>
         <div class="segment-row">
-            <h3><?= __('Tags'); ?></h3>
+            <h3>Tags</h3>
             <div class="tags-container">
                 <?php foreach ($timelineSegment->tags as $tags) { ?>
                     <div class="tag">
@@ -57,8 +53,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
     <?php } // endif; ?>
 </div>
 <div class="related">
-    <h4><?= __('Child Timeline Segments'); ?></h4>
-    <table cellpadding="0" cellspacing="0" class="actions-table timelinesegments">
+    <h4>Child Timeline Segments</h4>
+    <table class="table table-hover timeline-segments">
         <tbody>
             <?= $this->element('child-timeline-segment-rows', [
                 'childTimelineSegments' => $timelineSegment->child_timeline_segments,
