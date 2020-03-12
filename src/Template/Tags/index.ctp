@@ -5,7 +5,7 @@
  */
 ?>
 <div class="tags index content">
-    <h1><?= __('Tags') ?></h1>
+    <h1>Tags</h1>
     <div class="form-group">
         <?= $this->Html->link(__('New Tag'), ['action' => 'add'], ['class' => ['btn','btn-outline-success']]); ?>
     </div>

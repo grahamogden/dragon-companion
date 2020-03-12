@@ -6,7 +6,7 @@
 echo $this->Html->script('puzzles.js');
 ?>
 <div class="puzzles form edit content">
-    <h1><?= __('Edit Puzzle') ?></h1>
+    <h1>Edit Puzzle</h1>
     <?= $this->Form->create($puzzle) ?>
         <fieldset>
             <?= $this->Form->control('title', ['class' => ['form-control']]) ?>

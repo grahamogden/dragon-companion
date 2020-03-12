@@ -14,7 +14,7 @@
  */
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
-use Cake\Core\Plugin;
+use Cake\Http\BaseApplication;
 
 /**
  * Additional bootstrapping and configuration for CLI environments should
@@ -30,9 +30,9 @@ Configure::write('Log.debug.file', 'cli-debug');
 Configure::write('Log.error.file', 'cli-error');
 
 try {
-    Plugin::load('Bake');
+    BaseApplication::addPlugin('Bake');
 } catch (MissingPluginException $e) {
     // Do not halt if the plugin is missing
 }
 
-Plugin::load('Migrations');
+BaseApplication::addPlugin('Migrations');

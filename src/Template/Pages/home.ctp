@@ -25,7 +25,7 @@ $title = 'Dragon Companion - The one and only Companion app for playing role pla
                 <li>Session Diary - to keep all of your session notes in a public area that your group can read without them finding juicy secrets that you might have put into the timeline segments!</li>
                 <li>Many, many more to come...</li>
             </ul>
-            <p>To access these amazing features, you will need to register/log in - we wouldn&apos;t want your players coming here and seeing all of the juicy things your working on, would we!</p>
+            <p>To access these amazing features, you will need to register/log in - we wouldn&apos;t want your players coming here and seeing all of the juicy things you&apos;re working on, would we!</p>
         </div>
     </div>
     <?= $this->element('footer') ?>

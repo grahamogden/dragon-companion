@@ -13,7 +13,7 @@ return [
     // Widget ordering for date/time/datetime pickers.
     'dateWidget' => '{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}{{meridian}}',
     // Error message wrapper elements.
-    'error' => '<div class="error-message">{{content}}</div>',
+    'error' => '<div class="col-12 error-message alert alert-danger">{{content}}</div>',
     // Container for error items.
     'errorList' => '<ul>{{content}}</ul>',
     // Error item wrapper.
@@ -61,7 +61,7 @@ return [
     // Wrapping container for radio input/label,
     'radioWrapper' => '{{label}}',
     // Textarea input element,
-    'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>',
+    'textarea' => '<div class="input row form-group ml-0 mr-0"><textarea name="{{name}}"{{attrs}}>{{value}}</textarea></div>',
     // Container for submit buttons.
     'submitContainer' => '<div class="submit">{{content}}</div>',
     /********************

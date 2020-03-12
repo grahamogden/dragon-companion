@@ -47,6 +47,30 @@ use Cake\Routing\Route\DashedRoute;
 Router::defaultRouteClass(DashedRoute::class);
 
 Router::scope('/', function (RouteBuilder $routes) {
+
+    Router::prefix('api/v1', function (RouteBuilder $routes) {
+        $routes->setExtensions(['json']);
+        $routes->resources(
+            'CombatEncounters',
+            [
+                // 'actions' => [
+                //     'create' => 'apiAdd',
+                //     'read'   => 'apiView',
+                //     'update' => 'apiUpdate',
+                //     'delete' => 'apiDelete',
+                // ],
+                'path'    => 'combat-encounters'
+            ]
+        );
+        // $routes->connect(
+        //     '/combat-encounters',
+        //     [
+        //         'controller' => 'CombatEncounters',
+        //         'action' => 'add',
+        //         // 'prefix' => 'api',
+        //     ]);
+    });
+
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
@@ -57,7 +81,7 @@ Router::scope('/', function (RouteBuilder $routes) {
         [
             'controller' => 'Pages',
             'action' => 'display',
-            'home'
+            'home',
     ]);
 
     /**
@@ -67,7 +91,7 @@ Router::scope('/', function (RouteBuilder $routes) {
         '/pages/*',
         [
             'controller' => 'Pages',
-            'action' => 'display'
+            'action' => 'display',
     ]);
 
     $routes->connect(
@@ -156,6 +180,11 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['controller' => 'CombatEncounters'])
         ->setPass(['id']);
 
+    $routes->connect(
+        '/clans/:action/:id',
+        ['controller' => 'Clans'])
+        ->setPass(['id']);
+
     /**
      * Connect catchall routes for all controllers.
      *
@@ -175,7 +204,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
-Router::extensions('json');
+// Router::extensions('json');
 
 // New route we're adding for our tagged action.
 // The trailing `*` tells CakePHP that this action has
