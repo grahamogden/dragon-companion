@@ -70,9 +70,9 @@ $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
                         <!-- <li><label class="dropdown-item text-center nav-link" for="switch-dark-mode"><input type="checkbox" class="switch" id="switch-dark-mode" name="switch-dark-mode"<?= ($this->request->getCookie('darkMode') ? 'checked="checked"' : ''); ?> />Switch Dark Mode</label></li> -->
                         <!-- <li class="nav-item"><a href="#" id="switch-header-slider">Enable Header Slider</a></li> -->
                         <?php if ($userIsLoggedIn) { ?>
-                            <li><?= $this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout'], ['class' => 'dropdown-item text-center nav-link']); ?></li>
+                            <li><?= $this->Html->link('Log out', ['controller' => 'Users', 'action' => 'logout'], ['class' => 'dropdown-link text-center nav-link']); ?></li>
                         <?php } else { ?>
-                            <li><?= $this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login'], ['class' => 'dropdown-item text-center nav-link']); ?></li>
+                            <li><?= $this->Html->link('Log in', ['controller' => 'Users', 'action' => 'login'], ['class' => 'dropdown-link text-center nav-link']); ?></li>
                         <?php } ?>
                     </ul>
                 </li>

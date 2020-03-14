@@ -68,14 +68,19 @@ return [
      * CUSTOM TEMPLATES *
      ********************/
     // Have to stupidly hack value="{{val}}" because the widget refuses to add the "value" attribute and will instead create "val"
-    'autocomplete' => '<div class="autocomplete-container"><input type="text" name="{{name}}" id="autocomplete-{{name}}" value="{{val}}" {{attrs}} /><div class="autocomplete-results" id="results-{{name}}"></div><input type="hidden" class="autocomplete-template" /></div>
+    'autocomplete' => '<div class="autocomplete-container form-group input row"><input type="text" name="{{name}}" id="autocomplete-{{name}}" value="{{val}}" {{attrs}} {{excludes}} /><div class="autocomplete-results" id="results-{{name}}"></div><input type="hidden" class="autocomplete-template" /></div>
     <script>
         $( function() {
             function split( val ) {
                 return val.split( /,\s*/ );
             }
+
             function extractLast( term ) {
                 return split( term ).pop();
+            }
+
+            function getExcludes( name ) {
+                return JSON.stringify($( "#autocomplete-{{name}}" ).data("excludes"));
             }
          
             $( "#autocomplete-{{name}}" )
@@ -88,13 +93,14 @@ return [
                 .autocomplete({
                     appendTo: "#results-{{name}}",
                     minLength: 3,
-                    position: {
-                        my: "center (bottom - 2px)",
-                        of: "autocomplete-{{name}}"
-                    },
+                    // position: {
+                    //     my: "center (bottom - 2px)",
+                    //     of: $("#autocomplete-{{name}}")
+                    // },
                     source: function( request, response ) {
                         $.getJSON( "{{source}}", {
-                            term: extractLast( request.term )
+                            term: extractLast( request.term ),
+                            excludes: getExcludes("autocomplete-{{name}}")
                         }, response );
                         $(".ui-helper-hidden-accessible").remove();
                     },

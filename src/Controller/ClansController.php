@@ -1,7 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\Query;
 
 /**
  * Clans Controller
@@ -19,8 +22,11 @@ class ClansController extends AppController
      */
     public function index()
     {
-        $clans = $this->paginate($this->Clans);
-        $userId  = $this->Auth->user('id');
+        $userId = $this->Auth->user('id');
+        $query  = $this->Clans->find()->matching('Users', function ($q) use ($userId) {
+            return $q->where(['Users.id =' => $userId]);
+        });
+        $clans  = $this->paginate($query);
 
         $this->set(compact('clans', 'userId'));
     }
@@ -38,13 +44,8 @@ class ClansController extends AppController
             'contain' => ['Users'],
         ]);
 
-        $adminUsers = [];/*$clan->Users->find()->innerJoinWith('Clans', function($q) {//findById($adminUserId);
-            return $q->where(['account_level =' => 10]);
-        });*/
-
-        $memberUsers = [];/*$clan->Users->find()->innerJoinWith('Clans', function($q) {//findById($adminUserId);
-            return $q->where(['account_level !=' => 10]);
-        });*/
+        $adminUsers  = [];
+        $memberUsers = [];
 
         foreach($clan->users as $user) {
             if ($user->_joinData->account_level === 10) {
@@ -54,8 +55,6 @@ class ClansController extends AppController
             }
         }
 
-
-// var_dump('<pre>',$adminUsers,'----------------------', $memberUsers,'<pre>');exit;
         $this->set(compact('clan', 'adminUsers', 'memberUsers'));
     }
 
@@ -104,8 +103,15 @@ class ClansController extends AppController
             }
             $this->Flash->error(__('The clan could not be saved. Please, try again.'));
         }
-        $users = $this->Clans->Users->find('list', ['limit' => 200])->where(['id !=' => $this->Auth->user('id')]);
-
+        $clanId = $clan->id;
+        $userId = $this->Auth->user('id');
+        $this->loadModel('Users');
+        $users = $this->Users->find()->matching('Clans', function ($q) use ($clanId, $userId) {
+            return $q->where([
+                'Clans.id =' => $clanId,
+                'Users.id !=' => $userId
+            ]);
+        });
         $this->set(compact('clan', 'users'));
     }
 
@@ -143,6 +149,8 @@ class ClansController extends AppController
         if (in_array($action, [
             'add',
             'index',
+            'addClanUser',
+            'getUsers',
         ])) {
             return true;
         }
@@ -158,8 +166,62 @@ class ClansController extends AppController
         $clan = $this->Clans->findById($id)->contain('Users')->firstOrFail();
         $clanUserIds = array_column($clan->users, 'id');
 
-        // var_dump('<pre>',,'</pre>');exit;
-
         return $clan->user_id === $user['id'] || in_array($user['id'], $clanUserIds);
+    }
+
+    /**
+     * [addClanUser description]
+     */
+    public function addClanUser()
+    {
+        $this->autoRender = false;
+
+        $userId = $this->request->getQuery('userId');
+var_dump($this->request);
+        header("HTTP/1.0 201 Created");
+    }
+
+    /**
+     * Looks up tags based on a wildcard search term,
+     * starting with at least three character
+     * 
+     * @return string
+     */
+    public function getUsers()
+    {
+        $this->autoRender = false;
+        $term = $this->request->getQuery('term');
+
+        if ($this->request->is('ajax') && strlen($term) >= 3) {
+
+            $excludes = json_decode($this->request->getQuery('excludes'), true);
+            $excludeClanId = $excludes['clanId'];
+            if (!is_numeric($excludeClanId)) {
+                header('HTTP/1.0 400 Bad request');
+            }
+
+            $this->loadModel('Users');
+            
+            $results = $this->Users->find()
+                ->notMatching('Clans', function(Query $q) use ($excludeClanId) {
+                    return $q->where(['Clans.id =' => $excludeClanId]);
+                })
+                ->where(['Users.username LIKE' => $term . '%'])
+                ->limit(20);
+
+            foreach ($results as $result) {
+                $return[] = [
+                    'label'        => $result->username,
+                    'value'        => $result->username,
+                ];
+            }
+        } else {
+            $return = [
+                'label'        => 'No results found',
+                'value'        => 'No results found',
+            ];
+        }
+        
+        echo json_encode($return);
     }
 }

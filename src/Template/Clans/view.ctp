@@ -30,7 +30,7 @@
             <?php foreach ($memberUsers as $memberUser): ?>
                 <tr>
                     <td><?= h($memberUser->username) ?></td>
-                    <td><?= h($memberUser->email) ?></td>
+                    <td><?= h($memberUser->email) ?: 'No email address set' ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('Unlink'), ['controller' => 'Users', 'action' => 'view', $memberUser->id]) ?>
                         <?php // echo $this->Form->postLink(__('Delete'), ['controller' => 'Users', 'action' => 'delete', $users->id], ['confirm' => __('Are you sure you want to delete # {0}?', $users->id)]) ?>

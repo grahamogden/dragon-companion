@@ -209,6 +209,44 @@ body {
     margin: @distTwelve 0;
 }
 
+.autocomplete-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+
+    .autocomplete-results {
+        position: absolute;
+        top: calc(100% - @distTwo);
+        width: 100%;
+        z-index: 1;
+
+        ul.ui-autocomplete {
+            background-color: transparent;
+            border-width: 0 @distOne @distOne @distOne;
+            border-style: solid;
+            border-top: 3px double;
+            border-color: @colorGrey;
+            box-shadow: @boxShadowSmall;
+            list-style-type: none;
+            margin: 0;
+            max-width: 100%;
+            padding: 0;
+            width: 100%;
+
+            li .ui-menu-item-wrapper {
+                .background-color(rgba(255, 255, 255, 1), @noTransition, @hover, @darkMode);
+                cursor: pointer;
+                padding: @distEight;
+
+                &.ui-state-active {
+                    // background-color: rgba(240, 240, 240, 1);
+                }
+            }
+        }
+    }
+}
+
 .btn,
 body,
 .dropdown-menu,
@@ -252,6 +290,15 @@ div.content-container {
 
 h1 {
     margin: 0 0 @distSixteen 0;
+}
+
+header {
+
+    @media all and (max-width: 767px) {
+        .nav-item:not(:last-of-type) {
+            border-bottom: 0.1rem solid rgba(0, 0, 0, 0.3);
+        }
+    }
 }
 
 label {
@@ -311,11 +358,9 @@ label {
 
         .dropdown-menu {
             background-color: @colorDarkBlueTwo;
+            border: none;
             min-width: max-content;
-        }
-
-        .nav-item:not(:last-of-type) {
-            border-bottom: 0.1rem solid rgba(0, 0, 0, 0.3);
+            overflow: hidden;
         }
 
         .nav-link {
@@ -329,6 +374,10 @@ label {
                 background-color: @colorDarkBlueFour;
                 color: @colorThirteen;
                 cursor: pointer;
+            }
+
+            &.dropdown-link {
+                min-width: 20rem;
             }
         }
     }
@@ -804,44 +853,6 @@ a {
 
         li {
             margin: @distFour 0;
-        }
-    }
-}
-
-.autocomplete-container {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    width: 100%;
-
-    .autocomplete-results {
-        position: absolute;
-        top: calc(100% - @distTwo);
-        width: 100%;
-        z-index: 1;
-
-        ul.ui-autocomplete {
-            background-color: transparent;
-            border-width: 0 @distOne @distOne @distOne;
-            border-style: solid;
-            border-top: 3px double;
-            border-color: @colorGrey;
-            box-shadow: @boxShadowSmall;
-            list-style-type: none;
-            margin: 0;
-            max-width: 100%;
-            padding: 0;
-            width: 100%;
-
-            li .ui-menu-item-wrapper {
-                .background-color(rgba(255, 255, 255, 1), @noTransition, @hover, @darkMode);
-                cursor: pointer;
-                padding: @distEight;
-
-                &.ui-state-active {
-                    // background-color: rgba(240, 240, 240, 1);
-                }
-            }
         }
     }
 }

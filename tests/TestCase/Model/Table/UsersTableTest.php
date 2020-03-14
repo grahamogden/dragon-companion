@@ -10,7 +10,6 @@ use Cake\TestSuite\TestCase;
  */
 class UsersTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -24,7 +23,7 @@ class UsersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.users'
+        'app.Users',
     ];
 
     /**

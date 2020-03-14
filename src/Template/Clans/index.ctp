@@ -18,24 +18,32 @@
         </thead>
         <tbody>
             <?php foreach ($clans as $clan): ?>
-            <tr>
-                <td><?= $this->Html->link(
-                    h($clan->name),
-                    [
-                        'action' => $clan->user_id === $userId ? 'edit' : 'view',
-                        $clan->id
-                    ]
-                ) ?></td>
-                <td class="actions">
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $clan->id], [
-                        'class'   => [
-                            'btn',
-                            'btn-outline-danger'
-                        ],
-                        'confirm' => __('Are you sure you want to delete # {0}?', $clan->id)
-                    ]) ?>
-                </td>
-            </tr>
+                <?php foreach ($clan->_matchingData as $clanUser): ?>
+                    <?php $userIsAdmin = false; ?>
+                    <?php if ($clanUser->account_level): ?>
+                        <?php $userIsAdmin = true; ?>
+                        <?php break; ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <tr>
+                    <td>
+                    <?= $this->Html->link(
+                        h($clan->name),
+                        [
+                            'action' => $userIsAdmin ? 'edit' : 'view',
+                            $clan->id
+                        ]
+                    ) ?></td>
+                    <td class="actions">
+                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $clan->id], [
+                            'class'   => [
+                                'btn',
+                                'btn-outline-danger'
+                            ],
+                            'confirm' => __('Are you sure you want to delete # {0}?', $clan->id)
+                        ]) ?>
+                    </td>
+                </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
