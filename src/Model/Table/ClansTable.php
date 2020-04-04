@@ -78,8 +78,8 @@ class ClansTable extends Table
      */
     public function beforeSave(Event $event, $entity, $options): bool
     {
-        if ($entity->new_users) {
-            $entity->users = array_merge($entity->users, $this->_buildUsers($entity->new_users));
+        if ($entity->users_string) {
+            $entity->users = $this->_buildUsers($entity->users_string);
         }
 
         return true;
@@ -88,13 +88,13 @@ class ClansTable extends Table
     /**
      * Finds users records from the list provided and returns them to be added to the clan
      * 
-     * @param string $userString 
+     * @param string $usersString 
      * @return array
      */
-    protected function _buildUsers(string $userString): array
+    protected function _buildUsers(string $usersString): array
     {
         // Trim users
-        $newUsers = array_map('trim', explode(',', $userString));
+        $newUsers = array_map('trim', explode(',', $usersString));
 
         // Remove all empty users
         $newUsers = array_filter($newUsers);

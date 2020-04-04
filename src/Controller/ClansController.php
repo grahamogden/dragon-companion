@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\ClansUser;
 use Cake\ORM\Query;
 
 /**
@@ -48,7 +49,7 @@ class ClansController extends AppController
         $memberUsers = [];
 
         foreach($clan->users as $user) {
-            if ($user->_joinData->account_level === 10) {
+            if ($user->_joinData->account_level === ClansUser::ACCOUNT_LEVEL_ADMIN) {
                 $adminUsers[] = $user;
             } else {
                 $memberUsers[] = $user;
@@ -94,6 +95,7 @@ class ClansController extends AppController
         $clan = $this->Clans->get($id, [
             'contain' => ['Users'],
         ]);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $clan = $this->Clans->patchEntity($clan, $this->request->getData());
@@ -105,7 +107,14 @@ class ClansController extends AppController
             $this->Flash->error(__('The clan could not be saved. Please, try again.'));
         }
 
-        $this->set(compact('clan', 'users'));
+        $adminUsers = [];
+        foreach($clan->users as $user) {
+            if ($user->_joinData->account_level === ClansUser::ACCOUNT_LEVEL_ADMIN) {
+                $adminUsers[] = $user;
+            }
+        }
+
+        $this->set(compact('clan', 'users', 'adminUsers'));
     }
 
     /**
@@ -205,10 +214,5 @@ class ClansController extends AppController
         
         echo json_encode($return);
         exit;
-    }
-
-    public function deleteClanUser()
-    {
-        // $this->Clans->
     }
 }

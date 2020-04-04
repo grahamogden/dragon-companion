@@ -17,6 +17,9 @@ use Cake\ORM\Entity;
  */
 class ClansUser extends Entity
 {
+    public const ACCOUNT_LEVEL_USER  = 1;
+    public const ACCOUNT_LEVEL_ADMIN = 10;
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
