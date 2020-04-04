@@ -400,7 +400,7 @@ class TimelineSegmentsController extends AppController
 
                 if (!empty($out[2])) {
                     $timelinePartsArray[] = sprintf(
-                        '<h6>%s</h6><ul><li>%s</li></ul>',
+                        '<h3>%s</h3><ul><li>%s</li></ul>',
                         $childTimeline->title,
                         implode('</li><li>', $out[2])
                     );

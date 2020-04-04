@@ -1,8 +1,8 @@
 <?php
 namespace App\Model\Entity;
 
-use Cake\ORM\Entity;
 use Cake\Collection\Collection;
+use Cake\ORM\Entity;
 
 /**
  * TimelineSegment Entity

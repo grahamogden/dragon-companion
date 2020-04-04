@@ -104,23 +104,6 @@ class ClansController extends AppController
             }
             $this->Flash->error(__('The clan could not be saved. Please, try again.'));
         }
-        
-        // $clanId = $clan->id;
-        // $userId = $this->Auth->user('id');
-
-        // $this->loadModel('Users');
-
-        // $adminUsers  = [];
-        // $memberUsers = [];
-
-        // foreach($clan->users as $user) {
-        //     if ($user->_joinData->account_level === 10) {
-        //         $adminUsers[] = $user;
-        //     } else {
-        //         $memberUsers[] = $user;
-        //     }
-        // }
-        
 
         $this->set(compact('clan', 'users'));
     }

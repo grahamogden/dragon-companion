@@ -1,11 +1,11 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-// the Text class
 use Cake\Utility\Text;
 use App\Model\Behavior\DatabaseStringConverterBehavior;
 // the QueryExpressions class
@@ -107,12 +107,12 @@ class TimelineSegmentsTable extends Table
     /**
      * Before saving
      * 
-     * @param type $event 
+     * @param Event $event 
      * @param type $entity 
      * @param type $options 
-     * @return type
+     * @return bool
      */
-    public function beforeSave($event, $entity, $options)
+    public function beforeSave(Event $event, $entity, $options): bool
     {
         if ($entity->tag_string) {
             $entity->tags = $this->_buildTags($entity->tag_string);
@@ -136,14 +136,16 @@ class TimelineSegmentsTable extends Table
         $sluggedTitle = Text::slug(strtolower($entity->title));
         // trim slug to maximum length defined in schema
         $entity->slug = substr($sluggedTitle, 0, 250);
+
+        return true;
     }
 
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {
@@ -184,12 +186,12 @@ class TimelineSegmentsTable extends Table
     }
     
     /**
-     * Description
+     * Finds tag records from the list provided and returns them to be added to the User
      * 
-     * @param type $tagString 
-     * @return type
+     * @param string $tagString 
+     * @return array
      */
-    protected function _buildTags($tagString)
+    protected function _buildTags(string $tagString): array
     {
         // Trim tags
         $newTags = array_map('trim', explode(',', $tagString));
@@ -213,21 +215,18 @@ class TimelineSegmentsTable extends Table
         foreach ($query as $tag) {
             $out[] = $tag;
         }
-        // Add new tags.
-        // foreach ($newTags as $tag) {
-        //     $out[] = $this->Tags->newEntity(['title' => $tag]);
-        // }
 
         return $out;
     }
     
     /**
-     * Description
+     * Finds non-playable character records from the list provided and
+     * returns them to be added to the User
      * 
-     * @param type $nonPlayableCharacterString 
-     * @return type
+     * @param string $nonPlayableCharacterString 
+     * @return array
      */
-    protected function _buildNonPlayableCharacters($nonPlayableCharacterString)
+    protected function _buildNonPlayableCharacters(string $nonPlayableCharacterString): array
     {
         // Trim nonPlayableCharacters
         $newNonPlayableCharacters = array_map('trim', explode(',', $nonPlayableCharacterString));
@@ -251,11 +250,6 @@ class TimelineSegmentsTable extends Table
         foreach ($query as $nonPlayableCharacter) {
             $out[] = $nonPlayableCharacter;
         }
-        // TODO: Return some kind of response that the user cannot create a character here
-        // Add new nonPlayableCharacters.
-        // foreach ($newNonPlayableCharacters as $nonPlayableCharacter) {
-        //     $out[] = $this->NonPlayableCharacters->newEntity(['name' => $nonPlayableCharacter]);
-        // }
 
         return $out;
     }

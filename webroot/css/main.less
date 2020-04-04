@@ -518,6 +518,52 @@ table {
     }
 }
 
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+
+    .tag {
+        display: inline-block;
+        font-size: 0;
+        line-height: 0;
+        margin: 0 0 @distEight 0;
+
+        a {
+            border-radius: @distSixteen 0 0 @distSixteen;
+            display: inline-block;
+            font-size: initial;
+            line-height: initial;
+            overflow: hidden;
+            padding: @distFour @distEight @distFour @distTwentyFour;
+            position: relative;
+            max-width: 30rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            &,
+            &:before {
+                border: 0.1rem solid;
+                .border-color(@colorLightBlue);
+                // box-shadow: @distTwo @distTwo @distTwo 0 rgba(0, 0, 0, 0.1);
+            }
+
+            &:before {
+                border-radius: 100%;
+                content: '';
+                height: @distEight;
+                left: @distEight;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: @distEight;
+            }
+        }
+    }
+}
+
 ul {
     // margin: 0 0 @distEight 0;
     // padding: 0 @distEight 0 @distTwentyFour;
@@ -1776,44 +1822,6 @@ table {
         &.item-row-placeholder td {
             content: 'Pick a place!';
             padding: @distEight @distFour;
-        }
-    }
-}
-
-.tags-container {
-    display: flex;
-    flex-wrap: wrap;
-    // justify-content: space-between;
-
-    .tag {
-        display: inline-block;
-        margin: @distFour;
-
-        a {
-            border: @distOne solid;
-            .border-color(@colorLightBlue);
-            border-radius: @distSixteen 0 0 @distSixteen;
-            box-shadow: @distTwo @distTwo @distTwo 0 rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            padding: @distFour @distEight @distFour @distTwentyFour;
-            position: relative;
-            max-width: 30rem;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-
-            &:before {
-                border: @distOne solid;
-                .border-color(@colorLightBlue);
-                border-radius: 100%;
-                box-shadow: inset @distTwo @distTwo @distTwo 0 rgba(0, 0, 0, 0.1);
-                content: '';
-                height: @distEight;
-                left: @distEight;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                width: @distEight;
-            }
         }
     }
 }
