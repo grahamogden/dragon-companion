@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -28,7 +29,7 @@ class ClansTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -46,10 +47,10 @@ class ClansTable extends Table
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     * @return Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -65,5 +66,59 @@ class ClansTable extends Table
             ->allowEmptyString('description');
 
         return $validator;
+    }
+
+    /**
+     * Before saving
+     * 
+     * @param Event $event
+     * @param type $entity
+     * @param type $options
+     * @return bool
+     */
+    public function beforeSave(Event $event, $entity, $options): bool
+    {
+        if ($entity->new_users) {
+            $entity->users = array_merge($entity->users, $this->_buildUsers($entity->new_users));
+        }
+
+        return true;
+    }
+    
+    /**
+     * Finds users records from the list provided and returns them to be added to the clan
+     * 
+     * @param string $userString 
+     * @return array
+     */
+    protected function _buildUsers(string $userString): array
+    {
+        // Trim users
+        $newUsers = array_map('trim', explode(',', $userString));
+
+        // Remove all empty users
+        $newUsers = array_filter($newUsers);
+
+        // Reduce duplicated users
+        $newUsers = array_unique($newUsers);
+
+        $out = [];
+        $query = $this->Users->find()
+            ->where(['Users.username IN' => $newUsers]);
+
+        // Remove existing users from the list of new users.
+        foreach ($query->extract('username') as $existing) {
+            $index = array_search($existing, $newUsers);
+            if ($index !== false) {
+                unset($newUsers[$index]);
+            }
+        }
+
+        // Add existing users.
+        foreach ($query as $user) {
+            $out[] = $user;
+        }
+
+        return $out;
     }
 }

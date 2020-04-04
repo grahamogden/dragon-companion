@@ -95,6 +95,7 @@ class ClansController extends AppController
             'contain' => ['Users'],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
+
             $clan = $this->Clans->patchEntity($clan, $this->request->getData());
             if ($this->Clans->save($clan)) {
                 $this->Flash->success(__('The clan has been saved.'));
@@ -103,15 +104,24 @@ class ClansController extends AppController
             }
             $this->Flash->error(__('The clan could not be saved. Please, try again.'));
         }
-        $clanId = $clan->id;
-        $userId = $this->Auth->user('id');
-        $this->loadModel('Users');
-        $users = $this->Users->find()->matching('Clans', function ($q) use ($clanId, $userId) {
-            return $q->where([
-                'Clans.id =' => $clanId,
-                'Users.id !=' => $userId
-            ]);
-        });
+        
+        // $clanId = $clan->id;
+        // $userId = $this->Auth->user('id');
+
+        // $this->loadModel('Users');
+
+        // $adminUsers  = [];
+        // $memberUsers = [];
+
+        // foreach($clan->users as $user) {
+        //     if ($user->_joinData->account_level === 10) {
+        //         $adminUsers[] = $user;
+        //     } else {
+        //         $memberUsers[] = $user;
+        //     }
+        // }
+        
+
         $this->set(compact('clan', 'users'));
     }
 
@@ -170,24 +180,12 @@ class ClansController extends AppController
     }
 
     /**
-     * [addClanUser description]
-     */
-    public function addClanUser()
-    {
-        $this->autoRender = false;
-
-        $userId = $this->request->getQuery('userId');
-var_dump($this->request);
-        header("HTTP/1.0 201 Created");
-    }
-
-    /**
      * Looks up tags based on a wildcard search term,
      * starting with at least three character
      * 
      * @return string
      */
-    public function getUsers()
+    public function getUsers(): void
     {
         $this->autoRender = false;
         $term = $this->request->getQuery('term');
@@ -223,5 +221,11 @@ var_dump($this->request);
         }
         
         echo json_encode($return);
+        exit;
+    }
+
+    public function deleteClanUser()
+    {
+        // $this->Clans->
     }
 }

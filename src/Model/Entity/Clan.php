@@ -24,8 +24,9 @@ class Clan extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
+        'name'        => true,
         'description' => true,
-        'users' => true,
+        'users'       => true,
+        'new_users'   => true,
     ];
 }
