@@ -108,7 +108,7 @@ class MonstersController extends AppController
     /**
      * Determines whether the user is authorised to be able to use this action
      * 
-     * @param type $user
+     * @param array $user
      * 
      * @return bool
      */
@@ -119,6 +119,7 @@ class MonstersController extends AppController
         if (in_array($action, [
             'add',
             'index',
+            'view',
         ])) {
             return true;
         }
