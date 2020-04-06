@@ -1,7 +1,6 @@
 <?php
 namespace App\Model\Entity;
 
-use Cake\Collection\Collection;
 use Cake\ORM\Entity;
 
 /**
@@ -10,6 +9,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $name
  * @property string|null $description
+ * @property \Cake\I18n\FrozenTime $created
  *
  * @property \App\Model\Entity\User[] $users
  */
@@ -25,32 +25,9 @@ class Clan extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name'         => true,
-        'description'  => true,
-        'users'        => true,
-        'users_string' => true,
+        'name' => true,
+        'description' => true,
+        'created' => true,
+        'users' => true,
     ];
-
-    /**
-     * Returns a comma separated list of the user's usernames for the clan
-     * 
-     * @return string
-     */
-    protected function _getUsersString(): string
-    {
-        if (isset($this->_properties['users_string'])) {
-            return $this->_properties['users_string'];
-        }
-
-        if (empty($this->users)) {
-            return '';
-        }
-
-        $users = new Collection($this->users);
-        $str   = $users->reduce(function ($string, $user) {
-            return $string . $user->username . ', ';
-        }, '');
-
-        return $str;
-    }
 }

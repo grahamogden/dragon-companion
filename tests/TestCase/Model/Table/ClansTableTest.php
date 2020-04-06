@@ -72,11 +72,11 @@ class ClansTableTest extends TestCase
     }
 
     /**
-     * Test buildRules method
+     * Test beforeSave method
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testBeforeSave()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -20,6 +20,8 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Clan patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Clan[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Clan findOrCreate($search, callable $callback = null, $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ClansTable extends Table
 {
@@ -29,13 +31,15 @@ class ClansTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config): void
+    public function initialize(array $config)
     {
         parent::initialize($config);
 
         $this->setTable('clans');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
+
+        $this->addBehavior('Timestamp');
 
         $this->belongsToMany('Users', [
             'foreignKey' => 'clan_id',
