@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\CharacterRacesPlayableCharactersController;
+use App\Controller\PlayerCharactersController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\CharacterRacesPlayableCharactersController Test Case
+ * App\Controller\PlayerCharactersController Test Case
  */
-class CharacterRacesPlayableCharactersControllerTest extends IntegrationTestCase
+class PlayerCharactersControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,9 +16,13 @@ class CharacterRacesPlayableCharactersControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.character_races_playable_characters',
+        'app.player_characters',
+        'app.users',
+        'app.participants',
+        'app.character_classes',
         'app.character_races',
-        'app.playable_characters'
+        'app.character_classes_player_characters',
+        'app.character_races_player_characters'
     ];
 
     /**

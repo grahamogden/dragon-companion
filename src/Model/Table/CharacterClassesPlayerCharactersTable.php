@@ -7,21 +7,21 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * CharacterClassesPlayableCharacters Model
+ * CharacterClassesPlayerCharacters Model
  *
  * @property \App\Model\Table\CharacterClassesTable|\Cake\ORM\Association\BelongsTo $CharacterClasses
- * @property \App\Model\Table\PlayableCharactersTable|\Cake\ORM\Association\BelongsTo $PlayableCharacters
+ * @property \App\Model\Table\PlayerCharactersTable|\Cake\ORM\Association\BelongsTo $PlayerCharacters
  *
- * @method \App\Model\Entity\CharacterClassesPlayableCharacter get($primaryKey, $options = [])
- * @method \App\Model\Entity\CharacterClassesPlayableCharacter newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\CharacterClassesPlayableCharacter[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\CharacterClassesPlayableCharacter|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CharacterClassesPlayableCharacter|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CharacterClassesPlayableCharacter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\CharacterClassesPlayableCharacter[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\CharacterClassesPlayableCharacter findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\CharacterClassesPlayerCharacter get($primaryKey, $options = [])
+ * @method \App\Model\Entity\CharacterClassesPlayerCharacter newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\CharacterClassesPlayerCharacter[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\CharacterClassesPlayerCharacter|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CharacterClassesPlayerCharacter|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CharacterClassesPlayerCharacter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\CharacterClassesPlayerCharacter[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\CharacterClassesPlayerCharacter findOrCreate($search, callable $callback = null, $options = [])
  */
-class CharacterClassesPlayableCharactersTable extends Table
+class CharacterClassesPlayerCharactersTable extends Table
 {
 
     /**
@@ -34,7 +34,7 @@ class CharacterClassesPlayableCharactersTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('character_classes_playable_characters');
+        $this->setTable('character_classes_player_characters');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
@@ -42,7 +42,7 @@ class CharacterClassesPlayableCharactersTable extends Table
             'foreignKey' => 'character_class_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('PlayableCharacters', [
+        $this->belongsTo('PlayerCharacters', [
             'foreignKey' => 'player_character_id',
             'joinType' => 'INNER'
         ]);
@@ -73,7 +73,7 @@ class CharacterClassesPlayableCharactersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['character_class_id'], 'CharacterClasses'));
-        $rules->add($rules->existsIn(['player_character_id'], 'PlayableCharacters'));
+        $rules->add($rules->existsIn(['player_character_id'], 'PlayerCharacters'));
 
         return $rules;
     }

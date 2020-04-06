@@ -7,23 +7,23 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * PlayableCharacters Model
+ * PlayerCharacters Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\ParticipantsTable|\Cake\ORM\Association\HasMany $Participants
  * @property \App\Model\Table\CharacterClassesTable|\Cake\ORM\Association\BelongsToMany $CharacterClasses
  * @property \App\Model\Table\CharacterRacesTable|\Cake\ORM\Association\BelongsToMany $CharacterRaces
  *
- * @method \App\Model\Entity\PlayableCharacter get($primaryKey, $options = [])
- * @method \App\Model\Entity\PlayableCharacter newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\PlayableCharacter[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\PlayableCharacter|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\PlayableCharacter|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\PlayableCharacter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\PlayableCharacter[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\PlayableCharacter findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\PlayerCharacter get($primaryKey, $options = [])
+ * @method \App\Model\Entity\PlayerCharacter newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\PlayerCharacter[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\PlayerCharacter|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\PlayerCharacter|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\PlayerCharacter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\PlayerCharacter[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\PlayerCharacter findOrCreate($search, callable $callback = null, $options = [])
  */
-class PlayableCharactersTable extends Table
+class PlayerCharactersTable extends Table
 {
 
     /**
@@ -36,26 +36,26 @@ class PlayableCharactersTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('playable_characters');
+        $this->setTable('player_characters');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType'   => 'INNER'
         ]);
         $this->hasMany('Participants', [
-            'foreignKey' => 'playable_character_id'
+            'foreignKey' => 'player_character_id',
         ]);
         $this->belongsToMany('CharacterClasses', [
-            'foreignKey' => 'playable_character_id',
+            'foreignKey'       => 'player_character_id',
             'targetForeignKey' => 'character_class_id',
-            'joinTable' => 'character_classes_playable_characters'
+            'joinTable'        => 'character_classes_player_characters',
         ]);
         $this->belongsToMany('CharacterRaces', [
-            'foreignKey' => 'playable_character_id',
+            'foreignKey'       => 'player_character_id',
             'targetForeignKey' => 'character_race_id',
-            'joinTable' => 'character_races_playable_characters'
+            'joinTable'        => 'character_races_player_characters',
         ]);
     }
 
@@ -74,33 +74,33 @@ class PlayableCharactersTable extends Table
         $validator
             ->scalar('first_name')
             ->maxLength('first_name', 250)
-            ->requirePresence('first_name', 'create')
+            ->requirePresence('first_name', true)
             ->notEmpty('first_name');
 
         $validator
             ->scalar('last_name')
             ->maxLength('last_name', 250)
-            ->requirePresence('last_name', 'create')
-            ->notEmpty('last_name');
+            ->requirePresence('last_name', true)
+            ->allowEmptyString('last_name');
 
         $validator
             ->integer('age')
-            ->requirePresence('age', 'create')
+            ->requirePresence('age', true)
             ->notEmpty('age');
 
         $validator
             ->integer('max_hp')
-            ->requirePresence('max_hp', 'create')
+            ->requirePresence('max_hp', true)
             ->notEmpty('max_hp');
 
         $validator
             ->integer('current_hp')
-            ->requirePresence('current_hp', 'create')
+            ->requirePresence('current_hp', true)
             ->notEmpty('current_hp');
 
         $validator
             ->integer('armour_class')
-            ->requirePresence('armour_class', 'create')
+            ->requirePresence('armour_class', true)
             ->notEmpty('armour_class');
 
         return $validator;

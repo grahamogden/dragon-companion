@@ -17,7 +17,7 @@ class ParticipantsControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'app.participants',
-        'app.playable_characters',
+        'app.player_characters',
         'app.monster_instances'
     ];
 

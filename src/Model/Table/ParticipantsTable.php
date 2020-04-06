@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * Participants Model
  *
- * @property \App\Model\Table\PlayableCharactersTable|\Cake\ORM\Association\BelongsTo $PlayableCharacters
+ * @property \App\Model\Table\PlayerCharactersTable|\Cake\ORM\Association\BelongsTo $PlayerCharacters
  * @property \App\Model\Table\MonsterInstancesTable|\Cake\ORM\Association\BelongsTo $MonsterInstances
  *
  * @method \App\Model\Entity\Participant get($primaryKey, $options = [])
@@ -38,8 +38,8 @@ class ParticipantsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('PlayableCharacters', [
-            'foreignKey' => 'playable_character_id'
+        $this->belongsTo('PlayerCharacters', [
+            'foreignKey' => 'player_character_id'
         ]);
         $this->belongsTo('MonsterInstances', [
             'foreignKey' => 'monster_instance_id'
@@ -75,7 +75,7 @@ class ParticipantsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['playable_character_id'], 'PlayableCharacters'));
+        $rules->add($rules->existsIn(['player_character_id'], 'PlayerCharacters'));
         $rules->add($rules->existsIn(['monster_instance_id'], 'MonsterInstances'));
 
         return $rules;

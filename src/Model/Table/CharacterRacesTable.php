@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * CharacterRaces Model
  *
- * @property \App\Model\Table\PlayableCharactersTable|\Cake\ORM\Association\BelongsToMany $PlayableCharacters
+ * @property \App\Model\Table\PlayerCharactersTable|\Cake\ORM\Association\BelongsToMany $PlayerCharacters
  *
  * @method \App\Model\Entity\CharacterRace get($primaryKey, $options = [])
  * @method \App\Model\Entity\CharacterRace newEntity($data = null, array $options = [])
@@ -37,10 +37,10 @@ class CharacterRacesTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->belongsToMany('PlayableCharacters', [
+        $this->belongsToMany('PlayerCharacters', [
             'foreignKey' => 'character_race_id',
-            'targetForeignKey' => 'playable_character_id',
-            'joinTable' => 'character_races_playable_characters'
+            'targetForeignKey' => 'player_character_id',
+            'joinTable' => 'character_races_player_characters'
         ]);
     }
 

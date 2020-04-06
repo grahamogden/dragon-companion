@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * PlayableCharacter Entity
+ * PlayerCharacter Entity
  *
  * @property int $id
  * @property int $user_id
@@ -20,7 +20,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\CharacterClass[] $character_classes
  * @property \App\Model\Entity\CharacterRace[] $character_races
  */
-class PlayableCharacter extends Entity
+class PlayerCharacter extends Entity
 {
 
     /**
@@ -33,16 +33,16 @@ class PlayableCharacter extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'first_name' => true,
-        'last_name' => true,
-        'age' => true,
-        'max_hp' => true,
-        'current_hp' => true,
-        'armour_class' => true,
-        'user' => true,
-        'participants' => true,
+        'user_id'           => true,
+        'first_name'        => true,
+        'last_name'         => true,
+        'age'               => true,
+        'max_hp'            => true,
+        'current_hp'        => true,
+        'armour_class'      => true,
+        'user'              => true,
+        'participants'      => true,
         'character_classes' => true,
-        'character_races' => true
+        'character_races'   => true,
     ];
 }

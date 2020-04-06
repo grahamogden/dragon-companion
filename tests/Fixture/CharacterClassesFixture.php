@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * CharacterClassesFixture
- *
  */
 class CharacterClassesFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -18,6 +16,7 @@ class CharacterClassesFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
+        'name' => ['type' => 'string', 'length' => 25, 'null' => false, 'default' => '', 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
@@ -27,7 +26,6 @@ class CharacterClassesFixture extends TestFixture
         ],
     ];
     // @codingStandardsIgnoreEnd
-
     /**
      * Init method
      *
@@ -37,7 +35,8 @@ class CharacterClassesFixture extends TestFixture
     {
         $this->records = [
             [
-                'id' => 1
+                'id' => 1,
+                'name' => 'Lorem ipsum dolor sit a',
             ],
         ];
         parent::init();

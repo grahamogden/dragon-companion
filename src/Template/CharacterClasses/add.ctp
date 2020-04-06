@@ -4,22 +4,12 @@
  * @var \App\Model\Entity\CharacterClass $characterClass
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Character Classes'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Playable Characters'), ['controller' => 'PlayableCharacters', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Playable Character'), ['controller' => 'PlayableCharacters', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="characterClasses form large-9 medium-8 columns content">
+<div class="characterClasses form content">
+    <h1>Add Character Class</h1>
     <?= $this->Form->create($characterClass) ?>
-    <fieldset>
-        <legend><?= __('Add Character Class') ?></legend>
-        <?php
-            echo $this->Form->control('playable_characters._ids', ['options' => $playableCharacters]);
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+        <fieldset>
+            <?= $this->Form->control('player_characters._ids', ['options' => $playerCharacters]) ?>
+            <?= $this->Form->submit('Save', ['class' => ['btn','btn-lg','btn-block','btn-success']]) ?>
+        </fieldset>
     <?= $this->Form->end() ?>
 </div>

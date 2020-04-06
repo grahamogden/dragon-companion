@@ -7,12 +7,12 @@ use Cake\ORM\Entity;
  * CharacterClass Entity
  *
  * @property int $id
+ * @property string $name
  *
- * @property \App\Model\Entity\PlayableCharacter[] $playable_characters
+ * @property \App\Model\Entity\PlayerCharacter[] $player_characters
  */
 class CharacterClass extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -23,6 +23,7 @@ class CharacterClass extends Entity
      * @var array
      */
     protected $_accessible = [
-        'playable_characters' => true
+        'name'              => true,
+        'player_characters' => true,
     ];
 }

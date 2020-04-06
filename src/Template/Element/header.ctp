@@ -13,17 +13,17 @@ $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
                 </li>
                 <?php if ($userIsLoggedIn) { ?>
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-center dropdown-toggle" href="#" id="navbarPlayableCharacterDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Players</a>
-                        <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="navbarPlayableCharacterDropdownMenuLink">
+                        <a class="nav-link text-center dropdown-toggle" href="#" id="navbarPlayerCharacterDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Players</a>
+                        <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="navbarPlayerCharacterDropdownMenuLink">
                             <li class="nav-item">
-                                <?= $this->Html->link('Playable Characters', ['controller' => 'PlayableCharacters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                                <?= $this->Html->link('Player Characters', ['controller' => 'PlayerCharacters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                             </li>
                             <?php if (false) { ?>
                                 <li class="nav-item">
-                                    <?= $this->Html->link('Classes', ['controller' => 'PlayableCharacterClasses', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                                    <?= $this->Html->link('Classes', ['controller' => 'PlayerCharacterClasses', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                                 </li>
                                 <li class="nav-item">
-                                    <?= $this->Html->link('Races', ['controller' => 'PlayableCharacterRaces', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                                    <?= $this->Html->link('Races', ['controller' => 'PlayerCharacterRaces', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                                 </li>
                             <?php } //endif ?>
                         </ul>

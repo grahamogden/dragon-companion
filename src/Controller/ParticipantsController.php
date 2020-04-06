@@ -21,7 +21,7 @@ class ParticipantsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['PlayableCharacters', 'MonsterInstances']
+            'contain' => ['PlayerCharacters', 'MonsterInstances']
         ];
         $participants = $this->paginate($this->Participants);
 
@@ -38,7 +38,7 @@ class ParticipantsController extends AppController
     public function view($id = null)
     {
         $participant = $this->Participants->get($id, [
-            'contain' => ['PlayableCharacters', 'MonsterInstances']
+            'contain' => ['PlayerCharacters', 'MonsterInstances']
         ]);
 
         $this->set('participant', $participant);
@@ -61,9 +61,9 @@ class ParticipantsController extends AppController
             }
             $this->Flash->error(__('The participant could not be saved. Please, try again.'));
         }
-        $playableCharacters = $this->Participants->PlayableCharacters->find('list', ['limit' => 200]);
+        $playerCharacters = $this->Participants->PlayerCharacters->find('list', ['limit' => 200]);
         $monsterInstances = $this->Participants->MonsterInstances->find('list', ['limit' => 200]);
-        $this->set(compact('participant', 'playableCharacters', 'monsterInstances'));
+        $this->set(compact('participant', 'playerCharacters', 'monsterInstances'));
     }
 
     /**
@@ -87,9 +87,9 @@ class ParticipantsController extends AppController
             }
             $this->Flash->error(__('The participant could not be saved. Please, try again.'));
         }
-        $playableCharacters = $this->Participants->PlayableCharacters->find('list', ['limit' => 200]);
+        $playerCharacters = $this->Participants->PlayerCharacters->find('list', ['limit' => 200]);
         $monsterInstances = $this->Participants->MonsterInstances->find('list', ['limit' => 200]);
-        $this->set(compact('participant', 'playableCharacters', 'monsterInstances'));
+        $this->set(compact('participant', 'playerCharacters', 'monsterInstances'));
     }
 
     /**

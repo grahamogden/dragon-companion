@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $name
  *
- * @property \App\Model\Entity\PlayableCharacter[] $playable_characters
+ * @property \App\Model\Entity\PlayerCharacter[] $player_characters
  */
 class CharacterRace extends Entity
 {
@@ -24,7 +24,7 @@ class CharacterRace extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-        'playable_characters' => true
+        'name'              => true,
+        'player_characters' => true,
     ];
 }

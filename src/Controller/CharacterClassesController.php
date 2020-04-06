@@ -35,7 +35,7 @@ class CharacterClassesController extends AppController
     public function view($id = null)
     {
         $characterClass = $this->CharacterClasses->get($id, [
-            'contain' => ['PlayableCharacters']
+            'contain' => ['PlayerCharacters']
         ]);
 
         $this->set('characterClass', $characterClass);
@@ -58,8 +58,8 @@ class CharacterClassesController extends AppController
             }
             $this->Flash->error(__('The character class could not be saved. Please, try again.'));
         }
-        $playableCharacters = $this->CharacterClasses->PlayableCharacters->find('list', ['limit' => 200]);
-        $this->set(compact('characterClass', 'playableCharacters'));
+        $playerCharacters = $this->CharacterClasses->PlayerCharacters->find('list', ['limit' => 200]);
+        $this->set(compact('characterClass', 'playerCharacters'));
     }
 
     /**
@@ -72,7 +72,7 @@ class CharacterClassesController extends AppController
     public function edit($id = null)
     {
         $characterClass = $this->CharacterClasses->get($id, [
-            'contain' => ['PlayableCharacters']
+            'contain' => ['PlayerCharacters']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $characterClass = $this->CharacterClasses->patchEntity($characterClass, $this->request->getData());
@@ -83,8 +83,8 @@ class CharacterClassesController extends AppController
             }
             $this->Flash->error(__('The character class could not be saved. Please, try again.'));
         }
-        $playableCharacters = $this->CharacterClasses->PlayableCharacters->find('list', ['limit' => 200]);
-        $this->set(compact('characterClass', 'playableCharacters'));
+        $playerCharacters = $this->CharacterClasses->PlayerCharacters->find('list', ['limit' => 200]);
+        $this->set(compact('characterClass', 'playerCharacters'));
     }
 
     /**

@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\HasMany $CombatEncounters
  * @property \App\Model\Table\NonPlayableCharactersTable&\Cake\ORM\Association\HasMany $NonPlayableCharacters
- * @property \App\Model\Table\PlayableCharactersTable&\Cake\ORM\Association\HasMany $PlayableCharacters
+ * @property \App\Model\Table\PlayerCharactersTable&\Cake\ORM\Association\HasMany $PlayerCharacters
  * @property \App\Model\Table\PuzzlesTable&\Cake\ORM\Association\HasMany $Puzzles
  * @property \App\Model\Table\TagsTable&\Cake\ORM\Association\HasMany $Tags
  * @property \App\Model\Table\TimelineSegmentsTable&\Cake\ORM\Association\HasMany $TimelineSegments
@@ -54,7 +54,7 @@ class UsersTable extends Table
         $this->hasMany('NonPlayableCharacters', [
             'foreignKey' => 'user_id',
         ]);
-        $this->hasMany('PlayableCharacters', [
+        $this->hasMany('PlayerCharacters', [
             'foreignKey' => 'user_id',
         ]);
         $this->hasMany('Puzzles', [

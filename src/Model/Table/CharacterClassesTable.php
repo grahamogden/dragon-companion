@@ -9,20 +9,19 @@ use Cake\Validation\Validator;
 /**
  * CharacterClasses Model
  *
- * @property \App\Model\Table\PlayableCharactersTable|\Cake\ORM\Association\BelongsToMany $PlayableCharacters
+ * @property \App\Model\Table\PlayerCharactersTable&\Cake\ORM\Association\BelongsToMany $PlayerCharacters
  *
  * @method \App\Model\Entity\CharacterClass get($primaryKey, $options = [])
  * @method \App\Model\Entity\CharacterClass newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\CharacterClass[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\CharacterClass|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CharacterClass|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CharacterClass|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CharacterClass saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\CharacterClass patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\CharacterClass[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\CharacterClass findOrCreate($search, callable $callback = null, $options = [])
  */
 class CharacterClassesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -34,13 +33,13 @@ class CharacterClassesTable extends Table
         parent::initialize($config);
 
         $this->setTable('character_classes');
-        $this->setDisplayField('id');
+        $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->belongsToMany('PlayableCharacters', [
+        $this->belongsToMany('PlayerCharacters', [
             'foreignKey' => 'character_class_id',
-            'targetForeignKey' => 'playable_character_id',
-            'joinTable' => 'character_classes_playable_characters'
+            'targetForeignKey' => 'player_character_id',
+            'joinTable' => 'character_classes_player_characters',
         ]);
     }
 
@@ -53,8 +52,13 @@ class CharacterClassesTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
+
+        $validator
+            ->scalar('name')
+            ->maxLength('name', 25)
+            ->notEmptyString('name');
 
         return $validator;
     }

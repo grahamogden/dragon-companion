@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\PlayableCharactersTable;
+use App\Model\Table\PlayerCharactersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\PlayableCharactersTable Test Case
+ * App\Model\Table\PlayerCharactersTable Test Case
  */
-class PlayableCharactersTableTest extends TestCase
+class PlayerCharactersTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\PlayableCharactersTable
+     * @var \App\Model\Table\PlayerCharactersTable
      */
-    public $PlayableCharacters;
+    public $PlayerCharacters;
 
     /**
      * Fixtures
@@ -24,7 +24,7 @@ class PlayableCharactersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.playable_characters',
+        'app.player_characters',
         'app.users',
         'app.participants',
         'app.character_classes',
@@ -39,8 +39,8 @@ class PlayableCharactersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('PlayableCharacters') ? [] : ['className' => PlayableCharactersTable::class];
-        $this->PlayableCharacters = TableRegistry::getTableLocator()->get('PlayableCharacters', $config);
+        $config = TableRegistry::getTableLocator()->exists('PlayerCharacters') ? [] : ['className' => PlayerCharactersTable::class];
+        $this->PlayerCharacters = TableRegistry::getTableLocator()->get('PlayerCharacters', $config);
     }
 
     /**
@@ -50,7 +50,7 @@ class PlayableCharactersTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->PlayableCharacters);
+        unset($this->PlayerCharacters);
 
         parent::tearDown();
     }

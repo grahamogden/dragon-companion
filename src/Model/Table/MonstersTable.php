@@ -9,20 +9,19 @@ use Cake\Validation\Validator;
 /**
  * Monsters Model
  *
- * @property \App\Model\Table\MonsterInstancesTable|\Cake\ORM\Association\HasMany $MonsterInstances
+ * @property \App\Model\Table\MonsterInstancesTable&\Cake\ORM\Association\HasMany $MonsterInstances
  *
  * @method \App\Model\Entity\Monster get($primaryKey, $options = [])
  * @method \App\Model\Entity\Monster newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Monster[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Monster|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Monster|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Monster|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Monster saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Monster patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Monster[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Monster findOrCreate($search, callable $callback = null, $options = [])
  */
 class MonstersTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -38,7 +37,7 @@ class MonstersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->hasMany('MonsterInstances', [
-            'foreignKey' => 'monster_id'
+            'foreignKey' => 'monster_id',
         ]);
     }
 
@@ -51,13 +50,13 @@ class MonstersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('name')
             ->maxLength('name', 250)
-            ->allowEmpty('name');
+            ->allowEmptyString('name');
 
         return $validator;
     }

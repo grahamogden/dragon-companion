@@ -7,11 +7,11 @@ use Cake\ORM\Entity;
  * Participant Entity
  *
  * @property int $id
- * @property int $playable_character_id
+ * @property int $player_character_id
  * @property int $monster_instance_id
  * @property int $order
  *
- * @property \App\Model\Entity\PlayableCharacter $playable_character
+ * @property \App\Model\Entity\PlayerCharacter $player_character
  * @property \App\Model\Entity\MonsterInstance $monster_instance
  */
 class Participant extends Entity
@@ -27,10 +27,10 @@ class Participant extends Entity
      * @var array
      */
     protected $_accessible = [
-        'playable_character_id' => true,
+        'player_character_id' => true,
         'monster_instance_id' => true,
-        'order' => true,
-        'playable_character' => true,
-        'monster_instance' => true
+        'order'               => true,
+        'player_character'    => true,
+        'monster_instance'    => true,
     ];
 }

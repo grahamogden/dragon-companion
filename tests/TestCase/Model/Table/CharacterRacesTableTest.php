@@ -25,7 +25,7 @@ class CharacterRacesTableTest extends TestCase
      */
     public $fixtures = [
         'app.character_races',
-        'app.playable_characters'
+        'app.player_characters'
     ];
 
     /**

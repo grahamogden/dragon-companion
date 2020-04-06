@@ -151,18 +151,18 @@ Router::scope('/', function (RouteBuilder $routes) {
         ->setPass(['id']);
 
     $routes->connect(
-        '/playable-characters/:action/:id',
-        ['controller' => 'PlayableCharacters'])
+        '/player-characters/:action/:id',
+        ['controller' => 'PlayerCharacters'])
         ->setPass(['id']);
 
     $routes->connect(
         '/character-classes/:action/:id',
-        ['controller' => 'PlayableCharactersClasses'])
+        ['controller' => 'CharactersClasses'])
         ->setPass(['id']);
 
     $routes->connect(
         '/character-races/:action/:id',
-        ['controller' => 'PlayableCharacterRaces'])
+        ['controller' => 'CharacterRaces'])
         ->setPass(['id']);
 
     $routes->connect(

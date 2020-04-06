@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\CharacterRacesPlayableCharactersTable;
+use App\Model\Table\CharacterClassesPlayerCharactersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\CharacterRacesPlayableCharactersTable Test Case
+ * App\Model\Table\CharacterClassesPlayerCharactersTable Test Case
  */
-class CharacterRacesPlayableCharactersTableTest extends TestCase
+class CharacterClassesPlayerCharactersTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\CharacterRacesPlayableCharactersTable
+     * @var \App\Model\Table\CharacterClassesPlayerCharactersTable
      */
-    public $CharacterRacesPlayableCharacters;
+    public $CharacterClassesPlayerCharacters;
 
     /**
      * Fixtures
@@ -24,9 +24,9 @@ class CharacterRacesPlayableCharactersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.character_races_playable_characters',
-        'app.character_races',
-        'app.playable_characters'
+        'app.character_classes_player_characters',
+        'app.character_classes',
+        'app.player_characters'
     ];
 
     /**
@@ -37,8 +37,8 @@ class CharacterRacesPlayableCharactersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('CharacterRacesPlayableCharacters') ? [] : ['className' => CharacterRacesPlayableCharactersTable::class];
-        $this->CharacterRacesPlayableCharacters = TableRegistry::getTableLocator()->get('CharacterRacesPlayableCharacters', $config);
+        $config = TableRegistry::getTableLocator()->exists('CharacterClassesPlayerCharacters') ? [] : ['className' => CharacterClassesPlayerCharactersTable::class];
+        $this->CharacterClassesPlayerCharacters = TableRegistry::getTableLocator()->get('CharacterClassesPlayerCharacters', $config);
     }
 
     /**
@@ -48,7 +48,7 @@ class CharacterRacesPlayableCharactersTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->CharacterRacesPlayableCharacters);
+        unset($this->CharacterClassesPlayerCharacters);
 
         parent::tearDown();
     }

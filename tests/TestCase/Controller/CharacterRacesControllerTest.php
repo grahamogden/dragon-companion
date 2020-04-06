@@ -17,8 +17,8 @@ class CharacterRacesControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'app.character_races',
-        'app.playable_characters',
-        'app.character_races_playable_characters'
+        'app.player_characters',
+        'app.character_races_player_characters'
     ];
 
     /**

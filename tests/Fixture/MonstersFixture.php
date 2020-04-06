@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * MonstersFixture
- *
  */
 class MonstersFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -28,7 +26,6 @@ class MonstersFixture extends TestFixture
         ],
     ];
     // @codingStandardsIgnoreEnd
-
     /**
      * Init method
      *
@@ -39,7 +36,7 @@ class MonstersFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'name' => 'Lorem ipsum dolor sit amet'
+                'name' => 'Lorem ipsum dolor sit amet',
             ],
         ];
         parent::init();

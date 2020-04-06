@@ -7,13 +7,12 @@ use Cake\ORM\Entity;
  * Monster Entity
  *
  * @property int $id
- * @property string $name
+ * @property string|null $name
  *
  * @property \App\Model\Entity\MonsterInstance[] $monster_instances
  */
 class Monster extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -25,6 +24,6 @@ class Monster extends Entity
      */
     protected $_accessible = [
         'name' => true,
-        'monster_instances' => true
+        'monster_instances' => true,
     ];
 }

@@ -4,16 +4,16 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * CharacterClassesPlayableCharacter Entity
+ * CharacterClassesPlayerCharacter Entity
  *
  * @property int $id
  * @property int $character_class_id
  * @property int $player_character_id
  *
  * @property \App\Model\Entity\CharacterClass $character_class
- * @property \App\Model\Entity\PlayableCharacter $playable_character
+ * @property \App\Model\Entity\PlayerCharacter $player_character
  */
-class CharacterClassesPlayableCharacter extends Entity
+class CharacterClassesPlayerCharacter extends Entity
 {
 
     /**
@@ -26,9 +26,9 @@ class CharacterClassesPlayableCharacter extends Entity
      * @var array
      */
     protected $_accessible = [
-        'character_class_id' => true,
+        'character_class_id'  => true,
         'player_character_id' => true,
-        'character_class' => true,
-        'playable_character' => true
+        'character_class'     => true,
+        'player_character'    => true,
     ];
 }
