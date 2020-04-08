@@ -9,18 +9,14 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col"><?= $this->Paginator->sort('player_character_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('monster_instance_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('order') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('combat_encounter_id') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($participants as $participant): ?>
             <tr>
-                <td><?= $participant->has('player_character') ? $this->Html->link($participant->player_character->id, ['controller' => 'PlayerCharacters', 'action' => 'view', $participant->player_character->id]) : '' ?></td>
-                <td><?= $participant->has('monster_instance') ? $this->Html->link($participant->monster_instance->name, ['controller' => 'MonsterInstances', 'action' => 'view', $participant->monster_instance->id]) : '' ?></td>
-                <td><?= $this->Number->format($participant->order) ?></td>
+                <td><?= $participant->has('combat_encounter') ? $this->Html->link($participant->combat_encounter->name, ['controller' => 'CombatEncounters', 'action' => 'view', $participant->combat_encounter->id]) : '' ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $participant->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $participant->id]) ?>

@@ -4,16 +4,16 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Participant Entity
+ * ConditionsParticipant Entity
  *
  * @property int $id
- * @property int $order
- * @property int $combat_encounter_id
+ * @property int $condition_id
+ * @property int $participant_id
  *
- * @property \App\Model\Entity\CombatEncounter $combat_encounter
- * @property \App\Model\Entity\Condition[] $conditions
+ * @property \App\Model\Entity\Condition $condition
+ * @property \App\Model\Entity\Participant $participant
  */
-class Participant extends Entity
+class ConditionsParticipant extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -25,9 +25,9 @@ class Participant extends Entity
      * @var array
      */
     protected $_accessible = [
-        'order' => true,
-        'combat_encounter_id' => true,
-        'combat_encounter' => true,
-        'conditions' => true,
+        'condition_id' => true,
+        'participant_id' => true,
+        'condition' => true,
+        'participant' => true,
     ];
 }

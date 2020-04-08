@@ -9,21 +9,21 @@ use Cake\Validation\Validator;
 /**
  * Participants Model
  *
- * @property \App\Model\Table\PlayerCharactersTable|\Cake\ORM\Association\BelongsTo $PlayerCharacters
- * @property \App\Model\Table\MonsterInstancesTable|\Cake\ORM\Association\BelongsTo $MonsterInstances
+ * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\BelongsTo $CombatEncounters
+ * @property \App\Model\Table\ConditionsTable&\Cake\ORM\Association\BelongsToMany $Conditions
+ * @property \App\Model\Table\ConditionsTable&\Cake\ORM\Association\BelongsToMany $Conditions
  *
  * @method \App\Model\Entity\Participant get($primaryKey, $options = [])
  * @method \App\Model\Entity\Participant newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Participant[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Participant|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Participant|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Participant|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Participant saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Participant patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Participant[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Participant findOrCreate($search, callable $callback = null, $options = [])
  */
 class ParticipantsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -38,11 +38,19 @@ class ParticipantsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('PlayerCharacters', [
-            'foreignKey' => 'player_character_id'
+        $this->belongsTo('CombatEncounters', [
+            'foreignKey' => 'combat_encounter_id',
+            'joinType' => 'INNER',
         ]);
-        $this->belongsTo('MonsterInstances', [
-            'foreignKey' => 'monster_instance_id'
+        $this->belongsToMany('Conditions', [
+            'foreignKey' => 'participant_id',
+            'targetForeignKey' => 'condition_id',
+            'joinTable' => 'conditions_participants',
+        ]);
+        $this->belongsToMany('Conditions', [
+            'foreignKey' => 'participant_id',
+            'targetForeignKey' => 'condition_id',
+            'joinTable' => 'participants_conditions',
         ]);
     }
 
@@ -55,13 +63,13 @@ class ParticipantsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->integer('order')
             ->requirePresence('order', 'create')
-            ->notEmpty('order');
+            ->notEmptyString('order');
 
         return $validator;
     }
@@ -75,8 +83,7 @@ class ParticipantsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['player_character_id'], 'PlayerCharacters'));
-        $rules->add($rules->existsIn(['monster_instance_id'], 'MonsterInstances'));
+        $rules->add($rules->existsIn(['combat_encounter_id'], 'CombatEncounters'));
 
         return $rules;
     }

@@ -7,11 +7,10 @@
 <div class="participants form content">
     <h1>Add Participant</h1>
     <?= $this->Form->create($participant) ?>
-        <fieldset>
-                <?= $this->Form->control('player_character_id', ['options' => $playerCharacters, 'empty' => true]) ?>
-                <?= $this->Form->control('monster_instance_id', ['options' => $monsterInstances, 'empty' => true]) ?>
-                <?= $this->Form->control('order') ?>
-            <?= $this->Form->submit('Save', ['class' => ['btn','btn-lg','btn-block','btn-success']]) ?>
-        </fieldset>
+    <fieldset>
+        <?= $this->Form->control('combat_encounter_id', ['options' => $combatEncounters]) ?>
+        <?= $this->Form->control('order') ?>
+        <?= $this->Form->control('conditions._ids', ['options' => $conditions]) ?>
+    </fieldset>
     <?= $this->Form->end() ?>
 </div>

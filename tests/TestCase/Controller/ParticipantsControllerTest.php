@@ -2,13 +2,17 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\ParticipantsController;
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * App\Controller\ParticipantsController Test Case
+ *
+ * @uses \App\Controller\ParticipantsController
  */
-class ParticipantsControllerTest extends IntegrationTestCase
+class ParticipantsControllerTest extends TestCase
 {
+    use IntegrationTestTrait;
 
     /**
      * Fixtures
@@ -16,9 +20,10 @@ class ParticipantsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.participants',
-        'app.player_characters',
-        'app.monster_instances'
+        'app.Participants',
+        'app.CombatEncounters',
+        'app.Conditions',
+        'app.ParticipantsConditions',
     ];
 
     /**

@@ -1,21 +1,21 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ParticipantsTable;
+use App\Model\Table\ConditionsParticipantsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ParticipantsTable Test Case
+ * App\Model\Table\ConditionsParticipantsTable Test Case
  */
-class ParticipantsTableTest extends TestCase
+class ConditionsParticipantsTableTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ParticipantsTable
+     * @var \App\Model\Table\ConditionsParticipantsTable
      */
-    public $Participants;
+    public $ConditionsParticipants;
 
     /**
      * Fixtures
@@ -23,9 +23,9 @@ class ParticipantsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.Participants',
-        'app.CombatEncounters',
+        'app.ConditionsParticipants',
         'app.Conditions',
+        'app.Participants',
     ];
 
     /**
@@ -36,8 +36,8 @@ class ParticipantsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Participants') ? [] : ['className' => ParticipantsTable::class];
-        $this->Participants = TableRegistry::getTableLocator()->get('Participants', $config);
+        $config = TableRegistry::getTableLocator()->exists('ConditionsParticipants') ? [] : ['className' => ConditionsParticipantsTable::class];
+        $this->ConditionsParticipants = TableRegistry::getTableLocator()->get('ConditionsParticipants', $config);
     }
 
     /**
@@ -47,7 +47,7 @@ class ParticipantsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Participants);
+        unset($this->ConditionsParticipants);
 
         parent::tearDown();
     }
