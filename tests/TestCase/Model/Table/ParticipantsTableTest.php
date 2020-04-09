@@ -26,6 +26,8 @@ class ParticipantsTableTest extends TestCase
         'app.Participants',
         'app.CombatEncounters',
         'app.Conditions',
+        'app.Monsters',
+        'app.PlayerCharacters',
     ];
 
     /**

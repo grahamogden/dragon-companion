@@ -37,14 +37,8 @@ class ClansUsersTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Clans', [
-            'foreignKey' => 'clan_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-            'joinType' => 'INNER',
-        ]);
+        $this->belongsTo('Clans');
+        $this->belongsTo('Users');
     }
 
     /**

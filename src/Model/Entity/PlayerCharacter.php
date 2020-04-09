@@ -11,18 +11,16 @@ use Cake\ORM\Entity;
  * @property string $first_name
  * @property string $last_name
  * @property int $age
- * @property int $max_hp
- * @property int $current_hp
+ * @property int $max_hit_points
  * @property int $armour_class
  *
  * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\Participant[] $participants
  * @property \App\Model\Entity\CharacterClass[] $character_classes
  * @property \App\Model\Entity\CharacterRace[] $character_races
+ * @property \App\Model\Entity\Participant[] $participants
  */
 class PlayerCharacter extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -37,12 +35,11 @@ class PlayerCharacter extends Entity
         'first_name'        => true,
         'last_name'         => true,
         'age'               => true,
-        'max_hp'            => true,
-        'current_hp'        => true,
+        'max_hit_points'    => true,
         'armour_class'      => true,
         'user'              => true,
-        'participants'      => true,
         'character_classes' => true,
         'character_races'   => true,
+        'participants'      => true,
     ];
 }

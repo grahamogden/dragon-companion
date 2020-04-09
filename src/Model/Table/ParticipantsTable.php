@@ -11,7 +11,8 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\BelongsTo $CombatEncounters
  * @property \App\Model\Table\ConditionsTable&\Cake\ORM\Association\BelongsToMany $Conditions
- * @property \App\Model\Table\ConditionsTable&\Cake\ORM\Association\BelongsToMany $Conditions
+ * @property \App\Model\Table\MonstersTable&\Cake\ORM\Association\BelongsToMany $Monsters
+ * @property \App\Model\Table\PlayerCharactersTable&\Cake\ORM\Association\BelongsToMany $PlayerCharacters
  *
  * @method \App\Model\Entity\Participant get($primaryKey, $options = [])
  * @method \App\Model\Entity\Participant newEntity($data = null, array $options = [])
@@ -47,10 +48,15 @@ class ParticipantsTable extends Table
             'targetForeignKey' => 'condition_id',
             'joinTable' => 'conditions_participants',
         ]);
-        $this->belongsToMany('Conditions', [
+        $this->belongsToMany('Monsters', [
             'foreignKey' => 'participant_id',
-            'targetForeignKey' => 'condition_id',
-            'joinTable' => 'participants_conditions',
+            'targetForeignKey' => 'monster_id',
+            'joinTable' => 'monsters_participants',
+        ]);
+        $this->belongsToMany('PlayerCharacters', [
+            'foreignKey' => 'participant_id',
+            'targetForeignKey' => 'player_character_id',
+            'joinTable' => 'participants_player_characters',
         ]);
     }
 
@@ -70,6 +76,23 @@ class ParticipantsTable extends Table
             ->integer('order')
             ->requirePresence('order', 'create')
             ->notEmptyString('order');
+
+        $validator
+            ->numeric('starting_hit_points')
+            ->greaterThanOrEqual('starting_hit_points', 0)
+            ->requirePresence('starting_hit_points', 'create')
+            ->notEmptyString('starting_hit_points');
+
+        $validator
+            ->numeric('current_hit_points')
+            ->greaterThanOrEqual('current_hit_points', 0)
+            ->requirePresence('current_hit_points', 'create')
+            ->notEmptyString('current_hit_points');
+
+        $validator
+            ->nonNegativeInteger('armour_class')
+            ->requirePresence('armour_class', 'create')
+            ->notEmptyString('armour_class');
 
         return $validator;
     }

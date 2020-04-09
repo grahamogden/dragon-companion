@@ -42,9 +42,7 @@ class ClansTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsToMany('Users', [
-            'foreignKey' => 'clan_id',
-            'targetForeignKey' => 'user_id',
-            'joinTable' => 'clans_users',
+            'through' => 'ClansUsers',
         ]);
     }
 

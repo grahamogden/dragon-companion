@@ -28,11 +28,11 @@ class Tag extends Entity
      * @var array
      */
     protected $_accessible = [
-        'title' => true,
-        'description' => true,
-        'slug' => true,
-        'created' => true,
-        'modified' => true,
-        'timeline_segments' => true
+        'title'             => true,
+        'description'       => true,
+        'slug'              => true,
+        'created'           => true,
+        'modified'          => true,
+        'timeline_segments' => true,
     ];
 }

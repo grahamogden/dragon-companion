@@ -40,7 +40,7 @@ class CombatEncountersFixture extends TestFixture
                 'id' => 1,
                 'name' => 'Lorem ipsum dolor sit amet',
                 'user_id' => 1,
-                'created' => '2020-04-06 12:15:36',
+                'created' => '2020-04-09 10:37:37',
             ],
         ];
         parent::init();

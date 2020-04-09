@@ -12,6 +12,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $created
  *
  * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\Participant[] $participants
  */
 class CombatEncounter extends Entity
 {
@@ -25,9 +26,10 @@ class CombatEncounter extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-        'user_id' => true,
-        'created' => true,
-        'user' => true,
+        'name'         => true,
+        'user_id'      => true,
+        'created'      => true,
+        'user'         => true,
+        'participants' => true,
     ];
 }

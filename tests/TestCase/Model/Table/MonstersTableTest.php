@@ -24,7 +24,8 @@ class MonstersTableTest extends TestCase
      */
     public $fixtures = [
         'app.Monsters',
-        'app.MonsterInstances',
+        'app.DataSources',
+        'app.Participants',
     ];
 
     /**
@@ -67,6 +68,16 @@ class MonstersTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test buildRules method
+     *
+     * @return void
+     */
+    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

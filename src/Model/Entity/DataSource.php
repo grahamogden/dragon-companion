@@ -4,18 +4,14 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * CharacterClassesPlayerCharacter Entity
+ * DataSource Entity
  *
  * @property int $id
- * @property int $character_class_id
- * @property int $player_character_id
  *
- * @property \App\Model\Entity\CharacterClass $character_class
- * @property \App\Model\Entity\PlayerCharacter $player_character
+ * @property \App\Model\Entity\Monster[] $monsters
  */
-class CharacterClassesPlayerCharacter extends Entity
+class DataSource extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -26,9 +22,6 @@ class CharacterClassesPlayerCharacter extends Entity
      * @var array
      */
     protected $_accessible = [
-        'character_class_id'  => true,
-        'player_character_id' => true,
-        'character_class'     => true,
-        'player_character'    => true,
+        'monsters' => true,
     ];
 }

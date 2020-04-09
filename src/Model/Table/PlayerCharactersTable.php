@@ -9,23 +9,22 @@ use Cake\Validation\Validator;
 /**
  * PlayerCharacters Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\ParticipantsTable|\Cake\ORM\Association\HasMany $Participants
- * @property \App\Model\Table\CharacterClassesTable|\Cake\ORM\Association\BelongsToMany $CharacterClasses
- * @property \App\Model\Table\CharacterRacesTable|\Cake\ORM\Association\BelongsToMany $CharacterRaces
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CharacterClassesTable&\Cake\ORM\Association\BelongsToMany $CharacterClasses
+ * @property \App\Model\Table\CharacterRacesTable&\Cake\ORM\Association\BelongsToMany $CharacterRaces
+ * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\BelongsToMany $Participants
  *
  * @method \App\Model\Entity\PlayerCharacter get($primaryKey, $options = [])
  * @method \App\Model\Entity\PlayerCharacter newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\PlayerCharacter[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\PlayerCharacter|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\PlayerCharacter|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\PlayerCharacter|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\PlayerCharacter saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\PlayerCharacter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\PlayerCharacter[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\PlayerCharacter findOrCreate($search, callable $callback = null, $options = [])
  */
 class PlayerCharactersTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -42,20 +41,22 @@ class PlayerCharactersTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType'   => 'INNER'
-        ]);
-        $this->hasMany('Participants', [
-            'foreignKey' => 'player_character_id',
+            'joinType' => 'INNER',
         ]);
         $this->belongsToMany('CharacterClasses', [
-            'foreignKey'       => 'player_character_id',
+            'foreignKey' => 'player_character_id',
             'targetForeignKey' => 'character_class_id',
-            'joinTable'        => 'character_classes_player_characters',
+            'joinTable' => 'character_classes_player_characters',
         ]);
         $this->belongsToMany('CharacterRaces', [
-            'foreignKey'       => 'player_character_id',
+            'foreignKey' => 'player_character_id',
             'targetForeignKey' => 'character_race_id',
-            'joinTable'        => 'character_races_player_characters',
+            'joinTable' => 'character_races_player_characters',
+        ]);
+        $this->belongsToMany('Participants', [
+            'foreignKey' => 'player_character_id',
+            'targetForeignKey' => 'participant_id',
+            'joinTable' => 'participants_player_characters',
         ]);
     }
 
@@ -68,40 +69,33 @@ class PlayerCharactersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('first_name')
             ->maxLength('first_name', 250)
-            ->requirePresence('first_name', true)
-            ->notEmpty('first_name');
+            ->notEmptyString('first_name');
 
         $validator
             ->scalar('last_name')
             ->maxLength('last_name', 250)
-            ->requirePresence('last_name', true)
-            ->allowEmptyString('last_name');
+            ->notEmptyString('last_name');
 
         $validator
             ->integer('age')
-            ->requirePresence('age', true)
-            ->notEmpty('age');
+            ->requirePresence('age', 'create')
+            ->notEmptyString('age');
 
         $validator
-            ->integer('max_hp')
-            ->requirePresence('max_hp', true)
-            ->notEmpty('max_hp');
+            ->nonNegativeInteger('max_hit_points')
+            ->requirePresence('max_hit_points', 'create')
+            ->notEmptyString('max_hit_points');
 
         $validator
-            ->integer('current_hp')
-            ->requirePresence('current_hp', true)
-            ->notEmpty('current_hp');
-
-        $validator
-            ->integer('armour_class')
-            ->requirePresence('armour_class', true)
-            ->notEmpty('armour_class');
+            ->nonNegativeInteger('armour_class')
+            ->requirePresence('armour_class', 'create')
+            ->notEmptyString('armour_class');
 
         return $validator;
     }

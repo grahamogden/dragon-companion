@@ -10,6 +10,7 @@ use Cake\Validation\Validator;
  * CombatEncounters Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\HasMany $Participants
  *
  * @method \App\Model\Entity\CombatEncounter get($primaryKey, $options = [])
  * @method \App\Model\Entity\CombatEncounter newEntity($data = null, array $options = [])
@@ -43,6 +44,9 @@ class CombatEncountersTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
+        ]);
+        $this->hasMany('Participants', [
+            'foreignKey' => 'combat_encounter_id',
         ]);
     }
 

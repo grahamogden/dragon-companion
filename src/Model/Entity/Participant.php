@@ -9,9 +9,14 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $order
  * @property int $combat_encounter_id
+ * @property float $starting_hit_points
+ * @property float $current_hit_points
+ * @property int $armour_class
  *
  * @property \App\Model\Entity\CombatEncounter $combat_encounter
  * @property \App\Model\Entity\Condition[] $conditions
+ * @property \App\Model\Entity\Monster[] $monsters
+ * @property \App\Model\Entity\PlayerCharacter[] $player_characters
  */
 class Participant extends Entity
 {
@@ -25,9 +30,14 @@ class Participant extends Entity
      * @var array
      */
     protected $_accessible = [
-        'order' => true,
+        'order'               => true,
         'combat_encounter_id' => true,
-        'combat_encounter' => true,
-        'conditions' => true,
+        'starting_hit_points' => true,
+        'current_hit_points'  => true,
+        'armour_class'        => true,
+        'combat_encounter'    => true,
+        'conditions'          => true,
+        'monsters'            => true,
+        'player_characters'   => true,
     ];
 }

@@ -31,14 +31,14 @@ class NonPlayableCharacter extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-        'age' => true,
-        'appearance' => true,
-        'occupation' => true,
-        'personality' => true,
-        'history' => true,
-        'alignment' => true,
-        'notes' => true,
-        'timeline_segments' => true
+        'name'              => true,
+        'age'               => true,
+        'appearance'        => true,
+        'occupation'        => true,
+        'personality'       => true,
+        'history'           => true,
+        'alignment'         => true,
+        'notes'             => true,
+        'timeline_segments' => true,
     ];
 }

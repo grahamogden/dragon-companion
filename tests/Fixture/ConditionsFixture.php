@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * ConditionsFixture
- *
  */
 class ConditionsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -29,7 +27,6 @@ class ConditionsFixture extends TestFixture
         ],
     ];
     // @codingStandardsIgnoreEnd
-
     /**
      * Init method
      *
@@ -41,7 +38,7 @@ class ConditionsFixture extends TestFixture
             [
                 'id' => 1,
                 'name' => 'Lorem ipsum dolor sit amet',
-                'description' => 'Lorem ipsum dolor sit amet'
+                'description' => 'Lorem ipsum dolor sit amet',
             ],
         ];
         parent::init();

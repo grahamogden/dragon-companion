@@ -11,10 +11,10 @@ use Cake\ORM\Entity;
  * @property string $description
  *
  * @property \App\Model\Entity\CombatTurn[] $combat_turns
+ * @property \App\Model\Entity\Participant[] $participants
  */
 class Condition extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -25,8 +25,9 @@ class Condition extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-        'description' => true,
-        'combat_turns' => true
+        'name'         => true,
+        'description'  => true,
+        'combat_turns' => true,
+        'participants' => true,
     ];
 }

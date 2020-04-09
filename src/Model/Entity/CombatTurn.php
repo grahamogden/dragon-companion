@@ -10,9 +10,9 @@ use Cake\ORM\Entity;
  * @property int $combat_enounter_id
  * @property int $round_number
  * @property int $source_participant_id
- * @property int $target_participant_id
- * @property int $action_result
- * @property int $condition_id
+ * @property int|null $target_participant_id
+ * @property int|null $action_result
+ * @property int|null $condition_id
  *
  * @property \App\Model\Entity\CombatEncounter $combat_encounter
  * @property \App\Model\Entity\Participant $participant
@@ -20,7 +20,6 @@ use Cake\ORM\Entity;
  */
 class CombatTurn extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -31,14 +30,14 @@ class CombatTurn extends Entity
      * @var array
      */
     protected $_accessible = [
-        'combat_enounter_id' => true,
-        'round_number' => true,
+        'combat_enounter_id'    => true,
+        'round_number'          => true,
         'source_participant_id' => true,
         'target_participant_id' => true,
-        'action_result' => true,
-        'condition_id' => true,
-        'combat_encounter' => true,
-        'participant' => true,
-        'condition' => true
+        'action_result'         => true,
+        'condition_id'          => true,
+        'combat_encounter'      => true,
+        'participant'           => true,
+        'condition'             => true,
     ];
 }

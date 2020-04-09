@@ -9,23 +9,22 @@ use Cake\Validation\Validator;
 /**
  * CombatTurns Model
  *
- * @property \App\Model\Table\CombatEncountersTable|\Cake\ORM\Association\BelongsTo $CombatEncounters
- * @property \App\Model\Table\ParticipantsTable|\Cake\ORM\Association\BelongsTo $Participants
- * @property \App\Model\Table\ParticipantsTable|\Cake\ORM\Association\BelongsTo $Participants
- * @property \App\Model\Table\ConditionsTable|\Cake\ORM\Association\BelongsTo $Conditions
+ * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\BelongsTo $CombatEncounters
+ * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\BelongsTo $Participants
+ * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\BelongsTo $Participants
+ * @property \App\Model\Table\ConditionsTable&\Cake\ORM\Association\BelongsTo $Conditions
  *
  * @method \App\Model\Entity\CombatTurn get($primaryKey, $options = [])
  * @method \App\Model\Entity\CombatTurn newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\CombatTurn[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\CombatTurn|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CombatTurn|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CombatTurn|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CombatTurn saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\CombatTurn patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\CombatTurn[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\CombatTurn findOrCreate($search, callable $callback = null, $options = [])
  */
 class CombatTurnsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -42,18 +41,17 @@ class CombatTurnsTable extends Table
 
         $this->belongsTo('CombatEncounters', [
             'foreignKey' => 'combat_enounter_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Participants', [
             'foreignKey' => 'source_participant_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Participants', [
             'foreignKey' => 'target_participant_id',
-            'joinType' => 'INNER'
         ]);
         $this->belongsTo('Conditions', [
-            'foreignKey' => 'condition_id'
+            'foreignKey' => 'condition_id',
         ]);
     }
 
@@ -66,17 +64,17 @@ class CombatTurnsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->integer('round_number')
+            ->nonNegativeInteger('round_number')
             ->requirePresence('round_number', 'create')
-            ->notEmpty('round_number');
+            ->notEmptyString('round_number');
 
         $validator
             ->integer('action_result')
-            ->allowEmpty('action_result');
+            ->allowEmptyString('action_result');
 
         return $validator;
     }

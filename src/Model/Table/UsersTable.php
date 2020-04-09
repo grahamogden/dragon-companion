@@ -67,9 +67,7 @@ class UsersTable extends Table
             'foreignKey' => 'user_id',
         ]);
         $this->belongsToMany('Clans', [
-            'foreignKey' => 'user_id',
-            'targetForeignKey' => 'clan_id',
-            'joinTable' => 'clans_users',
+            'through' => 'ClansUsers',
         ]);
     }
 

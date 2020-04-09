@@ -9,20 +9,19 @@ use Cake\Validation\Validator;
 /**
  * CharacterRaces Model
  *
- * @property \App\Model\Table\PlayerCharactersTable|\Cake\ORM\Association\BelongsToMany $PlayerCharacters
+ * @property \App\Model\Table\PlayerCharactersTable&\Cake\ORM\Association\BelongsToMany $PlayerCharacters
  *
  * @method \App\Model\Entity\CharacterRace get($primaryKey, $options = [])
  * @method \App\Model\Entity\CharacterRace newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\CharacterRace[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\CharacterRace|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CharacterRace|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CharacterRace|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CharacterRace saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\CharacterRace patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\CharacterRace[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\CharacterRace findOrCreate($search, callable $callback = null, $options = [])
  */
 class CharacterRacesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -38,9 +37,9 @@ class CharacterRacesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->belongsToMany('PlayerCharacters', [
-            'foreignKey' => 'character_race_id',
+            'foreignKey'       => 'character_race_id',
             'targetForeignKey' => 'player_character_id',
-            'joinTable' => 'character_races_player_characters'
+            'joinTable'        => 'character_races_player_characters',
         ]);
     }
 
@@ -53,14 +52,13 @@ class CharacterRacesTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('name')
             ->maxLength('name', 25)
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->notEmptyString('name');
 
         return $validator;
     }

@@ -37,9 +37,9 @@ class CharacterClassesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->belongsToMany('PlayerCharacters', [
-            'foreignKey' => 'character_class_id',
+            'foreignKey'       => 'character_class_id',
             'targetForeignKey' => 'player_character_id',
-            'joinTable' => 'character_classes_player_characters',
+            'joinTable'        => 'character_classes_player_characters',
         ]);
     }
 

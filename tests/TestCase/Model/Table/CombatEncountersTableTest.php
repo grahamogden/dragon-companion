@@ -25,6 +25,7 @@ class CombatEncountersTableTest extends TestCase
     public $fixtures = [
         'app.CombatEncounters',
         'app.Users',
+        'app.Participants',
     ];
 
     /**

@@ -9,7 +9,8 @@ use Cake\Validation\Validator;
 /**
  * Monsters Model
  *
- * @property \App\Model\Table\MonsterInstancesTable&\Cake\ORM\Association\HasMany $MonsterInstances
+ * @property \App\Model\Table\DataSourcesTable&\Cake\ORM\Association\BelongsTo $DataSources
+ * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\BelongsToMany $Participants
  *
  * @method \App\Model\Entity\Monster get($primaryKey, $options = [])
  * @method \App\Model\Entity\Monster newEntity($data = null, array $options = [])
@@ -36,8 +37,14 @@ class MonstersTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->hasMany('MonsterInstances', [
+        $this->belongsTo('DataSources', [
+            'foreignKey' => 'data_source_id',
+            'joinType' => 'INNER',
+        ]);
+        $this->belongsToMany('Participants', [
             'foreignKey' => 'monster_id',
+            'targetForeignKey' => 'participant_id',
+            'joinTable' => 'monsters_participants',
         ]);
     }
 
@@ -56,8 +63,33 @@ class MonstersTable extends Table
         $validator
             ->scalar('name')
             ->maxLength('name', 250)
-            ->allowEmptyString('name');
+            ->notEmptyString('name');
+
+        $validator
+            ->numeric('max_hit_points')
+            ->greaterThanOrEqual('max_hit_points', 0)
+            ->requirePresence('max_hit_points', 'create')
+            ->notEmptyString('max_hit_points');
+
+        $validator
+            ->nonNegativeInteger('armour_class')
+            ->requirePresence('armour_class', 'create')
+            ->notEmptyString('armour_class');
 
         return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        $rules->add($rules->existsIn(['data_source_id'], 'DataSources'));
+
+        return $rules;
     }
 }
