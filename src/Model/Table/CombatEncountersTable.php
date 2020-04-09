@@ -9,20 +9,21 @@ use Cake\Validation\Validator;
 /**
  * CombatEncounters Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
  *
  * @method \App\Model\Entity\CombatEncounter get($primaryKey, $options = [])
  * @method \App\Model\Entity\CombatEncounter newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\CombatEncounter[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\CombatEncounter|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CombatEncounter|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CombatEncounter|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\CombatEncounter saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\CombatEncounter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\CombatEncounter[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\CombatEncounter findOrCreate($search, callable $callback = null, $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CombatEncountersTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -37,9 +38,11 @@ class CombatEncountersTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('Timestamp');
+
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -52,13 +55,13 @@ class CombatEncountersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('name')
             ->maxLength('name', 250)
-            ->allowEmpty('name');
+            ->allowEmptyString('name');
 
         return $validator;
     }

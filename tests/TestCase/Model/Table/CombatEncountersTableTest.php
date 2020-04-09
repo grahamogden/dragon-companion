@@ -10,7 +10,6 @@ use Cake\TestSuite\TestCase;
  */
 class CombatEncountersTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -24,8 +23,8 @@ class CombatEncountersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.combat_encounters',
-        'app.users'
+        'app.CombatEncounters',
+        'app.Users',
     ];
 
     /**

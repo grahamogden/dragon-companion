@@ -4,20 +4,14 @@
  * @var \App\Model\Entity\CombatEncounter[]|\Cake\Collection\CollectionInterface $combatEncounters
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Combat Encounter'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="combatEncounters index large-9 medium-8 columns content">
-    <h3><?= __('Combat Encounters') ?></h3>
-    <table cellpadding="0" cellspacing="0">
+<div class="combatEncounters index content">
+    <h1>Combat Tracker</h1>
+    <div class="form-group">
+        <?= $this->Html->link('New Combat Encounter', ['action' => 'add'], ['class' => ['btn','btn-outline-success']]); ?>
+    </div>
+    <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('name') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
@@ -26,7 +20,6 @@
         <tbody>
             <?php foreach ($combatEncounters as $combatEncounter): ?>
             <tr>
-                <td><?= $this->Number->format($combatEncounter->id) ?></td>
                 <td><?= h($combatEncounter->name) ?></td>
                 <td><?= $combatEncounter->has('user') ? $this->Html->link($combatEncounter->user->id, ['controller' => 'Users', 'action' => 'view', $combatEncounter->user->id]) : '' ?></td>
                 <td class="actions">
@@ -38,14 +31,5 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-    </div>
+    <?= $this->element('pagination') ?>
 </div>

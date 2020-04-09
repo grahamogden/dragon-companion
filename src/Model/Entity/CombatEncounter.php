@@ -7,14 +7,14 @@ use Cake\ORM\Entity;
  * CombatEncounter Entity
  *
  * @property int $id
- * @property string $name
+ * @property string|null $name
  * @property int $user_id
+ * @property \Cake\I18n\FrozenTime $created
  *
  * @property \App\Model\Entity\User $user
  */
 class CombatEncounter extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -27,6 +27,7 @@ class CombatEncounter extends Entity
     protected $_accessible = [
         'name' => true,
         'user_id' => true,
-        'user' => true
+        'created' => true,
+        'user' => true,
     ];
 }

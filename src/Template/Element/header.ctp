@@ -41,7 +41,7 @@ $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
                                 <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                             </li>
                             <li class="nav-item">
-                                <?= $this->Html->link('Combat Encounters', ['controller' => 'CombatEncounters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                                <?= $this->Html->link('Combat Tracker', ['controller' => 'CombatEncounters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                             </li>
                             <li class="nav-item">
                                 <?= $this->Html->link('Monsters', ['controller' => 'Monsters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>

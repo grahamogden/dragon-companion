@@ -23,9 +23,17 @@ class CombatEncountersController extends AppController
         $this->paginate = [
             'contain' => ['Users']
         ];
-        $combatEncounters = $this->paginate($this->CombatEncounters);
 
-        $this->set(compact('combatEncounters'));
+        $user = $this->getUserOrRedirect();
+
+        $combatEncounters = $this->CombatEncounters
+            ->find()
+            ->where(['user_id =' => $user['id']])
+            ->order(['CombatEncounters.created DESC']);
+
+        $combatEncountersPagination = $this->paginate($combatEncounters);
+
+        $this->set('combatEncounters', $combatEncountersPagination);
     }
 
     /**
