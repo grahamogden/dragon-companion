@@ -10,9 +10,9 @@ use Cake\Validation\Validator;
  * CombatTurns Model
  *
  * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\BelongsTo $CombatEncounters
- * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\BelongsTo $Participants
- * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\BelongsTo $Participants
- * @property \App\Model\Table\ConditionsTable&\Cake\ORM\Association\BelongsTo $Conditions
+ * @property &\Cake\ORM\Association\BelongsTo $SourceParticipants
+ * @property &\Cake\ORM\Association\BelongsTo $TargetParticipants
+ * @property &\Cake\ORM\Association\BelongsTo $CombatActions
  *
  * @method \App\Model\Entity\CombatTurn get($primaryKey, $options = [])
  * @method \App\Model\Entity\CombatTurn newEntity($data = null, array $options = [])
@@ -43,15 +43,16 @@ class CombatTurnsTable extends Table
             'foreignKey' => 'combat_enounter_id',
             'joinType' => 'INNER',
         ]);
-        $this->belongsTo('Participants', [
+        $this->belongsTo('SourceParticipants', [
             'foreignKey' => 'source_participant_id',
+        ]);
+        $this->belongsTo('TargetParticipants', [
+            'foreignKey' => 'target_participant_id',
             'joinType' => 'INNER',
         ]);
-        $this->belongsTo('Participants', [
-            'foreignKey' => 'target_participant_id',
-        ]);
-        $this->belongsTo('Conditions', [
-            'foreignKey' => 'condition_id',
+        $this->belongsTo('CombatActions', [
+            'foreignKey' => 'combat_action_id',
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -73,8 +74,22 @@ class CombatTurnsTable extends Table
             ->notEmptyString('round_number');
 
         $validator
-            ->integer('action_result')
-            ->allowEmptyString('action_result');
+            ->nonNegativeInteger('turn_order')
+            ->requirePresence('turn_order', 'create')
+            ->notEmptyString('turn_order');
+
+        $validator
+            ->integer('roll_total')
+            ->requirePresence('roll_total', 'create')
+            ->notEmptyString('roll_total');
+
+        $validator
+            ->numeric('net_action_total')
+            ->allowEmptyString('net_action_total');
+
+        $validator
+            ->nonNegativeInteger('movement')
+            ->notEmptyString('movement');
 
         return $validator;
     }
@@ -89,9 +104,9 @@ class CombatTurnsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['combat_enounter_id'], 'CombatEncounters'));
-        $rules->add($rules->existsIn(['source_participant_id'], 'Participants'));
-        $rules->add($rules->existsIn(['target_participant_id'], 'Participants'));
-        $rules->add($rules->existsIn(['condition_id'], 'Conditions'));
+        $rules->add($rules->existsIn(['source_participant_id'], 'SourceParticipants'));
+        $rules->add($rules->existsIn(['target_participant_id'], 'TargetParticipants'));
+        $rules->add($rules->existsIn(['combat_action_id'], 'CombatActions'));
 
         return $rules;
     }

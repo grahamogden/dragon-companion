@@ -9,10 +9,13 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $combat_enounter_id
  * @property int $round_number
- * @property int $source_participant_id
- * @property int|null $target_participant_id
- * @property int|null $action_result
- * @property int|null $condition_id
+ * @property int $turn_order
+ * @property int|null $source_participant_id
+ * @property int $target_participant_id
+ * @property int $combat_action_id
+ * @property int $roll_total
+ * @property float|null $net_action_total
+ * @property int $movement
  *
  * @property \App\Model\Entity\CombatEncounter $combat_encounter
  * @property \App\Model\Entity\Participant $participant
@@ -32,10 +35,13 @@ class CombatTurn extends Entity
     protected $_accessible = [
         'combat_enounter_id'    => true,
         'round_number'          => true,
+        'turn_order'            => true,
         'source_participant_id' => true,
         'target_participant_id' => true,
-        'action_result'         => true,
-        'condition_id'          => true,
+        'combat_action_id'      => true,
+        'roll_total'            => true,
+        'net_action_total'      => true,
+        'movement'              => true,
         'combat_encounter'      => true,
         'participant'           => true,
         'condition'             => true,
