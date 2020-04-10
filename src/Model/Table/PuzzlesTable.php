@@ -78,13 +78,14 @@ class PuzzlesTable extends Table
         $validator
             ->scalar('title')
             ->minLength('title', 3)
-            ->maxLength('title', 255)
+            ->maxLength('title', 250)
             ->requirePresence('title', 'create')
             ->notEmpty('title');
 
         $validator
             ->scalar('description')
             ->requirePresence('description', 'create')
+            ->maxLength('description', 250)
             ->notEmpty('description');
 
         $validator
