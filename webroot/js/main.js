@@ -1,17 +1,17 @@
-var setCookie = function(key, value) {
+const setCookie = function(key, value) {
     let expires = new Date();
     expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
     // let path = /((http\:\/\/)[a-z0-9:]*)/gm.exec(window.location.href)[0];
     document.cookie = key + '=' + value + ';path=/;expires=' + expires.toUTCString();
 }
 
-var getCookie = function(key) {
+const getCookie = function(key) {
     var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
     return keyValue ? keyValue[2] : null;
 }
 
 jQuery(document).ready(function($) {
-    let backgroundImages = [
+    const backgroundImages = [
         {
             url: 'battle_of_four_armies_by_jasonengle.jpg',
             slcted: true,
@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
      * 
      * @return object
      */
-    let getSelectedBackgroundImage = function () {
+    const getSelectedBackgroundImage = function () {
         let image;
         let i = 0;
         do {
@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
      * 
      * @return string
      */
-    let pickBackgroundImage = function () {
+    const pickBackgroundImage = function () {
         let image;
         do {
             image = backgroundImages[Math.floor(Math.random()*backgroundImages.length)]
@@ -80,7 +80,7 @@ jQuery(document).ready(function($) {
      * @param  object backgroundHeader 
      * @return void
      */
-    let changeBackgroundImage = function(backgroundHeader) {
+    const changeBackgroundImage = function(backgroundHeader) {
         url = pickBackgroundImage();
 
         backgroundHeader.css({
@@ -91,7 +91,7 @@ jQuery(document).ready(function($) {
     /**
      * Adds the animation CSS property and then sets the interval to replace the background image
      */
-    let backgroundSlider = function() {
+    const backgroundSlider = function() {
         let backgroundHeader = $("#header-background");
 
         backgroundHeader.css({
@@ -107,7 +107,7 @@ jQuery(document).ready(function($) {
      * Turns on or off the dark mode
      * @param bool isEnabled
      */
-    let setDarkMode = function(isEnabled = false) {
+    const setDarkMode = function(isEnabled = false) {
         if (isEnabled === true) {
             window.localStorage.darkMode = 1;
             setCookie('darkMode', 1);
@@ -125,7 +125,7 @@ jQuery(document).ready(function($) {
      * Toggles the header images to animate - currently only enables, cannot disable
      * @return void
      */
-    let toggleHeaderSlider = function () {
+    const toggleHeaderSlider = function () {
         backgroundSlider();
     }
 
@@ -176,6 +176,114 @@ jQuery(document).ready(function($) {
         // console.log(isChecked);
         setDarkMode(isChecked);
     });
+
+    const split = function(val) {
+        return val.split(/,\s*/);
+    }
+
+    const extractLast = function(term) {
+        return split(term).pop();
+    }
+
+    const getExcludes = function(name) {
+        return JSON.stringify($(name).data("excludes"));
+    }
+
+    const getJqueryElementForAutocomplete = function(event) {
+        return $(event)[0].element[0];
+    }
+ 
+    $("input.autocomplete").each(function() {
+        // dont navigate away from the field on tab when selecting an item
+        $(this).on("keydown", function(event) {
+                if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                appendTo: "#results-" + $(this).attr("name"),
+                source: function(request, response) {
+                    let $element = getJqueryElementForAutocomplete(this);
+                    $.getJSON($($element).data("source"), {
+                        term: extractLast(request.term),
+                        excludes: getExcludes("#autocomplete-" + $($element).attr("name"))
+                    }, response);
+                    $(".ui-helper-hidden-accessible").remove();
+                },
+                search: function() {
+                    // Custom minLength - because using the standard jQuery behaviour does not
+                    // work when there is already more than 3 characters
+                    var term = extractLast(this.value);
+                    if (term.length < 3) {
+                        return false;
+                    }
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function(event, ui) {
+                    var terms = split(this.value);
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    if (ui.item.value !== "No results found") {
+                        terms.push(ui.item.value);
+                    }
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join(", ");
+                    return false;
+                }
+            });
+    });
+ 
+    $("input.autocomplete-table").each(function() {
+        // dont navigate away from the field on tab when selecting an item
+        $(this).on("keydown", function(event) {
+                if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                appendTo: "#results-" + $(this).attr("name"),
+                source: function(request, response) {
+                    let $element = getJqueryElementForAutocomplete(this);
+                    $.getJSON($($element).data("source"), {
+                        term: extractLast(request.term),
+                        excludes: getExcludes("#autocomplete-" + $($element).attr("name"))
+                    }, response);
+                    $(".ui-helper-hidden-accessible").remove();
+                },
+                search: function() {
+                    // Custom minLength - because using the standard jQuery behaviour does not
+                    // work when there is already more than 3 characters
+                    var term = extractLast(this.value);
+                    if (term.length < 3) {
+                        return false;
+                    }
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function(event, ui) {
+                    var terms = split(this.value);
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    if (ui.item.value !== "No results found") {
+                        terms.push(ui.item.value);
+                    }
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join(", ");
+                    return false;
+                }
+            });
+    });
+
+
 
     // let list = $('table tbody.sortable');
     // list.sortable({
