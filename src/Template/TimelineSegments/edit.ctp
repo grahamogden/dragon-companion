@@ -6,7 +6,7 @@
 
 use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
-<h1>Edit Timeline Segment</h1>
+<h1><?= __('Edit Timeline Segment') ?></h1>
 <div class="timelineSegments form content">
     <?= $this->Form->create($timelineSegment); ?>
     <fieldset>

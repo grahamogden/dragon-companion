@@ -35,7 +35,7 @@ $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
                                 <?= $this->Html->link('Clans', ['controller' => 'Clans', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                             </li>
                             <li class="nav-item">
-                                <?= $this->Html->link('Campaigns', ['controller' => 'TimelineSegments', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
+                                <?= $this->Html->link('Campaigns', ['controller' => 'Campaigns', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                             </li>
                             <li class="nav-item">
                                 <?= $this->Html->link('Non Playable Characters', ['controller' => 'NonPlayableCharacters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>

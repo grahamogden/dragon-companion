@@ -8,22 +8,22 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Utility\Text;
 use App\Model\Behavior\DatabaseStringConverterBehavior;
-// the QueryExpressions class
-// use Cake\Database\Expression\QueryExpression;
 
 /**
  * TimelineSegments Model
  *
- * @property \App\Model\Table\TimelineSegmentsTable|\Cake\ORM\Association\BelongsTo $ParentTimelineSegments
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\TimelineSegmentsTable|\Cake\ORM\Association\HasMany $ChildTimelineSegments
- * @property \App\Model\Table\TagsTable|\Cake\ORM\Association\BelongsToMany $Tags
+ * @property &\Cake\ORM\Association\BelongsTo $Campaigns
+ * @property \App\Model\Table\TimelineSegmentsTable&\Cake\ORM\Association\BelongsTo $ParentTimelineSegments
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\TimelineSegmentsTable&\Cake\ORM\Association\HasMany $ChildTimelineSegments
+ * @property \App\Model\Table\NonPlayableCharactersTable&\Cake\ORM\Association\BelongsToMany $NonPlayableCharacters
+ * @property \App\Model\Table\TagsTable&\Cake\ORM\Association\BelongsToMany $Tags
  *
  * @method \App\Model\Entity\TimelineSegment get($primaryKey, $options = [])
  * @method \App\Model\Entity\TimelineSegment newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\TimelineSegment[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\TimelineSegment|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\TimelineSegment|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\TimelineSegment|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\TimelineSegment saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\TimelineSegment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\TimelineSegment[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\TimelineSegment findOrCreate($search, callable $callback = null, $options = [])
@@ -33,7 +33,6 @@ use App\Model\Behavior\DatabaseStringConverterBehavior;
  */
 class TimelineSegmentsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -54,9 +53,13 @@ class TimelineSegmentsTable extends Table
             'level' => 'level'
         ]);
 
+        $this->belongsTo('Campaigns', [
+            'foreignKey' => 'campaign_id',
+            'joinType' => 'INNER',
+        ]);
         $this->belongsTo('ParentTimelineSegments', [
             'className'  => 'TimelineSegments',
-            'foreignKey' => 'parent_id'
+            'foreignKey' => 'parent_id',
         ]);
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
@@ -64,17 +67,17 @@ class TimelineSegmentsTable extends Table
         ]);
         $this->hasMany('ChildTimelineSegments', [
             'className'  => 'TimelineSegments',
-            'foreignKey' => 'parent_id'
-        ]);
-        $this->belongsToMany('Tags', [
-            'foreignKey'       => 'timeline_segment_id',
-            'targetForeignKey' => 'tag_id',
-            'joinTable'        => 'tags_timeline_segments'
+            'foreignKey' => 'parent_id',
         ]);
         $this->belongsToMany('NonPlayableCharacters', [
             'foreignKey'       => 'timeline_segment_id',
             'targetForeignKey' => 'non_playable_character_id',
             'joinTable'        => 'non_playable_characters_timeline_segments'
+        ]);
+        $this->belongsToMany('Tags', [
+            'foreignKey' => 'timeline_segment_id',
+            'targetForeignKey' => 'tag_id',
+            'joinTable' => 'tags_timeline_segments',
         ]);
     }
 
@@ -87,19 +90,18 @@ class TimelineSegmentsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('title')
             ->maxLength('title', 2000)
-            ->requirePresence('title', 'create')
-            ->notEmpty('title');
+            ->notEmptyString('title');
 
         $validator
             ->scalar('body')
             ->requirePresence('body', 'create')
-            ->notEmpty('body');
+            ->notEmptyString('body');
 
         return $validator;
     }
@@ -149,6 +151,7 @@ class TimelineSegmentsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->existsIn(['campaign_id'], 'Campaigns'));
         $rules->add($rules->existsIn(['parent_id'], 'ParentTimelineSegments'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 

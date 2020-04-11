@@ -1,21 +1,21 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\TimelineSegmentsTable;
+use App\Model\Table\CampaignsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\TimelineSegmentsTable Test Case
+ * App\Model\Table\CampaignsTable Test Case
  */
-class TimelineSegmentsTableTest extends TestCase
+class CampaignsTableTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\TimelineSegmentsTable
+     * @var \App\Model\Table\CampaignsTable
      */
-    public $TimelineSegments;
+    public $Campaigns;
 
     /**
      * Fixtures
@@ -23,10 +23,9 @@ class TimelineSegmentsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.TimelineSegments',
+        'app.Campaigns',
         'app.Users',
-        'app.Tags',
-        'app.NonPlayableCharacters',
+        'app.Clans',
     ];
 
     /**
@@ -37,8 +36,8 @@ class TimelineSegmentsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('TimelineSegments') ? [] : ['className' => TimelineSegmentsTable::class];
-        $this->TimelineSegments = TableRegistry::getTableLocator()->get('TimelineSegments', $config);
+        $config = TableRegistry::getTableLocator()->exists('Campaigns') ? [] : ['className' => CampaignsTable::class];
+        $this->Campaigns = TableRegistry::getTableLocator()->get('Campaigns', $config);
     }
 
     /**
@@ -48,7 +47,7 @@ class TimelineSegmentsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->TimelineSegments);
+        unset($this->Campaigns);
 
         parent::tearDown();
     }
@@ -69,16 +68,6 @@ class TimelineSegmentsTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test beforeSave method
-     *
-     * @return void
-     */
-    public function testBeforeSave()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -4,14 +4,14 @@
  * @var \App\Model\Entity\TimelineSegment $timelineSegment
  */
 ?>
-<h1>Add Timeline Segment</h1>
+<h1><?= __('Add Timeline Segment') ?></h1>
 <div class="timelineSegments form content">
     <?= $this->Form->create($timelineSegment); ?>
     <fieldset>
         <?= $this->Form->control('parent_id', [
             'options' => $parentTimelineSegments,
             'empty'   => true,
-            'value'   => $this->request->getQuery('parent') ?? null, // Automatically fill this value in for the user
+            'value'   => $this->request->getParam('id') ?? null, // Automatically fill this value in for the user
             'class'   => ['form-control'],
         ]) ?>
         <?= $this->Form->control('title', ['class'   => ['form-control']]) ?>

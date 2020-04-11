@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Controller\AppController;
 use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 use App\Model\Entity\TimelineSegment as TimelineSegmentEntity;
+use Cake\Routing\Router;
+use Cake\Http\Response;
 
 /**
  * TimelineSegments Controller
@@ -36,9 +38,12 @@ class TimelineSegmentsController extends AppController
     /**
      * Index method
      *
+     * @param int|null $campaignId The ID for the campaign that the timeline segments
+     *                 should belong to
+     *
      * @return \Cake\Http\Response|void
      */
-    public function index(): void
+    public function index(?int $campaignId): void
     {
         $this->session->write('referer', [
             'controller' => 'TimelineSegments',
@@ -54,6 +59,7 @@ class TimelineSegmentsController extends AppController
 
         $timelineSegments = $this->TimelineSegments
             ->find()
+            ->where(['TimelineSegments.campaign_id =' => $campaignId])
             ->where(['TimelineSegments.parent_id IS' => null])
             ->where(['TimelineSegments.user_id =' => $user['id']])
             ->order('TimelineSegments.lft asc');
@@ -113,14 +119,17 @@ class TimelineSegmentsController extends AppController
     {
         $timelineSegment = $this->TimelineSegments->newEntity();
         if ($this->request->is('post')) {
-            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
+            $data = $this->request->getData();
+            $data['campaign_id'] = $this->TimelineSegments->findById($data['parent_id'])->firstOrFail()->campaign_id;
+
+            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $data);
             // Set the user ID on the item
             $timelineSegment->user_id = $this->Auth->user('id');
 
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->redirect($this->session->read('referer'));//['action' => 'index']);
+                return $this->generateReturnUrl($timelineSegment);
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
@@ -182,7 +191,7 @@ class TimelineSegmentsController extends AppController
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->redirect($this->session->read('referer'));//['action' => 'index']);
+                return $this->generateReturnUrl($timelineSegment);
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
@@ -227,13 +236,20 @@ class TimelineSegmentsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $timelineSegment = $this->TimelineSegments->get($id);
+
+        $url = $this->generateReturnUrl($timelineSegment);
+
         if ($this->TimelineSegments->delete($timelineSegment)) {
             $this->Flash->success(__('The timeline segment, {0}, has been deleted.', $timelineSegment->title));
         } else {
             $this->Flash->error(__('The timeline segment could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect($this->session->read('referer') ?: ['action' => 'index']);
+        if ($timelineSegment->parent_id) {
+            return $url;
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
 
     /**
@@ -270,6 +286,29 @@ class TimelineSegmentsController extends AppController
         $timelineSegment = $this->TimelineSegments->findById($id)->firstOrFail();
 
         return $timelineSegment->user_id === $user['id'];
+    }
+
+    /**
+     * Generates the URL for returning the user after saving
+     * 
+     * @param  TimelineSegmentEntity $timelineSegment [description]
+     * @return string
+     */
+    private function generateReturnUrl(TimelineSegmentEntity $timelineSegment): Response
+    {
+        $urlParams = [
+            '_name'      => 'TimelineSegments',
+            'campaignId' => $timelineSegment->campaign_id,
+        ];
+
+        if ($timelineSegment['parent_id']) {
+            $urlParams['action'] = 'view';
+            $urlParams['id'] = $timelineSegment->parent_id;
+        } else {
+            $urlParams['action'] = 'index';
+        }
+
+        return $this->redirect(Router::url($urlParams));
     }
 
     /**

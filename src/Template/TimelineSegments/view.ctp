@@ -8,8 +8,16 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
 <h1><?= sprintf('%s Timeline Segment (%s)',
     h($timelineSegment->title),
-    $this->Html->link('Edit', ['action' => 'edit', $timelineSegment->getId()])
-); ?></h1>
+    $this->Html->link(
+        __('Edit'),
+        [
+            'action'     => 'edit',
+            '_name'      => 'TimelineSegments',
+            'campaignId' => $timelineSegment->campaign_id,
+            'id'         => $timelineSegment->getId(),
+        ]
+    )
+    ); ?></h1>
 <div class="timelineSegments view columns content">
     <div class="segment-row show-more-container">
         <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body)); ?></div>

@@ -84,16 +84,6 @@ Router::scope('/', function (RouteBuilder $routes) {
             'home',
     ]);
 
-    /**
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
-    $routes->connect(
-        '/pages/*',
-        [
-            'controller' => 'Pages',
-            'action' => 'display',
-    ]);
-
     $routes->connect(
         '/login',
         ['controller' => 'Users', 'action' => 'login'],
@@ -101,7 +91,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     );
 
     $routes->connect(
-        'users/register',
+        '/users/register',
         ['controller' => 'Users', 'action' => 'add'],
         ['_name' => 'register']
     );
@@ -112,77 +102,130 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['_name' => 'logout']
     );
 
-    // $routes->connect(
-    //     'timeline-segments/reorder/:id',///:direction',
-    //     ['controller' => 'TimelineSegments', 'action' => 'reorder',])
-    //     ->setMethods(['POST'])
-    //     ->setPass(['id'])
-    //     ->setPatterns(['id' => '\d+']);
-    //     // ->setPatterns(['direction' => '(up|down)']);
-
-    // $routes->connect(
-    //     'timeline-segments/add/:parentId',///:direction',
-    //     ['controller' => 'TimelineSegments', 'action' => 'add',])
-    //     ->setMethods(['POST'])
-    //     ->setPass(['parentId'])
-    //     ->setPatterns(['parentId' => '\d+']);
-    //     // ->setPatterns(['direction' => '(up|down)']);
+    /**
+     * START Campaigns and Timeline Segments
+     */
 
     $routes->connect(
-        '/timeline-segments/:action/:id',
+        '/timeline-segments/delete/:id',
         [
-            'controller' => 'TimelineSegments'
-        ])
+            'action'     => 'delete',
+            'controller' => 'TimelineSegments',
+        ],
+        [
+            '_name' => 'TimelineSegmentsDelete',
+        ]
+    )
+        ->setMethods(['DELETE'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
+
+    $routes->connect(
+        '/campaigns/{campaignId}/timeline-segments',
+        [
+            'action'     => 'index',
+            'controller' => 'TimelineSegments',
+        ],
+        [
+            '_name' => 'TimelineSegmentsIndex',
+        ]
+    )
+        ->setMethods(['GET'])
+        ->setPatterns(['campaignId' => '\d*'])
+        ->setPass(['campaignId']);
+
+    $routes->connect(
+        '/campaigns/{campaignId}/timeline-segments/{action}/{id}',
+        [
+            'controller' => 'TimelineSegments',
+        ],
+        [
+            '_name' => 'TimelineSegments',
+        ]
+    )
+        ->setPatterns(['campaignId' => '\d*'])
+        ->setPatterns(['id' => '\d*'])
+        ->setPass([
+            'campaignId',
+            'id'
+        ]);
+
+    $routes->connect(
+        '/campaigns/:action/:id',
+        [
+            'controller' => 'Campaigns',
+        ])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    /**
+     * END Campaigns and Timeline Segments
+     */
 
     $routes->connect(
         '/tags/:action/:id',
         ['controller' => 'Tags'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/non-playable-characters/:action/:id',
         ['controller' => 'NonPlayableCharacters'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/puzzles/:action/:id',
         ['controller' => 'Puzzles'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/player-characters/:action/:id',
         ['controller' => 'PlayerCharacters'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/character-classes/:action/:id',
         ['controller' => 'CharactersClasses'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/character-races/:action/:id',
         ['controller' => 'CharacterRaces'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/monsters/:action/:id',
         ['controller' => 'Monsters'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/monster-instances/:action/:id',
         ['controller' => 'MonsterInstances'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/combat-encounters/:action/:id',
         ['controller' => 'CombatEncounters'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
         '/clans/:action/:id',
         ['controller' => 'Clans'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/participants/:action/:id',
+        ['controller' => 'Participants'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     /**
