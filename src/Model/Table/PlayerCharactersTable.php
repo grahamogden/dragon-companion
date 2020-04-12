@@ -10,6 +10,7 @@ use Cake\Validation\Validator;
  * PlayerCharacters Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property &\Cake\ORM\Association\BelongsTo $Campaigns
  * @property \App\Model\Table\CharacterClassesTable&\Cake\ORM\Association\BelongsToMany $CharacterClasses
  * @property \App\Model\Table\CharacterRacesTable&\Cake\ORM\Association\BelongsToMany $CharacterRaces
  * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\BelongsToMany $Participants
@@ -41,6 +42,10 @@ class PlayerCharactersTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
+            'joinType' => 'INNER',
+        ]);
+        $this->belongsTo('Campaigns', [
+            'foreignKey' => 'campaign_id',
             'joinType' => 'INNER',
         ]);
         $this->belongsToMany('CharacterClasses', [
@@ -110,6 +115,7 @@ class PlayerCharactersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['campaign_id'], 'Campaigns'));
 
         return $rules;
     }

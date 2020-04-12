@@ -31,13 +31,14 @@ class PlayerCharactersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users']
+            'contain' => ['Campaigns']
         ];
 
         $user = $this->getUserOrRedirect();
 
         $playerCharacters = $this->PlayerCharacters
             ->find()
+            ->contain(['Campaigns'])
             ->where(['PlayerCharacters.user_id =' => $user['id']]);
 
         $playerCharactersPaginated = $this->paginate($playerCharacters);
@@ -55,7 +56,7 @@ class PlayerCharactersController extends AppController
     public function view($id = null)
     {
         $playerCharacter = $this->PlayerCharacters->get($id, [
-            'contain' => ['Users', 'CharacterClasses', 'CharacterRaces', 'Participants']
+            'contain' => ['Users', 'CharacterClasses', 'CharacterRaces', 'Participants'],
         ]);
 
         $this->set('playerCharacter', $playerCharacter);
@@ -69,10 +70,11 @@ class PlayerCharactersController extends AppController
     public function add()
     {
         $playerCharacter = $this->PlayerCharacters->newEntity();
+        $user            = $this->getUserOrRedirect();
 
         if ($this->request->is('post')) {
             $data               = $this->request->getData();
-            $data['user_id']    = $this->Auth->user('id');
+            $data['user_id']    = $user['id'];
             $data['current_hp'] = $data['max_hp'];
 
             $playerCharacter  = $this->PlayerCharacters->patchEntity($playerCharacter, $data);
@@ -92,17 +94,20 @@ class PlayerCharactersController extends AppController
         $characterRaces = $this->PlayerCharacters->CharacterRaces
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
+        $campaigns = $this->PlayerCharacters->Campaigns
+            ->find('list', ['limit' => 200])
+            ->where(['Campaigns.user_id =' => $user['id']])
+            ->order(['name' => 'ASC']);
 
-        $this->set(compact('playerCharacter', 'characterClasses', 'characterRaces'));
+        $this->set(compact('playerCharacter', 'characterClasses', 'characterRaces', 'campaigns'));
     }
 
     /**
      * Edit method
      *
      * @param string|null $id Player Character id.
-     * 
      * @return \Cake\Http\Response|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
@@ -126,23 +131,26 @@ class PlayerCharactersController extends AppController
         $characterRaces = $this->PlayerCharacters->CharacterRaces
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
+        $campaigns = $this->PlayerCharacters->Campaigns
+            ->find('list', ['limit' => 200])
+            ->where(['Campaigns.user_id =' => $user['id']])
+            ->order(['name' => 'ASC']);
 
-        $this->set(compact('playerCharacter', 'characterClasses', 'characterRaces'));
+        $this->set(compact('playerCharacter', 'characterClasses', 'characterRaces', 'campaigns'));
     }
 
     /**
      * Delete method
      *
      * @param string|null $id Player Character id.
-     * 
-     * @return \Cake\Http\Response|null Redirects to index.
+     * @return \Cake\Http\Response|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         $playerCharacter = $this->PlayerCharacters->get($id);
-
+        
         if ($this->PlayerCharacters->delete($playerCharacter)) {
             $this->Flash->success(__('The player character has been deleted.'));
         } else {

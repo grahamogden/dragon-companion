@@ -13,6 +13,7 @@ use Cake\ORM\Entity;
  * @property int $age
  * @property int $max_hit_points
  * @property int $armour_class
+ * @property int $campaign_id
  *
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\CharacterClass[] $character_classes
@@ -37,6 +38,7 @@ class PlayerCharacter extends Entity
         'age'               => true,
         'max_hit_points'    => true,
         'armour_class'      => true,
+        'campaign_id'       => true,
         'user'              => true,
         'character_classes' => true,
         'character_races'   => true,

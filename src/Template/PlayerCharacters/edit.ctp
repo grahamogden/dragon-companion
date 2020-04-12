@@ -5,7 +5,7 @@
  */
 ?>
 <div class="playerCharacters form content">
-    <h1>Edit Player Character</h1>
+    <h1><?= __('Edit Player Character') ?></h1>
     <?= $this->Form->create($playerCharacter) ?>
         <fieldset>
             <?= $this->Form->control('first_name', ['class' => ['form-control']]) ?>
@@ -27,6 +27,7 @@
                     'class' => ['form-control']
                 ]
             ) ?>
+            <?= $this->Form->control('campaign_id', ['options' => $campaigns]) ?>
             <?= $this->Form->submit('Save', ['class' => ['btn','btn-lg','btn-block','btn-success']]) ?>
         </fieldset>
     <?= $this->Form->end() ?>

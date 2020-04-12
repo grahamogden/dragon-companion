@@ -14,7 +14,7 @@
         <thead>
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('name') ?></th>
-                <th class="d-none d-md-block" scope="col"><?= __('Synopsis') ?></th>
+                <th class="d-none d-md-table-cell" scope="col"><?= __('Synopsis') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('clan_id') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
             </tr>
@@ -23,7 +23,7 @@
             <?php foreach ($campaigns as $campaign): ?>
             <tr>
                 <td><?= h($campaign->name) ?></td>
-                <td class="d-none d-md-block"><?= h($campaign->synopsis) ?></td>
+                <td class="d-none d-md-table-cell"><?= h($campaign->synopsis) ?></td>
                 <td><?= $campaign->has('clan') ? $this->Html->link($campaign->clan->name, ['controller' => 'Clans', 'action' => 'view', $campaign->clan->id]) : '' ?></td>
                 <td class="actions">
                     <?= $this->Html->link(
