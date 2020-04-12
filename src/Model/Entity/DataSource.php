@@ -7,6 +7,7 @@ use Cake\ORM\Entity;
  * DataSource Entity
  *
  * @property int $id
+ * @property string $name
  *
  * @property \App\Model\Entity\Monster[] $monsters
  */
@@ -22,6 +23,7 @@ class DataSource extends Entity
      * @var array
      */
     protected $_accessible = [
+        'name' => true,
         'monsters' => true,
     ];
 }

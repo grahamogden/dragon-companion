@@ -53,6 +53,11 @@ class DataSourcesTable extends Table
             ->nonNegativeInteger('id')
             ->allowEmptyString('id', null, 'create');
 
+        $validator
+            ->scalar('name')
+            ->maxLength('name', 250)
+            ->notEmptyString('name');
+
         return $validator;
     }
 }
