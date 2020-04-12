@@ -11,6 +11,9 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\ClansTable&\Cake\ORM\Association\BelongsTo $Clans
+ * @property &\Cake\ORM\Association\HasMany $CombatEncounters
+ * @property &\Cake\ORM\Association\HasMany $PlayerCharacters
+ * @property &\Cake\ORM\Association\HasMany $TimelineSegments
  *
  * @method \App\Model\Entity\Campaign get($primaryKey, $options = [])
  * @method \App\Model\Entity\Campaign newEntity($data = null, array $options = [])
@@ -43,6 +46,15 @@ class CampaignsTable extends Table
         ]);
         $this->belongsTo('Clans', [
             'foreignKey' => 'clan_id',
+        ]);
+        $this->hasMany('CombatEncounters', [
+            'foreignKey' => 'campaign_id',
+        ]);
+        $this->hasMany('PlayerCharacters', [
+            'foreignKey' => 'campaign_id',
+        ]);
+        $this->hasMany('TimelineSegments', [
+            'foreignKey' => 'campaign_id',
         ]);
     }
 
