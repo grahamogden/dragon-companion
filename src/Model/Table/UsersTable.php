@@ -67,7 +67,9 @@ class UsersTable extends Table
             'foreignKey' => 'user_id',
         ]);
         $this->belongsToMany('Clans', [
-            'through' => 'ClansUsers',
+            // 'foreignKey'       => 'user_id',
+            // 'targetForeignKey' => 'id',
+            'through'          => 'ClansUsers',
         ]);
     }
 
@@ -86,8 +88,16 @@ class UsersTable extends Table
         $validator
             ->scalar('username')
             ->maxLength('username', 255)
-            ->notEmptyString('username')
-            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->notEmptyString('username', __('Please provide a username.'))
+            ->add(
+                'username',
+                'unique',
+                [
+                    'rule'     => 'validateUnique',
+                    'message'  => __('This username is already in use. Please enter a different name.'),
+                    'provider' => 'table',
+                ]
+            );
 
         $validator
             ->scalar('password')

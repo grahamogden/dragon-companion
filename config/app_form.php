@@ -67,15 +67,29 @@ return [
      * CUSTOM TEMPLATES *
      ********************/
     // Have to stupidly hack value="{{val}}" because the widget refuses to add the "value" attribute and will instead create "val"
-    'autocomplete'          => '<div class="autocomplete-container input"><input type="text" name="{{name}}" id="autocomplete-{{name}}" value="{{val}}" {{attrs}} {{excludes}} data-source="{{source}}" /><div class="autocomplete-results" id="results-{{name}}"></div><input type="hidden" class="autocomplete-template" /></div>',
+    'autocomplete'          => '<div class="autocomplete-container input">
+            <input type="text" name="{{name}}" id="autocomplete-{{name}}" value="{{val}}" {{attrs}} {{excludes}} data-source="{{source}}" />
+            <div class="autocomplete-results" id="results-{{name}}"></div>
+        </div>',
     'autocomplete-to-table' => '<div class="autocomplete-table-container input">
-            <table class="table table-hover">
+            <table id="autocomplete-{{name}}-table" class="table table-hover">
                 <thead>
-                    <tr></tr>
+                    <tr><th>{{heading}}</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><input type="text" name="{{name}}" id="autocomplete-{{name}}" value="{{val}}" {{attrs}} {{excludes}} /><div class="autocomplete-results" id="results-{{name}}"></div><input type="hidden" class="autocomplete-template" /></td>
+                </tbody>
+                <tfoot>
+                    <tr class="autocomplete-row">
+                        <td colspan="2">
+                            <div class="autocomplete-container input">
+                                <input type="text" name="{{name}}-field" id="autocomplete-{{name}}-field" value="{{val}}" {{attrs}} {{excludes}} data-source="{{source}}" data-conditionals="{{conditionals}}" data-autocomplete-for="{{name}}" />
+                                <div class="autocomplete-results" id="results-autocomplete-{{name}}-field"></div>
+                                <input type="hidden" name="{{name}}" id="{{name}}" />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>',
     'textareaeditor'        => '<div class="textarea-editor"><textarea id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor-content {{class}}" {{attrs}}>{{value}}</textarea></div>',
     // 'textareaeditor'  => '

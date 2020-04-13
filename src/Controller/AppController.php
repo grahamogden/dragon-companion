@@ -18,6 +18,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\ORM\Entity;
 
 /**
  * Application Controller
@@ -80,36 +81,54 @@ class AppController extends Controller
     /**
      * Generates a json encoded string using the results
      * 
-     * @param  Query  $results
+     * @param Entity     $entity - the entity that is going to be searched
+     * @param string     $term - the search term (used to prevent searches of less than 3 characters)
+     * @param array      $conditions - the conditions that are going to be used
+     * @param string     $displayFieldName - the DB field name that is going to be shown to the user
+     * @param string     $valueFieldName - the DB field name that is going to be used to used
+     * @param array|null $additionalReturnData - list of fields to return in the 'data' property
+     * 
      * @return string
      */
     protected function formatJsonResponse(
-        $search,
-        $term,
+        $entity,
+        string $term,
         array $conditions,
-        $field
+        string $displayFieldName,
+        string $valueFieldName,
+        ?array $additionalReturnData
     ): string {
+        $returnAray = [];
 
         if ($this->request->is('ajax') && strlen($term) >= 3) {
-            $results = $search->find('all', [
+            $results = $entity->find('all', [
                 'conditions' => $conditions
             ]);
 
-            $return = [];
             foreach ($results as $result) {
-                $return[] = [
-                    'label'        => $result->$field,
-                    'value'        => $result->$field,
+                $return = [
+                    'label'        => $result->$displayFieldName,
+                    'value'        => $result->$valueFieldName,
                 ];
+
+                if (!empty($additionalReturnData)) {
+                    foreach ($additionalReturnData as $additionalReturnDataName) {
+                        $return['data'][$additionalReturnDataName] = $result->$additionalReturnDataName;
+                    }
+                }
+
+                $returnAray[] = $return;
             }
-        } else {
-            $return = [
+        }
+
+        if (empty($returnAray)) {
+            $returnAray[] = [
                 'label'        => 'No results found',
-                'value'        => 'No results found',
+                'value'        => '',
             ];
         }
         
-        return json_encode($return);
+        return json_encode($returnAray);
     }
 
 

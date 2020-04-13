@@ -33,7 +33,7 @@ class DataSourcesTable extends Table
         parent::initialize($config);
 
         $this->setTable('data_sources');
-        $this->setDisplayField('id');
+        $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
         $this->hasMany('Monsters', [

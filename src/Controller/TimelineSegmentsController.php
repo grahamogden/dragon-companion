@@ -389,6 +389,7 @@ class TimelineSegmentsController extends AppController
             $this->TimelineSegments->Tags,
             $term,
             ['Tags.title LIKE' => '%' . $term . '%'],
+            'title',
             'title'
         );
     }
@@ -409,6 +410,7 @@ class TimelineSegmentsController extends AppController
             $this->TimelineSegments->NonPlayableCharacters,
             $term,
             ['NonPlayableCharacters.name LIKE' => '%' . $term . '%'],
+            'name',
             'name'
         );
     }

@@ -41,22 +41,22 @@ class ParticipantsTable extends Table
 
         $this->belongsTo('CombatEncounters', [
             'foreignKey' => 'combat_encounter_id',
-            'joinType' => 'INNER',
+            'joinType'   => 'INNER',
         ]);
         $this->belongsToMany('Conditions', [
-            'foreignKey' => 'participant_id',
+            'foreignKey'       => 'participant_id',
             'targetForeignKey' => 'condition_id',
-            'joinTable' => 'conditions_participants',
+            'joinTable'        => 'conditions_participants',
         ]);
         $this->belongsToMany('Monsters', [
-            'foreignKey' => 'participant_id',
+            'foreignKey'       => 'participant_id',
             'targetForeignKey' => 'monster_id',
-            'joinTable' => 'monsters_participants',
+            'joinTable'        => 'monsters_participants',
         ]);
         $this->belongsToMany('PlayerCharacters', [
-            'foreignKey' => 'participant_id',
+            'foreignKey'       => 'participant_id',
             'targetForeignKey' => 'player_character_id',
-            'joinTable' => 'participants_player_characters',
+            'joinTable'        => 'participants_player_characters',
         ]);
     }
 
