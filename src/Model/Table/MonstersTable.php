@@ -76,6 +76,11 @@ class MonstersTable extends Table
             ->requirePresence('armour_class', 'create')
             ->notEmptyString('armour_class');
 
+        $validator
+            ->scalar('source_location')
+            ->maxLength('source_location', 500)
+            ->allowEmptyString('source_location');
+
         return $validator;
     }
 

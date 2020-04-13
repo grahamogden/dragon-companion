@@ -8,7 +8,7 @@
     <h1><?= __('Monsters') ?></h1>
     <div class="form-group">
         <?= $this->Html->link(
-            __('New Monster Instance'),
+            __('New Monster'),
             [
                 'action' => 'add'
             ],

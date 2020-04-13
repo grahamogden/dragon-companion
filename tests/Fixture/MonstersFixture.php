@@ -20,6 +20,7 @@ class MonstersFixture extends TestFixture
         'data_source_id' => ['type' => 'integer', 'length' => 3, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'max_hit_points' => ['type' => 'float', 'length' => 9, 'precision' => 3, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => ''],
         'armour_class' => ['type' => 'integer', 'length' => 3, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'source_location' => ['type' => 'string', 'length' => 500, 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         '_indexes' => [
             'data_source_id' => ['type' => 'index', 'columns' => ['data_source_id'], 'length' => []],
         ],
@@ -47,6 +48,7 @@ class MonstersFixture extends TestFixture
                 'data_source_id' => 1,
                 'max_hit_points' => 1,
                 'armour_class' => 1,
+                'source_location' => 'Lorem ipsum dolor sit amet',
             ],
         ];
         parent::init();

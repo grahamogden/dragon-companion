@@ -35,7 +35,7 @@ class MonstersController extends AppController
     public function view($id = null)
     {
         $monster = $this->Monsters->get($id, [
-            'contain' => ['MonsterInstances']
+            'contain' => ['DataSources',],
         ]);
 
         $this->set('monster', $monster);
@@ -58,7 +58,9 @@ class MonstersController extends AppController
             }
             $this->Flash->error(__('The monster could not be saved. Please, try again.'));
         }
-        $this->set(compact('monster'));
+
+        $dataSources = $this->Monsters->DataSources->find('list', ['limit' => 200]);
+        $this->set(compact('monster', 'dataSources'));
     }
 
     /**
@@ -82,7 +84,9 @@ class MonstersController extends AppController
             }
             $this->Flash->error(__('The monster could not be saved. Please, try again.'));
         }
-        $this->set(compact('monster'));
+
+        $dataSources = $this->DataSources->find('list', ['limit' => 200]);
+        $this->set(compact('monster', 'data'));
     }
 
     /**
