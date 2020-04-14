@@ -25,6 +25,7 @@ class PlayerCharactersTableTest extends TestCase
     public $fixtures = [
         'app.PlayerCharacters',
         'app.Users',
+        'app.Campaigns',
         'app.CharacterClasses',
         'app.CharacterRaces',
         'app.Participants',

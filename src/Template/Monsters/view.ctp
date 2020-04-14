@@ -20,6 +20,10 @@
             <td><?= h($monster->armour_class) ?></td>
         </tr>
         <tr>
+            <th scope="row"><?= __('Dexterity Modifier') ?></th>
+            <td><?= h($monster->dexterity_modifier) ?></td>
+        </tr>
+        <tr>
             <th scope="row"><?= __('Source') ?></th>
             <td><?= h($monster->data_source->name) ?></td>
         </tr>

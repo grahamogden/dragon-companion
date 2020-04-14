@@ -1,7 +1,9 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
+use App\Model\Entity\PlayerCharacter;
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -9,20 +11,20 @@ use Cake\Validation\Validator;
 /**
  * PlayerCharacters Model
  *
- * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @property &\Cake\ORM\Association\BelongsTo $Campaigns
- * @property \App\Model\Table\CharacterClassesTable&\Cake\ORM\Association\BelongsToMany $CharacterClasses
- * @property \App\Model\Table\CharacterRacesTable&\Cake\ORM\Association\BelongsToMany $CharacterRaces
- * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\BelongsToMany $Participants
+ * @property UsersTable&BelongsTo                $Users
+ * @property CampaignsTable&BelongsTo            $Campaigns
+ * @property CharacterClassesTable&BelongsToMany $CharacterClasses
+ * @property CharacterRacesTable&BelongsToMany   $CharacterRaces
+ * @property ParticipantsTable&BelongsToMany     $Participants
  *
- * @method \App\Model\Entity\PlayerCharacter get($primaryKey, $options = [])
- * @method \App\Model\Entity\PlayerCharacter newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\PlayerCharacter[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\PlayerCharacter|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\PlayerCharacter saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\PlayerCharacter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\PlayerCharacter[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\PlayerCharacter findOrCreate($search, callable $callback = null, $options = [])
+ * @method PlayerCharacter get($primaryKey, $options = [])
+ * @method PlayerCharacter newEntity($data = null, array $options = [])
+ * @method PlayerCharacter[] newEntities(array $data, array $options = [])
+ * @method PlayerCharacter|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method PlayerCharacter saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method PlayerCharacter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method PlayerCharacter[] patchEntities($entities, array $data, array $options = [])
+ * @method PlayerCharacter findOrCreate($search, callable $callback = null, $options = [])
  */
 class PlayerCharactersTable extends Table
 {
@@ -101,6 +103,10 @@ class PlayerCharactersTable extends Table
             ->nonNegativeInteger('armour_class')
             ->requirePresence('armour_class', 'create')
             ->notEmptyString('armour_class');
+
+        $validator
+            ->requirePresence('dexterity_modifier', 'create')
+            ->notEmptyString('dexterity_modifier');
 
         return $validator;
     }

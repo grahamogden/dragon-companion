@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,19 +7,21 @@ use Cake\ORM\Entity;
 /**
  * PlayerCharacter Entity
  *
- * @property int $id
- * @property int $user_id
- * @property string $first_name
- * @property string $last_name
- * @property int $age
- * @property int $max_hit_points
- * @property int $armour_class
- * @property int $campaign_id
+ * @property int              $id
+ * @property int              $user_id
+ * @property int              $campaign_id
+ * @property string           $first_name
+ * @property string           $last_name
+ * @property int              $age
+ * @property int              $max_hit_points
+ * @property int              $armour_class
+ * @property int              $dexterity_modifier
  *
- * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\CharacterClass[] $character_classes
- * @property \App\Model\Entity\CharacterRace[] $character_races
- * @property \App\Model\Entity\Participant[] $participants
+ * @property User             $user
+ * @property Campaign         $campaign
+ * @property CharacterClass[] $character_classes
+ * @property CharacterRace[]  $character_races
+ * @property Participant[]    $participants
  */
 class PlayerCharacter extends Entity
 {
@@ -32,16 +35,18 @@ class PlayerCharacter extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id'           => true,
-        'first_name'        => true,
-        'last_name'         => true,
-        'age'               => true,
-        'max_hit_points'    => true,
-        'armour_class'      => true,
-        'campaign_id'       => true,
-        'user'              => true,
-        'character_classes' => true,
-        'character_races'   => true,
-        'participants'      => true,
+        'user_id'            => true,
+        'campaign_id'        => true,
+        'first_name'         => true,
+        'last_name'          => true,
+        'age'                => true,
+        'max_hit_points'     => true,
+        'armour_class'       => true,
+        'dexterity_modifier' => true,
+        'user'               => true,
+        'campaign'           => true,
+        'character_classes'  => true,
+        'character_races'    => true,
+        'participants'       => true,
     ];
 }

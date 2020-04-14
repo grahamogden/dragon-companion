@@ -1,14 +1,19 @@
 <?php
+
 namespace App\Controller;
 
-use App\Controller\AppController;
+use App\Model\Entity\Monster;
+use App\Model\Table\MonstersTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Response;
 
 /**
  * Monsters Controller
  *
- * @property \App\Model\Table\MonstersTable $Monsters
+ * @property MonstersTable $Monsters
  *
- * @method \App\Model\Entity\Monster[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method Monster[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class MonstersController extends AppController
 {
@@ -16,7 +21,7 @@ class MonstersController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|void
+     * @return Response|void
      */
     public function index()
     {
@@ -29,14 +34,18 @@ class MonstersController extends AppController
      * View method
      *
      * @param string|null $id Monster id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|void
+     * @throws RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $monster = $this->Monsters->get($id, [
-            'contain' => ['DataSources',],
-        ]);
+        $monster = $this->Monsters->get(
+            $id,
+            [
+                'contain' => ['DataSources',],
+            ]
+        );
 
         $this->set('monster', $monster);
     }
@@ -44,7 +53,7 @@ class MonstersController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return Response|null Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -67,14 +76,18 @@ class MonstersController extends AppController
      * Edit method
      *
      * @param string|null $id Monster id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     *
+     * @return Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $monster = $this->Monsters->get($id, [
-            'contain' => []
-        ]);
+        $monster = $this->Monsters->get(
+            $id,
+            [
+                'contain' => [],
+            ]
+        );
         if ($this->request->is(['patch', 'post', 'put'])) {
             $monster = $this->Monsters->patchEntity($monster, $this->request->getData());
             if ($this->Monsters->save($monster)) {
@@ -85,16 +98,17 @@ class MonstersController extends AppController
             $this->Flash->error(__('The monster could not be saved. Please, try again.'));
         }
 
-        $dataSources = $this->DataSources->find('list', ['limit' => 200]);
-        $this->set(compact('monster', 'data'));
+        $dataSources = $this->Monsters->DataSources->find('list', ['limit' => 200]);
+        $this->set(compact('monster', 'dataSources'));
     }
 
     /**
      * Delete method
      *
      * @param string|null $id Monster id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|null Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -111,20 +125,23 @@ class MonstersController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param array $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
         // The add and index actions are always allowed to logged in users
-        if (in_array($action, [
-            'add',
-            'index',
-            'view',
-        ])) {
+        if (in_array(
+            $action,
+            [
+                'add',
+                'index',
+                'view',
+            ]
+        )) {
             return true;
         }
 

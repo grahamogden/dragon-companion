@@ -1,7 +1,11 @@
 <?php
+
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
+use App\Model\Entity\User;
+use Cake\ORM\Association\BelongsToMany;
+use Cake\ORM\Association\HasMany;
+use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -9,26 +13,26 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\HasMany $CombatEncounters
- * @property \App\Model\Table\NonPlayableCharactersTable&\Cake\ORM\Association\HasMany $NonPlayableCharacters
- * @property \App\Model\Table\PlayerCharactersTable&\Cake\ORM\Association\HasMany $PlayerCharacters
- * @property \App\Model\Table\PuzzlesTable&\Cake\ORM\Association\HasMany $Puzzles
- * @property \App\Model\Table\TagsTable&\Cake\ORM\Association\HasMany $Tags
- * @property \App\Model\Table\TimelineSegmentsTable&\Cake\ORM\Association\HasMany $TimelineSegments
- * @property &\Cake\ORM\Association\HasMany $TimelineSegmentsCopy
- * @property &\Cake\ORM\Association\HasMany $TimelineSegmentsCopy2
- * @property \App\Model\Table\ClansTable&\Cake\ORM\Association\BelongsToMany $Clans
+ * @property CampaignsTable&HasMany             $Campaigns
+ * @property ClansTable&HasMany&BelongsToMany   $Clans
+ * @property CombatEncountersTable&HasMany      $CombatEncounters
+ * @property MonstersTable&HasMany              $Monsters
+ * @property NonPlayableCharactersTable&HasMany $NonPlayableCharacters
+ * @property PlayerCharactersTable&HasMany      $PlayerCharacters
+ * @property PuzzlesTable&HasMany               $Puzzles
+ * @property TagsTable&HasMany                  $Tags
+ * @property TimelineSegmentsTable&HasMany      $TimelineSegments
  *
- * @method \App\Model\Entity\User get($primaryKey, $options = [])
- * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\User|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\User saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\User[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\User findOrCreate($search, callable $callback = null, $options = [])
+ * @method User get($primaryKey, $options = [])
+ * @method User newEntity($data = null, array $options = [])
+ * @method User[] newEntities(array $data, array $options = [])
+ * @method User|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method User saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method User[] patchEntities($entities, array $data, array $options = [])
+ * @method User findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin TimestampBehavior
  */
 class UsersTable extends Table
 {
@@ -36,6 +40,7 @@ class UsersTable extends Table
      * Initialize method
      *
      * @param array $config The configuration for the Table.
+     *
      * @return void
      */
     public function initialize(array $config)
@@ -48,36 +53,76 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('CombatEncounters', [
-            'foreignKey' => 'user_id',
-        ]);
-        $this->hasMany('NonPlayableCharacters', [
-            'foreignKey' => 'user_id',
-        ]);
-        $this->hasMany('PlayerCharacters', [
-            'foreignKey' => 'user_id',
-        ]);
-        $this->hasMany('Puzzles', [
-            'foreignKey' => 'user_id',
-        ]);
-        $this->hasMany('Tags', [
-            'foreignKey' => 'user_id',
-        ]);
-        $this->hasMany('TimelineSegments', [
-            'foreignKey' => 'user_id',
-        ]);
-        $this->belongsToMany('Clans', [
-            // 'foreignKey'       => 'user_id',
-            // 'targetForeignKey' => 'id',
-            'through'          => 'ClansUsers',
-        ]);
+        $this->hasMany(
+            'Campaigns',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->hasMany(
+            'Clans',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->hasMany(
+            'CombatEncounters',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->hasMany(
+            'Monsters',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->hasMany(
+            'NonPlayableCharacters',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->hasMany(
+            'PlayerCharacters',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->hasMany(
+            'Puzzles',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->hasMany(
+            'Tags',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->hasMany(
+            'TimelineSegments',
+            [
+                'foreignKey' => 'user_id',
+            ]
+        );
+        $this->belongsToMany(
+            'Clans',
+            [
+//                'foreignKey'       => 'user_id',
+//                'targetForeignKey' => 'clan_id',
+                'through'        => 'ClansUsers',
+            ]
+        );
     }
 
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     *
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -88,16 +133,8 @@ class UsersTable extends Table
         $validator
             ->scalar('username')
             ->maxLength('username', 255)
-            ->notEmptyString('username', __('Please provide a username.'))
-            ->add(
-                'username',
-                'unique',
-                [
-                    'rule'     => 'validateUnique',
-                    'message'  => __('This username is already in use. Please enter a different name.'),
-                    'provider' => 'table',
-                ]
-            );
+            ->notEmptyString('username')
+            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->scalar('password')
@@ -105,14 +142,13 @@ class UsersTable extends Table
             ->requirePresence('password', 'create')
             ->notEmptyString('password');
 
-        // $validator
-        //     ->email('email')
-        //     ->notEmptyString('email');
+//        $validator
+//            ->email('email')
+//            ->notEmptyString('email');
 
-        // $validator
-        //     ->email('email')
-        //     ->requirePresence('email', 'create')
-        //     ->notEmpty('email');
+        $validator
+            ->requirePresence('status', 'create')
+            ->notEmptyString('status');
 
         return $validator;
     }
@@ -121,8 +157,9 @@ class UsersTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     *
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {

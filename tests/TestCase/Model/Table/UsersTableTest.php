@@ -24,6 +24,13 @@ class UsersTableTest extends TestCase
      */
     public $fixtures = [
         'app.Users',
+        'app.CombatEncounters',
+        'app.NonPlayableCharacters',
+        'app.PlayerCharacters',
+        'app.Puzzles',
+        'app.Tags',
+        'app.TimelineSegments',
+        'app.Clans',
     ];
 
     /**

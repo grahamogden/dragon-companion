@@ -1,8 +1,13 @@
 <?php
+
+use App\Model\Entity\PlayerCharacter;
+use App\View\AppView;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\PlayerCharacter $playerCharacter
+ * @var AppView         $this
+ * @var PlayerCharacter $playerCharacter
  */
+
 ?>
 <div class="playerCharacters view large-9 medium-8 columns content">
     <h3><?= h($playerCharacter->id) ?></h3>
@@ -28,6 +33,10 @@
             <td><?= $this->Number->format($playerCharacter->armour_class) ?></td>
         </tr>
         <tr>
+            <th scope="row"><?= __('Dexterity Modifier') ?></th>
+            <td><?= $this->Number->format($playerCharacter->dexterity_modifier) ?></td>
+        </tr>
+        <tr>
             <th scope="row"><?= __('Campaign') ?></th>
             <td><?= $this->Number->format($playerCharacter->campaign->name) ?></td>
         </tr>
@@ -37,14 +46,14 @@
         <?php if (!empty($playerCharacter->character_classes)): ?>
             <ul>
                 <?php foreach ($playerCharacter->character_classes as $characterClasses): ?>
-                <li><?= $this->Html->link(
-                        h($characterClasses->name),
-                        [
-                            'controller' => 'CharacterClasses',
-                            'action' => 'view',
-                            $characterClasses->id
-                        ]
-                    ) ?></li>
+                    <li><?= $this->Html->link(
+                            h($characterClasses->name),
+                            [
+                                'controller' => 'CharacterClasses',
+                                'action'     => 'view',
+                                $characterClasses->id,
+                            ]
+                        ) ?></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
@@ -54,14 +63,14 @@
         <?php if (!empty($playerCharacter->character_races)): ?>
             <ul>
                 <?php foreach ($playerCharacter->character_races as $characterRaces): ?>
-                <li><?= $this->Html->link(
-                    h($characterRaces->name),
-                    [
-                        'controller' => 'CharacterRaces',
-                        'action' => 'view',
-                        $characterRaces->id
-                    ]
-                ) ?></li>
+                    <li><?= $this->Html->link(
+                            h($characterRaces->name),
+                            [
+                                'controller' => 'CharacterRaces',
+                                'action'     => 'view',
+                                $characterRaces->id,
+                            ]
+                        ) ?></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
