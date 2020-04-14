@@ -402,7 +402,7 @@ jQuery(function ($) {
 
     $('fieldset button.next-step').on('click', function () {
         let $parent = $(this).closest('fieldset');
-        // $($parent).hide();
+        $($parent).hide();
         $($parent).next('fieldset').show();
     });
 
