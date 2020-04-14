@@ -9,6 +9,9 @@
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
 
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <script src="https://kit.fontawesome.com/c68e483c7b.js" crossorigin="anonymous"></script>
+
     <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon/57.png" />
     <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon/72.png" />
     <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon/114.png" />

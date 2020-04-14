@@ -1,49 +1,198 @@
 <?php
+
+use App\Model\Entity\CombatEncounter;
+use App\View\AppView;
+use \App\View\Widget\AutocompleteToTableWidget;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\CombatEncounter $combatEncounter
+ * @var AppView         $this
+ * @var CombatEncounter $combatEncounter
+ * @var array           $campaigns
  */
-
-/*
- * COMBAT ENCOUNTERS
- * 
- * Combat is made up of two parts:
- * - Initiative
- * - Looping rounds of combat
- * 
- * Initiative
- * All playable characters and monsters roll and include their speed to provide them with a
- * number that represents their _order in combat_, known as initiative.
- *
- * Combat
- * This is a loop of rounds, each round being comprised of each character having the opportunity
- * for combat - meaning a character could wait until later in the round or completely skip the round entirely
- *
- * Turns Combat
- * A turn in combat is made up of a few different components, here are a few of them:
- * - Action
- *   = Attack - one source attacks a single or multiple targets
- *   = Heal - one source replenishes the health of a single or multiple targets
- *   = Opportunity Attacks - when one source attacks a target or moves away from a target,
- *   the target may have the opportunity to attack the source
- * - Movement
- * - Bonus action
- * - Reaction (although not necessarily during your turn) - such as opportunity attacks
- *
- * There are plenty of additional things that can be done during a turn of combat, but let us
- * focus on delivering specific things, one at a time!
- * - 
- */
-
-echo $this->Html->script('combat-encounters.js');
 ?>
+<?= $this->Html->script('combat-encounters.js') ?>
 <div class="combatEncounters form content">
-    <h1>Add Combat Encounter</h1>
+    <h1><?= __('Add Combat Encounter') ?></h1>
     <?= $this->Form->create($combatEncounter) ?>
-        <fieldset>
-            <?= $this->Form->control('name', ['class' => ['form-control']]) ?>
-            <?= $this->Form->textarea('json', ['class' => ['form-control'], 'readonly']) ?>
-        </fieldset>
-        <?= $this->Form->submit('Save Encounter', ['class' => ['btn','btn-lg','btn-block','btn-success']]) ?>
+    <fieldset id="combat-encounters" class="combat-encounter-fieldset">
+        <legend>1. Startup</legend>
+        <?= $this->Form->control(
+            'campaign_id',
+            [
+                'label'   => __('What campaign is this in?'),
+                'class'   => [
+                    'form-control',
+                ],
+                'options' => $campaigns,
+            ]
+        ) ?>
+        <?= $this->Form->control(
+            'name',
+            [
+                'class' => [
+                    'form-control',
+                ],
+            ]
+        ) ?>
+        <?= $this->Form->button(
+            __('Next step'),
+            [
+                'class' => [
+                    'btn',
+                    'btn-lg',
+                    'btn-block',
+                    'btn-success',
+                    'next-step',
+                ],
+                'type'  => 'button',
+            ]
+        ) ?>
+    </fieldset>
+    <fieldset id="combat-encounters-participants" class="combat-encounter-fieldset">
+        <legend>2. Participants</legend>
+        <?= $this->Form->control(
+            'player-characters',
+            [
+                'type'                                       => 'autocomplete-to-table',
+                AutocompleteToTableWidget::ATTR_SOURCE       => [
+                    AutocompleteToTableWidget::ATTR_SOURCE_ACTION     => 'getAvailablePlayerCharacters',
+                    AutocompleteToTableWidget::ATTR_SOURCE_CONTROLLER => 'Participants',
+                ],
+                'class'                                      => [
+                    'form-control',
+                    'autocomplete-to-table',
+                ],
+                AutocompleteToTableWidget::ATTR_HEADING      => 'name',
+                AutocompleteToTableWidget::ATTR_CONDITIONALS => [
+                    'campaign_id',
+                ],
+            ]
+        ) ?>
+        <?= $this->Form->control(
+            'monsters',
+            [
+                'type'                                  => 'autocomplete-to-table',
+                AutocompleteToTableWidget::ATTR_SOURCE  => [
+                    AutocompleteToTableWidget::ATTR_SOURCE_ACTION     => 'getAvailableMonsters',
+                    AutocompleteToTableWidget::ATTR_SOURCE_CONTROLLER => 'Participants',
+                ],
+                'class'                                 => [
+                    'form-control',
+                    'autocomplete-to-table',
+                ],
+                AutocompleteToTableWidget::ATTR_HEADING => 'name',
+            ]
+        ) ?>
+        <?= $this->Form->button(
+            __('Next step'),
+            [
+                'class' => [
+                    'btn',
+                    'btn-lg',
+                    'btn-block',
+                    'btn-success',
+                    'next-step',
+                    'update-participants',
+                ],
+                'type'  => 'button',
+            ]
+        ) ?>
+        <?= $this->Form->button(
+            __('Back'),
+            [
+                'class' => [
+                    'btn',
+                    'btn-lg',
+                    'btn-block',
+                    'btn-secondary',
+                    'previous-step',
+                ],
+                'type'  => 'button',
+            ]
+        ) ?>
+    </fieldset>
+    <fieldset id="combat-encounters-participants" class="combat-encounter-fieldset">
+        <legend>3. Initiative</legend>
+        <table id="initiative-table" class="table table-hover">
+            <thead>
+            <?= $this->Html->tableHeaders(
+                [
+                    __('Name'),
+                    __('Initiative'),
+                    __('Armour Class'),
+                    __('Hit Points'),
+                ]
+            ) ?>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <?= $this->Form->control(
+            'participants',
+            [
+                'type' => 'textarea',
+            ]
+        ) ?>
+        <?= $this->Form->button(
+            __('Next step'),
+            [
+                'class' => [
+                    'btn',
+                    'btn-lg',
+                    'btn-block',
+                    'btn-success',
+                    'next-step',
+                ],
+                'type'  => 'button',
+            ]
+        ) ?>
+        <?= $this->Form->button(
+            __('Back'),
+            [
+                'class' => [
+                    'btn',
+                    'btn-lg',
+                    'btn-block',
+                    'btn-secondary',
+                    'previous-step',
+                ],
+                'type'  => 'button',
+            ]
+        ) ?>
+    </fieldset>
+    <fieldset id="combat-encounters-combat" class="combat-encounter-fieldset">
+        <legend>4. Battle</legend>
+        <?= $this->Form->control(
+            'turns',
+            [
+                'class' => ['form-control',],
+                'type'  => 'textarea',
+                'readonly',
+            ]
+        ) ?>
+        <?= $this->Form->submit(
+            __('Finish!'),
+            [
+                'class' => [
+                    'btn',
+                    'btn-lg',
+                    'btn-block',
+                    'btn-success',
+                ],
+            ]
+        ) ?>
+        <?= $this->Form->button(
+            __('Back'),
+            [
+                'class' => [
+                    'btn',
+                    'btn-lg',
+                    'btn-block',
+                    'btn-secondary',
+                    'previous-step',
+                ],
+                'type'  => 'button',
+            ]
+        ) ?>
+    </fieldset>
     <?= $this->Form->end() ?>
 </div>

@@ -1,27 +1,31 @@
 <?php
+
 namespace App\Controller;
 
-use App\Controller\AppController;
+use App\Model\Entity\CombatEncounter;
+use App\Model\Table\CombatEncountersTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Response;
 
 /**
  * CombatEncounters Controller
  *
- * @property \App\Model\Table\CombatEncountersTable $CombatEncounters
+ * @property CombatEncountersTable $CombatEncounters
  *
- * @method \App\Model\Entity\CombatEncounter[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method CombatEncounter[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class CombatEncountersController extends AppController
 {
-
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|void
+     * @return Response|void
      */
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users']
+            'contain' => ['Users'],
         ];
 
         $user = $this->getUserOrRedirect();
@@ -40,14 +44,21 @@ class CombatEncountersController extends AppController
      * View method
      *
      * @param string|null $id Combat Encounter id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|void
+     * @throws RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(?string $id = null)
     {
-        $combatEncounter = $this->CombatEncounters->get($id, [
-            'contain' => ['Users']
-        ]);
+        $combatEncounter = $this->CombatEncounters->get(
+            $id, [
+                   'contain' => [
+                       'Users',
+                       'Campaigns',
+                       'Participants',
+                   ],
+               ]
+        );
 
         $this->set('combatEncounter', $combatEncounter);
     }
@@ -55,13 +66,19 @@ class CombatEncountersController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return Response|void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
         $combatEncounter = $this->CombatEncounters->newEntity();
+        $user = $this->getUserOrRedirect();
+
         if ($this->request->is('post')) {
-            $combatEncounter = $this->CombatEncounters->patchEntity($combatEncounter, $this->request->getData());
+            $data = $this->request->getData();
+            $data['user_id'] = $user['id'];
+            debug($data);
+            exit;
+            $combatEncounter = $this->CombatEncounters->patchEntity($combatEncounter, $data);
             if ($this->CombatEncounters->save($combatEncounter)) {
                 $this->Flash->success(__('The combat encounter has been saved.'));
 
@@ -69,45 +86,48 @@ class CombatEncountersController extends AppController
             }
             $this->Flash->error(__('The combat encounter could not be saved. Please, try again.'));
         }
-        $users = $this->CombatEncounters->Users->find('list', ['limit' => 200]);
-        $this->set(compact('combatEncounter', 'users'));
+
+        $campaigns = $this->CombatEncounters->Campaigns
+            ->find('list', ['limit' => 200])
+            ->where(['user_id =' => $user['id']])
+            ->order(['Campaigns.name ASC']);
+
+        $this->set(compact('combatEncounter', 'campaigns'));
     }
 
     /**
      * Edit method
      *
      * @param string|null $id Combat Encounter id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     *
+     * @return Response|void Redirects on successful edit, renders view otherwise.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null)
     {
-        $combatEncounter = $this->CombatEncounters->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $combatEncounter = $this->CombatEncounters->patchEntity($combatEncounter, $this->request->getData());
-            if ($this->CombatEncounters->save($combatEncounter)) {
-                $this->Flash->success(__('The combat encounter has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The combat encounter could not be saved. Please, try again.'));
-        }
-        $users = $this->CombatEncounters->Users->find('list', ['limit' => 200]);
-        $this->set(compact('combatEncounter', 'users'));
+        return $this->redirect(
+            [
+                'action' => 'view',
+                $id,
+            ]
+        );
     }
 
     /**
      * Delete method
      *
      * @param string|null $id Combat Encounter id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|void Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        $this->request->allowMethod(
+            [
+                'post',
+                'delete',
+            ]
+        );
         $combatEncounter = $this->CombatEncounters->get($id);
         if ($this->CombatEncounters->delete($combatEncounter)) {
             $this->Flash->success(__('The combat encounter has been deleted.'));
@@ -120,19 +140,21 @@ class CombatEncountersController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
-     * @param type $user
-     * 
+     *
+     * @param array $user
+     *
      * @return bool
      */
     public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
         // The add and index actions are always allowed to logged in users
-        if (in_array($action, [
-            'add',
-            'index',
-        ])) {
+        if (in_array(
+            $action, [
+                       'add',
+                       'index',
+                   ]
+        )) {
             return true;
         }
 
@@ -144,8 +166,10 @@ class CombatEncountersController extends AppController
         }
 
         // Check that the combatEncounters belongs to the current user
-        $combatEncounters = $this->CombatEncounters->findById($id)->firstOrFail();
+        $combatEncounters = $this->CombatEncounters->findById($id)
+                                                   ->firstOrFail();
 
-        return $combatEncounters->user_id === $user['id'];
+        return $combatEncounters->user_id
+               === $user['id'];
     }
 }

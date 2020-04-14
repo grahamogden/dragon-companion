@@ -10,6 +10,7 @@ use Cake\Validation\Validator;
  * CombatEncounters Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property &\Cake\ORM\Association\BelongsTo $Campaigns
  * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\HasMany $Participants
  *
  * @method \App\Model\Entity\CombatEncounter get($primaryKey, $options = [])
@@ -43,7 +44,11 @@ class CombatEncountersTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER',
+            'joinType'   => 'INNER',
+        ]);
+        $this->belongsTo('Campaigns', [
+            'foreignKey' => 'campaign_id',
+            'joinType'   => 'INNER',
         ]);
         $this->hasMany('Participants', [
             'foreignKey' => 'combat_encounter_id',
@@ -80,6 +85,7 @@ class CombatEncountersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['campaign_id'], 'Campaigns'));
 
         return $rules;
     }

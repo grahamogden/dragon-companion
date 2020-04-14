@@ -4,18 +4,7 @@
  * @var \App\Model\Entity\CombatEncounter $combatEncounter
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Combat Encounter'), ['action' => 'edit', $combatEncounter->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Combat Encounter'), ['action' => 'delete', $combatEncounter->id], ['confirm' => __('Are you sure you want to delete # {0}?', $combatEncounter->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Combat Encounters'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Combat Encounter'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="combatEncounters view large-9 medium-8 columns content">
+<div class="combatEncounters view content">
     <h3><?= h($combatEncounter->name) ?></h3>
     <table class="vertical-table">
         <tr>
@@ -24,11 +13,44 @@
         </tr>
         <tr>
             <th scope="row"><?= __('User') ?></th>
-            <td><?= $combatEncounter->has('user') ? $this->Html->link($combatEncounter->user->id, ['controller' => 'Users', 'action' => 'view', $combatEncounter->user->id]) : '' ?></td>
+            <td><?= $combatEncounter->user->username ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($combatEncounter->id) ?></td>
+            <th scope="row"><?= __('Campaign') ?></th>
+            <td><?= $combatEncounter->has('campaign') ? $this->Html->link($combatEncounter->campaign->name, ['controller' => 'Campaigns', 'action' => 'view', $combatEncounter->campaign->id]) : '' ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Created') ?></th>
+            <td><?= h($combatEncounter->created) ?></td>
         </tr>
     </table>
+    <div class="related">
+        <h3><?= __('Related Participants') ?></h3>
+        <?php if (!empty($combatEncounter->participants)): ?>
+        <table class="table table-hover">
+            <tr>
+                <th scope="col"><?= __('Order') ?></th>
+                <th scope="col"><?= __('Combat Encounter Id') ?></th>
+                <th scope="col"><?= __('Starting Hit Points') ?></th>
+                <th scope="col"><?= __('Current Hit Points') ?></th>
+                <th scope="col"><?= __('Armour Class') ?></th>
+                <th scope="col" class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <?php foreach ($combatEncounter->participants as $participants): ?>
+            <tr>
+                <td><?= h($participants->order) ?></td>
+                <td><?= h($participants->combat_encounter_id) ?></td>
+                <td><?= h($participants->starting_hit_points) ?></td>
+                <td><?= h($participants->current_hit_points) ?></td>
+                <td><?= h($participants->armour_class) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['controller' => 'Participants', 'action' => 'view', $participants->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Participants', 'action' => 'edit', $participants->id]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Participants', 'action' => 'delete', $participants->id], ['confirm' => __('Are you sure you want to delete # {0}?', $participants->id)]) ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+        <?php endif; ?>
+    </div>
 </div>

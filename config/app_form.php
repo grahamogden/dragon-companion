@@ -26,11 +26,11 @@ return [
     // Close tag used by end().
     'formEnd'               => '</form>',
     // General grouping container for control(). Defines input/label ordering.
-    'formGroup'             => '<div class="col-12 col-md-4 col-lg-2">{{label}}</div><div class="col-12 col-md-8 col-lg-10">{{input}}</div>',
+    'formGroup'             => '<div class="col-12 col-md-4 col-lg-3">{{label}}</div><div class="col-12 col-md-8 col-lg-9">{{input}}</div>',
     // Wrapper content used to hide other content.
     'hiddenBlock'           => '<div style="display:none;">{{content}}</div>',
     // Generic input element.
-    'input'                 => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
+    'input'                 => '<input type="{{type}}" name="{{name}}" autocomplete="off"{{attrs}}/>',
     // Submit input element.
     'inputSubmit'           => '<input type="{{type}}"{{attrs}}/>',
     // Container element used by control().
@@ -62,7 +62,7 @@ return [
     // Textarea input element,
     'textarea'              => '<div class="input row ml-0 mr-0"><textarea name="{{name}}"{{attrs}}>{{value}}</textarea></div>',
     // Container for submit buttons.
-    'submitContainer'       => '<div class="submit">{{content}}</div>',
+    'submitContainer'       => '{{content}}',//'<div class="submit">{{content}}</div>',
     /********************
      * CUSTOM TEMPLATES *
      ********************/
@@ -72,7 +72,7 @@ return [
             <div class="autocomplete-results" id="results-{{name}}"></div>
         </div>',
     'autocomplete-to-table' => '<div class="autocomplete-table-container input">
-            <table id="autocomplete-{{name}}-table" class="table table-hover">
+            <table id="autocomplete-{{name}}-table" class="table table-hover autocomplete-table">
                 <thead>
                     <tr><th>{{heading}}</th><th>Actions</th></tr>
                 </thead>
@@ -84,7 +84,7 @@ return [
                             <div class="autocomplete-container input">
                                 <input type="text" name="{{name}}-field" id="autocomplete-{{name}}-field" value="{{val}}" {{attrs}} {{excludes}} data-source="{{source}}" data-conditionals="{{conditionals}}" data-autocomplete-for="{{name}}" />
                                 <div class="autocomplete-results" id="results-autocomplete-{{name}}-field"></div>
-                                <input type="hidden" name="{{name}}" id="{{name}}" />
+                                <input type="hidden" name="{{name}}" id="{{name}}" class="autocomplete-data" value="[]" />
                             </div>
                         </td>
                     </tr>
