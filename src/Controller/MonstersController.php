@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Model\Entity\Monster;
+use App\Model\Entity\MonsterInstanceType;
 use App\Model\Table\MonstersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Response;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Monsters Controller
@@ -43,7 +45,10 @@ class MonstersController extends AppController
         $monster = $this->Monsters->get(
             $id,
             [
-                'contain' => ['DataSources',],
+                'contain' => [
+                    'DataSources',
+                    'MonsterInstanceTypes',
+                ],
             ]
         );
 
@@ -68,8 +73,18 @@ class MonstersController extends AppController
             $this->Flash->error(__('The monster could not be saved. Please, try again.'));
         }
 
-        $dataSources = $this->Monsters->DataSources->find('list', ['limit' => 200]);
-        $this->set(compact('monster', 'dataSources'));
+        $dataSources          = $this->Monsters->DataSources->find('list', ['limit' => 200]);
+        $monsterInstanceTypes = $this->Monsters->MonsterInstanceTypes->find(
+            'list',
+            [
+                'limit'      => 200,
+                'valueField' => static function (MonsterInstanceType $monsterInstanceType) {
+                    return $monsterInstanceType->getLabel();
+                },
+            ]
+        );
+
+        $this->set(compact('monster', 'dataSources', 'monsterInstanceTypes'));
     }
 
     /**
@@ -78,7 +93,7 @@ class MonstersController extends AppController
      * @param string|null $id Monster id.
      *
      * @return Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws NotFoundException When record not found.
      */
     public function edit($id = null)
     {
@@ -98,8 +113,10 @@ class MonstersController extends AppController
             $this->Flash->error(__('The monster could not be saved. Please, try again.'));
         }
 
-        $dataSources = $this->Monsters->DataSources->find('list', ['limit' => 200]);
-        $this->set(compact('monster', 'dataSources'));
+        $dataSources          = $this->Monsters->DataSources->find('list', ['limit' => 200]);
+        $monsterInstanceTypes = $this->Monsters->MonsterInstanceTypes->find('list', ['limit' => 200]);
+
+        $this->set(compact('monster', 'dataSources', 'monsterInstanceTypes'));
     }
 
     /**

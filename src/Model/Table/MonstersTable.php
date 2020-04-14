@@ -3,6 +3,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Monster;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\RulesChecker;
@@ -12,16 +13,17 @@ use Cake\Validation\Validator;
 /**
  * Monsters Model
  *
- * @property UsersTable&BelongsTo            $Users
- * @property DataSourcesTable&BelongsTo      $DataSources
- * @property ParticipantsTable&BelongsToMany $Participants
+ * @property UsersTable&BelongsTo                $Users
+ * @property DataSourcesTable&BelongsTo          $DataSources
+ * @property MonsterInstanceTypesTable&BelongsTo $MonsterInstanceTypes
+ * @property ParticipantsTable&BelongsToMany     $Participants
  *
  * @method Monster get($primaryKey, $options = [])
  * @method Monster newEntity($data = null, array $options = [])
  * @method Monster[] newEntities(array $data, array $options = [])
- * @method Monster|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method Monster saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method Monster patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method Monster|false save(EntityInterface $entity, $options = [])
+ * @method Monster saveOrFail(EntityInterface $entity, $options = [])
+ * @method Monster patchEntity(EntityInterface $entity, array $data, array $options = [])
  * @method Monster[] patchEntities($entities, array $data, array $options = [])
  * @method Monster findOrCreate($search, callable $callback = null, $options = [])
  */
@@ -56,6 +58,12 @@ class MonstersTable extends Table
                 'joinType'   => 'INNER',
             ]
         );
+        $this->belongsTo(
+            'MonsterInstanceTypes',
+            [
+                'foreignKey' => 'monster_instance_type_id',
+            ]
+        );
         $this->belongsToMany(
             'Participants',
             [
@@ -69,9 +77,9 @@ class MonstersTable extends Table
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @param Validator $validator Validator instance.
      *
-     * @return \Cake\Validation\Validator
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -85,6 +93,11 @@ class MonstersTable extends Table
             ->notEmptyString('name');
 
         $validator
+            ->scalar('source_location')
+            ->maxLength('source_location', 500)
+            ->allowEmptyString('source_location');
+
+        $validator
             ->numeric('max_hit_points')
             ->greaterThanOrEqual('max_hit_points', 0)
             ->requirePresence('max_hit_points', 'create')
@@ -94,11 +107,6 @@ class MonstersTable extends Table
             ->nonNegativeInteger('armour_class')
             ->requirePresence('armour_class', 'create')
             ->notEmptyString('armour_class');
-
-        $validator
-            ->scalar('source_location')
-            ->maxLength('source_location', 500)
-            ->allowEmptyString('source_location');
 
         $validator
             ->integer('dexterity_modifier')
@@ -112,14 +120,15 @@ class MonstersTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @param RulesChecker $rules The rules object to be modified.
      *
-     * @return \Cake\ORM\RulesChecker
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['data_source_id'], 'DataSources'));
+        $rules->add($rules->existsIn(['monster_instance_type_id'], 'MonsterInstanceTypes'));
 
         return $rules;
     }

@@ -19,10 +19,11 @@ class MonstersFixture extends TestFixture
         'user_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'name' => ['type' => 'string', 'length' => 250, 'null' => false, 'default' => '', 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'data_source_id' => ['type' => 'integer', 'length' => 3, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'source_location' => ['type' => 'string', 'length' => 500, 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'max_hit_points' => ['type' => 'float', 'length' => 9, 'precision' => 3, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => ''],
         'armour_class' => ['type' => 'integer', 'length' => 3, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
-        'source_location' => ['type' => 'string', 'length' => 500, 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'dexterity_modifier' => ['type' => 'integer', 'length' => 3, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'monster_instance_type_id' => ['type' => 'integer', 'length' => 3, 'unsigned' => true, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         '_indexes' => [
             'data_source_id' => ['type' => 'index', 'columns' => ['data_source_id'], 'length' => []],
             'user_id' => ['type' => 'index', 'columns' => ['user_id'], 'length' => []],
@@ -51,10 +52,11 @@ class MonstersFixture extends TestFixture
                 'user_id' => 1,
                 'name' => 'Lorem ipsum dolor sit amet',
                 'data_source_id' => 1,
+                'source_location' => 'Lorem ipsum dolor sit amet',
                 'max_hit_points' => 1,
                 'armour_class' => 1,
-                'source_location' => 'Lorem ipsum dolor sit amet',
                 'dexterity_modifier' => 1,
+                'monster_instance_type_id' => 1,
             ],
         ];
         parent::init();

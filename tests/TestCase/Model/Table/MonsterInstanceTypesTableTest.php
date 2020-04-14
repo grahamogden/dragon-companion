@@ -1,21 +1,21 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\MonstersTable;
+use App\Model\Table\MonsterInstanceTypesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\MonstersTable Test Case
+ * App\Model\Table\MonsterInstanceTypesTable Test Case
  */
-class MonstersTableTest extends TestCase
+class MonsterInstanceTypesTableTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\MonstersTable
+     * @var \App\Model\Table\MonsterInstanceTypesTable
      */
-    public $Monsters;
+    public $MonsterInstanceTypes;
 
     /**
      * Fixtures
@@ -23,10 +23,8 @@ class MonstersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.MonsterInstanceTypes',
         'app.Monsters',
-        'app.Users',
-        'app.DataSources',
-        'app.Participants',
     ];
 
     /**
@@ -37,8 +35,8 @@ class MonstersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Monsters') ? [] : ['className' => MonstersTable::class];
-        $this->Monsters = TableRegistry::getTableLocator()->get('Monsters', $config);
+        $config = TableRegistry::getTableLocator()->exists('MonsterInstanceTypes') ? [] : ['className' => MonsterInstanceTypesTable::class];
+        $this->MonsterInstanceTypes = TableRegistry::getTableLocator()->get('MonsterInstanceTypes', $config);
     }
 
     /**
@@ -48,7 +46,7 @@ class MonstersTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Monsters);
+        unset($this->MonsterInstanceTypes);
 
         parent::tearDown();
     }
@@ -69,16 +67,6 @@ class MonstersTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -1,8 +1,13 @@
 <?php
+
+use App\Model\Entity\Monster;
+use App\View\AppView;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Monster $monster
+ * @var AppView $this
+ * @var Monster $monster
  */
+
 ?>
 <div class="monsters view content">
     <h1><?= h($monster->name) ?></h1>
@@ -22,6 +27,10 @@
         <tr>
             <th scope="row"><?= __('Dexterity Modifier') ?></th>
             <td><?= h($monster->dexterity_modifier) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Monster Instance') ?></th>
+            <td><?= h($monster->monster_instance_type->name) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Source') ?></th>

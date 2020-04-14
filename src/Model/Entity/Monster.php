@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,17 +7,19 @@ use Cake\ORM\Entity;
 /**
  * Monster Entity
  *
- * @property int $id
- * @property int $user_id
- * @property string $name
- * @property int $data_source_id
- * @property float $max_hit_points
- * @property int $armour_class
- * @property string|null $source_location
- * @property int $dexterity_modifier
+ * @property int           $id
+ * @property int           $user_id
+ * @property string        $name
+ * @property int           $data_source_id
+ * @property string|null   $source_location
+ * @property float         $max_hit_points
+ * @property int           $armour_class
+ * @property int           $dexterity_modifier
+ * @property int|null      $monster_instance_type_id
  *
- * @property \App\Model\Entity\DataSource $data_source
- * @property \App\Model\Entity\Participant[] $participants
+ * @property User          $user
+ * @property DataSource    $data_source
+ * @property Participant[] $participants
  */
 class Monster extends Entity
 {
@@ -30,14 +33,16 @@ class Monster extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'name' => true,
-        'data_source_id' => true,
-        'max_hit_points' => true,
-        'armour_class' => true,
-        'source_location' => true,
-        'dexterity_modifier' => true,
-        'data_source' => true,
-        'participants' => true,
+        'user_id'                  => true,
+        'name'                     => true,
+        'data_source_id'           => true,
+        'source_location'          => true,
+        'max_hit_points'           => true,
+        'armour_class'             => true,
+        'dexterity_modifier'       => true,
+        'monster_instance_type_id' => true,
+        'user'                     => true,
+        'data_source'              => true,
+        'participants'             => true,
     ];
 }
