@@ -8,6 +8,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
  * @var AppView         $this
  * @var CombatEncounter $combatEncounter
  * @var array           $campaigns
+ * @var array           $combatActions
  */
 ?>
 <?= $this->Html->script('combat-encounters.js') ?>
@@ -34,7 +35,11 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 ],
             ]
         ) ?>
-        <?= $this->Form->button(
+        <div class="row form-group" role="group" aria-label="">
+            <div class="col-md-6 order-md-1">
+            </div>
+            <div class="col-md-6 order-md-1">
+                <?= $this->Form->button(
             __('Next step'),
             [
                 'class' => [
@@ -47,6 +52,8 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 'type'  => 'button',
             ]
         ) ?>
+            </div>
+        </div>
     </fieldset>
     <fieldset id="combat-encounters-participants" class="combat-encounter-fieldset">
         <legend>2. Participants</legend>
@@ -83,33 +90,39 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 AutocompleteToTableWidget::ATTR_HEADING => 'name',
             ]
         ) ?>
-        <?= $this->Form->button(
-            __('Next step'),
-            [
-                'class' => [
-                    'btn',
-                    'btn-lg',
-                    'btn-block',
-                    'btn-success',
-                    'next-step',
-                    'update-participants',
-                ],
-                'type'  => 'button',
-            ]
-        ) ?>
-        <?= $this->Form->button(
-            __('Back'),
-            [
-                'class' => [
-                    'btn',
-                    'btn-lg',
-                    'btn-block',
-                    'btn-secondary',
-                    'previous-step',
-                ],
-                'type'  => 'button',
-            ]
-        ) ?>
+        <div class="row form-group" role="group" aria-label="">
+            <div class="col-md-6 order-md-2">
+                <?= $this->Form->button(
+                    __('Next step'),
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-lg',
+                            'btn-block',
+                            'btn-success',
+                            'next-step',
+                            'update-participants',
+                        ],
+                        'type'  => 'button',
+                    ]
+                ) ?>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <?= $this->Form->button(
+                    __('Back'),
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-lg',
+                            'btn-block',
+                            'btn-secondary',
+                            'previous-step',
+                        ],
+                        'type'  => 'button',
+                    ]
+                ) ?>
+            </div>
+        </div>
     </fieldset>
     <fieldset id="combat-encounters-participants" class="combat-encounter-fieldset">
         <legend>3. Initiative</legend>
@@ -119,8 +132,8 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 [
                     __('Name'),
                     __('Initiative'),
-                    __('Armour Class'),
-                    __('Hit Points'),
+                    __('AC'),
+                    __('Starting HP'),
                 ]
             ) ?>
             </thead>
@@ -132,35 +145,132 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 'type' => 'textarea',
             ]
         ) ?>
-        <?= $this->Form->button(
-            __('Next step'),
-            [
-                'class' => [
-                    'btn',
-                    'btn-lg',
-                    'btn-block',
-                    'btn-success',
-                    'next-step',
-                ],
-                'type'  => 'button',
-            ]
-        ) ?>
-        <?= $this->Form->button(
-            __('Back'),
-            [
-                'class' => [
-                    'btn',
-                    'btn-lg',
-                    'btn-block',
-                    'btn-secondary',
-                    'previous-step',
-                ],
-                'type'  => 'button',
-            ]
-        ) ?>
+        <div class="row form-group" role="group" aria-label="">
+            <div class="col-md-6 order-md-2">
+                <?= $this->Form->button(
+                    __('Next step'),
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-lg',
+                            'btn-block',
+                            'btn-success',
+                            'next-step',
+                            'update-combat-table',
+                        ],
+                        'type'  => 'button',
+                    ]
+                ) ?>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <?= $this->Form->button(
+                    __('Back'),
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-lg',
+                            'btn-block',
+                            'btn-secondary',
+                            'previous-step',
+                        ],
+                        'type'  => 'button',
+                    ]
+                ) ?>
+            </div>
+        </div>
     </fieldset>
     <fieldset id="combat-encounters-combat" class="combat-encounter-fieldset">
         <legend>4. Battle</legend>
+        <table id="combat-table" class="table table-hover">
+            <thead>
+            <?= $this->Html->tableHeaders(
+                [
+                    __('Name'),
+                    __('Init'),
+                    __('AC'),
+                    __('HP'),
+                ]
+            ) ?>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h3><?= __('New Turn of Combat') ?></h3>
+        <?= $this->Form->control(
+            'source-participant',
+            [
+                'label'   => __('Who'),
+                'class'   => ['form-control',],
+                'options' => [],
+            ]
+        ) ?>
+        <div class="combat-encounter-action-container">
+            <?= $this->Form->control(
+                'combat-actions',
+                [
+                    'label'   => __('Is doing'),
+                    'class'   => ['form-control',],
+                    'options' => $combatActions,
+                ]
+            ) ?>
+            <?= $this->Form->control(
+                'target-participant',
+                [
+                    'label'   => __('The target'),
+                    'class'   => ['form-control',],
+                    'options' => [],
+                ]
+            ) ?>
+            <?= $this->Form->control(
+                'combat-roll',
+                [
+                    'label'       => 'Roll',
+                    'class'       => ['form-control',],
+                    'type'        => 'text',
+                    'inputmode'   => 'number',
+                    'placeholder' => 'd20 + 6 = ?',
+                ]
+            ) ?>
+            <?= $this->Form->control(
+                'combat-total',
+                [
+                    'label'       => 'Total',
+                    'class'       => ['form-control',],
+                    'type'        => 'text',
+                    'inputmode'   => 'number',
+                    'placeholder' => 'The total damage/healing done to the target',
+                ]
+            ) ?>
+            <?= $this->Form->control(
+                'combat-movement',
+                [
+                    'label'       => 'Movement',
+                    'class'       => ['form-control',],
+                    'type'        => 'text',
+                    'inputmode'   => 'number',
+                    'placeholder' => 'How many spaces moved',
+                ]
+            ) ?>
+            <div class="row form-group" role="group" aria-label="">
+                <div class="col-md-6 order-md-2">
+                    <?= $this->Form->button(
+                        'End turn',
+                        [
+                            'class' => ['btn', 'btn-sm', 'btn-outline-primary', 'btn-block', 'col-6'],
+                            'type'  => 'button',
+                        ]
+                    ) ?>
+                </div>
+                <div class="col-md-6 order-md-1">
+                    <?= $this->Form->button(
+                        'Add another action/target',
+                        [
+                            'class' => ['btn', 'btn-sm', 'btn-outline-primary', 'btn-block', 'col-6'],
+                            'type'  => 'button',
+                        ]
+                    ) ?>
+                </div>
+            </div>
+        </div>
         <?= $this->Form->control(
             'turns',
             [
@@ -169,30 +279,36 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 'readonly',
             ]
         ) ?>
-        <?= $this->Form->submit(
-            __('Finish!'),
-            [
-                'class' => [
-                    'btn',
-                    'btn-lg',
-                    'btn-block',
-                    'btn-success',
-                ],
-            ]
-        ) ?>
-        <?= $this->Form->button(
-            __('Back'),
-            [
-                'class' => [
-                    'btn',
-                    'btn-lg',
-                    'btn-block',
-                    'btn-secondary',
-                    'previous-step',
-                ],
-                'type'  => 'button',
-            ]
-        ) ?>
+        <div class="row form-group" role="group" aria-label="">
+            <div class="col-md-6 order-md-2">
+                <?= $this->Form->submit(
+                    __('Finish!'),
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-lg',
+                            'btn-block',
+                            'btn-success',
+                        ],
+                    ]
+                ) ?>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <?= $this->Form->button(
+                    __('Back'),
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-lg',
+                            'btn-block',
+                            'btn-secondary',
+                            'previous-step',
+                        ],
+                        'type'  => 'button',
+                    ]
+                ) ?>
+            </div>
+        </div>
     </fieldset>
     <?= $this->Form->end() ?>
 </div>

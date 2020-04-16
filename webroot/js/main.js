@@ -403,7 +403,9 @@ jQuery(function ($) {
     $('fieldset button.next-step').on('click', function () {
         let $parent = $(this).closest('fieldset');
         $($parent).hide();
-        $($parent).next('fieldset').show();
+        let $next = $($parent).next('fieldset');
+        $($next).show();
+        $($next).find('input[type=text],input[type=hidden],select,textarea').val('');
     });
 
     $('fieldset button.previous-step').on('click', function () {

@@ -51,13 +51,14 @@ class CombatEncountersController extends AppController
     public function view(?string $id = null)
     {
         $combatEncounter = $this->CombatEncounters->get(
-            $id, [
-                   'contain' => [
-                       'Users',
-                       'Campaigns',
-                       'Participants',
-                   ],
-               ]
+            $id,
+            [
+                'contain' => [
+                    'Users',
+                    'Campaigns',
+                    'Participants',
+                ],
+            ]
         );
 
         $this->set('combatEncounter', $combatEncounter);
@@ -71,10 +72,10 @@ class CombatEncountersController extends AppController
     public function add()
     {
         $combatEncounter = $this->CombatEncounters->newEntity();
-        $user = $this->getUserOrRedirect();
+        $user            = $this->getUserOrRedirect();
 
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
+            $data            = $this->request->getData();
             $data['user_id'] = $user['id'];
             debug($data);
             exit;
@@ -92,7 +93,18 @@ class CombatEncountersController extends AppController
             ->where(['user_id =' => $user['id']])
             ->order(['Campaigns.name ASC']);
 
-        $this->set(compact('combatEncounter', 'campaigns'));
+        $this->loadModel('CombatActions');
+        $combatActions = $this->CombatActions
+            ->find('list', ['limit' => 200])
+            ->order(['CombatActions.name ASC']);
+
+        $this->set(
+            compact(
+                'combatEncounter',
+                'campaigns',
+                'combatActions'
+            )
+        );
     }
 
     /**
@@ -150,10 +162,11 @@ class CombatEncountersController extends AppController
         $action = $this->request->getParam('action');
         // The add and index actions are always allowed to logged in users
         if (in_array(
-            $action, [
-                       'add',
-                       'index',
-                   ]
+            $action,
+            [
+                'add',
+                'index',
+            ]
         )) {
             return true;
         }
@@ -167,7 +180,7 @@ class CombatEncountersController extends AppController
 
         // Check that the combatEncounters belongs to the current user
         $combatEncounters = $this->CombatEncounters->findById($id)
-                                                   ->firstOrFail();
+            ->firstOrFail();
 
         return $combatEncounters->user_id
                === $user['id'];
