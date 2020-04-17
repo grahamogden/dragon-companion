@@ -101,7 +101,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
                             'btn-block',
                             'btn-success',
                             'next-step',
-                            'update-participants',
+                            'update-initiative-table',
                         ],
                         'type'  => 'button',
                     ]
@@ -179,7 +179,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
             </div>
         </div>
     </fieldset>
-    <fieldset id="combat-encounters-combat" class="combat-encounter-fieldset">
+    <div id="combat-encounters-combat" class="combat-encounter-fieldset">
         <legend>4. Battle</legend>
         <table id="combat-table" class="table table-hover">
             <thead>
@@ -204,74 +204,77 @@ use \App\View\Widget\AutocompleteToTableWidget;
             ]
         ) ?>
         <div class="combat-encounter-action-container">
-            <?= $this->Form->control(
-                'combat-actions',
-                [
-                    'label'   => __('Is doing'),
-                    'class'   => ['form-control',],
-                    'options' => $combatActions,
-                ]
-            ) ?>
-            <?= $this->Form->control(
-                'target-participant',
-                [
-                    'label'   => __('The target'),
-                    'class'   => ['form-control',],
-                    'options' => [],
-                ]
-            ) ?>
-            <?= $this->Form->control(
-                'combat-roll',
-                [
-                    'label'       => 'Roll',
-                    'class'       => ['form-control',],
-                    'type'        => 'text',
-                    'inputmode'   => 'number',
-                    'placeholder' => 'd20 + 6 = ?',
-                ]
-            ) ?>
-            <?= $this->Form->control(
-                'combat-total',
-                [
-                    'label'       => 'Total',
-                    'class'       => ['form-control',],
-                    'type'        => 'text',
-                    'inputmode'   => 'number',
-                    'placeholder' => 'The total damage/healing done to the target',
-                ]
-            ) ?>
-            <?= $this->Form->control(
-                'combat-movement',
-                [
-                    'label'       => 'Movement',
-                    'class'       => ['form-control',],
-                    'type'        => 'text',
-                    'inputmode'   => 'number',
-                    'placeholder' => 'How many spaces moved',
-                ]
-            ) ?>
-            <div class="row form-group" role="group" aria-label="">
-                <div class="col-md-6 order-md-2">
-                    <?= $this->Form->button(
-                        'End turn',
-                        [
-                            'class' => ['btn', 'btn-sm', 'btn-outline-primary', 'btn-block', 'col-6'],
-                            'type'  => 'button',
-                        ]
-                    ) ?>
-                </div>
-                <div class="col-md-6 order-md-1">
-                    <?= $this->Form->button(
-                        'Add another action/target',
-                        [
-                            'class' => ['btn', 'btn-sm', 'btn-outline-primary', 'btn-block', 'col-6'],
-                            'type'  => 'button',
-                        ]
-                    ) ?>
-                </div>
+            <div class="combat-encounter-action">
+                <?= $this->Form->control(
+                    'combat-actions',
+                    [
+                        'label'   => __('Is doing'),
+                        'class'   => ['form-control',],
+                        'options' => $combatActions,
+                    ]
+                ) ?>
+                <?= $this->Form->control(
+                    'target-participant',
+                    [
+                        'label'   => __('The target'),
+                        'class'   => ['form-control',],
+                        'options' => [],
+                    ]
+                ) ?>
+                <?= $this->Form->control(
+                    'combat-roll',
+                    [
+                        'label'       => 'Roll',
+                        'class'       => ['form-control',],
+                        'type'        => 'text',
+                        'inputmode'   => 'number',
+                        'placeholder' => 'd20 + 6 = ?',
+                    ]
+                ) ?>
+                <?= $this->Form->control(
+                    'combat-total',
+                    [
+                        'label'       => 'Total',
+                        'class'       => ['form-control',],
+                        'type'        => 'text',
+                        'inputmode'   => 'number',
+                        'placeholder' => 'The total damage/healing done to the target',
+                    ]
+                ) ?>
+                <?= $this->Form->control(
+                    'combat-movement',
+                    [
+                        'label'       => 'Movement',
+                        'class'       => ['form-control',],
+                        'type'        => 'text',
+                        'inputmode'   => 'number',
+                        'placeholder' => 'How many spaces moved',
+                    ]
+                ) ?>
             </div>
         </div>
-        <?= $this->Form->control(
+        <div class="row form-group" role="group" aria-label="">
+            <div class="col-md-6 order-md-2">
+                <?= $this->Form->button(
+                    'End turn',
+                    [
+                        'class' => ['btn', 'btn-sm', 'btn-outline-primary', 'btn-block', 'col-6'],
+                        'type'  => 'button',
+                    ]
+                ) ?>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <?= $this->Form->button(
+                    'Add another action/target',
+                    [
+                        'class' => ['btn', 'btn-sm', 'btn-outline-primary', 'btn-block', 'col-6'],
+                        'type'  => 'button',
+                    ]
+                ) ?>
+            </div>
+        </div>
+        <div class="row">
+            <?= $this->Form->control(
             'turns',
             [
                 'class' => ['form-control',],
@@ -279,6 +282,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 'readonly',
             ]
         ) ?>
+        </div>
         <div class="row form-group" role="group" aria-label="">
             <div class="col-md-6 order-md-2">
                 <?= $this->Form->submit(

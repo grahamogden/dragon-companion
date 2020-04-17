@@ -285,8 +285,6 @@ textarea {
 }
 
 .btn {
-  .border-radius();
-  padding: @distEight @distTwelve;
   transition-duration: @transitionSpeedFast;
 
   &.btn-block {
@@ -315,6 +313,13 @@ div.content-container {
   flex: 1;
   padding-bottom: @distSixteen;
   padding-top: @distSixteen;
+}
+
+.fa-dice-d20 {
+  &:hover {
+    -webkit-animation: fa-spin 2s linear infinite;
+    animation: fa-spin 2s linear infinite;
+  }
 }
 
 fieldset {

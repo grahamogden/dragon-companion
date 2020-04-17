@@ -34,16 +34,20 @@ const participantTypeMonster         = 2;
 
 const updateParticipantData = function ($) {
     $.each(combatEncounter.getParticipants(), function (index, participant) {
-        participant.setStartingHitPoints(parseInt(
+        participant.setStartingHitPoints(
+            parseInt(
                 $('#participant-starting-hit-points-' + participant.getTempId()).val()
             )
         );
 
-        participant.setInitiative(parseInt(
+        participant.setInitiative(
+            parseInt(
                 $('#participant-initiative-' + participant.getTempId()).val()
             )
         );
     });
+
+    combatEncounter.sortParticipants();
 
     $('#participants').val(JSON.stringify(combatEncounter.getParticipants()));
 };
@@ -53,8 +57,6 @@ const randomiser = function ($, self, max, modifier) {
     let rand = Math.floor(Math.random() * max + modifier);
     // console.log(rand);
     $(self).siblings('input').val(rand).change();
-
-    updateParticipantData($);
 };
 
 class Participant {
@@ -137,6 +139,10 @@ class Participant {
 }
 
 class PlayerCharacter extends Participant {
+
+    get className () {
+        return 'PlayerCharacter';
+    }
 }
 
 class Monster extends Participant {
@@ -162,6 +168,10 @@ class Monster extends Participant {
              initiative*/
         );
         this.monsterInstanceTypeId = monsterInstanceTypeId;
+    }
+
+    get className () {
+        return 'Monster';
     }
 
     getMonsterInstanceTypeId () {
@@ -238,12 +248,12 @@ class InitiativeTable extends TableHelper {
     }
 
     getInputInitiative (tempId, dexterityModifier) {
-        return `<input type="text" inputmode="number" id="participant-initiative-${tempId}" class="participant-initiative" name="participant-initiative[]" value="" pattern="\-?[0-9]*"-participant-temp-id="${tempId}" onkeyup="updateParticipantData(jQuery, ${tempId})" placeholder="(${dexterityModifier})" />`;
-    }
+        return `<input type="text" inputmode="number" id="participant-initiative-${tempId}" class="participant-initiative" name="participant-initiative[]" value="" pattern="\-?[0-9]*" placeholder="(${dexterityModifier})" />`;
+    }// onkeyup="updateParticipantData(jQuery, ${tempId})"
 
     getInputStartingHitPoint (tempId, maxHitPoints) {
-        return `<input type="text" inputmode="decimal" id="participant-starting-hit-points-${tempId}" class="participant-starting-hit-points" name="participant-starting-hit-points[]" value=""-participant-temp-id="${tempId}" onkeyup="updateParticipantData(jQuery, ${tempId})" placeholder="${maxHitPoints}" />`;
-    }
+        return `<input type="text" inputmode="decimal" id="participant-starting-hit-points-${tempId}" class="participant-starting-hit-points" name="participant-starting-hit-points[]" value="" placeholder="${maxHitPoints}" />`;
+    }// onkeyup="updateParticipantData(jQuery, ${tempId})"
 }
 
 class CombatTable extends TableHelper {
@@ -262,30 +272,72 @@ class CombatTable extends TableHelper {
 
         $(this._tableBody).append(`<tr class="combat-participant-${participant.getTempId()}">${tableCells}</tr>`);
     }
+
+    selectTableRowForParticipantTempId (tempId) {
+        let activeRowClass = 'combat-turn-active';
+        $(this._tableBody).find('tr').removeClass(activeRowClass);
+        $(this._tableBody).find('.combat-participant-' + tempId).addClass(activeRowClass);
+    }
+}
+
+class CombatTurnFormHelper {
+    constructor (
+        sourceParticipant,
+        targetParticipant,
+        combatActions,
+        combatRoll,
+        combatTotal,
+        combatMovement,
+        participants
+    ) {
+        this.rollElement     = combatRoll;
+        this.totalElement    = combatTotal;
+        this.movementElement = combatMovement;
+        this.actionElement   = combatActions;
+        $(this.actionElement).val('ATTACK'); // Set the default action to "ATTACK"
+
+        $(sourceParticipant).html('').append('<option value="">No source</option>');
+        $(targetParticipant).html('').append('<option value="">No target</option>');
+
+        $.each(participants, function (index, participant) {
+            let sourceSelection = '';
+
+            if (index === 0) {
+                sourceSelection = 'selected';
+            }
+
+            $(sourceParticipant)
+                .append(`<option value="${participant.getTempId()}" ${sourceSelection}>${participant.getName()}</option>`);
+            $(targetParticipant)
+                .append(`<option value="${participant.getTempId()}">${participant.getName()}</option>`);
+        });
+
+        this.sourceElement   = sourceParticipant;
+        this.targetElement   = targetParticipant;
+    }
+}
+
+class CombatTurnEntity {
+    constructor (
+        sourceTempId,
+        targetTempId,
+        action,
+        roll,
+        total,
+        movement
+    ) {
+        this.sourceTempId = sourceTempId;
+        this.targetTempId = targetTempId;
+        this.action       = action;
+        this.roll         = roll;
+        this.total        = total;
+        this.movement     = movement;
+    }
 }
 
 class CombatEncounter {
-    constructor (
-        // participantsArg
-        sourceParticipantEl,
-        targetParticipantEl,
-        combatActionsEl,
-        combatRollEl,
-        combatTotalEl,
-        combatMovementEl
-    ) {
-        this.sourceElement   = sourceParticipantEl;
-        this.targetElement   = targetParticipantEl;
-        this.actionElement   = combatActionsEl;
-        this.rollElement     = combatRollEl;
-        this.totalElement    = combatTotalEl;
-        this.movementElement = combatMovementEl;
-        // participants = participantsArg;
-
-        this.roundCounter = 1;
-        this.turnCounter  = 1;
-        this.participants = [];
-
+    constructor (combatTable) {
+        this.participants  = [];
         this.combatActions = [
             'ATTACK',
             'HEAL',
@@ -302,27 +354,7 @@ class CombatEncounter {
             'SEARCH',
             'TEMP'
         ];
-
-        $(this.sourceElement).html('').append('<option value="">No source</option>');
-        $(this.targetElement).html('').append('<option value="">No target</option>');
-
-        // jQ.each(participants, function (index, participant) {
-        //     let sourceSelection = '';
-        //     let targetSelection = '';
-        //     if (index === 0) {
-        //         sourceSelection = ' selected';
-        //     }
-        //     // if (index === 1) {
-        //     //     targetSelection = ' selected';
-        //     // }
-        //
-        //     jQ($sourceElement)
-        //         .append('<option value="' + participant.data.tempId + '"' + sourceSelection + '>' + participant.data.name + '</option>');
-        //     jQ($targetElement)
-        //         .append('<option value="' + participant.data.tempId + '"' + targetSelection + '>' + participant.data.name + '</option>');
-        // });
-
-        // jQ('.combat-participant-' + participants[0].data.tempId).addClass('combat-turn-active');
+        this.combatTable   = combatTable;
     }
 
     privateResetRoundCounter () {
@@ -341,7 +373,7 @@ class CombatEncounter {
         ++this.turnCounter;
     }
 
-    privateSortParticipants () {
+    sortParticipants () {
         this.participants.sort(function (a, b) {
             return b.getInitiative() - a.getInitiative();
         });
@@ -355,79 +387,30 @@ class CombatEncounter {
         return this.participants;
     }
 
-    addParticipant (
-        participant
-    ) {
-        // let participant = {
-        //     id: id,
-        //     name: name,
-        //     armour_class: armourClass,
-        //     max_hit_points: maxHitPoints,
-        //     dexterity_modifier: dexterityModifier,
-        //     tempId: tempId,
-        //     starting_hit_points: startingHitPoints,
-        //     initiative: initiative,
-        // };
-        //
-        // if (monsterInstanceType !== null) {
-        //     participant.monster_instance_type_id = monsterInstanceType;
-        // }
-
+    addParticipant (participant) {
         this.participants.push(participant);
-
-        if (this.participants.length > 1) {
-            this.privateSortParticipants();
-        }
-    }
-
-    addPlayerCharacter (
-        id,
-        name,
-        armourClass,
-        maxHitPoints,
-        dexterityModifier,
-        tempId,
-        startingHitPoints,
-        initiative
-    ) {
-        this.addParticipant(
-            id,
-            name,
-            armourClass,
-            maxHitPoints,
-            dexterityModifier,
-            tempId,
-            startingHitPoints,
-            initiative
-        );
-    }
-
-    addMonster (
-        id,
-        name,
-        armourClass,
-        maxHitPoints,
-        dexterityModifier,
-        tempId,
-        startingHitPoints,
-        initiative,
-        monsterInstanceType
-    ) {
-        this.addParticipant(
-            id,
-            name,
-            armourClass,
-            maxHitPoints,
-            dexterityModifier,
-            tempId,
-            startingHitPoints,
-            initiative,
-            monsterInstanceType
-        );
     }
 
     getCombatActions () {
         return this.combatActions;
+    }
+
+    setUpCombat () {
+        this.currentParticipant = this.getParticipants()[0];
+        this.roundCounter       = 1;
+        this.turnCounter        = 1;
+
+        this.combatTable.selectTableRowForParticipantTempId(this.currentParticipant.getTempId());
+
+        this.combatTurnHelper = new CombatTurnFormHelper(
+            $('#source-participant'),
+            $('#target-participant'),
+            $('#combat-actions'),
+            $('#combat-roll'),
+            $('#combat-total'),
+            $('#combat-movement'),
+            this.getParticipants()
+        );
     }
 
     addTurnOfCombat () {
@@ -440,25 +423,13 @@ let initiativeTable;
 let combatTable;
 
 jQuery(function ($) {
-    const getParticipantsJson = function () {
-        return {
-            playerCharacters: JSON.parse($('#player-characters').val()),
-            monsters: JSON.parse($('#monsters').val()),
-        };
-    };
 
-    $('.update-participants').on('click', function (event) {
-        console.time('updateParticipants');
+    const getParticipantsFromSeparateJson = function () {
+        let playerCharacters  = JSON.parse($('#player-characters').val());
+        let monsters          = JSON.parse($('#monsters').val());
+        let participantsArray = [];
 
-        let participantsJson  = getParticipantsJson();
-        let participants      = [];
-        let tempParticipantId = 1;
-
-        combatEncounter.clearParticipants();
-        combatTable.clearTable();
-        initiativeTable.clearTable();
-
-        $.each(participantsJson.playerCharacters, function (index, playerCharacterObj) {
+        $.each(playerCharacters, function (index, playerCharacterObj) {
             let playerCharacter = new PlayerCharacter(
                 playerCharacterObj.data.id,
                 playerCharacterObj.data.name,
@@ -467,15 +438,13 @@ jQuery(function ($) {
                 playerCharacterObj.data.dexterity_modifier
             );
 
-            initiativeTable.addRowToBottom(index, playerCharacter);
-            // participants.push(playerCharacter);
-            combatEncounter.addParticipant(playerCharacter);
+            participantsArray.push(playerCharacter);
         });
 
         /** @var object - key = monster ID, value = count of that particular monster */
         let monstersCounters = {};
 
-        $.each(participantsJson.monsters, function (index, monsterObj) {
+        $.each(monsters, function (index, monsterObj) {
             if (monsterObj.data.monster_instance_type_id === 1) {
                 monstersCounters[monsterObj.data.id] = ++monstersCounters[monsterObj.data.id] || 1;
                 // console.log(monsters);
@@ -491,12 +460,30 @@ jQuery(function ($) {
                 monsterObj.data.monster_instance_type_id
             );
 
-            initiativeTable.addRowToBottom(index, monster);
-            // participants.push(monster);
-            combatEncounter.addParticipant(monster);
+            participantsArray.push(monster);
         });
 
-        $('#participants').val(JSON.stringify(combatEncounter.getParticipants()));
+        return participantsArray;
+    };
+
+    const setUpInitiativeTable = function (participants) {
+        console.log('set up initiative table');
+        initiativeTable.clearTable();
+
+        $.each(participants, function (index, participant) {
+            initiativeTable.addRowToBottom(index, participant);
+            combatEncounter.addParticipant(participant);
+        });
+    };
+
+    $('.update-initiative-table').on('click', function (event) {
+        console.time('updateParticipants');
+
+        let participantsJson = getParticipantsFromSeparateJson();
+
+        combatEncounter.clearParticipants();
+        combatTable.clearTable();
+        setUpInitiativeTable(participantsJson);
 
         console.timeEnd('updateParticipants');
     });
@@ -508,9 +495,13 @@ jQuery(function ($) {
 
         combatTable.clearTable();
 
+        updateParticipantData($);
+
         $.each(combatEncounter.getParticipants(), function (index, participant) {
             combatTable.addRowToBottom(index, participant);
         });
+
+        combatEncounter.setUpCombat();
 
         console.timeEnd('updateCombatTable');
     });
@@ -524,11 +515,19 @@ jQuery(function ($) {
     );
 
     combatEncounter = new CombatEncounter(
-        $('#source-participant'),
-        $('#target-participant'),
-        $('#combat-actions'),
-        $('#combat-roll'),
-        $('#combat-total'),
-        $('#combat-movement')
+        combatTable
     );
+
+    console.log(getParticipantsFromSeparateJson());
+    /*if (combatEncounter.getParticipants().length > 0) {
+     setUpInitiativeTable(combatEncounter.getParticipants());
+     } else
+    if (JSON.parse($('#participants').val()).length > 0) {
+        console.log('participant json exists, set up initiative table');
+        console.log(JSON.parse($('#participants').val()));
+        setUpInitiativeTable(JSON.parse($('#participants').val()))
+    } else */if (getParticipantsFromSeparateJson().length > 0) {
+        console.log('monster and PC json exists, set up initiative table');
+        setUpInitiativeTable(getParticipantsFromSeparateJson());
+    }
 });

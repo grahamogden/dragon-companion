@@ -95,7 +95,14 @@ class CombatEncountersController extends AppController
 
         $this->loadModel('CombatActions');
         $combatActions = $this->CombatActions
-            ->find('list', ['limit' => 200])
+            ->find(
+                'list',
+                [
+                    'keyField'   => 'external_id',
+                    'valueField' => 'name',
+                    'limit'      => 200,
+                ]
+            )
             ->order(['CombatActions.name ASC']);
 
         $this->set(
