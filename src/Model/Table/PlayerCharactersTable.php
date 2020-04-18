@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Model\Table;
 
 use App\Model\Entity\PlayerCharacter;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\BelongsToMany;
+use Cake\ORM\Association\HasMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -13,16 +16,16 @@ use Cake\Validation\Validator;
  *
  * @property UsersTable&BelongsTo                $Users
  * @property CampaignsTable&BelongsTo            $Campaigns
+ * @property ParticipantsTable&HasMany           $Participants
  * @property CharacterClassesTable&BelongsToMany $CharacterClasses
  * @property CharacterRacesTable&BelongsToMany   $CharacterRaces
- * @property ParticipantsTable&BelongsToMany     $Participants
  *
  * @method PlayerCharacter get($primaryKey, $options = [])
  * @method PlayerCharacter newEntity($data = null, array $options = [])
  * @method PlayerCharacter[] newEntities(array $data, array $options = [])
- * @method PlayerCharacter|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method PlayerCharacter saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method PlayerCharacter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method PlayerCharacter|false save(EntityInterface $entity, $options = [])
+ * @method PlayerCharacter saveOrFail(EntityInterface $entity, $options = [])
+ * @method PlayerCharacter patchEntity(EntityInterface $entity, array $data, array $options = [])
  * @method PlayerCharacter[] patchEntities($entities, array $data, array $options = [])
  * @method PlayerCharacter findOrCreate($search, callable $callback = null, $options = [])
  */
@@ -32,6 +35,7 @@ class PlayerCharactersTable extends Table
      * Initialize method
      *
      * @param array $config The configuration for the Table.
+     *
      * @return void
      */
     public function initialize(array $config)
@@ -42,36 +46,50 @@ class PlayerCharactersTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsTo('Campaigns', [
-            'foreignKey' => 'campaign_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsToMany('CharacterClasses', [
-            'foreignKey' => 'player_character_id',
-            'targetForeignKey' => 'character_class_id',
-            'joinTable' => 'character_classes_player_characters',
-        ]);
-        $this->belongsToMany('CharacterRaces', [
-            'foreignKey' => 'player_character_id',
-            'targetForeignKey' => 'character_race_id',
-            'joinTable' => 'character_races_player_characters',
-        ]);
-        $this->belongsToMany('Participants', [
-            'foreignKey' => 'player_character_id',
-            'targetForeignKey' => 'participant_id',
-            'joinTable' => 'participants_player_characters',
-        ]);
+        $this->belongsTo(
+            'Users',
+            [
+                'foreignKey' => 'user_id',
+                'joinType'   => 'INNER',
+            ]
+        );
+        $this->belongsTo(
+            'Campaigns',
+            [
+                'foreignKey' => 'campaign_id',
+                'joinType'   => 'INNER',
+            ]
+        );
+        $this->hasMany(
+            'Participants',
+            [
+                'foreignKey' => 'player_character_id',
+            ]
+        );
+        $this->belongsToMany(
+            'CharacterClasses',
+            [
+                'foreignKey'       => 'player_character_id',
+                'targetForeignKey' => 'character_class_id',
+                'joinTable'        => 'character_classes_player_characters',
+            ]
+        );
+        $this->belongsToMany(
+            'CharacterRaces',
+            [
+                'foreignKey'       => 'player_character_id',
+                'targetForeignKey' => 'character_race_id',
+                'joinTable'        => 'character_races_player_characters',
+            ]
+        );
     }
 
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     *
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -115,8 +133,9 @@ class PlayerCharactersTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     *
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var \App\View\AppView                                                        $this
  * @var \App\Model\Entity\CombatEncounter[]|\Cake\Collection\CollectionInterface $combatEncounters
  */
 ?>
@@ -8,12 +8,14 @@
     <h1><?= __('Combat Encounters') ?></h1>
     <div class="form-group">
         <?= $this->Html->link(
-            'New Combat Encounter', ['action' => 'add'], [
-            'class' => [
-                'btn',
-                'btn-outline-success',
-            ],
-        ]
+            'New Combat Encounter',
+            ['action' => 'add'],
+            [
+                'class' => [
+                    'btn',
+                    'btn-outline-success',
+                ],
+            ]
         ); ?>
     </div>
     <table class="table table-hover">
@@ -30,14 +32,14 @@
             <tr>
                 <td><?= h($combatEncounter->name) ?></td>
                 <td><?= h($combatEncounter->created) ?></td>
-                <td><?= $combatEncounter->has('campaign')
-                        ? $this->Html->link(
-                            $combatEncounter->campaign->name, [
+                <td><?= $this->Html->link(
+                        $combatEncounter->campaign->name,
+                        [
                             'controller' => 'Campaigns',
                             'action'     => 'view',
                             $combatEncounter->campaign->id,
                         ]
-                        ) : '' ?></td>
+                    ) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $combatEncounter->id]) ?>
                     <?= $this->Form->postLink(

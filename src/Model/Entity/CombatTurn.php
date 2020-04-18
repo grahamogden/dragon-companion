@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,20 +7,21 @@ use Cake\ORM\Entity;
 /**
  * CombatTurn Entity
  *
- * @property int $id
- * @property int $combat_enounter_id
- * @property int $round_number
- * @property int $turn_order
- * @property int|null $source_participant_id
- * @property int $target_participant_id
- * @property int $combat_action_id
- * @property int $roll_total
- * @property float|null $net_action_total
- * @property int $movement
+ * @property int               $id
+ * @property int               $combat_encounter_id
+ * @property int               $round_number
+ * @property int               $turn_order
+ * @property int|null          $source_participant_id
+ * @property int|null          $target_participant_id
+ * @property int               $combat_action_id
+ * @property int               $roll_total
+ * @property float|null        $net_action_total
+ * @property int               $movement
  *
- * @property \App\Model\Entity\CombatEncounter $combat_encounter
- * @property \App\Model\Entity\Participant $participant
- * @property \App\Model\Entity\Condition $condition
+ * @property CombatEncounter   $combat_encounter
+ * @property SourceParticipant $source_participant
+ * @property TargetParticipant $target_participant
+ * @property CombatAction      $combat_action
  */
 class CombatTurn extends Entity
 {
@@ -33,7 +35,7 @@ class CombatTurn extends Entity
      * @var array
      */
     protected $_accessible = [
-        'combat_enounter_id'    => true,
+        'combat_encounter_id'   => true,
         'round_number'          => true,
         'turn_order'            => true,
         'source_participant_id' => true,
@@ -43,7 +45,8 @@ class CombatTurn extends Entity
         'net_action_total'      => true,
         'movement'              => true,
         'combat_encounter'      => true,
-        'participant'           => true,
-        'condition'             => true,
+        'source_participant'    => true,
+        'target_participant'    => true,
+        'combat_action'         => true,
     ];
 }

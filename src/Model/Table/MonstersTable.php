@@ -5,7 +5,7 @@ namespace App\Model\Table;
 use App\Model\Entity\Monster;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Association\BelongsTo;
-use Cake\ORM\Association\BelongsToMany;
+use Cake\ORM\Association\HasMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -16,7 +16,7 @@ use Cake\Validation\Validator;
  * @property UsersTable&BelongsTo                $Users
  * @property DataSourcesTable&BelongsTo          $DataSources
  * @property MonsterInstanceTypesTable&BelongsTo $MonsterInstanceTypes
- * @property ParticipantsTable&BelongsToMany     $Participants
+ * @property ParticipantsTable&HasMany           $Participants
  *
  * @method Monster get($primaryKey, $options = [])
  * @method Monster newEntity($data = null, array $options = [])
@@ -64,12 +64,10 @@ class MonstersTable extends Table
                 'foreignKey' => 'monster_instance_type_id',
             ]
         );
-        $this->belongsToMany(
+        $this->hasMany(
             'Participants',
             [
-                'foreignKey'       => 'monster_id',
-                'targetForeignKey' => 'participant_id',
-                'joinTable'        => 'monsters_participants',
+                'foreignKey' => 'monster_id',
             ]
         );
     }

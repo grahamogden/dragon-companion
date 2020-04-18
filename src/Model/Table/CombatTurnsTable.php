@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
+use App\Model\Entity\CombatTurn;
+use Cake\Datasource\EntityInterface;
+use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -9,19 +12,18 @@ use Cake\Validation\Validator;
 /**
  * CombatTurns Model
  *
- * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\BelongsTo $CombatEncounters
- * @property &\Cake\ORM\Association\BelongsTo $SourceParticipants
- * @property &\Cake\ORM\Association\BelongsTo $TargetParticipants
- * @property &\Cake\ORM\Association\BelongsTo $CombatActions
+ * @property CombatEncountersTable&BelongsTo $CombatEncounters
+ * @property ParticipantsTable&BelongsTo     $Participants
+ * @property CombatActionsTable&BelongsTo    $CombatActions
  *
- * @method \App\Model\Entity\CombatTurn get($primaryKey, $options = [])
- * @method \App\Model\Entity\CombatTurn newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\CombatTurn[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\CombatTurn|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CombatTurn saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CombatTurn patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\CombatTurn[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\CombatTurn findOrCreate($search, callable $callback = null, $options = [])
+ * @method CombatTurn get($primaryKey, $options = [])
+ * @method CombatTurn newEntity($data = null, array $options = [])
+ * @method CombatTurn[] newEntities(array $data, array $options = [])
+ * @method CombatTurn|false save(EntityInterface $entity, $options = [])
+ * @method CombatTurn saveOrFail(EntityInterface $entity, $options = [])
+ * @method CombatTurn patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method CombatTurn[] patchEntities($entities, array $data, array $options = [])
+ * @method CombatTurn findOrCreate($search, callable $callback = null, $options = [])
  */
 class CombatTurnsTable extends Table
 {
@@ -29,6 +31,7 @@ class CombatTurnsTable extends Table
      * Initialize method
      *
      * @param array $config The configuration for the Table.
+     *
      * @return void
      */
     public function initialize(array $config)
@@ -39,28 +42,44 @@ class CombatTurnsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('CombatEncounters', [
-            'foreignKey' => 'combat_enounter_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsTo('SourceParticipants', [
-            'foreignKey' => 'source_participant_id',
-        ]);
-        $this->belongsTo('TargetParticipants', [
-            'foreignKey' => 'target_participant_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsTo('CombatActions', [
-            'foreignKey' => 'combat_action_id',
-            'joinType' => 'INNER',
-        ]);
+        $this->belongsTo(
+            'CombatEncounters',
+            [
+                'foreignKey' => 'combat_encounter_id',
+                'joinType'   => 'INNER',
+            ]
+        );
+        $this->belongsTo(
+            'SourceParticipant',
+            [
+                'className' => 'Participants',
+                'foreignKey' => 'source_participant_id',
+            ]
+        )
+        ->setProperty('source_participant');
+        $this->belongsTo(
+            'TargetParticipant',
+            [
+                'className' => 'Participants',
+                'foreignKey' => 'target_participant_id',
+            ]
+        )
+        ->setProperty('target_participant');
+        $this->belongsTo(
+            'CombatActions',
+            [
+                'foreignKey' => 'combat_action_id',
+                'joinType'   => 'INNER',
+            ]
+        );
     }
 
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     *
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -98,14 +117,15 @@ class CombatTurnsTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     *
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['combat_enounter_id'], 'CombatEncounters'));
-        $rules->add($rules->existsIn(['source_participant_id'], 'SourceParticipants'));
-        $rules->add($rules->existsIn(['target_participant_id'], 'TargetParticipants'));
+        $rules->add($rules->existsIn(['combat_encounter_id'], 'CombatEncounters'));
+        $rules->add($rules->existsIn(['source_participant_id'], 'SourceParticipant'));
+        $rules->add($rules->existsIn(['target_participant_id'], 'TargetParticipant'));
         $rules->add($rules->existsIn(['combat_action_id'], 'CombatActions'));
 
         return $rules;

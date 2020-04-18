@@ -7,19 +7,20 @@ use Cake\ORM\Entity;
 /**
  * Monster Entity
  *
- * @property int           $id
- * @property int           $user_id
- * @property string        $name
- * @property int           $data_source_id
- * @property string|null   $source_location
- * @property float         $max_hit_points
- * @property int           $armour_class
- * @property int           $dexterity_modifier
- * @property int|null      $monster_instance_type_id
+ * @property int                 $id
+ * @property int                 $user_id
+ * @property string              $name
+ * @property int                 $data_source_id
+ * @property string|null         $source_location
+ * @property float               $max_hit_points
+ * @property int                 $armour_class
+ * @property int                 $dexterity_modifier
+ * @property int|null            $monster_instance_type_id
  *
- * @property User          $user
- * @property DataSource    $data_source
- * @property Participant[] $participants
+ * @property User                $user
+ * @property DataSource          $data_source
+ * @property MonsterInstanceType $monster_instance_type
+ * @property Participant[]       $participants
  */
 class Monster extends Entity
 {
@@ -43,6 +44,7 @@ class Monster extends Entity
         'monster_instance_type_id' => true,
         'user'                     => true,
         'data_source'              => true,
+        'monster_instance_type'    => true,
         'participants'             => true,
     ];
 }

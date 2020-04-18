@@ -26,6 +26,7 @@ class MonstersTableTest extends TestCase
         'app.Monsters',
         'app.Users',
         'app.DataSources',
+        'app.MonsterInstanceTypes',
         'app.Participants',
     ];
 

@@ -1,36 +1,9 @@
-/*
- * COMBAT ENCOUNTERS
- * 
- * Combat is made up of two parts:
- * - Initiative
- * - Looping rounds of combat
- * 
- * Initiative
- * All playable characters and monsters roll and include their speed to provide them with a
- * number that represents their _order in combat_, known as initiative.
- *
- * Combat
- * This is a loop of rounds, each round being comprised of each character having the opportunity
- * for combat - meaning a character could wait until later in the round or completely skip the round entirely
- *
- * Turns Combat
- * A turn in combat is made up of a few different components, here are a few of them:
- * - Action
- *   = Attack - one source attacks a single or multiple targets
- *   = Heal - one source replenishes the health of a single or multiple targets
- *   = Opportunity Attacks - when one source attacks a target or moves away from a target,
- *   the target may have the opportunity to attack the source
- * - Movement
- * - Bonus action
- * - Reaction (although not necessarily during your turn) - such as opportunity attacks
- *
- * There are plenty of additional things that can be done during a turn of combat, but let us
- * focus on delivering specific things, one at a time!
- * - 
- */
-
 const participantTypePlayerCharacter = 'PlayerCharacter';
 const participantTypeMonster         = 'Monster';
+
+let combatEncounter;
+let initiativeTable;
+let combatTable;
 
 const updateParticipantData = function ($) {
     $.each(combatEncounter.getParticipants(), function (index, participant) {
@@ -65,9 +38,7 @@ class Participant {
         name,
         armourClass,
         maxHitPoints,
-        dexterityModifier/*,
-         startingHitPoints,
-         initiative*/
+        dexterityModifier
     ) {
         this.id                = id;
         this.name              = name;
@@ -75,7 +46,6 @@ class Participant {
         this.maxHitPoints      = maxHitPoints;
         this.dexterityModifier = dexterityModifier;
         this.startingHitPoints = this.maxHitPoints;
-        // this.initiative        = initiative;
         this.currentHitPoints  = this.maxHitPoints;
         this.participantType   = null;
         this._createTempId();
@@ -130,22 +100,23 @@ class Participant {
         this.initiative = initiative;
     }
 
+    /*
+     * Create a number that is 10 characters long and assign it to tempId
+     */
     _createTempId () {
-        // Create a number between 1 and 100,000,000
-        this.tempId = Math.floor(Math.random() * 99999999 + 1);
-    }
+        let milliseconds = (Date.now()).toString();
+        milliseconds = milliseconds.substr(-4);
 
-    /*toString () {
-     return {
-     name: this.name,
-     armourClass: this.armourClass,
-     maxHitPoints: this.maxHitPoints,
-     dexterityModifier: this.dexterityModifier,
-     startingHitPoints: this.startingHitPoints,
-     initiative: this.initiative,
-     tempId: this.tempId
-     }.toString();
-     }*/
+        let randomNumber = Math.floor(
+            1000 + Math.random() * 9999
+        ).toString();
+
+        this.tempId = parseInt(
+            (randomNumber + milliseconds)
+        );
+
+        console.log(this.tempId);
+    }
 }
 
 class PlayerCharacter extends Participant {
@@ -176,19 +147,14 @@ class Monster extends Participant {
         armourClass,
         maxHitPoints,
         dexterityModifier,
-        // startingHitPoints,
-        // initiative,
         monsterInstanceTypeId
-        // tempId
     ) {
         super(
             id,
             name,
             armourClass,
             maxHitPoints,
-            dexterityModifier/*,
-             startingHitPoints,
-             initiative*/
+            dexterityModifier
         );
         this.participantType       = participantTypeMonster;
         this.monsterInstanceTypeId = monsterInstanceTypeId;
@@ -197,25 +163,9 @@ class Monster extends Participant {
     getMonsterInstanceTypeId () {
         return this.monsterInstanceTypeId;
     }
-
-    /*toString () {
-     return {
-     name: this.name,
-     armourClass: this.armourClass,
-     maxHitPoints: this.maxHitPoints,
-     dexterityModifier: this.dexterityModifier,
-     startingHitPoints: this.startingHitPoints,
-     initiative: this.initiative,
-     tempId: this.tempId,
-     monsterInstanceTypeId: this.monsterInstanceTypeId
-     }.toString();
-     }*/
 }
 
 class TableHelper {
-    // var $table;
-    // var $tableBody;
-
     constructor (table) {
         this._table     = table;
         this._tableBody = $(this._table).find('tbody');
@@ -228,6 +178,7 @@ class TableHelper {
     }
 
     addRowToBottom (index, participant) {
+        console.warn('Method not implemented');
     }
 }
 
@@ -269,11 +220,11 @@ class InitiativeTable extends TableHelper {
 
     getInputInitiative (tempId, dexterityModifier) {
         return `<input type="text" inputmode="number" id="participant-initiative-${tempId}" class="participant-initiative" name="participant-initiative[]" value="" pattern="\-?[0-9]*" placeholder="(${dexterityModifier})" />`;
-    }// onkeyup="updateParticipantData(jQuery, ${tempId})"
+    }
 
     getInputStartingHitPoint (tempId, maxHitPoints) {
         return `<input type="text" inputmode="decimal" id="participant-starting-hit-points-${tempId}" class="participant-starting-hit-points" name="participant-starting-hit-points[]" value="" placeholder="${maxHitPoints}" />`;
-    }// onkeyup="updateParticipantData(jQuery, ${tempId})"
+    }
 }
 
 class CombatTable extends TableHelper {
@@ -394,25 +345,9 @@ class CombatTurnEntity {
 
 class CombatEncounter {
     constructor (combatTable) {
-        this.participants  = [];
-        this.combatActions = [
-            'ATTACK',
-            'HEAL',
-            'SPELL',
-            'DASH',
-            'DELAY',
-            'DISENGAGE',
-            'DODGE',
-            'HELP',
-            'HIDE',
-            'PASS',
-            'READY',
-            'USE',
-            'SEARCH',
-            'TEMP'
-        ];
-        this.combatTable   = combatTable;
-        this.combatTurns   = [];
+        this.participants = [];
+        this.combatTable  = combatTable;
+        this.combatTurns  = [];
     }
 
     incrementRoundCounter () {
@@ -459,10 +394,6 @@ class CombatEncounter {
         this.participants.push(participant);
     }
 
-    getCombatActions () {
-        return this.combatActions;
-    }
-
     setUpCombat () {
         this.currentParticipantKey = 0;
         this.roundCounter          = 0;
@@ -489,11 +420,9 @@ class CombatEncounter {
         let participantKey         = this.getParticipants()[this.currentParticipantKey].getTempId();
         this.combatTable.selectTableRowForParticipantTempId(participantKey);
         this.combatTurnHelper.setUpNextTurn(participantKey);
-        // this.combatTurns = [];
     }
 
     addTurnOfCombat () {
-        console.log(this.combatTurns);
         this.incrementTurnCounter();
         let combatTurn        = this.combatTurnHelper.getCombatTurnEntity(
             this.roundCounter,
@@ -566,10 +495,6 @@ class CombatEncounter {
     }
 }
 
-let combatEncounter;
-let initiativeTable;
-let combatTable;
-
 jQuery(function ($) {
 
     const getParticipantsFromSeparateJson = function () {
@@ -595,7 +520,6 @@ jQuery(function ($) {
         $.each(monsters, function (index, monsterObj) {
             if (monsterObj.data.monster_instance_type_id === 1) {
                 monstersCounters[monsterObj.data.id] = ++monstersCounters[monsterObj.data.id] || 1;
-                // console.log(monsters);
                 monsterObj.data.name += ' ' + monstersCounters[monsterObj.data.id];
             }
 
@@ -624,20 +548,14 @@ jQuery(function ($) {
     };
 
     $('.update-initiative-table').on('click', function (event) {
-        console.time('updateParticipants');
-
         let participantsJson = getParticipantsFromSeparateJson();
 
         combatEncounter.clearParticipants();
         combatTable.clearTable();
         setUpInitiativeTable(participantsJson);
-
-        console.timeEnd('updateParticipants');
     });
 
     $('.update-combat-table').on('click', function (event) {
-        console.time('updateCombatTable');
-
         let $tableBody = $('#combat-table tbody');
 
         combatTable.clearTable();
@@ -649,8 +567,6 @@ jQuery(function ($) {
         });
 
         combatEncounter.setUpCombat();
-
-        console.timeEnd('updateCombatTable');
     });
 
     $('#end-of-turn').on('click', function () {

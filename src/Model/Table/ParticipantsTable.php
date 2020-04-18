@@ -2,7 +2,6 @@
 
 namespace App\Model\Table;
 
-use App\Model\Entity\Participant;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\BelongsToMany;
@@ -13,19 +12,20 @@ use Cake\Validation\Validator;
 /**
  * Participants Model
  *
- * @property CombatEncountersTable&BelongsTo     $CombatEncounters
- * @property ConditionsTable&BelongsToMany       $Conditions
- * @property MonstersTable&BelongsToMany         $Monsters
- * @property PlayerCharactersTable&BelongsToMany $PlayerCharacters
+ * @property CombatEncountersTable&BelongsTo $CombatEncounters
+ * @property MonstersTable&BelongsTo         $Monsters
+ * @property PlayerCharactersTable&BelongsTo $PlayerCharacters
+ * @property ConditionsTable&BelongsToMany   $Conditions
+ * @property ConditionsTable&BelongsTo       $CombatTurns
  *
- * @method Participant get($primaryKey, $options = [])
- * @method Participant newEntity($data = null, array $options = [])
- * @method Participant[] newEntities(array $data, array $options = [])
- * @method Participant|false save(EntityInterface $entity, $options = [])
- * @method Participant saveOrFail(EntityInterface $entity, $options = [])
- * @method Participant patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method Participant[] patchEntities($entities, array $data, array $options = [])
- * @method Participant findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Participant get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Participant newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Participant[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Participant|false save(EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Participant saveOrFail(EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Participant patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Participant[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Participant findOrCreate($search, callable $callback = null, $options = [])
  */
 class ParticipantsTable extends Table
 {
@@ -44,37 +44,25 @@ class ParticipantsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo(
-            'CombatEncounters',
-            [
-                'foreignKey' => 'combat_encounter_id',
-                'joinType'   => 'INNER',
-            ]
-        );
+        $this->belongsTo('CombatEncounters')
+            ->setForeignKey('combat_encounter_id')
+            ->setJoinType('INNER');
+        $this->belongsTo('Monsters')
+            ->setForeignKey('monster_id');
+        $this->belongsTo('PlayerCharacters')
+            ->setForeignKey('player_character_id');
+        $this->hasMany('CombatTurns')
+            ->setForeignKey('source_participant_id')
+            ->setProperty('source_participant');
+        $this->hasMany('CombatTurns')
+            ->setForeignKey('target_participant_id')
+            ->setProperty('target_participant');
         $this->belongsToMany(
             'Conditions',
-            [
-                'foreignKey'       => 'participant_id',
-                'targetForeignKey' => 'condition_id',
-                'joinTable'        => 'conditions_participants',
-            ]
-        );
-        $this->belongsToMany(
-            'Monsters',
-            [
-                'foreignKey'       => 'participant_id',
-                'targetForeignKey' => 'monster_id',
-                'joinTable'        => 'monsters_participants',
-            ]
-        );
-        $this->belongsToMany(
-            'PlayerCharacters',
-            [
-                'foreignKey'       => 'participant_id',
-                'targetForeignKey' => 'player_character_id',
-                'joinTable'        => 'participants_player_characters',
-            ]
-        );
+            ['joinTable' => 'conditions_participants',]
+        )
+            ->setForeignKey('participant_id')
+            ->setTargetForeignKey('condition_id');
     }
 
     /**
@@ -110,6 +98,11 @@ class ParticipantsTable extends Table
             ->requirePresence('armour_class', 'create')
             ->notEmptyString('armour_class');
 
+        $validator
+            ->nonNegativeInteger('temporary_id')
+            ->requirePresence('temporary_id', 'create')
+            ->notEmptyString('temporary_id');
+
         return $validator;
     }
 
@@ -124,6 +117,8 @@ class ParticipantsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['combat_encounter_id'], 'CombatEncounters'));
+        $rules->add($rules->existsIn(['monster_id'], 'Monsters'));
+        $rules->add($rules->existsIn(['player_character_id'], 'PlayerCharacters'));
 
         return $rules;
     }

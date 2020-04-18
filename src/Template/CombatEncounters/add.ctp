@@ -9,6 +9,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
  * @var CombatEncounter $combatEncounter
  * @var array           $campaigns
  * @var array           $combatActions
+ * @var string          $combatEncounterSuggestedName
  */
 ?>
 <?= $this->Html->script('combat-encounters.js') ?>
@@ -33,6 +34,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 'class' => [
                     'form-control',
                 ],
+                'value' => $combatEncounterSuggestedName,
             ]
         ) ?>
         <div class="row form-group" role="group" aria-label="">

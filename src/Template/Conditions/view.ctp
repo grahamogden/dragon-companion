@@ -48,7 +48,7 @@
             <?php foreach ($condition->combat_turns as $combatTurns): ?>
             <tr>
                 <td><?= h($combatTurns->id) ?></td>
-                <td><?= h($combatTurns->combat_enounter_id) ?></td>
+                <td><?= h($combatTurns->combat_encounter_id) ?></td>
                 <td><?= h($combatTurns->round_number) ?></td>
                 <td><?= h($combatTurns->source_participant_id) ?></td>
                 <td><?= h($combatTurns->target_participant_id) ?></td>

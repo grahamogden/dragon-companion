@@ -45,7 +45,7 @@ class CombatEncountersFixture extends TestFixture
                 'id' => 1,
                 'name' => 'Lorem ipsum dolor sit amet',
                 'user_id' => 1,
-                'created' => '2020-04-11 11:12:34',
+                'created' => '2020-04-18 15:16:00',
                 'campaign_id' => 1,
             ],
         ];

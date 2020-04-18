@@ -25,8 +25,9 @@ class CombatTurnsTableTest extends TestCase
     public $fixtures = [
         'app.CombatTurns',
         'app.CombatEncounters',
-        'app.Participants',
-        'app.Conditions',
+        'app.SourceParticipants',
+        'app.TargetParticipants',
+        'app.CombatActions',
     ];
 
     /**

@@ -15,7 +15,9 @@ use Cake\ORM\Entity;
  * @property int           $campaign_id
  *
  * @property User          $user
+ * @property Campaign      $campaign
  * @property Participant[] $participants
+ * @property CombatTurn[]  $combat_turns
  */
 class CombatEncounter extends Entity
 {
@@ -34,6 +36,8 @@ class CombatEncounter extends Entity
         'created'      => true,
         'campaign_id'  => true,
         'user'         => true,
+        'campaign'     => true,
         'participants' => true,
+        'combat_turns' => true,
     ];
 }

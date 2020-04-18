@@ -25,9 +25,10 @@ class ParticipantsTableTest extends TestCase
     public $fixtures = [
         'app.Participants',
         'app.CombatEncounters',
-        'app.Conditions',
         'app.Monsters',
         'app.PlayerCharacters',
+        'app.CombatTurns',
+        'app.Conditions',
     ];
 
     /**
