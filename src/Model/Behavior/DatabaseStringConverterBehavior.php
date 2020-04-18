@@ -23,7 +23,9 @@ class DatabaseStringConverterBehavior extends Behavior
         'strike',
         'strong',
         'table',
+        'thead',
         'tbody',
+        'em',
         'hr',
         'li',
         'ol',
@@ -35,6 +37,13 @@ class DatabaseStringConverterBehavior extends Behavior
         'i',
         'p',
         'u',
+        'a',
+    ];
+
+    const WHITE_LIST_HTML_ATTRIBUTES = [
+        'href',
+        'target',
+        'style',
     ];
 
     public static function toDatabase($string)

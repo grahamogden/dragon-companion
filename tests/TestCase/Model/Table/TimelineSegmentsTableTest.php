@@ -10,7 +10,6 @@ use Cake\TestSuite\TestCase;
  */
 class TimelineSegmentsTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -24,9 +23,10 @@ class TimelineSegmentsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.timeline_segments',
-        'app.users',
-        'app.tags'
+        'app.TimelineSegments',
+        'app.Users',
+        'app.Tags',
+        'app.NonPlayableCharacters',
     ];
 
     /**
@@ -69,6 +69,16 @@ class TimelineSegmentsTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test beforeSave method
+     *
+     * @return void
+     */
+    public function testBeforeSave()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

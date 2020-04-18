@@ -7,6 +7,12 @@ use Cake\Routing\Router;
 
 class AutocompleteWidget implements WidgetInterface
 {
+    private const ATTR_ATTRIBUTES       = 'attrs';
+    public const ATTR_ELEMENT_NAME      = 'name';
+    public const ATTR_SOURCE            = 'source';
+    public const ATTR_SOURCE_ACTION     = 'action';
+    public const ATTR_SOURCE_CONTROLLER = 'controller';
+    public const ATTR_VALUE             = 'val';
 
     protected $_templates;
 
@@ -18,23 +24,31 @@ class AutocompleteWidget implements WidgetInterface
     public function render(array $data, ContextInterface $context)
     {
         $data += [
-            'name'   => '',
-            'source' => [
-                'controller' => '',
-                'action' => ''
+            self::ATTR_ELEMENT_NAME   => '',
+            self::ATTR_SOURCE         => [
+                self::ATTR_SOURCE_ACTION     => '',
+                self::ATTR_SOURCE_CONTROLLER => ''
             ],
-            'val' => '',
+            self::ATTR_VALUE          => '',
         ];
+        
         return $this->_templates->format('autocomplete', [
-            'name'   => $data['name'],
-            'val'    => $data['val'],
-            'source' => Router::url($data['source']),
-            'attrs'  => $this->_templates->formatAttributes($data, ['name', 'source', 'value'])
+            self::ATTR_ELEMENT_NAME => $data[self::ATTR_ELEMENT_NAME],
+            self::ATTR_VALUE        => $data[self::ATTR_VALUE],
+            self::ATTR_SOURCE       => Router::url($data[self::ATTR_SOURCE]),
+            self::ATTR_ATTRIBUTES   => $this->_templates->formatAttributes(
+                $data,
+                [
+                    self::ATTR_ELEMENT_NAME,
+                    self::ATTR_SOURCE,
+                    self::ATTR_VALUE,
+                ]
+            )
         ]);
     }
 
     public function secureFields(array $data)
     {
-        return [$data['name']];
+        return [$data[self::ATTR_ELEMENT_NAME]];
     }
 }

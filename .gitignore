@@ -1,6 +1,5 @@
 # CakePHP specific files #
 ##########################
-/config/app.php
 /config/.env
 /logs/*
 /tmp/*
@@ -45,3 +44,4 @@ nbproject/*
 /webroot/img/backgrounds/*
 notes.txt
 webroot/img/orig/
+dragon-companion*.zip

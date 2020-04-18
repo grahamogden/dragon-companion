@@ -30,7 +30,7 @@
     <div class="related">
         <h4><?= __('Related Timeline Segments') ?></h4>
         <?php if (!empty($tag->timeline_segments)) { ?>
-        <table cellpadding="0" cellspacing="0">
+        <table class="table table-hover">
             <tr>
                 <th scope="col"><?= __('Tag'); ?></th>
                 <th scope="col"><?= __('Level'); ?></th>

@@ -2,6 +2,10 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
+use App\Model\Entity\TimelineSegment as TimelineSegmentEntity;
+use Cake\Routing\Router;
+use Cake\Http\Response;
 
 /**
  * TimelineSegments Controller
@@ -12,6 +16,7 @@ use App\Controller\AppController;
  */
 class TimelineSegmentsController extends AppController
 {
+    const CONTROLLER_NAME = 'Timeline Segments';
     /** @var Session */
     private $session;
 
@@ -26,12 +31,6 @@ class TimelineSegmentsController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        $this->Auth->allow([
-            'tags',
-            'reorder',
-            'getTags',
-            'getNonPlayableCharacters'
-        ]);
 
         $this->session = $this->getRequest()->getSession();
     }
@@ -39,9 +38,12 @@ class TimelineSegmentsController extends AppController
     /**
      * Index method
      *
+     * @param int|null $campaignId The ID for the campaign that the timeline segments
+     *                 should belong to
+     *
      * @return \Cake\Http\Response|void
      */
-    public function index(): void
+    public function index(?int $campaignId): void
     {
         $this->session->write('referer', [
             'controller' => 'TimelineSegments',
@@ -52,14 +54,20 @@ class TimelineSegmentsController extends AppController
         $this->paginate = [
             'contain' => ['ParentTimelineSegments', 'Users']
         ];
+
+        $user = $this->getUserOrRedirect();
+
         $timelineSegments = $this->TimelineSegments
             ->find()
+            ->where(['TimelineSegments.campaign_id =' => $campaignId])
             ->where(['TimelineSegments.parent_id IS' => null])
+            ->where(['TimelineSegments.user_id =' => $user['id']])
             ->order('TimelineSegments.lft asc');
 
         $timelineSegments = $this->paginate($timelineSegments);
 
         $this->set('childTimelineSegments', $timelineSegments);
+        $this->set('title', self::CONTROLLER_NAME);
     }
 
     /**
@@ -94,6 +102,12 @@ class TimelineSegmentsController extends AppController
 
         $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ? : 0]));
         $this->set('timelineSegment', $timelineSegment);
+        $this->set('childTimelineParts', $this->getChildTimelineParts($timelineSegment));
+        $this->set('title', sprintf(
+            'View %s - %s',
+            self::CONTROLLER_NAME,
+            $timelineSegment->title
+        ));
     }
 
     /**
@@ -105,14 +119,17 @@ class TimelineSegmentsController extends AppController
     {
         $timelineSegment = $this->TimelineSegments->newEntity();
         if ($this->request->is('post')) {
-            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
+            $data = $this->request->getData();
+            $data['campaign_id'] = $this->TimelineSegments->findById($data['parent_id'])->firstOrFail()->campaign_id;
+
+            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $data);
             // Set the user ID on the item
             $timelineSegment->user_id = $this->Auth->user('id');
 
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->redirect($this->session->read('referer'));//['action' => 'index']);
+                return $this->generateReturnUrl($timelineSegment);
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
@@ -138,6 +155,11 @@ class TimelineSegmentsController extends AppController
             'tags',
             'nonPlayableCharacters'
         ));
+        $this->set('title', sprintf(
+            'Add %s - %s',
+            self::CONTROLLER_NAME,
+            $timelineSegment->title
+        ));
     }
 
     /**
@@ -150,7 +172,18 @@ class TimelineSegmentsController extends AppController
     public function edit(int $id = null)
     {
         $timelineSegment = $this->TimelineSegments->get($id, [
-            'contain' => ['Tags', 'NonPlayableCharacters'],
+            'contain' => [
+                'ParentTimelineSegments',
+                'Users',
+                'Tags' => [
+                    'sort' => ['title' => 'ASC',],
+                ],
+                'NonPlayableCharacters' => [
+                    'sort' => ['name' => 'ASC',],
+                ],
+                'ChildTimelineSegments' => [
+                    'sort' => ['lft' => 'ASC',],
+            ]],
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -158,7 +191,7 @@ class TimelineSegmentsController extends AppController
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->redirect($this->session->read('referer'));//['action' => 'index']);
+                return $this->generateReturnUrl($timelineSegment);
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
@@ -184,6 +217,12 @@ class TimelineSegmentsController extends AppController
             'tags',
             'nonPlayableCharacters'
         ));
+        $this->set('childTimelineParts', $this->getChildTimelineParts($timelineSegment));
+        $this->set('title', sprintf(
+            'Edit %s - %s',
+            self::CONTROLLER_NAME,
+            $timelineSegment->title
+        ));
     }
 
     /**
@@ -197,13 +236,20 @@ class TimelineSegmentsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $timelineSegment = $this->TimelineSegments->get($id);
+
+        $url = $this->generateReturnUrl($timelineSegment);
+
         if ($this->TimelineSegments->delete($timelineSegment)) {
             $this->Flash->success(__('The timeline segment, {0}, has been deleted.', $timelineSegment->title));
         } else {
             $this->Flash->error(__('The timeline segment could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect($this->session->read('referer') ?: ['action' => 'index']);
+        if ($timelineSegment->parent_id) {
+            return $url;
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
 
     /**
@@ -216,9 +262,15 @@ class TimelineSegmentsController extends AppController
     public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
+
         // The add and tags actions are always allowed to logged in users
-        if (in_array($action, [
-            'add', 'tags', 'getTags', 'getNonPlayableCharacters',
+        if (
+            in_array($action, [
+            'add',
+            'index',
+            'tags',
+            'getTags',
+            'getNonPlayableCharacters',
         ])) {
             return true;
         }
@@ -234,6 +286,29 @@ class TimelineSegmentsController extends AppController
         $timelineSegment = $this->TimelineSegments->findById($id)->firstOrFail();
 
         return $timelineSegment->user_id === $user['id'];
+    }
+
+    /**
+     * Generates the URL for returning the user after saving
+     * 
+     * @param  TimelineSegmentEntity $timelineSegment [description]
+     * @return string
+     */
+    private function generateReturnUrl(TimelineSegmentEntity $timelineSegment): Response
+    {
+        $urlParams = [
+            '_name'      => 'TimelineSegments',
+            'campaignId' => $timelineSegment->campaign_id,
+        ];
+
+        if ($timelineSegment['parent_id']) {
+            $urlParams['action'] = 'view';
+            $urlParams['id'] = $timelineSegment->parent_id;
+        } else {
+            $urlParams['action'] = 'index';
+        }
+
+        return $this->redirect(Router::url($urlParams));
     }
 
     /**
@@ -314,6 +389,7 @@ class TimelineSegmentsController extends AppController
             $this->TimelineSegments->Tags,
             $term,
             ['Tags.title LIKE' => '%' . $term . '%'],
+            'title',
             'title'
         );
     }
@@ -334,7 +410,49 @@ class TimelineSegmentsController extends AppController
             $this->TimelineSegments->NonPlayableCharacters,
             $term,
             ['NonPlayableCharacters.name LIKE' => '%' . $term . '%'],
+            'name',
             'name'
         );
+    }
+
+    /**
+     * Uses a regular expression to extract any content that is within a <blockquote> element
+     * 
+     * @param  TimeLineSegment $timeline The timeline segment object
+     * 
+     * @return string
+     */
+    private function getChildTimelineParts(TimelineSegmentEntity $timelineSegment): string
+    {
+        $content = '';
+        $timelinePartsArray = [];
+        $timelineParts = '';
+
+        if ($timelineSegment->child_timeline_segments) {
+            // echo '<pre>';
+            /** @var TimelineSegment $childTimeline */
+            foreach ($timelineSegment->child_timeline_segments as $childTimeline) {
+                // var_dump($childTimeline->body);
+                preg_match_all('/\{\{blockquote\}\}(\{\{p\}\})?(.*?)(\{\{\/p\}\})?\{\{\/blockquote\}\}/i', $childTimeline->body, $out);
+                // if (!empty($out[2])) {
+                //     // var_dump($out,'-----------------------------------');
+                //     $timelinePartsArray[] = implode(' | ', $out[2]);
+                // }
+
+                if (!empty($out[2])) {
+                    $timelinePartsArray[] = sprintf(
+                        '<h3>%s</h3><ul><li>%s</li></ul>',
+                        $childTimeline->title,
+                        implode('</li><li>', $out[2])
+                    );
+                }
+            }
+
+            // var_dump($timelineSegment);exit();
+        // } else {
+            // $content = dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body));
+        }
+
+        return implode('', $timelinePartsArray);
     }
 }

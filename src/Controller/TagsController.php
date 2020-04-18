@@ -12,6 +12,16 @@ use App\Controller\AppController;
  */
 class TagsController extends AppController
 {
+    const CONTROLLER_NAME = 'Tags';
+    public $paginate = [
+        'limit' => 50,
+        'order' => [
+            'Tags.title' => 'asc'
+        ],
+        'sortWhitelist' => [
+            'Tags.title',
+        ],
+    ];
 
     /**
      * Initialises the class, including authentication
@@ -24,7 +34,6 @@ class TagsController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        $this->Auth->allow();
     }
 
     /**
@@ -34,9 +43,16 @@ class TagsController extends AppController
      */
     public function index()
     {
-        $tags = $this->paginate($this->Tags);
+        $user = $this->getUserOrRedirect();
+
+        $tags = $this->Tags
+            ->find()
+            ->where(['tags.user_id =' => $user['id']]);
+
+        $tags = $this->paginate($tags);
 
         $this->set(compact('tags'));
+        $this->set('title', self::CONTROLLER_NAME);
     }
 
     /**
@@ -53,6 +69,11 @@ class TagsController extends AppController
         ]);
 
         $this->set('tag', $tag);
+        $this->set('title', sprintf(
+            'View %s - %s',
+            self::CONTROLLER_NAME,
+            $tag->title
+        ));
     }
 
     /**
@@ -73,7 +94,13 @@ class TagsController extends AppController
             $this->Flash->error(__('The tag could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->Tags->TimelineSegments->find('list', ['limit' => 200]);
+
         $this->set(compact('tag', 'timelineSegments'));
+        $this->set('title', sprintf(
+            'Add %s - %s',
+            self::CONTROLLER_NAME,
+            $tag->title
+        ));
     }
 
     /**
@@ -98,7 +125,13 @@ class TagsController extends AppController
             $this->Flash->error(__('The tag could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->Tags->TimelineSegments->find('list', ['limit' => 200]);
+
         $this->set(compact('tag', 'timelineSegments'));
+        $this->set('title', sprintf(
+            'Edit %s - %s',
+            self::CONTROLLER_NAME,
+            $tag->title
+        ));
     }
 
     /**
@@ -119,5 +152,38 @@ class TagsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Determines whether the user is authorised to be able to use this action
+     * 
+     * @param type $user
+     * 
+     * @return bool
+     */
+    public function isAuthorized($user): bool
+    {
+        $action = $this->request->getParam('action');
+
+        // The add and tags actions are always allowed to logged in users
+        if (
+            in_array($action, [
+            'add',
+            'index',
+        ])) {
+            return true;
+        }
+
+        // All other actions require an item ID
+        $id = $this->request->getParam('id');
+
+        if (!$id) {
+            return false;
+        }
+
+        // Check that the timelineSegment belongs to the current user
+        $tags = $this->Tags->findById($id)->firstOrFail();
+
+        return $tags->user_id === $user['id'];
     }
 }

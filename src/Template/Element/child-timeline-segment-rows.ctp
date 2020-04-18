@@ -1,97 +1,114 @@
 <?php
 use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
-
-$childCounter = 0;
-foreach ($childTimelineSegments as $childTimelineSegment) {
-    $childCounter++;
-    ?>
+?>
+<?php $childCounter = 0; ?>
+<?php foreach ($childTimelineSegments as $childTimelineSegment) { ?>
+    <?php $childCounter++; ?>
     <tr>
-        <th>
-            <?= $this->Html->link($childTimelineSegment->title, [
-                'action' => 'view',
-                $childTimelineSegment->id,
-            ]); ?>
-            <div class="actions actions-fixed">
-                <a class="menu-button action">. . .</a>
-                <ul class="menu">
-                    <?php
-                        if ($childCounter > 1) {
-                            // Move to top
-                            echo sprintf('<li>%s</li>',
-                                $this->Form->postLink('', [
-                                        'action' => 'moveUpTop',
-                                        $childTimelineSegment->id,
-                                    ], [
-                                        'class' => [
-                                            'action',
-                                            'move-arrow',
-                                            'arrow-up',
-                                            'top',
-                                        ],
-                            ]));
-                            // Move up
-                            echo sprintf('<li>%s</li>',
-                                $this->Form->postLink('', [
-                                        'action' => 'moveUp',
-                                        $childTimelineSegment->id,
-                                    ], [
-                                        'class' => [
-                                            'action',
-                                            'move-arrow',
-                                            'arrow-up',
-                                        ],
-                            ]));
-                        }
+        <th class="align-items-center d-flex bg-light">
+            <?= $this->Html->link(
+                $childTimelineSegment->title,
+                [
+                    'action'     => 'view',
+                    '_name'      => 'TimelineSegments',
+                    'campaignId' => $childTimelineSegment->campaign_id,
+                    'id'         => $childTimelineSegment->id,
+                ]
+            ) ?>
+            <div class="dropdown d-inline-block ml-auto">
+                <button class="btn btn-secondary dropdown-toggle shadow-none" type="button" id="timelineDropdownMenuButton<?=$childCounter?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</button>
+                <div class="dropdown-menu dropdown-menu-right flex-column" aria-labelledby="timelineDropdownMenuButton<?=$childCounter?>">
+                    <?php if ($childCounter > 1) { ?>
+                        <?php // Move to top ?>
+                        <?= $this->Form->postLink('Move to top', [
+                            'action'     => 'moveUpTop',
+                            '_name'      => 'TimelineSegments',
+                            'campaignId' => $childTimelineSegment->campaign_id,
+                            'id'         => $childTimelineSegment->id,
+                        ], [
+                            'class' => [
+                                'btn',
+                                'btn-info',
+                                'mb-2'
+                            ],
+                            'role' => 'button',
+                        ]); ?>
 
-                        if ($childCounter < count($childTimelineSegments)) {
-                            // Move down
-                            echo sprintf('<li>%s</li>',
-                                $this->Form->postLink('', [
-                                        'action' => 'moveDown',
-                                        $childTimelineSegment->id,
-                                    ], [
-                                        'class' => [
-                                            'action',
-                                            'move-arrow',
-                                            'arrow-down',
-                                        ],
-                            ]));
-                            // Move to bottom
-                            echo sprintf('<li>%s</li>',
-                                $this->Form->postLink('', [
-                                        'action' => 'moveDownBottom',
-                                        $childTimelineSegment->id,
-                                    ], [
-                                        'class' => [
-                                            'action',
-                                            'move-arrow',
-                                            'arrow-down',
-                                            'bottom',
-                                        ],
-                            ]));
-                    } ?>
-                    <li><?= $this->Html->link('', [
-                        'action' => 'edit',
-                        $childTimelineSegment->id
+                        <?php // Move up ?>
+                        <?= $this->Form->postLink('Move up', [
+                            'action'     => 'moveUp',
+                            '_name'      => 'TimelineSegments',
+                            'campaignId' => $childTimelineSegment->campaign_id,
+                            'id'         => $childTimelineSegment->id,
+                        ], [
+                            'class' => [
+                                'btn',
+                                'btn-info',
+                                'mb-2'
+                            ],
+                            'role' => 'button',
+                        ]); ?>
+                    <?php } ?>
+
+                    <?php if ($childCounter < count($childTimelineSegments)) { ?>
+                        <?php // Move down ?>
+                        <?= $this->Form->postLink('Move down', [
+                            'action'     => 'moveDown',
+                            '_name'      => 'TimelineSegments',
+                            'campaignId' => $childTimelineSegment->campaign_id,
+                            'id'         => $childTimelineSegment->id,
+                        ], [
+                            'class' => [
+                                'btn',
+                                'btn-info',
+                                'mb-2'
+                            ],
+                            'role' => 'button',
+                        ]); ?>
+
+                        <?php // Move to bottom ?>
+                        <?= $this->Form->postLink('Move to bottom', [
+                            'action'     => 'moveDownBottom',
+                            '_name'      => 'TimelineSegments',
+                            'campaignId' => $childTimelineSegment->campaign_id,
+                            'id'         => $childTimelineSegment->id,
+                        ], [
+                            'class' => [
+                                'btn',
+                                'btn-info',
+                                'mb-2'
+                            ],
+                            'role' => 'button',
+                        ]); ?>
+                    <?php } ?>
+
+                    <?= $this->Html->link('Edit', [
+                        'action'     => 'edit',
+                        '_name'      => 'TimelineSegments',
+                        'campaignId' => $childTimelineSegment->campaign_id,
+                        'id'         => $childTimelineSegment->id,
                     ], [
                         'class'   => [
-                            'action',
-                            'button',
-                            'edit-button'
+                            'btn',
+                            'btn-primary',
+                            'mb-2'
                         ],
-                    ]); ?></li>
-                    <li><?= $this->Form->postLink('', [
+                        'role' => 'button',
+                    ]); ?>
+
+                    <?= $this->Form->postLink('Delete', [
                         'action' => 'delete',
-                        $childTimelineSegment->id
+                        '_name'  => 'TimelineSegmentsDelete',
+                        'id'     => $childTimelineSegment->id,
                     ], [
                         'class'   => [
-                            'action',
-                            'button',
-                            'delete-button'
+                            'btn',
+                            'btn-danger',
                         ],
-                        'confirm' => __('Are you sure you want to delete # {0}?', $childTimelineSegment->id),
-                    ]); ?></li>
-                </ul>
+                        'role' => 'button',
+                        'confirm' => __('Are you sure you want to delete {0}?', $childTimelineSegment->name),
+                    ]); ?>
+                </div>
             </div>
         </th>
     </tr>

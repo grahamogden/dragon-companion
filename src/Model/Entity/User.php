@@ -8,14 +8,23 @@ use Cake\Auth\DefaultPasswordHasher;
  * User Entity
  *
  * @property int $id
- * @property string $email
+ * @property string $username
  * @property string $password
+ * @property string $email
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property int $status
+ *
+ * @property \App\Model\Entity\CombatEncounter[] $combat_encounters
+ * @property \App\Model\Entity\NonPlayableCharacter[] $non_playable_characters
+ * @property \App\Model\Entity\PlayerCharacter[] $player_characters
+ * @property \App\Model\Entity\Puzzle[] $puzzles
+ * @property \App\Model\Entity\Tag[] $tags
+ * @property \App\Model\Entity\TimelineSegment[] $timeline_segments
+ * @property \App\Model\Entity\Clan[] $clans
  */
 class User extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -27,10 +36,18 @@ class User extends Entity
      */
     protected $_accessible = [
         'username' => true,
-        'email' => true,
         'password' => true,
+        'email' => true,
         'created' => true,
-        'modified' => true
+        'modified' => true,
+        'status' => true,
+        'combat_encounters' => true,
+        'non_playable_characters' => true,
+        'player_characters' => true,
+        'puzzles' => true,
+        'tags' => true,
+        'timeline_segments' => true,
+        'clans' => true,
     ];
 
     /**

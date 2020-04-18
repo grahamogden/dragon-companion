@@ -12,6 +12,18 @@ use App\Controller\AppController;
  */
 class NonPlayableCharactersController extends AppController
 {
+    const CONTROLLER_NAME = 'Non-Playable Characters';
+    public $paginate = [
+        'limit' => 50,
+        'order' => [
+            'NonPlayableCharacters.name' => 'asc'
+        ],
+        'sortWhitelist' => [
+            'NonPlayableCharacters.name',
+            'NonPlayableCharacters.age',
+            'NonPlayableCharacters.occupation',
+        ]
+    ];
 
     /**
      * Initialises the class, including authentication
@@ -24,7 +36,6 @@ class NonPlayableCharactersController extends AppController
 
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
-        $this->Auth->allow();
     }
 
     /**
@@ -34,9 +45,16 @@ class NonPlayableCharactersController extends AppController
      */
     public function index()
     {
-        $nonPlayableCharacters = $this->paginate($this->NonPlayableCharacters);
+        $user = $this->getUserOrRedirect();
+
+        $nonPlayableCharacters = $this->NonPlayableCharacters
+            ->find()
+            ->where(['nonPlayableCharacters.user_id =' => $user['id']]);
+
+        $nonPlayableCharacters = $this->paginate($nonPlayableCharacters);
 
         $this->set(compact('nonPlayableCharacters'));
+        $this->set('title', self::CONTROLLER_NAME);
     }
 
     /**
@@ -53,6 +71,11 @@ class NonPlayableCharactersController extends AppController
         ]);
 
         $this->set('nonPlayableCharacter', $nonPlayableCharacter);
+        $this->set('title', sprintf(
+            'View %s - %s',
+            self::CONTROLLER_NAME,
+            $nonPlayableCharacter->name
+        ));
     }
 
     /**
@@ -73,7 +96,13 @@ class NonPlayableCharactersController extends AppController
             $this->Flash->error(__('The non playable character could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
+
         $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
+        $this->set('title', sprintf(
+            'Add %s - %s',
+            self::CONTROLLER_NAME,
+            $nonPlayableCharacter->name
+        ));
     }
 
     /**
@@ -98,7 +127,13 @@ class NonPlayableCharactersController extends AppController
             $this->Flash->error(__('The non playable character could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
+
         $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
+        $this->set('title', sprintf(
+            'Edit %s - %s',
+            self::CONTROLLER_NAME,
+            $nonPlayableCharacter->name
+        ));
     }
 
     /**
@@ -128,26 +163,27 @@ class NonPlayableCharactersController extends AppController
      * 
      * @return bool
      */
-    // public function isAuthorized($user): bool
-    // {
-    //     $action = $this->request->getParam('action');
-    //     // The add and tags actions are always allowed to logged in users
-    //     if (in_array($action, [
-    //         'add'
-    //     ])) {
-    //         return true;
-    //     }
+    public function isAuthorized($user): bool
+    {
+        $action = $this->request->getParam('action');
+        // The add and index actions are always allowed to logged in users
+        if (in_array($action, [
+            'add',
+            'index',
+        ])) {
+            return true;
+        }
 
-    //     // All other actions require an item ID
-    //     $id = $this->request->getParam('id');
+        // All other actions require an item ID
+        $id = $this->request->getParam('id');
 
-    //     if (!$id) {
-    //         return false;
-    //     }
+        if (!$id) {
+            return false;
+        }
 
-    //     // Check that the nonPlayableCharacter belongs to the current user
-    //     $nonPlayableCharacter = $this->NonPlayableCharacters->findById($id)->firstOrFail();
+        // Check that the nonPlayableCharacter belongs to the current user
+        $nonPlayableCharacter = $this->NonPlayableCharacters->findById($id)->firstOrFail();
 
-    //     return $nonPlayableCharacter->user_id === $user['id'];
-    // }
+        return $nonPlayableCharacter->user_id === $user['id'];
+    }
 }

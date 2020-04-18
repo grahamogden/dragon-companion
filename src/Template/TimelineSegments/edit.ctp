@@ -6,44 +6,46 @@
 
 use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
-<h1>Edit Timeline Segment</h1>
-<div class="timelineSegments form large-9 medium-8 columns content">
+<h1><?= __('Edit Timeline Segment') ?></h1>
+<div class="timelineSegments form content">
     <?= $this->Form->create($timelineSegment); ?>
     <fieldset>
-        <!-- <legend><?= __('Edit Timeline Segment'); ?></legend> -->
-        <?php
-            echo $this->Form->control('parent_id', ['options' => $parentTimelineSegments, 'empty' => true]);
-            echo $this->Form->control('title');
-            // echo $this->Form->control('body');
-            echo $this->Form->control('body', [
-                'type'         => 'textareaeditor',
-                'val'          => dbConverter::fromDatabase($timelineSegment->body),
-                'spellcheck'   => 'true',
-                'id'   => $timelineSegment->id,
-            ]);
-            // echo $this->Form->control('tags._ids', ['options' => $tags]);
-            // echo $this->Form->input('tags._ids', ['class' => 'autocomplete autocomplete-tags']);
-            // echo $this->Form->control('tag_string', ['type' => 'text']);
-            echo $this->Form->control('tag_string', [
-                'label'  => 'Tag',
-                'type'   => 'autocomplete',
-                'source' => [
-                    'controller' => 'TimelineSegments',
-                    'action'     => 'getTags'],
-                'val'        => $timelineSegment->tag_string,
-                'spellcheck' => 'true',
-            ]);
-            echo $this->Form->control('non_playable_character_string', [
-                'label'  => 'Non-Playable Characters',
-                'type'   => 'autocomplete',
-                'source' => [
-                    'controller' => 'TimelineSegments',
-                    'action'     => 'getNonPlayableCharacters'],
-                'val'        => $timelineSegment->non_playable_character_string,
-                'spellcheck' => 'true',
-            ]);
-        ?>
+        <?= $this->Form->control('parent_id', [
+            'options' => $parentTimelineSegments,
+            'empty'   => true,
+            'class'   => ['form-control'],
+        ]) ?>
+        <?= $this->Form->control('title', ['class' => ['form-control']]) ?>
+<!--         <?= $this->Form->control('tag_string', [
+            'label'  => 'Tag',
+            'type'   => 'autocomplete',
+            'source' => [
+                'controller' => 'TimelineSegments',
+                'action'     => 'getTags'],
+            'val'        => $timelineSegment->tag_string,
+            'spellcheck' => 'true',
+        ]) ?>
+        <?= $this->Form->control('non_playable_character_string', [
+            'label'  => 'Non-Playable Characters',
+            'type'   => 'autocomplete',
+            'source' => [
+                'controller' => 'TimelineSegments',
+                'action'     => 'getNonPlayableCharacters'],
+            'val'        => $timelineSegment->non_playable_character_string,
+            'spellcheck' => 'true',
+        ]) ?> -->
+        <?= $this->Form->control('body', [
+            'type'         => 'textareaeditor',
+            'val'          => dbConverter::fromDatabase($timelineSegment->getBody()),
+            'spellcheck'   => 'true',
+            'id'           => $timelineSegment->getId(),
+            'class'        => ['form-control'],
+        ]) ?>
+        <div class="segment-row">
+            <h3>Child Timeline Segment Synopsis</h3>
+            <div><?= $childTimelineParts; ?></div>
+        </div>
+        <?= $this->Form->submit('Save', ['class' => ['btn','btn-lg','btn-block','btn-success']]); ?>
     </fieldset>
-    <?= $this->Form->submit(__('Save')); ?>
     <?= $this->Form->end(); ?>
 </div>

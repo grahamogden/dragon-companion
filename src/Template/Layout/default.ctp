@@ -14,14 +14,18 @@
  */
 
 $cakeDescription = 'CakePHP: the rapid development php framework';
+$bodyClasses = ['bg-light'];
+if ($this->request->getCookie('darkMode')) {
+    $bodyClasses[] = 'dark-mode';
+}
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <?= $this->element('head') ?>
-<body>
+<body class="<?= implode(' ', $bodyClasses); ?>">
     <?= $this->element('header') ?>
     <?= $this->Flash->render() ?>
-    <div class="container clearfix">
+    <div class="container bg-white content-container">
         <?= $this->fetch('content') ?>
     </div>
 <?= $this->element('footer') ?>

@@ -1,28 +1,31 @@
 <?php
 if (isset($breadcrumbs)) {
-    // $crumbs[] = [
-    //     'title' => 'Timeline Segments',
-    //     'url'   => [
-    //         'controller' => 'timeline-segments',
-    //         'action'     => 'index',
-    //     ]
-    // ];
+    $breadcrumbCounter = 0; // Must be set to 0 if there is no origin crumb (the above one)
 
-    $breadcrumbCounter = 0;
     foreach($breadcrumbs as $breadcrumb) {
+        if ($breadcrumbCounter === 0) {
+            $crumbs[] = [
+                'title' => 'Timeline Segments',
+                'url'   => [
+                    'campaignId' => $breadcrumb->campaign_id,
+                    '_name'      => 'TimelineSegmentsIndex',
+                ],
+            ];
+        }
         $breadcrumbCounter++;
         $crumbs[] = [
             'title' => $breadcrumb->getTitle(),
             'url'   => [
-                'controller' => 'timeline-segments',
+                'controller' => 'TimelineSegments',
                 'action'     => 'view',
-                $breadcrumb->getId(),
+                'campaignId' => $breadcrumb->campaign_id,
+                'id'         => $breadcrumb->getId(),
             ],
         ];
     }
 
     if ($this->request->getParam('action') !== 'edit') {
-        $crumbs[$breadcrumbCounter - 1]['url'] = '';
+        $crumbs[$breadcrumbCounter]['url'] = '';
     }
 
     $this->Breadcrumbs->add($crumbs);

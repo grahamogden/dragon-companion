@@ -47,6 +47,30 @@ use Cake\Routing\Route\DashedRoute;
 Router::defaultRouteClass(DashedRoute::class);
 
 Router::scope('/', function (RouteBuilder $routes) {
+
+    Router::prefix('api/v1', function (RouteBuilder $routes) {
+        $routes->setExtensions(['json']);
+        $routes->resources(
+            'CombatEncounters',
+            [
+                // 'actions' => [
+                //     'create' => 'apiAdd',
+                //     'read'   => 'apiView',
+                //     'update' => 'apiUpdate',
+                //     'delete' => 'apiDelete',
+                // ],
+                'path'    => 'combat-encounters'
+            ]
+        );
+        // $routes->connect(
+        //     '/combat-encounters',
+        //     [
+        //         'controller' => 'CombatEncounters',
+        //         'action' => 'add',
+        //         // 'prefix' => 'api',
+        //     ]);
+    });
+
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
@@ -57,17 +81,7 @@ Router::scope('/', function (RouteBuilder $routes) {
         [
             'controller' => 'Pages',
             'action' => 'display',
-            'home'
-    ]);
-
-    /**
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
-    $routes->connect(
-        '/pages/*',
-        [
-            'controller' => 'Pages',
-            'action' => 'display'
+            'home',
     ]);
 
     $routes->connect(
@@ -77,38 +91,142 @@ Router::scope('/', function (RouteBuilder $routes) {
     );
 
     $routes->connect(
+        '/users/register',
+        ['controller' => 'Users', 'action' => 'add'],
+        ['_name' => 'register']
+    );
+
+    $routes->connect(
         '/logout',
         ['controller' => 'Users', 'action' => 'logout'],
         ['_name' => 'logout']
     );
 
-    // $routes->connect(
-    //     'timeline-segments/reorder/:id',///:direction',
-    //     ['controller' => 'TimelineSegments', 'action' => 'reorder',])
-    //     ->setMethods(['POST'])
-    //     ->setPass(['id'])
-    //     ->setPatterns(['id' => '\d+']);
-    //     // ->setPatterns(['direction' => '(up|down)']);
-
-    // $routes->connect(
-    //     'timeline-segments/add/:parentId',///:direction',
-    //     ['controller' => 'TimelineSegments', 'action' => 'add',])
-    //     ->setMethods(['POST'])
-    //     ->setPass(['parentId'])
-    //     ->setPatterns(['parentId' => '\d+']);
-    //     // ->setPatterns(['direction' => '(up|down)']);
+    /**
+     * START Campaigns and Timeline Segments
+     */
 
     $routes->connect(
-        '/timeline-segments/:action/:id',
+        '/timeline-segments/delete/:id',
         [
-            'controller' => 'TimelineSegments'
-        ])
+            'action'     => 'delete',
+            'controller' => 'TimelineSegments',
+        ],
+        [
+            '_name' => 'TimelineSegmentsDelete',
+        ]
+    )
+        ->setMethods(['DELETE'])
+        ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
 
     $routes->connect(
-        '/tags/:action/',
-        ['controller' => 'Tags']
-    );
+        '/campaigns/{campaignId}/timeline-segments',
+        [
+            'action'     => 'index',
+            'controller' => 'TimelineSegments',
+        ],
+        [
+            '_name' => 'TimelineSegmentsIndex',
+        ]
+    )
+        ->setMethods(['GET'])
+        ->setPatterns(['campaignId' => '\d*'])
+        ->setPass(['campaignId']);
+
+    $routes->connect(
+        '/campaigns/{campaignId}/timeline-segments/{action}/{id}',
+        [
+            'controller' => 'TimelineSegments',
+        ],
+        [
+            '_name' => 'TimelineSegments',
+        ]
+    )
+        ->setPatterns(['campaignId' => '\d*'])
+        ->setPatterns(['id' => '\d*'])
+        ->setPass([
+            'campaignId',
+            'id'
+        ]);
+
+    $routes->connect(
+        '/campaigns/:action/:id',
+        [
+            'controller' => 'Campaigns',
+        ])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    /**
+     * END Campaigns and Timeline Segments
+     */
+
+    $routes->connect(
+        '/tags/:action/:id',
+        ['controller' => 'Tags'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/non-playable-characters/:action/:id',
+        ['controller' => 'NonPlayableCharacters'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/puzzles/:action/:id',
+        ['controller' => 'Puzzles'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/player-characters/:action/:id',
+        ['controller' => 'PlayerCharacters'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/character-classes/:action/:id',
+        ['controller' => 'CharactersClasses'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/character-races/:action/:id',
+        ['controller' => 'CharacterRaces'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/monsters/:action/:id',
+        ['controller' => 'Monsters'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/monster-instances/:action/:id',
+        ['controller' => 'MonsterInstances'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/combat-encounters/:action/:id',
+        ['controller' => 'CombatEncounters'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/clans/:action/:id',
+        ['controller' => 'Clans'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+
+    $routes->connect(
+        '/participants/:action/:id',
+        ['controller' => 'Participants'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
 
     /**
      * Connect catchall routes for all controllers.
@@ -129,7 +247,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
-Router::extensions('json');
+// Router::extensions('json');
 
 // New route we're adding for our tagged action.
 // The trailing `*` tells CakePHP that this action has

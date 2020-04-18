@@ -8,42 +8,57 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 ?>
 <h1><?= sprintf('%s Timeline Segment (%s)',
     h($timelineSegment->title),
-    $this->Html->link(__('Edit'), ['action' => 'edit', $timelineSegment->getId()])
-); ?></h1>
+    $this->Html->link(
+        __('Edit'),
+        [
+            'action'     => 'edit',
+            '_name'      => 'TimelineSegments',
+            'campaignId' => $timelineSegment->campaign_id,
+            'id'         => $timelineSegment->getId(),
+        ]
+    )
+    ); ?></h1>
 <div class="timelineSegments view columns content">
-    <!-- <div class="segment-row">
-        <h3><?= __('Created'); ?></h3>
-        <p class="item"><?= h($timelineSegment->created); ?></p>
-    </div> -->
     <div class="segment-row show-more-container">
         <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body)); ?></div>
     </div>
+    <hr>
+    <?php if ($childTimelineParts) { ?>
+        <div class="segment-row show-more-container">
+            <h2>Child Timeline Segment Synopsis</h2>
+            <div class="show-more-content"><?= $childTimelineParts; ?></div>
+        </div>
+    <?php } // endif; ?>
     <?php if (!empty($timelineSegment->tags)) { ?>
         <div class="segment-row">
-            <h3><?= __('Tags'); ?></h3>
-            <div class="tags-container">
-                <?php foreach ($timelineSegment->tags as $tags) { ?>
-                    <div class="tag">
-                        <?= $this->Form->postLink($tags->title, [
-                            'action' => 'removeTag',
+            <h2>Tags</h2>
+            <ul class="tags-container">
+                <?php foreach ($timelineSegment->tags as $tag) { ?>
+                    <li class="tag">
+                        <?= $this->Html->link($tag->title, [
+                            'action'     => 'view',
+                            'controller' => 'tags',
+                            $tag->id,
                         ], [
-                            'confirm' => 'Are you sure you want to remove this tag?',
+                            'target' => '_blank'
                         ]); ?>
-                    </div>
+                    </li>
                 <?php } // endforeach; ?>
-            </div>
+            </ul>
         </div>
     <?php } // endif; ?>
     <?php if (!empty($timelineSegment->non_playable_characters)) { ?>
         <div class="segment-row">
-            <h3><?= __('Non Playable Characters'); ?></h3>
+            <h2><?= __('Non Playable Characters'); ?></h2>
             <ul class="non-playable-characters-container">
-                <?php foreach ($timelineSegment->non_playable_characters as $nonPlayableCharacters) { ?>
+                <?php foreach ($timelineSegment->non_playable_characters as $nonPlayableCharacter) { ?>
                     <li class="non-playable-character">
-                        <?= $this->Form->postLink($nonPlayableCharacters->name, [
-                            'action' => 'removeNonPlayableCharacter',
+                        <?= $this->Html->link($nonPlayableCharacter->name, [
+                            'action'     => 'view',
+                            'controller' => 'NonPlayableCharacter',
+                            $nonPlayableCharacter->id,
                         ], [
-                            'confirm' => 'Are you sure you want to remove this NPC?',
+                            'target' => '_blank'
                         ]); ?>
                     </li>
                 <?php } // endforeach; ?>
@@ -52,8 +67,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
     <?php } // endif; ?>
 </div>
 <div class="related">
-    <h4><?= __('Child Timeline Segments'); ?></h4>
-    <table cellpadding="0" cellspacing="0" class="actions-table">
+    <h2>Child Timeline Segments</h2>
+    <table class="table timeline-segments">
         <tbody>
             <?= $this->element('child-timeline-segment-rows', [
                 'childTimelineSegments' => $timelineSegment->child_timeline_segments,
