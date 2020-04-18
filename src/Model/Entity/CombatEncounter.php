@@ -1,19 +1,21 @@
 <?php
+
 namespace App\Model\Entity;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
  * CombatEncounter Entity
  *
- * @property int $id
- * @property string|null $name
- * @property int $user_id
- * @property \Cake\I18n\FrozenTime $created
- * @property int $campaign_id
+ * @property int           $id
+ * @property string|null   $name
+ * @property int           $user_id
+ * @property FrozenTime    $created
+ * @property int           $campaign_id
  *
- * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\Participant[] $participants
+ * @property User          $user
+ * @property Participant[] $participants
  */
 class CombatEncounter extends Entity
 {
@@ -27,11 +29,11 @@ class CombatEncounter extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-        'user_id' => true,
-        'created' => true,
-        'campaign_id' => true,
-        'user' => true,
+        'name'         => true,
+        'user_id'      => true,
+        'created'      => true,
+        'campaign_id'  => true,
+        'user'         => true,
         'participants' => true,
     ];
 }

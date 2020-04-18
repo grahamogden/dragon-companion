@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,17 +7,17 @@ use Cake\ORM\Entity;
 /**
  * Participant Entity
  *
- * @property int $id
- * @property int $order
- * @property int $combat_encounter_id
- * @property float $starting_hit_points
- * @property float $current_hit_points
- * @property int $armour_class
+ * @property int               $id
+ * @property int               $order
+ * @property int               $combat_encounter_id
+ * @property float             $starting_hit_points
+ * @property float             $current_hit_points
+ * @property int               $armour_class
  *
- * @property \App\Model\Entity\CombatEncounter $combat_encounter
- * @property \App\Model\Entity\Condition[] $conditions
- * @property \App\Model\Entity\Monster[] $monsters
- * @property \App\Model\Entity\PlayerCharacter[] $player_characters
+ * @property CombatEncounter   $combat_encounter
+ * @property Condition[]       $conditions
+ * @property Monster[]         $monsters
+ * @property PlayerCharacter[] $player_characters
  */
 class Participant extends Entity
 {
@@ -30,7 +31,7 @@ class Participant extends Entity
      * @var array
      */
     protected $_accessible = [
-        'order'               => true,
+        'initiative'          => true,
         'combat_encounter_id' => true,
         'starting_hit_points' => true,
         'current_hit_points'  => true,

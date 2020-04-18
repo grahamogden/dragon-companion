@@ -2,11 +2,19 @@
 
 namespace App\Controller;
 
+use App\Model\Entity\CombatAction;
 use App\Model\Entity\CombatEncounter;
+use App\Model\Entity\Participant;
+use App\Model\Table\CombatActionsTable;
 use App\Model\Table\CombatEncountersTable;
+use App\Model\Table\ParticipantsTable;
+use Cake\Controller\ComponentRegistry;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
+use Cake\Event\EventManager;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest;
+use http\Exception\InvalidArgumentException;
 
 /**
  * CombatEncounters Controller
@@ -17,6 +25,42 @@ use Cake\Http\Response;
  */
 class CombatEncountersController extends AppController
 {
+    private const PARTICIPANT_TYPE_PLAYER_CHARACTER = 'PlayerCharacter';
+    private const PARTICIPANT_TYPE_MONSTER          = 'Monster';
+
+//    /** @var CombatActionsTable */
+//    private $CombatActions;
+//
+//    /** @var MonstersTable */
+//    private $Monsters;
+//
+//    /** @var ParticipantsTable */
+//    private $Participants;
+
+    /**
+     * CombatEncountersController constructor.
+     *
+     * @param ServerRequest|null     $request
+     * @param Response|null          $response
+     * @param string|null            $name
+     * @param EventManager|null      $eventManager
+     * @param ComponentRegistry|null $components
+     */
+    public function __construct(
+        ServerRequest $request = null,
+        Response $response = null,
+        $name = null,
+        $eventManager = null,
+        $components = null
+    ) {
+        parent::__construct($request, $response, $name, $eventManager, $components);
+
+        // Load in all necessary models
+        $this->loadModel('CombatActions');
+        $this->loadModel('Monsters');
+        $this->loadModel('Participants');
+    }
+
     /**
      * Index method
      *
@@ -75,17 +119,22 @@ class CombatEncountersController extends AppController
         $user            = $this->getUserOrRedirect();
 
         if ($this->request->is('post')) {
-            $data            = $this->request->getData();
-            $data['user_id'] = $user['id'];
-            debug($data);
+            [$validated, $newData] = $this->validateAndBlessData(
+                $this->request->getData(),
+                $user,
+                $combatEncounter
+            );
+            debug($newData);
             exit;
-            $combatEncounter = $this->CombatEncounters->patchEntity($combatEncounter, $data);
-            if ($this->CombatEncounters->save($combatEncounter)) {
-                $this->Flash->success(__('The combat encounter has been saved.'));
+            if ($validated) {
+                $combatEncounter = $this->CombatEncounters->patchEntity($combatEncounter, $newData);
+                if ($this->CombatEncounters->save($combatEncounter)) {
+                    $this->Flash->success(__('The combat encounter has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+                $this->Flash->error(__('The combat encounter could not be saved. Please, try again.'));
             }
-            $this->Flash->error(__('The combat encounter could not be saved. Please, try again.'));
         }
 
         $campaigns = $this->CombatEncounters->Campaigns
@@ -93,7 +142,6 @@ class CombatEncountersController extends AppController
             ->where(['user_id =' => $user['id']])
             ->order(['Campaigns.name ASC']);
 
-        $this->loadModel('CombatActions');
         $combatActions = $this->CombatActions
             ->find(
                 'list',
@@ -103,6 +151,7 @@ class CombatEncountersController extends AppController
                     'limit'      => 200,
                 ]
             )
+            ->where(['visible' => 1])
             ->order(['CombatActions.name ASC']);
 
         $this->set(
@@ -191,5 +240,162 @@ class CombatEncountersController extends AppController
 
         return $combatEncounters->user_id
                === $user['id'];
+    }
+
+    /**
+     * @param array           $data
+     * @param array           $user
+     * @param CombatEncounter $combatEncounter
+     *
+     * @return array
+     */
+    private function validateAndBlessData(array $data, array $user, CombatEncounter $combatEncounter): array
+    {
+        $campaign = $this->CombatEncounters->Campaigns
+            ->findById($data['campaign_id'])
+            ->contain(['PlayerCharacters'])
+            ->firstOrFail();
+
+        if ($campaign->user_id !== $user['id']) {
+            $errorMsg = __('Please select a campaign that you own.');
+            $combatEncounter->setError('campaign_id', $errorMsg);
+            $this->Flash->error(__('The combat encounter could not be saved. Please try again.'));
+            return [false];
+        }
+
+        $participantsData  = json_decode($data['participants'], true);
+        $monsterIdsToCheck = [];
+//        debug($participantsData);
+//        debug($campaign);
+//        debug($campaign->player_characters);
+//        debug(array_column($campaign->player_characters, 'id'));
+
+        foreach ($participantsData as $participantData) {
+            if ($participantData['participantType'] === self::PARTICIPANT_TYPE_PLAYER_CHARACTER) {
+                // If we have a player character,
+                if (!in_array(
+                    $participantData['id'],
+                    array_column($campaign->player_characters, 'id'),
+                    true
+                )) {
+                    $errorMsg = __(
+                        'Player Character is not in your campaign, please check your selected campaign and player characters'
+                    );
+                    $combatEncounter->setError('campaign_id', $errorMsg);
+                    $this->Flash->error(__('The combat encounter could not be saved. Please try again.'));
+                    return [false];
+                    break;
+                }
+            } elseif ($participantData['participantType'] === self::PARTICIPANT_TYPE_MONSTER) {
+                $monsterIdsToCheck[] = $participantData['id'];
+            } else {
+                $errorMsg = __('Participant is not a known type (Monster or Player Character)');
+                $combatEncounter->setError('participants', $errorMsg);
+                $this->Flash->error(__('The combat encounter could not be saved. Please try again.'));
+                return [false];
+                break;
+            }
+            unset($participantData);
+        }
+
+        // Remove duplicate monster IDs
+        $monsterIdsToCheck = array_unique($monsterIdsToCheck);
+
+        if (!empty($monsterIdsToCheck)) {
+            $monsters      = $this->Monsters->find()
+                ->where(['id IN' => $monsterIdsToCheck]);
+            $monstersCount = $monsters->count();
+
+            if ($monstersCount !== count($monsterIdsToCheck)) {
+                $errorMsg = __(
+                    'You have selected a monster that does not exist, please try adding the monster again'
+                );
+                $combatEncounter->setError('participants', $errorMsg);
+                $this->Flash->error(__('The combat encounter could not be saved. Please try again.'));
+                return [false];
+            }
+        }
+
+        $newData = [
+            'name'         => $data['name'],
+            'user_id'      => $user['id'],
+            'campaign_id'  => $data['campaign_id'],
+            'participants' => $this->getParticipantEntities($participantsData),
+        ];
+
+//        debug($newData);
+//        debug($participantsData);
+//        debug($combatEncounter->getErrors());
+//        exit;
+        return [true, $newData, $participantsData];
+    }
+
+    /**
+     * @param array $participantsData
+     *
+     * @return array
+     */
+    private function getParticipantEntities(
+        array $participantsData
+    ): array {
+        $participants = [];
+        foreach ($participantsData as $participantData) {
+//            $data = [
+//                'first_name' => 'Sally',
+//                'last_name' => 'Parker',
+//                'courses' => [
+//                    [
+//                        'id' => 10,
+//                        '_joinData' => [
+//                            'grade' => 80.12,
+//                            'days_attended' => 30
+//                        ]
+//                    ],
+//                    // Other courses.
+//                ]
+//            ];
+//            $student = $this->Students->newEntity($data, [
+//                'associated' => ['Courses._joinData']
+//            ]);
+
+            $formattedParticipantData = [
+                'initiative'          => $participantData['initiative'],
+                //                'combat_encounter_id' => 0,
+                /************* NEED TO ATTACH THIS TO THE COMBAT ENCOUNTER **********/
+                'starting_hit_points' => $participantData['startingHitPoints'],
+                'current_hit_points'  => $participantData['currentHitPoints'],
+                'armour_class'        => $participantData['armourClass'],
+                //                'combat_encounter'    => $combatEncounter,
+                //                'conditions'          =>
+                //                'monsters'            =>
+                //                'player_characters'   =>
+            ];
+
+            if ($participantData['participantType'] === self::PARTICIPANT_TYPE_PLAYER_CHARACTER) {
+                $formattedParticipantData['player_characters'] = [
+                    'id' => $participantData['id'],
+                ];
+            } elseif ($participantData['participantType'] === self::PARTICIPANT_TYPE_MONSTER) {
+                $formattedParticipantData['monsters'] = [
+                    'id'        => $participantData['id'],
+                    '_joinData' => ['name' => $participantData['name'],],
+                ];
+            } else {
+                throw new InvalidArgumentException('Participant type not known');
+            }
+
+            /** @var Participant $participant */
+            $participant = $this->Participants->newEntity(
+                $formattedParticipantData,
+                [
+                    'associated' => ['PlayerCharacters._joinData',],
+                ]
+            );
+
+//            $this->Participants->save($participant);
+            $participants[] = $participant;
+        }
+
+        return $participants;
     }
 }

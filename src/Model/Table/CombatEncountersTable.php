@@ -1,7 +1,12 @@
 <?php
+
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
+use App\Model\Entity\CombatEncounter;
+use Cake\Datasource\EntityInterface;
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Association\HasMany;
+use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -9,20 +14,20 @@ use Cake\Validation\Validator;
 /**
  * CombatEncounters Model
  *
- * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @property &\Cake\ORM\Association\BelongsTo $Campaigns
- * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\HasMany $Participants
+ * @property UsersTable&BelongsTo      $Users
+ * @property CampaignsTable&BelongsTo  $Campaigns
+ * @property ParticipantsTable&HasMany $Participants
  *
- * @method \App\Model\Entity\CombatEncounter get($primaryKey, $options = [])
- * @method \App\Model\Entity\CombatEncounter newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\CombatEncounter[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\CombatEncounter|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CombatEncounter saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\CombatEncounter patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\CombatEncounter[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\CombatEncounter findOrCreate($search, callable $callback = null, $options = [])
+ * @method CombatEncounter get($primaryKey, $options = [])
+ * @method CombatEncounter newEntity($data = null, array $options = [])
+ * @method CombatEncounter[] newEntities(array $data, array $options = [])
+ * @method CombatEncounter|false save(EntityInterface $entity, $options = [])
+ * @method CombatEncounter saveOrFail(EntityInterface $entity, $options = [])
+ * @method CombatEncounter patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method CombatEncounter[] patchEntities($entities, array $data, array $options = [])
+ * @method CombatEncounter findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin TimestampBehavior
  */
 class CombatEncountersTable extends Table
 {
@@ -30,6 +35,7 @@ class CombatEncountersTable extends Table
      * Initialize method
      *
      * @param array $config The configuration for the Table.
+     *
      * @return void
      */
     public function initialize(array $config)
@@ -42,24 +48,34 @@ class CombatEncountersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-            'joinType'   => 'INNER',
-        ]);
-        $this->belongsTo('Campaigns', [
-            'foreignKey' => 'campaign_id',
-            'joinType'   => 'INNER',
-        ]);
-        $this->hasMany('Participants', [
-            'foreignKey' => 'combat_encounter_id',
-        ]);
+        $this->belongsTo(
+            'Users',
+            [
+                'foreignKey' => 'user_id',
+                'joinType'   => 'INNER',
+            ]
+        );
+        $this->belongsTo(
+            'Campaigns',
+            [
+                'foreignKey' => 'campaign_id',
+                'joinType'   => 'INNER',
+            ]
+        );
+        $this->hasMany(
+            'Participants',
+            [
+                'foreignKey' => 'combat_encounter_id',
+            ]
+        );
     }
 
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     *
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -72,6 +88,10 @@ class CombatEncountersTable extends Table
             ->maxLength('name', 250)
             ->allowEmptyString('name');
 
+        $validator
+            ->nonNegativeInteger('campaign_id')
+            ->requirePresence('campaign_id');
+
         return $validator;
     }
 
@@ -79,8 +99,9 @@ class CombatEncountersTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     *
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {

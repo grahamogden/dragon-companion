@@ -40,18 +40,18 @@ use \App\View\Widget\AutocompleteToTableWidget;
             </div>
             <div class="col-md-6 order-md-1">
                 <?= $this->Form->button(
-            __('Next step'),
-            [
-                'class' => [
-                    'btn',
-                    'btn-lg',
-                    'btn-block',
-                    'btn-success',
-                    'next-step',
-                ],
-                'type'  => 'button',
-            ]
-        ) ?>
+                    __('Next step'),
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-lg',
+                            'btn-block',
+                            'btn-success',
+                            'next-step',
+                        ],
+                        'type'  => 'button',
+                    ]
+                ) ?>
             </div>
         </div>
     </fieldset>
@@ -142,7 +142,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
         <?= $this->Form->control(
             'participants',
             [
-                'type' => 'textarea',
+                'type' => 'hidden',
             ]
         ) ?>
         <div class="row form-group" role="group" aria-label="">
@@ -179,7 +179,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
             </div>
         </div>
     </fieldset>
-    <div id="combat-encounters-combat" class="combat-encounter-fieldset">
+    <fieldset id="combat-encounters-combat" class="combat-encounter-fieldset">
         <legend>4. Battle</legend>
         <table id="combat-table" class="table table-hover">
             <thead>
@@ -203,16 +203,16 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 'options' => [],
             ]
         ) ?>
+        <?= $this->Form->control(
+            'combat-actions',
+            [
+                'label'   => __('Is doing'),
+                'class'   => ['form-control',],
+                'options' => $combatActions,
+            ]
+        ) ?>
         <div class="combat-encounter-action-container">
             <div class="combat-encounter-action">
-                <?= $this->Form->control(
-                    'combat-actions',
-                    [
-                        'label'   => __('Is doing'),
-                        'class'   => ['form-control',],
-                        'options' => $combatActions,
-                    ]
-                ) ?>
                 <?= $this->Form->control(
                     'target-participant',
                     [
@@ -254,27 +254,50 @@ use \App\View\Widget\AutocompleteToTableWidget;
             </div>
         </div>
         <div class="row form-group" role="group" aria-label="">
-            <div class="col-md-6 order-md-2">
-                <?= $this->Form->button(
-                    'End turn',
-                    [
-                        'class' => ['btn', 'btn-sm', 'btn-outline-primary', 'btn-block', 'col-6'],
-                        'type'  => 'button',
-                    ]
-                ) ?>
-            </div>
-            <div class="col-md-6 order-md-1">
+            <div class="col-12">
                 <?= $this->Form->button(
                     'Add another action/target',
                     [
-                        'class' => ['btn', 'btn-sm', 'btn-outline-primary', 'btn-block', 'col-6'],
+                        'class' => ['btn', 'btn-sm', 'btn-outline-primary',],
                         'type'  => 'button',
+                        'id'    => 'add-another-target',
                     ]
                 ) ?>
             </div>
         </div>
-        <div class="row">
-            <?= $this->Form->control(
+        <div class="row form-group">
+            <div class="col-md-6">
+                <?= $this->Form->button(
+                    'End turn',
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-sm',
+                            'btn-block',
+                            'btn-outline-primary',
+                        ],
+                        'type'  => 'button',
+                        'id'    => 'end-of-turn',
+                    ]
+                ) ?>
+            </div>
+            <div class="col-md-6">
+                <?= $this->Form->button(
+                    'Round completed',
+                    [
+                        'class' => [
+                            'btn',
+                            'btn-sm',
+                            'btn-block',
+                            'btn-outline-primary',
+                        ],
+                        'type'  => 'button',
+                        'id'    => 'end-of-round',
+                    ]
+                ) ?>
+            </div>
+        </div>
+        <?= $this->Form->control(
             'turns',
             [
                 'class' => ['form-control',],
@@ -282,7 +305,6 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 'readonly',
             ]
         ) ?>
-        </div>
         <div class="row form-group" role="group" aria-label="">
             <div class="col-md-6 order-md-2">
                 <?= $this->Form->submit(

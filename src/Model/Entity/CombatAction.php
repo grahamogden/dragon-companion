@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,11 +7,11 @@ use Cake\ORM\Entity;
 /**
  * CombatAction Entity
  *
- * @property int $id
- * @property string|null $name
- * @property string|null $description
+ * @property int          $id
+ * @property string|null  $name
+ * @property string|null  $description
  *
- * @property \App\Model\Entity\CombatTurn[] $combat_turns
+ * @property CombatTurn[] $combat_turns
  */
 class CombatAction extends Entity
 {
