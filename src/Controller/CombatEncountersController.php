@@ -391,11 +391,17 @@ class CombatEncountersController extends AppController
         return $participants;
     }
 
+    /**
+     * @param array $combatTurnsData
+     * @param       $combatEncounter
+     * @param       $participantEntities
+     * @param array $combatActions
+     */
     private function saveCombatTurns(
         array $combatTurnsData,
         $combatEncounter,
         $participantEntities,
-        CombatActionsTable $combatActions
+        array $combatActions
     ): void {
         $participantEntitiesMapped = [];
 
@@ -432,7 +438,9 @@ class CombatEncountersController extends AppController
             $combatTurnsSaveResult = $this->CombatTurns->saveMany($combatTurns);
 
             if (!$combatTurnsSaveResult) {
-                $this->Flash->error('The combat turn data could not be saved, but the combat encounter itself has been. Apologies, but you will need to re-enter the combat turns again.');
+                $this->Flash->error(
+                    'The combat turn data could not be saved, but the combat encounter itself has been. Apologies, but you will need to re-enter the combat turns again.'
+                );
             }
         } catch (Exception $e) {
             debug($e);
