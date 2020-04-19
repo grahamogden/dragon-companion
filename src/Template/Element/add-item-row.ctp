@@ -5,7 +5,7 @@
                 __('New Timeline Segment'),
                 [
                     'action'     => 'add',
-                    '_name'      => 'TimelineSegments',
+                    '_name'      => 'TimelineSegmentsId',
                     'campaignId' => $this->request->getParam('campaignId'),
                     'id'         => $timelineSegment->id ?? null,
                 ]

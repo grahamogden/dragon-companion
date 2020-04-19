@@ -8,6 +8,7 @@ use App\Model\Entity\TimelineSegment as TimelineSegmentEntity;
 use App\Model\Table\TimelineSegmentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Routing\Router;
 use Cake\Http\Response;
@@ -134,14 +135,26 @@ class TimelineSegmentsController extends AppController
     /**
      * Add method
      *
+     * @param int|null $campaignId
+     * @param int||string|null $parentId
+     *
      * @return Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add(?int $campaignId = null, $parentId = null)
     {
         $timelineSegment = $this->TimelineSegments->newEntity();
         if ($this->request->is('post')) {
-            $data                = $this->request->getData();
-            $data['campaign_id'] = $this->TimelineSegments->findById($data['parent_id'])->firstOrFail()->campaign_id;
+            $data = $this->request->getData();
+            if ($data['parent_id']) {
+                $data['campaign_id'] = $this->TimelineSegments
+                    ->findById($data['parent_id'])
+                    ->firstOrFail()
+                    ->campaign_id;
+            } elseif ($campaignId) {
+                $data['campaign_id'] = $campaignId;
+            } else {
+                throw new BadRequestException('Please provide the ID for a campaign.');
+            }
 
             $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $data);
             // Set the user ID on the item
@@ -150,7 +163,10 @@ class TimelineSegmentsController extends AppController
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->generateReturnUrl($timelineSegment);
+                return $this->generateReturnUrl(
+                    $timelineSegment->campaign_id,
+                    $timelineSegment->parent_id
+                );
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
@@ -202,12 +218,12 @@ class TimelineSegmentsController extends AppController
     /**
      * Edit method
      *
+     * @param int $campaignId
      * @param int $id Timeline Segment id.
      *
-     * @return Response|null Redirects on successful edit, renders view otherwise.
-     * @throws NotFoundException When record not found.
+     * @return Response|void Redirects on successful edit, renders view otherwise.
      */
-    public function edit(int $id = null)
+    public function edit(int $campaignId, ?int $id = null)
     {
         $timelineSegment = $this->TimelineSegments->get(
             $id,
@@ -233,7 +249,10 @@ class TimelineSegmentsController extends AppController
             if ($this->TimelineSegments->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->generateReturnUrl($timelineSegment);
+                return $this->generateReturnUrl(
+                    $timelineSegment->campaign_id,
+                    $timelineSegment->parent_id
+                );
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
@@ -288,15 +307,18 @@ class TimelineSegmentsController extends AppController
      *
      * @param int $id Timeline Segment id.
      *
-     * @return Response|null Redirects to index.
+     * @return Response Redirects to index or to the view for the parent.
      * @throws RecordNotFoundException When record not found.
      */
-    public function delete(int $id = null)
+    public function delete(int $id = null): Response
     {
         $this->request->allowMethod(['post', 'delete']);
         $timelineSegment = $this->TimelineSegments->get($id);
 
-        $url = $this->generateReturnUrl($timelineSegment);
+//        $url = $this->generateReturnUrl($timelineSegment);
+
+        $campaignId = $timelineSegment->campaign_id;
+        $parentId   = $timelineSegment->parent_id;
 
         if ($this->TimelineSegments->delete($timelineSegment)) {
             $this->Flash->success(__('The timeline segment, {0}, has been deleted.', $timelineSegment->title));
@@ -304,11 +326,16 @@ class TimelineSegmentsController extends AppController
             $this->Flash->error(__('The timeline segment could not be deleted. Please, try again.'));
         }
 
-        if ($timelineSegment->parent_id) {
-            return $url;
+        if ($parentId) {
+            return $this->generateReturnUrl($campaignId, $parentId);
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(
+            [
+                '_name'      => 'TimelineSegments',
+                'campaignId' => $campaignId,
+            ]
+        );
     }
 
     /**
@@ -353,20 +380,22 @@ class TimelineSegmentsController extends AppController
     /**
      * Generates the URL for returning the user after saving
      *
-     * @param TimelineSegmentEntity $timelineSegment [description]
+     * @param int      $campaignId
+     * @param int|null $parentId
      *
-     * @return string
+     * @return Response
      */
-    private function generateReturnUrl(TimelineSegmentEntity $timelineSegment): Response
+    private function generateReturnUrl(int $campaignId, ?int $parentId): Response
     {
         $urlParams = [
             '_name'      => 'TimelineSegments',
-            'campaignId' => $timelineSegment->campaign_id,
+            'campaignId' => $campaignId,
         ];
 
-        if ($timelineSegment['parent_id']) {
+        if ($parentId) {
+            $urlParams['_name']  = 'TimelineSegmentsId';
             $urlParams['action'] = 'view';
-            $urlParams['id']     = $timelineSegment->parent_id;
+            $urlParams['id']     = $parentId;
         } else {
             $urlParams['action'] = 'index';
         }

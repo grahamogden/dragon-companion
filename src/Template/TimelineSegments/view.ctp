@@ -12,7 +12,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
         __('Edit'),
         [
             'action'     => 'edit',
-            '_name'      => 'TimelineSegments',
+            '_name'      => 'TimelineSegmentsId',
             'campaignId' => $timelineSegment->campaign_id,
             'id'         => $timelineSegment->getId(),
         ]
