@@ -16,7 +16,7 @@ if (isset($breadcrumbs)) {
         $crumbs[] = [
             'title' => $breadcrumb->getTitle(),
             'url'   => [
-                'controller' => 'TimelineSegmentsId',
+                'controller' => 'TimelineSegments',
                 'action'     => 'view',
                 'campaignId' => $breadcrumb->campaign_id,
                 'id'         => $breadcrumb->getId(),
