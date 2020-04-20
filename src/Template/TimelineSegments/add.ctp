@@ -1,8 +1,15 @@
 <?php
+
+use App\Model\Entity\TimelineSegment;
+use App\View\AppView;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\TimelineSegment $timelineSegment
+ * @var AppView $this
+ * @var TimelineSegment $timelineSegment
+ * @var array $parentTimelineSegments
+ * @var array $childTimelineParts
  */
+
 ?>
 <h1><?= __('Add Timeline Segment') ?></h1>
 <div class="timelineSegments form content">
@@ -16,9 +23,12 @@
         ]) ?>
         <?= $this->Form->control('title', ['class'   => ['form-control']]) ?>
         <?= $this->Form->control('body', [
-            'type'         => 'textareaeditor',
+            'type'         => 'textarea-editor',
             'spellcheck'   => 'true',
             'class'   => ['form-control'],
+            'templates' => [
+                'formGroup' => '<div class="col-12">{{label}}</div><div class="col-12">{{input}}</div>',
+            ],
         ]) ?>
 <!--         <?= $this->Form->control('tag_string', [
             'label'  => 'Tag',

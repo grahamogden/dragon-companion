@@ -62,7 +62,8 @@ return [
     // Textarea input element,
     'textarea'              => '<div class="input row ml-0 mr-0"><textarea name="{{name}}"{{attrs}}>{{value}}</textarea></div>',
     // Container for submit buttons.
-    'submitContainer'       => '{{content}}',//'<div class="submit">{{content}}</div>',
+    'submitContainer'       => '{{content}}',
+    //'<div class="submit">{{content}}</div>',
     /********************
      * CUSTOM TEMPLATES *
      ********************/
@@ -91,8 +92,11 @@ return [
                 </tbody>
             </table>
         </div>',
-    'textareaeditor'        => '<div class="textarea-editor"><textarea id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor-content {{class}}" {{attrs}}>{{value}}</textarea></div>',
-    // 'textareaeditor'  => '
+    'textarea-editor'       => '
+        <div class="textarea-editor">
+            <textarea id="textarea-editor-input-{{name}}" name="{{name}}" class="textarea-editor-content {{class}}" {{attrs}}>{{value}}</textarea>
+        </div>',
+    // 'textarea-editor'  => '
     // <div id="textarea-editor-{{name}}" class="textarea-editor" data-name="{{name}}" data-id="{{id}}">
     //     <div class="textarea-editor-toolbar sticky-element">
     //         <i class="icon icon-undo" title="Undo"></i><i class="icon icon-redo" title="Redo"></i><i class="icon icon-bold" title="Bold"></i><i class="icon icon-italic" title="Italic"></i><i class="icon icon-underline" title="Underline"></i><i class="icon icon-strikethrough" title="Strikethrough"></i><i class="icon icon-ol" title="Numbered list"></i><i class="icon icon-ul" title="Dotted list"></i><i class="icon icon-unindent" title="Delete indentation"></i><i class="icon icon-indent" title="Add indentation"></i><i class="icon icon-hr" title="Add horizontal line rule"></i><i class="icon icon-table" title="Add table"></i><i class="icon icon-add-row"></i><i class="icon icon-add-column"></i><i class="icon icon-restore" title="Open autosave"></i><i class="icon icon-full-screen" title="Full screen"></i><i class="icon icon-auto-height" title="Auto height"></i>
