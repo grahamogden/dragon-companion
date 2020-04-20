@@ -47,9 +47,6 @@ $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
                                 <?= $this->Html->link('Monsters', ['controller' => 'Monsters', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                             </li>
                             <li class="nav-item">
-                                <?= $this->Html->link('Named Monsters', ['controller' => 'MonsterInstances', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
-                            </li>
-                            <li class="nav-item">
                                 <?= $this->Html->link('Tags', ['controller' => 'Tags', 'action' => 'index'], ['class' => 'dropdown-link nav-link text-center']); ?>
                             </li>
                         </ul>
