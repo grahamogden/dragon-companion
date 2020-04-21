@@ -1,22 +1,29 @@
 <?php
+
 namespace App\Controller;
 
-use App\Controller\AppController;
+use App\Model\Entity\Tag;
+use App\Model\Table\TagsTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Response;
+use Cake\Network\Exception\NotFoundException;
+use Exception;
 
 /**
  * Tags Controller
  *
- * @property \App\Model\Table\TagsTable $Tags
+ * @property TagsTable $Tags
  *
- * @method \App\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method Tag[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class TagsController extends AppController
 {
-    const CONTROLLER_NAME = 'Tags';
+    private const CONTROLLER_NAME = 'Tags';
     public $paginate = [
-        'limit' => 50,
-        'order' => [
-            'Tags.title' => 'asc'
+        'limit'         => 50,
+        'order'         => [
+            'Tags.title' => 'asc',
         ],
         'sortWhitelist' => [
             'Tags.title',
@@ -24,22 +31,9 @@ class TagsController extends AppController
     ];
 
     /**
-     * Initialises the class, including authentication
-     * 
-     * @return void
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-
-        $this->loadComponent('Paginator');
-        $this->loadComponent('Flash');
-    }
-
-    /**
      * Index method
      *
-     * @return \Cake\Http\Response|void
+     * @return Response|void
      */
     public function index()
     {
@@ -47,7 +41,7 @@ class TagsController extends AppController
 
         $tags = $this->Tags
             ->find()
-            ->where(['tags.user_id =' => $user['id']]);
+            ->where(['Tags.user_id =' => $user['id']]);
 
         $tags = $this->paginate($tags);
 
@@ -59,27 +53,34 @@ class TagsController extends AppController
      * View method
      *
      * @param string|null $id Tag id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|void
+     * @throws RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $tag = $this->Tags->get($id, [
-            'contain' => ['TimelineSegments']
-        ]);
+        $tag = $this->Tags->get(
+            $id,
+            [
+                'contain' => ['TimelineSegments'],
+            ]
+        );
 
         $this->set('tag', $tag);
-        $this->set('title', sprintf(
-            'View %s - %s',
-            self::CONTROLLER_NAME,
-            $tag->title
-        ));
+        $this->set(
+            'title',
+            sprintf(
+                'View %s - %s',
+                self::CONTROLLER_NAME,
+                $tag->title
+            )
+        );
     }
 
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return Response|null Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -96,25 +97,32 @@ class TagsController extends AppController
         $timelineSegments = $this->Tags->TimelineSegments->find('list', ['limit' => 200]);
 
         $this->set(compact('tag', 'timelineSegments'));
-        $this->set('title', sprintf(
-            'Add %s - %s',
-            self::CONTROLLER_NAME,
-            $tag->title
-        ));
+        $this->set(
+            'title',
+            sprintf(
+                'Add %s - %s',
+                self::CONTROLLER_NAME,
+                $tag->title
+            )
+        );
     }
 
     /**
      * Edit method
      *
      * @param string|null $id Tag id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     *
+     * @return Response|null Redirects on successful edit, renders view otherwise.
+     * @throws NotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $tag = $this->Tags->get($id, [
-            'contain' => ['TimelineSegments']
-        ]);
+        $tag = $this->Tags->get(
+            $id,
+            [
+                'contain' => ['TimelineSegments'],
+            ]
+        );
         if ($this->request->is(['patch', 'post', 'put'])) {
             $tag = $this->Tags->patchEntity($tag, $this->request->getData());
             if ($this->Tags->save($tag)) {
@@ -127,19 +135,23 @@ class TagsController extends AppController
         $timelineSegments = $this->Tags->TimelineSegments->find('list', ['limit' => 200]);
 
         $this->set(compact('tag', 'timelineSegments'));
-        $this->set('title', sprintf(
-            'Edit %s - %s',
-            self::CONTROLLER_NAME,
-            $tag->title
-        ));
+        $this->set(
+            'title',
+            sprintf(
+                'Edit %s - %s',
+                self::CONTROLLER_NAME,
+                $tag->title
+            )
+        );
     }
 
     /**
      * Delete method
      *
      * @param string|null $id Tag id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|null Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -156,9 +168,9 @@ class TagsController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool
@@ -167,10 +179,13 @@ class TagsController extends AppController
 
         // The add and tags actions are always allowed to logged in users
         if (
-            in_array($action, [
-            'add',
-            'index',
-        ])) {
+        in_array(
+            $action,
+            [
+                'add',
+                'index',
+            ]
+        )) {
             return true;
         }
 

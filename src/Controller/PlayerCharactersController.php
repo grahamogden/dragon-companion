@@ -1,14 +1,16 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
+use App\Model\Entity\PlayerCharacter;
+use App\Model\Table\PlayerCharactersTable;
+use Cake\Datasource\ResultSetInterface;
 
 /**
  * PlayerCharacters Controller
  *
- * @property \App\Model\Table\PlayerCharactersTable $PlayerCharacters
+ * @property PlayerCharactersTable $PlayerCharacters
  *
- * @method \App\Model\Entity\PlayerCharacter[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method PlayerCharacter[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class PlayerCharactersController extends AppController
 {
