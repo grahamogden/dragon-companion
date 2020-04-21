@@ -1,7 +1,13 @@
 <?php
+
+use App\Model\Entity\Monster;
+use App\View\AppView;
+use Cake\Collection\CollectionInterface;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Monster[]|\Cake\Collection\CollectionInterface $monsters
+ * @var AppView                       $this
+ * @var Monster[]|CollectionInterface $monsters
+ * @var array                         $user
  */
 ?>
 <div class="monsters index content">
@@ -10,36 +16,59 @@
         <?= $this->Html->link(
             __('New Monster'),
             [
-                'action' => 'add'
+                'action' => 'add',
             ],
             [
                 'class' => [
                     'btn',
-                    'btn-outline-success'
-                ]
+                    'btn-outline-success',
+                ],
             ]
         ) ?>
     </div>
     <table class="table table-hover">
         <thead>
-            <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('name') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
+        <tr>
+            <th scope="col"><?= $this->Paginator->sort('name') ?></th>
+            <th scope="col"><?= __('Instance') ?></th>
+            <th scope="col"><?= __('Visibility') ?></th>
+            <th scope="col" class="actions"><?= __('Actions') ?></th>
+        </tr>
         </thead>
         <tbody>
-            <?php foreach ($monsters as $monster): ?>
+        <?php foreach ($monsters as $monster): ?>
             <tr>
-                <td><?= $this->Number->format($monster->id) ?></td>
-                <td><?= h($monster->name) ?></td>
+                <td><?= $this->Html->link(h($monster->name), ['action' => 'view', $monster->id]) ?></td>
+                <td><?= __($monster->monster_instance_type->name) ?></td>
+                <td><?= ucfirst(strtolower(h($monster->visibility))) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $monster->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $monster->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $monster->id], ['confirm' => __('Are you sure you want to delete # {0}?', $monster->id)]) ?>
+                    <?= $monster->user_id === $user['id'] ? $this->Html->link(
+                        __('Edit'),
+                        ['action' => 'edit', $monster->id],
+                        [
+                            'class' => [
+                                'btn',
+                                'btn-outline-primary',
+                            ],
+                        ]
+                    ) : '' ?>
+                    <?= $monster->user_id === $user['id'] ? $this->Form->postLink(
+                        __('Delete'),
+                        ['action' => 'delete', $monster->id],
+                        [
+                            'class'   => [
+                                'btn',
+                                'btn-outline-danger',
+                            ],
+                            'confirm' => __(
+                                'Are you sure you want to delete # {0}?',
+                                $monster->id
+                            ),
+                        ]
+                    ) : '' ?>
                 </td>
             </tr>
-            <?php endforeach; ?>
+        <?php endforeach; ?>
         </tbody>
     </table>
     <?= $this->element('pagination') ?>

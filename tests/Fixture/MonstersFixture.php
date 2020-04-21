@@ -24,6 +24,7 @@ class MonstersFixture extends TestFixture
         'armour_class' => ['type' => 'integer', 'length' => 3, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'dexterity_modifier' => ['type' => 'integer', 'length' => 3, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'monster_instance_type_id' => ['type' => 'integer', 'length' => 3, 'unsigned' => true, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'visibility' => ['type' => 'string', 'length' => null, 'null' => false, 'default' => 'PRIVATE', 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         '_indexes' => [
             'data_source_id' => ['type' => 'index', 'columns' => ['data_source_id'], 'length' => []],
             'user_id' => ['type' => 'index', 'columns' => ['user_id'], 'length' => []],
@@ -57,6 +58,7 @@ class MonstersFixture extends TestFixture
                 'armour_class' => 1,
                 'dexterity_modifier' => 1,
                 'monster_instance_type_id' => 1,
+                'visibility' => 'Lorem ipsum dolor sit amet',
             ],
         ];
         parent::init();

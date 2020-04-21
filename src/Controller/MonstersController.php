@@ -19,6 +19,15 @@ use Cake\Network\Exception\NotFoundException;
  */
 class MonstersController extends AppController
 {
+    public $paginate = [
+        'limit' => 50,
+        'order' => [
+            'name' => 'asc'
+        ],
+        'sortWhitelist' => [
+            'name',
+        ],
+    ];
 
     /**
      * Index method
@@ -27,9 +36,26 @@ class MonstersController extends AppController
      */
     public function index()
     {
-        $monsters = $this->paginate($this->Monsters);
+        $user = $this->getUserOrRedirect();
 
-        $this->set(compact('monsters'));
+        $monsters = $this->Monsters->find()
+            ->where(
+                [
+                    'OR' => [
+                        'visibility' => 'public',
+                        [
+                            'visibility' => 'private',
+                            'user_id'    => $user['id'],
+                        ],
+                    ],
+                ]
+            )
+            ->contain(['MonsterInstanceTypes']);
+
+        $monstersPaginated = $this->paginate($monsters);
+
+        $this->set('monsters', $monstersPaginated);
+        $this->set(compact('user'));
     }
 
     /**
@@ -172,6 +198,6 @@ class MonstersController extends AppController
         // Check that the monsters belongs to the current user
         $monsters = $this->Monsters->findById($id)->firstOrFail();
 
-        return $monsters->user_id === $user['id'];
+        return $monsters->user_id === $user['id'] && $monsters->visibility === Monster::VISIBILITY_PRIVATE;
     }
 }

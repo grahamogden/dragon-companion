@@ -33,7 +33,6 @@ class MonstersTable extends Table
      * Initialize method
      *
      * @param array $config The configuration for the Table.
-     *
      * @return void
      */
     public function initialize(array $config)
@@ -110,6 +109,10 @@ class MonstersTable extends Table
             ->integer('dexterity_modifier')
             ->requirePresence('dexterity_modifier', 'create')
             ->notEmptyString('dexterity_modifier');
+
+        $validator
+            ->scalar('visibility')
+            ->notEmptyString('visibility');
 
         return $validator;
     }

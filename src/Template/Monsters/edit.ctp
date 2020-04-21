@@ -5,12 +5,14 @@
  * @var array $monsterInstanceTypes
  * @var array $dataSources
  */
-?>
+
+use App\Model\Entity\Monster; ?>
 <div class="monsters form content">
     <h1>Edit Monster - <?= $monster->name ?></h1>
     <?= $this->Form->create($monster) ?>
         <fieldset>
             <?= $this->Form->control('name', ['class' => 'form-control',]) ?>
+            <?= $this->Form->control('visibility', ['class' => 'form-control', 'options' => [Monster::VISIBILITY_PUBLIC => 'Public', Monster::VISIBILITY_PRIVATE => 'Private'],]) ?>
             <?= $this->Form->control('max_hit_points', ['class' => 'form-control',]) ?>
             <?= $this->Form->control('armour_class', ['class' => 'form-control',]) ?>
             <?= $this->Form->control('dexterity_modifier', ['class' => 'form-control',]) ?>
