@@ -22,7 +22,7 @@ use App\View\AppView;
             'class'   => ['form-control'],
         ]) ?>
         <?= $this->Form->control('title', ['class' => ['form-control']]) ?>
-<!--         <?= $this->Form->control('tag_string', [
+        <?php /*= $this->Form->control('tag_string', [
             'label'  => 'Tag',
             'type'   => 'autocomplete',
             'source' => [
@@ -39,7 +39,7 @@ use App\View\AppView;
                 'action'     => 'getNonPlayableCharacters'],
             'val'        => $timelineSegment->non_playable_character_string,
             'spellcheck' => 'true',
-        ]) ?> -->
+        ])*/ ?>
         <?= $this->Form->control('body', [
             'type'         => 'textarea-editor',
             'val'          => dbConverter::fromDatabase($timelineSegment->getBody()),
