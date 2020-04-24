@@ -51,7 +51,7 @@ jQuery(function ($) {
                 .parent()
                 .addClass('active')
                 .append(
-                    '<a class="show-more-link"><span class="show">show</span><span class="hide">hide</span> more</a>'
+                    '<a class="show-more-link text-secondary"><span class="show">show</span><span class="hide">hide</span> more</a>'
                 );
         }
     });

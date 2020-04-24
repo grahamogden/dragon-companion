@@ -14,7 +14,7 @@
  */
 
 $cakeDescription = 'CakePHP: the rapid development php framework';
-$bodyClasses = ['bg-light'];
+$bodyClasses = ['bg-secondary'];
 if ($this->request->getCookie('darkMode')) {
     $bodyClasses[] = 'dark-mode';
 }

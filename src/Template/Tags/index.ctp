@@ -7,7 +7,7 @@
 <div class="tags index content">
     <h1>Tags</h1>
     <div class="form-group">
-        <?= $this->Html->link(__('New Tag'), ['action' => 'add'], ['class' => ['btn', 'btn-outline-success']]); ?>
+        <a href="<?= $this->Url->build(['action' => 'add']) ?>" class="btn btn-outline-success"><i class="fa fa-plus"></i><?= __('New Tag') ?></a>
     </div>
     <table class="table table-hover">
         <thead>

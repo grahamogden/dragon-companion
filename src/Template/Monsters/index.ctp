@@ -13,18 +13,9 @@ use Cake\Collection\CollectionInterface;
 <div class="monsters index content">
     <h1><?= __('Monsters') ?></h1>
     <div class="form-group">
-        <?= $this->Html->link(
-            __('New Monster'),
-            [
-                'action' => 'add',
-            ],
-            [
-                'class' => [
-                    'btn',
-                    'btn-outline-success',
-                ],
-            ]
-        ) ?>
+        <a href="<?= $this->Url->build(
+            ['action' => 'add']
+        ) ?>" class="btn btn-outline-success"><i class="fa fa-plus"></i><?= __('New Monster') ?></a>
     </div>
     <table class="table table-hover">
         <thead>
@@ -42,7 +33,9 @@ use Cake\Collection\CollectionInterface;
                 <td><?= __($monster->monster_instance_type->name) ?></td>
                 <td><?= ucfirst(strtolower(h($monster->visibility))) ?></td>
                 <td class="actions">
-                    <?= $monster->user_id === $user['id'] ? $this->Html->link(
+                    <?=
+                    $monster->user_id === $user['id']
+                        ? $this->Html->link(
                         __('Edit'),
                         ['action' => 'edit', $monster->id],
                         [
@@ -51,8 +44,11 @@ use Cake\Collection\CollectionInterface;
                                 'btn-outline-primary',
                             ],
                         ]
-                    ) : '' ?>
-                    <?= $monster->user_id === $user['id'] ? $this->Form->postLink(
+                    )
+                        : ''
+                    ?><?=
+                    $monster->user_id === $user['id']
+                        ? $this->Form->postLink(
                         __('Delete'),
                         ['action' => 'delete', $monster->id],
                         [
@@ -65,7 +61,9 @@ use Cake\Collection\CollectionInterface;
                                 $monster->id
                             ),
                         ]
-                    ) : '' ?>
+                    )
+                        : ''
+                    ?>
                 </td>
             </tr>
         <?php endforeach; ?>
