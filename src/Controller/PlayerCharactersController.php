@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Controller;
 
 use App\Model\Entity\PlayerCharacter;
 use App\Model\Table\PlayerCharactersTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Response;
 
 /**
  * PlayerCharacters Controller
@@ -15,9 +18,9 @@ use Cake\Datasource\ResultSetInterface;
 class PlayerCharactersController extends AppController
 {
     public $paginate = [
-        'limit' => 50,
-        'order' => [
-            'first_name' => 'asc'
+        'limit'         => 50,
+        'order'         => [
+            'first_name' => 'asc',
         ],
         'sortWhitelist' => [
             'first_name',
@@ -28,12 +31,12 @@ class PlayerCharactersController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|void
+     * @return Response|void
      */
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Campaigns']
+            'contain' => ['Campaigns'],
         ];
 
         $user = $this->getUserOrRedirect();
@@ -52,14 +55,24 @@ class PlayerCharactersController extends AppController
      * View method
      *
      * @param string|null $id Player Character id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|void
+     * @throws RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $playerCharacter = $this->PlayerCharacters->get($id, [
-            'contain' => ['Users', 'CharacterClasses', 'CharacterRaces', 'Participants'],
-        ]);
+        $playerCharacter = $this->PlayerCharacters->get(
+            $id,
+            [
+                'contain' => [
+                    'Campaigns',
+                    'Users',
+                    'CharacterClasses',
+                    'CharacterRaces',
+                    'Participants',
+                ],
+            ]
+        );
 
         $this->set('playerCharacter', $playerCharacter);
     }
@@ -67,7 +80,7 @@ class PlayerCharactersController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|void Redirects on successful add, renders view otherwise.
+     * @return Response|void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -79,7 +92,7 @@ class PlayerCharactersController extends AppController
             $data['user_id']    = $user['id'];
             $data['current_hp'] = $data['max_hp'];
 
-            $playerCharacter  = $this->PlayerCharacters->patchEntity($playerCharacter, $data);
+            $playerCharacter = $this->PlayerCharacters->patchEntity($playerCharacter, $data);
 
             if ($this->PlayerCharacters->save($playerCharacter)) {
                 $this->Flash->success(__('The player character has been saved.'));
@@ -93,10 +106,10 @@ class PlayerCharactersController extends AppController
         $characterClasses = $this->PlayerCharacters->CharacterClasses
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
-        $characterRaces = $this->PlayerCharacters->CharacterRaces
+        $characterRaces   = $this->PlayerCharacters->CharacterRaces
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
-        $campaigns = $this->PlayerCharacters->Campaigns
+        $campaigns        = $this->PlayerCharacters->Campaigns
             ->find('list', ['limit' => 200])
             ->where(['Campaigns.user_id =' => $user['id']])
             ->order(['name' => 'ASC']);
@@ -108,14 +121,18 @@ class PlayerCharactersController extends AppController
      * Edit method
      *
      * @param string|null $id Player Character id.
-     * @return \Cake\Http\Response|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|void Redirects on successful edit, renders view otherwise.
+     * @throws RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $playerCharacter = $this->PlayerCharacters->get($id, [
-            'contain' => ['CharacterClasses', 'CharacterRaces']
-        ]);
+        $playerCharacter = $this->PlayerCharacters->get(
+            $id,
+            [
+                'contain' => ['CharacterClasses', 'CharacterRaces'],
+            ]
+        );
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $playerCharacter = $this->PlayerCharacters->patchEntity($playerCharacter, $this->request->getData());
@@ -127,13 +144,15 @@ class PlayerCharactersController extends AppController
             $this->Flash->error(__('The player character could not be saved. Please, try again.'));
         }
 
+        $user = $this->getUserOrRedirect();
+
         $characterClasses = $this->PlayerCharacters->CharacterClasses
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
-        $characterRaces = $this->PlayerCharacters->CharacterRaces
+        $characterRaces   = $this->PlayerCharacters->CharacterRaces
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
-        $campaigns = $this->PlayerCharacters->Campaigns
+        $campaigns        = $this->PlayerCharacters->Campaigns
             ->find('list', ['limit' => 200])
             ->where(['Campaigns.user_id =' => $user['id']])
             ->order(['name' => 'ASC']);
@@ -145,14 +164,15 @@ class PlayerCharactersController extends AppController
      * Delete method
      *
      * @param string|null $id Player Character id.
-     * @return \Cake\Http\Response|void Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|void Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         $playerCharacter = $this->PlayerCharacters->get($id);
-        
+
         if ($this->PlayerCharacters->delete($playerCharacter)) {
             $this->Flash->success(__('The player character has been deleted.'));
         } else {
@@ -164,19 +184,22 @@ class PlayerCharactersController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
         // The add and index actions are always allowed to logged in users
-        if (in_array($action, [
-            'add',
-            'index',
-        ])) {
+        if (in_array(
+            $action,
+            [
+                'add',
+                'index',
+            ]
+        )) {
             return true;
         }
 
