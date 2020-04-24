@@ -26,7 +26,6 @@ const removeAutocompleteItemFromTable = function ($, self, autocompleteFor, id) 
             return false;
         }
     });
-    // let newIdsList = autocompleteData.replace(id + ',', '');
 
     $($autocomplete).val(JSON.stringify(autocompleteData));
 
@@ -34,141 +33,6 @@ const removeAutocompleteItemFromTable = function ($, self, autocompleteFor, id) 
 };
 
 jQuery(function ($) {
-    const backgroundImages = [
-        {
-            url: 'battle_of_four_armies_by_jasonengle.jpg',
-            slcted: true,
-        },
-        {
-            url: '190622ddba35c1efab03fec90b427c65-d7pdb8i.png',
-            slcted: false,
-        },
-        {
-            url: 'commission__dungeons_and_dragons_party_by_kiralng-dbu4089.png',
-            slcted: false,
-        },
-        {
-            url: 'dungeons_and_dragons__minimalistic_party_wallpaper_by_conanultimate-d99abng.jpg',
-            slcted: false,
-        },
-        {
-            url: 'dungeons_and_dragons_party_by_uncannyknack-d7j7l0r.jpg',
-            slcted: false,
-        },
-        {
-            url: 'fantasy_asian_by_macduykhanh121094-da50lyq.jpg',
-            slcted: false,
-        },
-    ];
-
-    let transitionTime = 200;  // 0.2 seconds
-    let intervalTime   = 7000; // 7 seconds
-
-    /**
-     * Retrieves the currently selected header background image
-     *
-     * @return object
-     */
-    const getSelectedBackgroundImage = function () {
-        let image;
-        let i = 0;
-        do {
-            image = backgroundImages[i];
-            i++;
-        } while (image.slcted === false);
-        return image;
-    };
-
-    /**
-     * Randomly selects and image from the array and returns image file name and file type
-     *
-     * @return string
-     */
-    const pickBackgroundImage = function () {
-        let image;
-        do {
-            image = backgroundImages[Math.floor(Math.random() * backgroundImages.length)]
-        } while (image.slcted === true);
-
-        let currentImage    = getSelectedBackgroundImage();
-        currentImage.slcted = false;
-        image.slcted        = true;
-
-        return image.url;
-    };
-
-    /**
-     * Switches out the background image of the header for a random one from the array
-     *
-     * @param  object backgroundHeader
-     * @return void
-     */
-    const changeBackgroundImage = function (backgroundHeader) {
-        let url = pickBackgroundImage();
-
-        backgroundHeader.css(
-            {
-                "background-image": "url('/img/backgrounds/" + url + "')"
-            }
-        );
-    };
-
-    /**
-     * Adds the animation CSS property and then sets the interval to replace the background image
-     */
-    const backgroundSlider = function () {
-        let backgroundHeader = $("#header-background");
-
-        backgroundHeader.css(
-            {
-                animation: "move-header-mobile " + (intervalTime / 1000) + "s linear infinite",
-            }
-        );
-
-        setInterval(function () {
-            changeBackgroundImage($("#header-background"))
-        }, intervalTime);
-    };
-
-    /**
-     * Turns on or off the dark mode
-     * @param bool isEnabled
-     */
-    const setDarkMode = function (isEnabled = false) {
-        if (isEnabled === true) {
-            window.localStorage.darkMode = 1;
-            setCookie('darkMode', 1);
-            $('body').addClass('dark-mode');
-            $('#switch-dark-mode').prop('checked', true);
-        } else {
-            window.localStorage.removeItem('darkMode');
-            setCookie('darkMode', 0);
-            $('body').removeClass('dark-mode');
-            $('#switch-dark-mode').prop('checked', false);
-        }
-    };
-
-    /**
-     * Toggles the header images to animate - currently only enables, cannot disable
-     * @return void
-     */
-    const toggleHeaderSlider = function () {
-        backgroundSlider();
-    };
-
-    // $('#top-bar').click(function() {
-    //     url = pickBackgroundImage();
-
-    //     $("#header-background").css({
-    //         "background-image": "url('/img/backgrounds/" + url + "')"
-    //     });
-    // });
-
-    // backgroundSlider();
-
-    $('#switch-header-slider').click(function () {
-        toggleHeaderSlider();
-    });
 
     $('.menu-button').click(function () {
         $(this).parent('.actions').toggleClass('open');
@@ -187,7 +51,7 @@ jQuery(function ($) {
                 .parent()
                 .addClass('active')
                 .append(
-                    '<a class="show-more-link"><span class="show">show</span><span class="hide">hide</span> more</a>'
+                    '<a class="show-more-link text-secondary"><span class="show">show</span><span class="hide">hide</span> more</a>'
                 );
         }
     });
@@ -317,7 +181,6 @@ jQuery(function ($) {
     $("input.autocomplete-to-table").each(function () {
         let autoCompleteOptions = {
             select: function (event, ui) {
-// console.log($(this).data('autocompleteFor'));
                 let autocompleteFor = $(this).data('autocompleteFor');
                 let $hiddenField    = $('#' + autocompleteFor);
                 let $table          = $('#autocomplete-' + autocompleteFor + '-table');
@@ -328,9 +191,6 @@ jQuery(function ($) {
                 } catch {
                     console.warn('Terms could not be parsed');
                 }
-
-                // remove the current input
-                // terms.pop();
 
                 // Add the selected item
                 if (ui.item.value !== "No results found") {
@@ -343,7 +203,7 @@ jQuery(function ($) {
                     $($hiddenField).val(JSON.stringify(terms)).change();
 
                     $($tableBody)
-                        .append('<tr><td>' + ui.item.label + '</td><td><button class="btn btn-danger" onclick="removeAutocompleteItemFromTable(jQuery, this, \'' + autocompleteFor + '\', ' + ui.item.value + ')" type="button">Remove</button></td></tr>');
+                        .append(`<tr><td>${ui.item.label}</td><td><button class="btn btn-danger" onclick="removeAutocompleteItemFromTable(jQuery, this, '${autocompleteFor}', ${ui.item.value})" type="button">Remove</button></td></tr>`);
 
                     // Reset the current element to blank for the next item to be selected
                     this.value = '';
@@ -359,27 +219,15 @@ jQuery(function ($) {
                 let conditionalsString = $($element).data("conditionals").trim();
                 let conditionals       = {};
 
-// console.log("conditionalsString");
-// console.log(conditionalsString);
                 if (conditionalsString !== "") {
                     let conditionalsArray = split(conditionalsString);
-// console.log("conditionalsArray");
-// console.log(conditionalsArray);
                     $.each(conditionalsArray, function (index, value) {
-// console.log("Each");
-// console.log(value);
-// console.log($("[name" + value + "]"));
-// console.log($("[name=" + value + "]").val());
                         conditionals[value] = parseInt($("[name=" + value + "]").val());
                     });
                 }
 
                 let conditionalsJson = JSON.stringify(conditionals);
-// console.log("conditionals");
-// console.log(conditionals);
-// console.log(conditionalsJson);
-
-                let excludes = $("#" + autocompleteFor).val();
+                let excludes         = $("#" + autocompleteFor).val();
 
                 $.getJSON(sourceUrl, {
                     term: extractLast(request.term),
@@ -387,9 +235,6 @@ jQuery(function ($) {
                     excludes: excludes
                 }, response);
                 $(".ui-helper-hidden-accessible").remove();
-                // } catch {
-                //     console.error('An error occurred, sorry!');
-                // }
             }
         };
 

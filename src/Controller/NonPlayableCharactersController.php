@@ -1,47 +1,41 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\NonPlayableCharacter;
+use App\Model\Table\NonPlayableCharactersTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Response;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * NonPlayableCharacters Controller
  *
- * @property \App\Model\Table\NonPlayableCharactersTable $NonPlayableCharacters
+ * @property NonPlayableCharactersTable $NonPlayableCharacters
  *
- * @method \App\Model\Entity\NonPlayableCharacter[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method NonPlayableCharacter[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class NonPlayableCharactersController extends AppController
 {
-    const CONTROLLER_NAME = 'Non-Playable Characters';
+    private const CONTROLLER_NAME = 'Non-Playable Characters';
     public $paginate = [
         'limit' => 50,
         'order' => [
-            'NonPlayableCharacters.name' => 'asc'
+            'NonPlayableCharacters.name' => 'asc',
         ],
         'sortWhitelist' => [
             'NonPlayableCharacters.name',
             'NonPlayableCharacters.age',
             'NonPlayableCharacters.occupation',
-        ]
+        ],
     ];
-
-    /**
-     * Initialises the class, including authentication
-     * 
-     * @return void
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-
-        $this->loadComponent('Paginator');
-        $this->loadComponent('Flash');
-    }
 
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|void
+     * @return Response|void
      */
     public function index()
     {
@@ -49,7 +43,7 @@ class NonPlayableCharactersController extends AppController
 
         $nonPlayableCharacters = $this->NonPlayableCharacters
             ->find()
-            ->where(['nonPlayableCharacters.user_id =' => $user['id']]);
+            ->where(['NonPlayableCharacters.user_id =' => $user['id']]);
 
         $nonPlayableCharacters = $this->paginate($nonPlayableCharacters);
 
@@ -61,33 +55,43 @@ class NonPlayableCharactersController extends AppController
      * View method
      *
      * @param string|null $id Non Playable Character id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|void
+     * @throws RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $nonPlayableCharacter = $this->NonPlayableCharacters->get($id, [
-            'contain' => ['TimelineSegments']
-        ]);
+        $nonPlayableCharacter = $this->NonPlayableCharacters->get(
+            $id,
+            [
+                'contain' => ['TimelineSegments'],
+            ]
+        );
 
         $this->set('nonPlayableCharacter', $nonPlayableCharacter);
-        $this->set('title', sprintf(
-            'View %s - %s',
-            self::CONTROLLER_NAME,
-            $nonPlayableCharacter->name
-        ));
+        $this->set(
+            'title',
+            sprintf(
+                'View %s - %s',
+                self::CONTROLLER_NAME,
+                $nonPlayableCharacter->name
+            )
+        );
     }
 
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return Response|null Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
         $nonPlayableCharacter = $this->NonPlayableCharacters->newEntity();
         if ($this->request->is('post')) {
-            $nonPlayableCharacter = $this->NonPlayableCharacters->patchEntity($nonPlayableCharacter, $this->request->getData());
+            $nonPlayableCharacter = $this->NonPlayableCharacters->patchEntity(
+                $nonPlayableCharacter,
+                $this->request->getData()
+            );
             if ($this->NonPlayableCharacters->save($nonPlayableCharacter)) {
                 $this->Flash->success(__('The non playable character has been saved.'));
 
@@ -98,27 +102,37 @@ class NonPlayableCharactersController extends AppController
         $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
 
         $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
-        $this->set('title', sprintf(
-            'Add %s - %s',
-            self::CONTROLLER_NAME,
-            $nonPlayableCharacter->name
-        ));
+        $this->set(
+            'title',
+            sprintf(
+                'Add %s - %s',
+                self::CONTROLLER_NAME,
+                $nonPlayableCharacter->name
+            )
+        );
     }
 
     /**
      * Edit method
      *
      * @param string|null $id Non Playable Character id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     *
+     * @return Response|null Redirects on successful edit, renders view otherwise.
+     * @throws NotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $nonPlayableCharacter = $this->NonPlayableCharacters->get($id, [
-            'contain' => []
-        ]);
+        $nonPlayableCharacter = $this->NonPlayableCharacters->get(
+            $id,
+            [
+                'contain' => [],
+            ]
+        );
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $nonPlayableCharacter = $this->NonPlayableCharacters->patchEntity($nonPlayableCharacter, $this->request->getData());
+            $nonPlayableCharacter = $this->NonPlayableCharacters->patchEntity(
+                $nonPlayableCharacter,
+                $this->request->getData()
+            );
             if ($this->NonPlayableCharacters->save($nonPlayableCharacter)) {
                 $this->Flash->success(__('The non playable character has been saved.'));
 
@@ -129,19 +143,23 @@ class NonPlayableCharactersController extends AppController
         $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
 
         $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
-        $this->set('title', sprintf(
-            'Edit %s - %s',
-            self::CONTROLLER_NAME,
-            $nonPlayableCharacter->name
-        ));
+        $this->set(
+            'title',
+            sprintf(
+                'Edit %s - %s',
+                self::CONTROLLER_NAME,
+                $nonPlayableCharacter->name
+            )
+        );
     }
 
     /**
      * Delete method
      *
      * @param string|null $id Non Playable Character id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|null Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -158,19 +176,22 @@ class NonPlayableCharactersController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool
     {
         $action = $this->request->getParam('action');
         // The add and index actions are always allowed to logged in users
-        if (in_array($action, [
-            'add',
-            'index',
-        ])) {
+        if (in_array(
+            $action,
+            [
+                'add',
+                'index',
+            ]
+        )) {
             return true;
         }
 

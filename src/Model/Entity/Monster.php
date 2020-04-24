@@ -16,6 +16,7 @@ use Cake\ORM\Entity;
  * @property int                 $armour_class
  * @property int                 $dexterity_modifier
  * @property int|null            $monster_instance_type_id
+ * @property string              $visibility
  *
  * @property User                $user
  * @property DataSource          $data_source
@@ -24,6 +25,9 @@ use Cake\ORM\Entity;
  */
 class Monster extends Entity
 {
+    public const VISIBILITY_PRIVATE = 'PRIVATE';
+    public const VISIBILITY_PUBLIC  = 'PUBLIC';
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -42,6 +46,7 @@ class Monster extends Entity
         'armour_class'             => true,
         'dexterity_modifier'       => true,
         'monster_instance_type_id' => true,
+        'visibility'               => true,
         'user'                     => true,
         'data_source'              => true,
         'monster_instance_type'    => true,

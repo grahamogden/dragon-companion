@@ -11,6 +11,7 @@
     <?= $this->Form->create($monster) ?>
         <fieldset>
             <?= $this->Form->control('name', ['class' => 'form-control',]) ?>
+            <?= $this->Form->control('visibility', ['class' => 'form-control', 'options' => ['PUBLIC' => 'Public', 'PRIVATE' => 'Private'],]) ?>
             <?= $this->Form->control('max_hit_points', ['class' => 'form-control',]) ?>
             <?= $this->Form->control('armour_class', ['class' => 'form-control',]) ?>
             <?= $this->Form->control('dexterity_modifier', ['class' => 'form-control',]) ?>

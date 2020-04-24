@@ -10,22 +10,14 @@ use App\View\AppView;
 
 ?>
 <div class="playerCharacters view large-9 medium-8 columns content">
-    <h3><?= h($playerCharacter->id) ?></h3>
+    <h1><?= h($playerCharacter->first_name . ($playerCharacter->last_name ? ' ' . $playerCharacter->last_name : '')) ?></h1>
     <table class="table vertical-table">
-        <tr>
-            <th scope="row"><?= __('First Name') ?></th>
-            <td><?= h($playerCharacter->first_name) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Last Name') ?></th>
-            <td><?= h($playerCharacter->last_name) ?></td>
-        </tr>
         <tr>
             <th scope="row"><?= __('Age') ?></th>
             <td><?= $this->Number->format($playerCharacter->age) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Max Hit Points') ?></th>
+            <th scope="row"><?= __('Hit Points (max)') ?></th>
             <td><?= $this->Number->format($playerCharacter->max_hit_points) ?></td>
         </tr>
         <tr>
@@ -38,7 +30,7 @@ use App\View\AppView;
         </tr>
         <tr>
             <th scope="row"><?= __('Campaign') ?></th>
-            <td><?= $this->Number->format($playerCharacter->campaign->name) ?></td>
+            <td><?= h($playerCharacter->campaign->name) ?></td>
         </tr>
     </table>
     <div class="related">
@@ -46,14 +38,7 @@ use App\View\AppView;
         <?php if (!empty($playerCharacter->character_classes)): ?>
             <ul>
                 <?php foreach ($playerCharacter->character_classes as $characterClasses): ?>
-                    <li><?= $this->Html->link(
-                            h($characterClasses->name),
-                            [
-                                'controller' => 'CharacterClasses',
-                                'action'     => 'view',
-                                $characterClasses->id,
-                            ]
-                        ) ?></li>
+                    <li><?= h($characterClasses->name) ?></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
@@ -63,14 +48,7 @@ use App\View\AppView;
         <?php if (!empty($playerCharacter->character_races)): ?>
             <ul>
                 <?php foreach ($playerCharacter->character_races as $characterRaces): ?>
-                    <li><?= $this->Html->link(
-                            h($characterRaces->name),
-                            [
-                                'controller' => 'CharacterRaces',
-                                'action'     => 'view',
-                                $characterRaces->id,
-                            ]
-                        ) ?></li>
+                    <li><?= h($characterRaces->name) ?></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>

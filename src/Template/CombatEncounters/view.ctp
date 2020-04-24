@@ -5,8 +5,8 @@
  */
 ?>
 <div class="combatEncounters view content">
-    <h3><?= h($combatEncounter->name) ?></h3>
-    <table class="vertical-table">
+    <h1><?= h($combatEncounter->name) ?></h1>
+    <table class="table vertical-table">
         <tr>
             <th scope="row"><?= __('Name') ?></th>
             <td><?= h($combatEncounter->name) ?></td>
@@ -28,17 +28,17 @@
         </tr>
     </table>
     <div class="related">
-        <h3><?= __('Participants') ?></h3>
-        <?php if (!empty($combatEncounter->participants)): ?>
+        <h2><?= __('Participants') ?></h2>
+        <?php if (!empty($combatEncounter->participants)) { ?>
             <table class="table table-hover">
                 <tr>
                     <th scope="col"><?= __('Initiative') ?></th>
                     <th scope="col"><?= __('Name') ?></th>
                     <th scope="col"><?= __('Starting Hit Points') ?></th>
-                    <th scope="col"><?= __('Current Hit Points') ?></th>
+                    <th scope="col"><?= __('Ending Hit Points') ?></th>
                     <th scope="col"><?= __('Armour Class') ?></th>
                 </tr>
-                <?php foreach ($combatEncounter->participants as $participant): ?>
+                <?php foreach ($combatEncounter->participants as $participant) { ?>
                     <tr>
                         <td><?= h($participant->initiative) ?></td>
                         <td><?= $participant->has('monster')
@@ -55,25 +55,28 @@
                         <td><?= h($participant->current_hit_points) ?></td>
                         <td><?= h($participant->armour_class) ?></td>
                     </tr>
-                <?php endforeach; ?>
+                <?php } // endforeach; ?>
             </table>
-        <?php endif; ?>
+        <?php } // endif; ?>
     </div>
     <div class="related">
-        <h3><?= __('Turns') ?></h3>
-        <?php if (!empty($combatEncounter->combat_turns)): ?>
+        <h2><?= __('Turns') ?></h2>
+        <?php if (!empty($combatEncounter->combat_turns)) { ?>
             <table class="table table-hover">
                 <tr>
-                    <th scope="col"><?= __('Round Number') ?></th>
                     <th scope="col"><?= __('Source') ?></th>
                     <th scope="col"><?= __('Action') ?></th>
                     <th scope="col"><?= __('Target') ?></th>
                     <th scope="col"><?= __('Total') ?></th>
                     <th scope="col"><?= __('Movement') ?></th>
                 </tr>
-                <?php foreach ($combatEncounter->combat_turns as $combatTurn): ?>
+                <?php $prevRoundCounter = -1; ?>
+                <?php foreach ($combatEncounter->combat_turns as $combatTurn) { ?>
+                    <?php if ($prevRoundCounter !== $combatTurn->round_number) { ?>
+                        <tr class="table-primary"><th colspan="5">Round <?= $combatTurn->round_number ?></th></tr>
+                        <?php $prevRoundCounter = $combatTurn->round_number ?>
+                    <?php } ?>
                     <tr>
-                        <td><?= h($combatTurn->round_number) ?></td>
                         <td><?php if ($combatTurn->has('source_participant')) { ?>
                             <?= $combatTurn->source_participant->has('monster')
                                     ? h($combatTurn->source_participant->monster->name)
@@ -100,8 +103,8 @@
                         <td><?= h($combatTurn->net_action_total) ?></td>
                         <td><?= h($combatTurn->movement) ?></td>
                     </tr>
-                <?php endforeach; ?>
+                <?php } // endforeach; ?>
             </table>
-        <?php endif; ?>
+        <?php } // endif; ?>
     </div>
 </div>

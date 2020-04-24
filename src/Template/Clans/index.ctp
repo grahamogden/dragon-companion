@@ -7,7 +7,7 @@
 <div class="clans index content">
     <h1>Clans</h1>
     <div class="form-group">
-        <?= $this->Html->link(__('New Clan'), ['action' => 'add'], ['class' => ['btn','btn-outline-success']]); ?>
+        <a href="<?= $this->Url->build(['action' => 'add']) ?>" class="btn btn-outline-success"><i class="fa fa-plus"></i><?= __('New Clan') ?></a>
     </div>
     <table class="table table-hover">
         <thead>
