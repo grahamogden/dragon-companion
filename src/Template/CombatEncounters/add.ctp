@@ -16,7 +16,21 @@ use \App\View\Widget\AutocompleteToTableWidget;
 <div class="combatEncounters form content">
     <h1><?= __('Add Combat Encounter') ?></h1>
     <?= $this->Form->create($combatEncounter) ?>
-    <fieldset id="combat-encounters" class="combat-encounter-fieldset">
+    <?= $this->Form->control(
+        'participants',
+        [
+            'type'  => 'hidden',
+            'value' => '',
+        ]
+    ) ?>
+    <?= $this->Form->control(
+        'turns',
+        [
+            'type'  => 'hidden',
+            'value' => '',
+        ]
+    ) ?>
+    <fieldset id="combat-encounters-startup" class="combat-encounter-fieldset">
         <legend>1. Startup</legend>
         <?= $this->Form->control(
             'campaign_id',
@@ -50,6 +64,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
                             'btn-block',
                             'btn-success',
                             'next-step',
+                            'update-startup',
                         ],
                         'type'  => 'button',
                     ]
@@ -126,7 +141,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
             </div>
         </div>
     </fieldset>
-    <fieldset id="combat-encounters-participants" class="combat-encounter-fieldset">
+    <fieldset id="combat-encounters-initiative" class="combat-encounter-fieldset">
         <legend>3. Initiative</legend>
         <table id="initiative-table" class="table table-hover">
             <thead>
@@ -141,12 +156,6 @@ use \App\View\Widget\AutocompleteToTableWidget;
             </thead>
             <tbody></tbody>
         </table>
-        <?= $this->Form->control(
-            'participants',
-            [
-                'type' => 'hidden',
-            ]
-        ) ?>
         <div class="row form-group" role="group" aria-label="">
             <div class="col-md-6 order-md-2">
                 <?= $this->Form->button(
@@ -299,14 +308,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
                 ) ?>
             </div>
         </div>
-        <?= $this->Form->control(
-            'turns',
-            [
-                'class' => ['form-control',],
-                'type'  => 'textarea',
-                'readonly',
-            ]
-        ) ?>
+        <hr class="mt-4 mb-4">
         <div class="row form-group" role="group" aria-label="">
             <div class="col-md-6 order-md-2">
                 <?= $this->Form->submit(
