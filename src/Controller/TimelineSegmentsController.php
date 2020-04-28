@@ -412,7 +412,7 @@ class TimelineSegmentsController extends AppController
      *
      * @return
      */
-    public function moveUp(int $id, $top = 1)
+    public function moveUp(int $campaignId, int $id, $top = 1)
     {
         $this->request->allowMethod(['post', 'put']);
         $timelineSegment = $this->TimelineSegments->get($id);
@@ -431,9 +431,9 @@ class TimelineSegmentsController extends AppController
      *
      * @return
      */
-    public function moveUpTop(int $id)
+    public function moveUpTop(int $campaignId, int $id)
     {
-        return $this->moveUp($id, true);
+        return $this->moveUp($campaignId, $id, true);
     }
 
     /**
@@ -445,7 +445,7 @@ class TimelineSegmentsController extends AppController
      *
      * @return
      */
-    public function moveDown(int $id, $bottom = 1)
+    public function moveDown(int $campaignId, int $id, $bottom = 1)
     {
         $this->request->allowMethod(['post', 'put']);
         $timelineSegment = $this->TimelineSegments->get($id);
@@ -464,9 +464,9 @@ class TimelineSegmentsController extends AppController
      *
      * @return
      */
-    public function moveDownBottom(int $id)
+    public function moveDownBottom(int $campaignId, int $id)
     {
-        return $this->moveDown($id, true);
+        return $this->moveDown($campaignId, $id, true);
     }
 
     /**
