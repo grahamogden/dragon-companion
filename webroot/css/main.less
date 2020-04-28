@@ -542,6 +542,7 @@ label {
 
 select {
   cursor: pointer;
+  overflow: hidden;
 
   &:not([multiple]) {
     appearance: none;
@@ -553,6 +554,10 @@ select {
     &.form-control {
       padding-right: 3.75rem;
     }
+  }
+
+  option {
+    max-width: 100%;
   }
 }
 
