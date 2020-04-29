@@ -43,7 +43,6 @@ class NonPlayableCharacter extends Entity
         'alignment_id'      => true,
         'notes'             => true,
         'user_id'           => true,
-        'alignment'         => true,
         'user'              => true,
         'timeline_segments' => true,
     ];
