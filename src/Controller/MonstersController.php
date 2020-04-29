@@ -20,9 +20,9 @@ use Cake\Network\Exception\NotFoundException;
 class MonstersController extends AppController
 {
     public $paginate = [
-        'limit' => 50,
-        'order' => [
-            'name' => 'asc'
+        'limit'         => 50,
+        'order'         => [
+            'name' => 'asc',
         ],
         'sortWhitelist' => [
             'name',
@@ -72,6 +72,7 @@ class MonstersController extends AppController
             $id,
             [
                 'contain' => [
+                    'Alignments',
                     'DataSources',
                     'MonsterInstanceTypes',
                 ],
@@ -89,8 +90,13 @@ class MonstersController extends AppController
     public function add()
     {
         $monster = $this->Monsters->newEntity();
+        $user = $this->getUserOrRedirect();
+
         if ($this->request->is('post')) {
-            $monster = $this->Monsters->patchEntity($monster, $this->request->getData());
+            $data = $this->request->getData();
+            $data['user_id'] = $user['id'];
+
+            $monster = $this->Monsters->patchEntity($monster, $data);
             if ($this->Monsters->save($monster)) {
                 $this->Flash->success(__('The monster has been saved.'));
 
@@ -100,6 +106,7 @@ class MonstersController extends AppController
         }
 
         $dataSources          = $this->Monsters->DataSources->find('list', ['limit' => 200]);
+        $alignments           = $this->Monsters->Alignments->find('list', ['limit' => 200]);
         $monsterInstanceTypes = $this->Monsters->MonsterInstanceTypes->find(
             'list',
             [
@@ -110,7 +117,14 @@ class MonstersController extends AppController
             ]
         );
 
-        $this->set(compact('monster', 'dataSources', 'monsterInstanceTypes'));
+        $this->set(
+            compact(
+                'monster',
+                'dataSources',
+                'monsterInstanceTypes',
+                'alignments'
+            )
+        );
     }
 
     /**
@@ -140,9 +154,17 @@ class MonstersController extends AppController
         }
 
         $dataSources          = $this->Monsters->DataSources->find('list', ['limit' => 200]);
+        $alignments           = $this->Monsters->Alignments->find('list', ['limit' => 200]);
         $monsterInstanceTypes = $this->Monsters->MonsterInstanceTypes->find('list', ['limit' => 200]);
 
-        $this->set(compact('monster', 'dataSources', 'monsterInstanceTypes'));
+        $this->set(
+            compact(
+                'monster',
+                'dataSources',
+                'monsterInstanceTypes',
+                'alignments'
+            )
+        );
     }
 
     /**

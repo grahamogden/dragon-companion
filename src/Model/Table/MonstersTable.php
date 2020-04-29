@@ -16,6 +16,7 @@ use Cake\Validation\Validator;
  * @property UsersTable&BelongsTo                $Users
  * @property DataSourcesTable&BelongsTo          $DataSources
  * @property MonsterInstanceTypesTable&BelongsTo $MonsterInstanceTypes
+ * @property AlignmentsTable&BelongsTo           $Alignments
  * @property ParticipantsTable&HasMany           $Participants
  *
  * @method Monster get($primaryKey, $options = [])
@@ -33,6 +34,7 @@ class MonstersTable extends Table
      * Initialize method
      *
      * @param array $config The configuration for the Table.
+     *
      * @return void
      */
     public function initialize(array $config)
@@ -61,6 +63,13 @@ class MonstersTable extends Table
             'MonsterInstanceTypes',
             [
                 'foreignKey' => 'monster_instance_type_id',
+            ]
+        );
+        $this->belongsTo(
+            'Alignments',
+            [
+                'foreignKey' => 'alignment_id',
+                'joinType'   => 'INNER',
             ]
         );
         $this->hasMany(
@@ -130,6 +139,7 @@ class MonstersTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['data_source_id'], 'DataSources'));
         $rules->add($rules->existsIn(['monster_instance_type_id'], 'MonsterInstanceTypes'));
+        $rules->add($rules->existsIn(['alignment_id'], 'Alignments'));
 
         return $rules;
     }

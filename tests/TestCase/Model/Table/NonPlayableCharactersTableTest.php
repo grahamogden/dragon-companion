@@ -10,7 +10,6 @@ use Cake\TestSuite\TestCase;
  */
 class NonPlayableCharactersTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -24,8 +23,10 @@ class NonPlayableCharactersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.non_playable_characters',
-        'app.timeline_segments'
+        'app.NonPlayableCharacters',
+        'app.Alignments',
+        'app.Users',
+        'app.TimelineSegments',
     ];
 
     /**

@@ -16,6 +16,7 @@ use Cake\Validation\Validator;
  *
  * @property UsersTable&BelongsTo                $Users
  * @property CampaignsTable&BelongsTo            $Campaigns
+ * @property AlignmentsTable&BelongsTo           $Alignments
  * @property ParticipantsTable&HasMany           $Participants
  * @property CharacterClassesTable&BelongsToMany $CharacterClasses
  * @property CharacterRacesTable&BelongsToMany   $CharacterRaces
@@ -57,6 +58,13 @@ class PlayerCharactersTable extends Table
             'Campaigns',
             [
                 'foreignKey' => 'campaign_id',
+                'joinType'   => 'INNER',
+            ]
+        );
+        $this->belongsTo(
+            'Alignments',
+            [
+                'foreignKey' => 'alignment_id',
                 'joinType'   => 'INNER',
             ]
         );
@@ -141,6 +149,7 @@ class PlayerCharactersTable extends Table
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['campaign_id'], 'Campaigns'));
+        $rules->add($rules->existsIn(['alignment_id'], 'Alignments'));
 
         return $rules;
     }

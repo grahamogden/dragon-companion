@@ -29,6 +29,10 @@ use App\View\AppView;
             <td><?= h($monster->dexterity_modifier) ?></td>
         </tr>
         <tr>
+            <th scope="row"><?= __('Alignment') ?></th>
+            <td><?= __($monster->alignment->name) ?></td>
+        </tr>
+        <tr>
             <th scope="row"><?= __('Monster Instance') ?></th>
             <td><?= h($monster->monster_instance_type->name) ?></td>
         </tr>

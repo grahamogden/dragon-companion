@@ -16,12 +16,13 @@ use Cake\ORM\Entity;
  * @property int              $max_hit_points
  * @property int              $armour_class
  * @property int              $dexterity_modifier
+ * @property int              $alignment_id
  *
  * @property User             $user
  * @property Campaign         $campaign
+ * @property Participant[]    $participants
  * @property CharacterClass[] $character_classes
  * @property CharacterRace[]  $character_races
- * @property Participant[]    $participants
  */
 class PlayerCharacter extends Entity
 {
@@ -43,10 +44,11 @@ class PlayerCharacter extends Entity
         'max_hit_points'     => true,
         'armour_class'       => true,
         'dexterity_modifier' => true,
+        'alignment_id'       => true,
         'user'               => true,
         'campaign'           => true,
+        'participants'       => true,
         'character_classes'  => true,
         'character_races'    => true,
-        'participants'       => true,
     ];
 }

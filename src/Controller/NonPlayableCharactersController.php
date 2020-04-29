@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Controller\AppController;
 use App\Model\Entity\NonPlayableCharacter;
 use App\Model\Table\NonPlayableCharactersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -19,10 +18,9 @@ use Cake\Network\Exception\NotFoundException;
  */
 class NonPlayableCharactersController extends AppController
 {
-    private const CONTROLLER_NAME = 'Non-Playable Characters';
     public $paginate = [
-        'limit' => 50,
-        'order' => [
+        'limit'         => 50,
+        'order'         => [
             'NonPlayableCharacters.name' => 'asc',
         ],
         'sortWhitelist' => [
@@ -48,7 +46,6 @@ class NonPlayableCharactersController extends AppController
         $nonPlayableCharacters = $this->paginate($nonPlayableCharacters);
 
         $this->set(compact('nonPlayableCharacters'));
-        $this->set('title', self::CONTROLLER_NAME);
     }
 
     /**
@@ -61,22 +58,19 @@ class NonPlayableCharactersController extends AppController
      */
     public function view($id = null)
     {
+        $user = $this->getUserOrRedirect();
+
         $nonPlayableCharacter = $this->NonPlayableCharacters->get(
             $id,
             [
-                'contain' => ['TimelineSegments'],
+                'contain' => [
+                    'TimelineSegments',
+                    'Alignments',
+                ],
             ]
         );
 
         $this->set('nonPlayableCharacter', $nonPlayableCharacter);
-        $this->set(
-            'title',
-            sprintf(
-                'View %s - %s',
-                self::CONTROLLER_NAME,
-                $nonPlayableCharacter->name
-            )
-        );
     }
 
     /**
@@ -87,11 +81,17 @@ class NonPlayableCharactersController extends AppController
     public function add()
     {
         $nonPlayableCharacter = $this->NonPlayableCharacters->newEntity();
+        $user                 = $this->getUserOrRedirect();
+
         if ($this->request->is('post')) {
+            $data            = $this->request->getData();
+            $data['user_id'] = $user['id'];
+
             $nonPlayableCharacter = $this->NonPlayableCharacters->patchEntity(
                 $nonPlayableCharacter,
-                $this->request->getData()
+                $data
             );
+
             if ($this->NonPlayableCharacters->save($nonPlayableCharacter)) {
                 $this->Flash->success(__('The non playable character has been saved.'));
 
@@ -100,16 +100,9 @@ class NonPlayableCharactersController extends AppController
             $this->Flash->error(__('The non playable character could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
+        $alignments       = $this->NonPlayableCharacters->Alignments->find('list', ['limit' => 200]);
 
-        $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
-        $this->set(
-            'title',
-            sprintf(
-                'Add %s - %s',
-                self::CONTROLLER_NAME,
-                $nonPlayableCharacter->name
-            )
-        );
+        $this->set(compact('nonPlayableCharacter', 'timelineSegments', 'alignments'));
     }
 
     /**
@@ -125,9 +118,10 @@ class NonPlayableCharactersController extends AppController
         $nonPlayableCharacter = $this->NonPlayableCharacters->get(
             $id,
             [
-                'contain' => [],
+                'contain' => ['Alignments',],
             ]
         );
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $nonPlayableCharacter = $this->NonPlayableCharacters->patchEntity(
                 $nonPlayableCharacter,
@@ -141,16 +135,9 @@ class NonPlayableCharactersController extends AppController
             $this->Flash->error(__('The non playable character could not be saved. Please, try again.'));
         }
         $timelineSegments = $this->NonPlayableCharacters->TimelineSegments->find('list', ['limit' => 200]);
+        $alignments       = $this->NonPlayableCharacters->Alignments->find('list', ['limit' => 200]);
 
-        $this->set(compact('nonPlayableCharacter', 'timelineSegments'));
-        $this->set(
-            'title',
-            sprintf(
-                'Edit %s - %s',
-                self::CONTROLLER_NAME,
-                $nonPlayableCharacter->name
-            )
-        );
+        $this->set(compact('nonPlayableCharacter', 'timelineSegments', 'alignments'));
     }
 
     /**

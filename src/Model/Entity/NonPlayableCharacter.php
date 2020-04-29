@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,21 +7,23 @@ use Cake\ORM\Entity;
 /**
  * NonPlayableCharacter Entity
  *
- * @property int $id
- * @property string $name
- * @property int $age
- * @property string $appearance
- * @property string $occupation
- * @property string $personality
- * @property string $history
- * @property int $alignment
- * @property string $notes
+ * @property int               $id
+ * @property string            $name
+ * @property int               $age
+ * @property string|null       $appearance
+ * @property string|null       $occupation
+ * @property string|null       $personality
+ * @property string|null       $history
+ * @property int               $alignment_id
+ * @property string|null       $notes
+ * @property int               $user_id
  *
- * @property \App\Model\Entity\TimelineSegment[] $timeline_segments
+ * @property Alignment         $alignment
+ * @property User              $user
+ * @property TimelineSegment[] $timeline_segments
  */
 class NonPlayableCharacter extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -37,8 +40,11 @@ class NonPlayableCharacter extends Entity
         'occupation'        => true,
         'personality'       => true,
         'history'           => true,
-        'alignment'         => true,
+        'alignment_id'      => true,
         'notes'             => true,
+        'user_id'           => true,
+        'alignment'         => true,
+        'user'              => true,
         'timeline_segments' => true,
     ];
 }
