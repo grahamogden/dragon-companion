@@ -17,6 +17,7 @@ use Cake\ORM\Entity;
  * @property int                 $dexterity_modifier
  * @property int|null            $monster_instance_type_id
  * @property string              $visibility
+ * @property int                 $alignment_id
  *
  * @property User                $user
  * @property DataSource          $data_source
@@ -47,6 +48,7 @@ class Monster extends Entity
         'dexterity_modifier'       => true,
         'monster_instance_type_id' => true,
         'visibility'               => true,
+        'alignment_id'             => true,
         'user'                     => true,
         'data_source'              => true,
         'monster_instance_type'    => true,

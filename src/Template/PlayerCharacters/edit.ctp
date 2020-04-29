@@ -9,6 +9,7 @@ use App\View\AppView;
  * @var array           $characterClasses
  * @var array           $characterRaces
  * @var array           $campaigns
+ * @var array           $alignments
  */
 
 ?>
@@ -23,6 +24,13 @@ use App\View\AppView;
         <?= $this->Form->control('max_hit_points', ['class' => ['form-control']]) ?>
         <?= $this->Form->control('armour_class', ['class' => ['form-control']]) ?>
         <?= $this->Form->control('dexterity_modifier', ['class' => ['form-control']]) ?>
+        <?= $this->Form->control(
+            'alignment_id',
+            [
+                'class'   => ['form-control'],
+                'options' => $alignments,
+            ]
+        ) ?>
         <?= $this->Form->control(
             'character_classes._ids',
             [

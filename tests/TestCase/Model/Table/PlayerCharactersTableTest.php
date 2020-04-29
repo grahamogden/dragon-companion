@@ -26,9 +26,9 @@ class PlayerCharactersTableTest extends TestCase
         'app.PlayerCharacters',
         'app.Users',
         'app.Campaigns',
+        'app.Participants',
         'app.CharacterClasses',
         'app.CharacterRaces',
-        'app.Participants',
     ];
 
     /**

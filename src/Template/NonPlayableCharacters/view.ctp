@@ -9,13 +9,13 @@
     $this->Html->link('Edit', ['action' => 'edit', $nonPlayableCharacter->id])
 ); ?></h1>
 <div class="nonPlayableCharacters view content">
-    <table class="vertical-table">
+    <table class="table vertical-table">
         <tr>
-            <th scope="row">Occupation</th>
+            <th>Occupation</th>
             <td><?= h($nonPlayableCharacter->occupation) ?></td>
         </tr>
         <tr>
-            <th scope="row">Tag</th>
+            <th>Tag</th>
             <td><?= $nonPlayableCharacter->has('tag')
                 ? $this->Html->link(
                     $nonPlayableCharacter->tag->title,
@@ -24,32 +24,32 @@
                 : '' ?></td>
         </tr>
         <tr>
-            <th scope="row">Id</th>
+            <th>Id</th>
             <td><?= $this->Number->format($nonPlayableCharacter->id) ?></td>
         </tr>
         <tr>
-            <th scope="row">Age</th>
+            <th>Age</th>
             <td><?= $this->Number->format($nonPlayableCharacter->age) ?></td>
         </tr>
         <tr>
-            <th scope="row">Alignment</th>
-            <td><?= $this->Number->format($nonPlayableCharacter->alignment) ?></td>
+            <th>Alignment</th>
+            <td><?= __($nonPlayableCharacter->alignment->name) ?></td>
+        </tr>
+        <tr>
+            <th>Appearance</th>
+            <td><?= $this->Text->autoParagraph(h($nonPlayableCharacter->appearance)); ?></td>
+        </tr>
+        <tr>
+            <th>Personality</th>
+            <td><?= $this->Text->autoParagraph(h($nonPlayableCharacter->personality)); ?></td>
+        </tr>
+        <tr>
+            <th>History</th>
+            <td><?= $this->Text->autoParagraph(h($nonPlayableCharacter->history)); ?></td>
+        </tr>
+        <tr>
+            <th>Notes</th>
+            <td><?= $this->Text->autoParagraph(h($nonPlayableCharacter->notes)); ?></td>
         </tr>
     </table>
-    <div class="row">
-        <h4>Appearance</h4>
-        <?= $this->Text->autoParagraph(h($nonPlayableCharacter->appearance)); ?>
-    </div>
-    <div class="row">
-        <h4>Personality</h4>
-        <?= $this->Text->autoParagraph(h($nonPlayableCharacter->personality)); ?>
-    </div>
-    <div class="row">
-        <h4>History</h4>
-        <?= $this->Text->autoParagraph(h($nonPlayableCharacter->history)); ?>
-    </div>
-    <div class="row">
-        <h4>Notes</h4>
-        <?= $this->Text->autoParagraph(h($nonPlayableCharacter->notes)); ?>
-    </div>
 </div>

@@ -65,6 +65,7 @@ class PlayerCharactersController extends AppController
             $id,
             [
                 'contain' => [
+                    'Alignments',
                     'Campaigns',
                     'Users',
                     'CharacterClasses',
@@ -90,7 +91,6 @@ class PlayerCharactersController extends AppController
         if ($this->request->is('post')) {
             $data               = $this->request->getData();
             $data['user_id']    = $user['id'];
-            $data['current_hp'] = $data['max_hp'];
 
             $playerCharacter = $this->PlayerCharacters->patchEntity($playerCharacter, $data);
 
@@ -109,12 +109,22 @@ class PlayerCharactersController extends AppController
         $characterRaces   = $this->PlayerCharacters->CharacterRaces
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
+        $alignments       = $this->PlayerCharacters->Alignments
+            ->find('list', ['limit' => 200]);
         $campaigns        = $this->PlayerCharacters->Campaigns
             ->find('list', ['limit' => 200])
             ->where(['Campaigns.user_id =' => $user['id']])
             ->order(['name' => 'ASC']);
 
-        $this->set(compact('playerCharacter', 'characterClasses', 'characterRaces', 'campaigns'));
+        $this->set(
+            compact(
+                'playerCharacter',
+                'characterClasses',
+                'characterRaces',
+                'campaigns',
+                'alignments'
+            )
+        );
     }
 
     /**
@@ -130,7 +140,11 @@ class PlayerCharactersController extends AppController
         $playerCharacter = $this->PlayerCharacters->get(
             $id,
             [
-                'contain' => ['CharacterClasses', 'CharacterRaces'],
+                'contain' => [
+                    'CharacterClasses',
+                    'CharacterRaces',
+                    'Alignments',
+                ],
             ]
         );
 
@@ -152,12 +166,22 @@ class PlayerCharactersController extends AppController
         $characterRaces   = $this->PlayerCharacters->CharacterRaces
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
+        $alignments       = $this->PlayerCharacters->Alignments
+            ->find('list', ['limit' => 200]);
         $campaigns        = $this->PlayerCharacters->Campaigns
             ->find('list', ['limit' => 200])
             ->where(['Campaigns.user_id =' => $user['id']])
             ->order(['name' => 'ASC']);
 
-        $this->set(compact('playerCharacter', 'characterClasses', 'characterRaces', 'campaigns'));
+        $this->set(
+            compact(
+                'playerCharacter',
+                'characterClasses',
+                'characterRaces',
+                'campaigns',
+                'alignments'
+            )
+        );
     }
 
     /**

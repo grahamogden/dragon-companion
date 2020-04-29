@@ -31,7 +31,7 @@
                         $this->Html->link(
                             $nonPlayableCharacter->name,
                             [
-                                'action' => 'edit',
+                                'action' => 'view',
                                 $nonPlayableCharacter->id,
                             ]
                         ),
@@ -40,8 +40,21 @@
                 <td><?= h($nonPlayableCharacter->occupation); ?></td>
                 <td class="actions">
                     <?=
+                    $this->Html->link(
+                        __('Edit'),
+                        [
+                            'action' => 'edit',
+                            $nonPlayableCharacter->id,
+                        ],
+                        [
+                            'class' => [
+                                'btn',
+                                'btn-outline-primary',
+                            ],
+                        ]
+                    ) ?><?=
                     $this->Form->postLink(
-                        'Delete',
+                        __('Delete'),
                         [
                             'action' => 'delete',
                             $nonPlayableCharacter->id,

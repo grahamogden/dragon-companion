@@ -1,21 +1,21 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\NonPlayableCharactersTable;
+use App\Model\Table\AlignmentsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\NonPlayableCharactersTable Test Case
+ * App\Model\Table\AlignmentsTable Test Case
  */
-class NonPlayableCharactersTableTest extends TestCase
+class AlignmentsTableTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\NonPlayableCharactersTable
+     * @var \App\Model\Table\AlignmentsTable
      */
-    public $NonPlayableCharacters;
+    public $Alignments;
 
     /**
      * Fixtures
@@ -23,10 +23,10 @@ class NonPlayableCharactersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.NonPlayableCharacters',
         'app.Alignments',
-        'app.Users',
-        'app.TimelineSegments',
+        'app.Monsters',
+        'app.NonPlayableCharacters',
+        'app.PlayerCharacters',
     ];
 
     /**
@@ -37,8 +37,8 @@ class NonPlayableCharactersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('NonPlayableCharacters') ? [] : ['className' => NonPlayableCharactersTable::class];
-        $this->NonPlayableCharacters = TableRegistry::getTableLocator()->get('NonPlayableCharacters', $config);
+        $config = TableRegistry::getTableLocator()->exists('Alignments') ? [] : ['className' => AlignmentsTable::class];
+        $this->Alignments = TableRegistry::getTableLocator()->get('Alignments', $config);
     }
 
     /**
@@ -48,7 +48,7 @@ class NonPlayableCharactersTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->NonPlayableCharacters);
+        unset($this->Alignments);
 
         parent::tearDown();
     }
@@ -69,16 +69,6 @@ class NonPlayableCharactersTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
