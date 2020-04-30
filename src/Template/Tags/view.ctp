@@ -1,35 +1,38 @@
 <?php
+
+use App\Model\Entity\Tag;
+use App\View\AppView;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Tag $tag
+ * @var AppView     $this
+ * @var Tag $tag
+ * @var array $timelineSegments
  */
 ?>
 <div class="tags view columns content">
-    <h3><?= sprintf('%s (%s)',
-        $tag->title,
+    <h1><?= sprintf('Tag - %s (%s)',
+        h($tag->title),
         $this->Html->link(__('edit'), ['action' => 'edit', $tag->id])
-        ); ?></h3>
-    <table class="vertical-table">
+        ) ?></h1>
+    <div>
+        <h3><?= __('Description') ?></h3>
+        <div><?= $this->Text->autoParagraph($tag->description) ?></div>
+    </div>
+    <table class="table vertical-table">
         <tr>
-            <th scope="row"><?= __('Slug') ?></th>
-            <td><?= $tag->slug; ?></td>
+            <th><?= __('Created') ?></th>
+            <td><?= $tag->created ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Created') ?></th>
-            <td><?= $tag->created; ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Modified') ?></th>
-            <td><?= $tag->modified; ?></td>
+            <th><?= __('Modified') ?></th>
+            <td><?= $tag->modified ?></td>
         </tr>
     </table>
-    <div class="row">
-        <h4><?= __('Description') ?></h4>
-        <?= $this->Text->autoParagraph($tag->description); ?>
-    </div>
-    <div class="related">
-        <h4><?= __('Related Timeline Segments') ?></h4>
-        <?php if (!empty($tag->timeline_segments)) { ?>
+    <div>
+        <h3><?= __('Related Timeline Segments') ?></h3>
+        <?php if (empty($tag->timeline_segments)) { ?>
+            <p>Tag not linked to any timeline segments.</p>
+        <?php } else { ?>
         <table class="table table-hover">
             <tr>
                 <th scope="col"><?= __('Tag'); ?></th>

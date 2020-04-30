@@ -204,16 +204,23 @@ body {
   display: flex;
   flex-direction: column;
 
-  // display: none;
-  background-attachment: fixed;
-  background-position: center center;
-  background-repeat: no-repeat;
-  //background-size: 110% auto;
+  @media all and (min-width: 576px) {
+    background-image: url("/img/backgrounds/repeat-background-1.png");
+    background-attachment: fixed;
+    background-position: top left;
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+  }
 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  //.content-container {
+  //  visibility: hidden;
+  //}
+  // display: none;
+
+  //-webkit-background-size: cover;
+  //-moz-background-size: cover;
+  //-o-background-size: cover;
+  //background-size: cover;
 
   // -webkit-filter: blur(@distTwo);
   // filter: blur(@distTwo);
