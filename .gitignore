@@ -41,7 +41,7 @@ nbproject/*
 
 # User Files #
 ##############
-/webroot/img/backgrounds/*
 notes.txt
 webroot/img/orig/
-dragon-companion*.zip
+deployments/*
+*.pem
