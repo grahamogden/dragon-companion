@@ -34,10 +34,7 @@
 
     <?= $this->Html->script('libs/jquery-3.3.1.min.js') ?>
     <?= $this->Html->script('libs/jquery-ui.min.js') ?>
-    <?= $this->Html->script(
-        'https://cdn.tiny.cloud/1/8auxrgdpw9nhtbfnzk2pqu5gaxr1ti90dohm27ykv717cxjq/tinymce/5/tinymce.min.js',
-        ['referrerpolicy' => 'origin',]
-    ) ?>
+    <?= $this->Html->script('libs/tinymce-5.2.2/tinymce.min.js') ?>
     <?= $this->fetch('script') ?>
     <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
