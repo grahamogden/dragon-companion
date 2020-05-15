@@ -45,3 +45,4 @@ notes.txt
 webroot/img/orig/
 deployments/*
 *.pem
+*.zip
