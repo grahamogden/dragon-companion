@@ -26,13 +26,17 @@ html {
     font-family: 'Open Sans', Arial;
     font-size: 62.5%;
     // letter-spacing: 0.01rem;
-    min-height: 100%;
     word-spacing: 0.05rem;
 }
 
 body.mce-content-body {
     font-size: @fontSizeDefault;
     line-height: 2rem;
+
+    &.dark-mode {
+        background-color: rgba(51, 51, 51, 1);
+        color: rgb(255, 255, 255);
+    }
 
     * {
         font-size: @fontSizeDefault;
