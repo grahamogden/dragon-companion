@@ -1,6 +1,12 @@
 <?php
 namespace App\Model\Table;
 
+use \App\Model\Entity\Tag;
+use \App\Model\Table\UsersTable;
+use \App\Model\Table\TimelineSegmentsTable;
+use Cake\Datasource\EntityInterface;
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -10,16 +16,17 @@ use Cake\Utility\Text;
 /**
  * Tags Model
  *
- * @property \App\Model\Table\TimelineSegmentsTable|\Cake\ORM\Association\BelongsToMany $TimelineSegments
+ * @property UsersTable&BelongsTo $Users
+ * @property TimelineSegmentsTable&BelongsToMany $TimelineSegments
  *
- * @method \App\Model\Entity\Tag get($primaryKey, $options = [])
- * @method \App\Model\Entity\Tag newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Tag[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Tag|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Tag|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Tag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Tag[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Tag findOrCreate($search, callable $callback = null, $options = [])
+ * @method Tag get($primaryKey, $options = [])
+ * @method Tag newEntity($data = null, array $options = [])
+ * @method Tag[] newEntities(array $data, array $options = [])
+ * @method Tag|false save(EntityInterface $entity, $options = [])
+ * @method Tag saveOrFail(EntityInterface $entity, $options = [])
+ * @method Tag patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method Tag[] patchEntities($entities, array $data, array $options = [])
+ * @method Tag findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
@@ -42,10 +49,15 @@ class TagsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType'   => 'INNER',
+        ]);
+
         $this->belongsToMany('TimelineSegments', [
             'foreignKey'       => 'tag_id',
             'targetForeignKey' => 'timeline_segment_id',
-            'joinTable'        => 'tags_timeline_segments'
+            'joinTable'        => 'tags_timeline_segments',
         ]);
     }
 
@@ -73,26 +85,26 @@ class TagsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->nonNegativeInteger('id')
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('title')
             ->minLength('title', 3)
             ->maxLength('title', 255)
-            ->requirePresence('title', 'create')
+            ->notEmptyString('title')
             ->notEmpty('title')
             ->add('title', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->scalar('description')
             ->requirePresence('description', 'create')
-            ->notEmpty('description');
+            ->notEmptyString('description');
 
         $validator
             ->scalar('slug')
             ->maxLength('slug', 250)
-            ->notEmpty('slug');
+            ->notEmptyString('slug');
 
         return $validator;
     }
@@ -107,6 +119,7 @@ class TagsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['title']));
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
     }

@@ -10,7 +10,6 @@ use Cake\TestSuite\TestCase;
  */
 class TagsTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -24,8 +23,8 @@ class TagsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.tags',
-        'app.timeline_segments'
+        'app.Tags',
+        'app.TimelineSegments',
     ];
 
     /**
