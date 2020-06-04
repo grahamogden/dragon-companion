@@ -84,9 +84,14 @@ class TagsController extends AppController
      */
     public function add()
     {
-        $tag = $this->Tags->newEntity();
+        $tag  = $this->Tags->newEntity();
+        $user = $this->getUserOrRedirect();
+
         if ($this->request->is('post')) {
-            $tag = $this->Tags->patchEntity($tag, $this->request->getData());
+            $data            = $this->request->getData();
+            $data['user_id'] = $user['id'];
+            $tag             = $this->Tags->patchEntity($tag, $data);
+
             if ($this->Tags->save($tag)) {
                 $this->Flash->success(__('The tag, {0}, has been saved.', $tag->title));
 

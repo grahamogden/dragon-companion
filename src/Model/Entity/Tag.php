@@ -12,12 +12,12 @@ use Cake\ORM\Entity;
  * @property string $slug
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property int $user_id
  *
  * @property \App\Model\Entity\TimelineSegment[] $timeline_segments
  */
 class Tag extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -33,6 +33,7 @@ class Tag extends Entity
         'slug'              => true,
         'created'           => true,
         'modified'          => true,
+        'user_id'           => true,
         'timeline_segments' => true,
     ];
 }
