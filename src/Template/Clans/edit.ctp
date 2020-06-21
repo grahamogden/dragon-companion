@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Clan $clan
+ * @var array $adminUsers
  */
 ?>
 <div class="clans form content">
@@ -28,7 +29,7 @@
                             <td><?= h($user->email) ?: 'No email address set' ?></td>
                             <?php if (false) { ?>
                                 <td class="actions">
-                                    <?php if (in_array($user->id, array_column($adminUsers, 'id'))) { ?>
+                                    <?php if (in_array($user->id, array_column($adminUsers, 'id'), true)) { ?>
                                         <em>Admins cannot be removed</em>
                                     <?php } else { ?>
                                         <?= $this->Form->postLink(

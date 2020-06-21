@@ -1,17 +1,19 @@
 <?php
+
 namespace App\Model\Entity;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
  * Clan Entity
  *
- * @property int $id
- * @property string $name
+ * @property int         $id
+ * @property string      $name
  * @property string|null $description
- * @property \Cake\I18n\FrozenTime $created
+ * @property FrozenTime  $created
  *
- * @property \App\Model\Entity\User[] $users
+ * @property User[]      $users
  */
 class Clan extends Entity
 {
@@ -28,6 +30,7 @@ class Clan extends Entity
         'name'        => true,
         'description' => true,
         'created'     => true,
+        'user_id'     => true, // The user ID that created this Clan
         'users'       => true,
     ];
 }
