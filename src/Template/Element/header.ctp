@@ -1,5 +1,7 @@
 <?php
 $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
+$flashMessages  = $this->Flash->render();
+$breadcrumbs    = $this->element('breadcrumbs');
 ?>
 <header class="navbar navbar-dark bg-dark sticky-top navbar-expand-md p-2">
     <?= $this->Html->link(
@@ -104,9 +106,13 @@ $userIsLoggedIn = $this->request->getSession()->read('Auth.User');
         </ul>
     </nav>
 </header>
-<div class="container p-0">
-    <?= $this->Flash->render() ?>
+<?php if ($flashMessages) { ?>
+<div class="container-fluid content-container p-0">
+    <?= $flashMessages ?>
 </div>
-<div class="container bg-white p-0">
-    <?= $this->element('breadcrumbs'); ?>
+<?php } // endif ?>
+<?php if ($breadcrumbs) { ?>
+<div class="container-fluid content-container bg-white p-0">
+    <?= $breadcrumbs ?>
 </div>
+<?php } // endif ?>
