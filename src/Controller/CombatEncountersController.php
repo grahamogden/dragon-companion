@@ -165,7 +165,6 @@ class CombatEncountersController extends AppController
 
         $campaigns = $this->CombatEncounters->Campaigns
             ->find('list', ['limit' => 200])
-            ->where(['user_id =' => $user['id']])
             ->order(['Campaigns.name ASC']);
 
         $combatActions = $this->CombatActions
@@ -285,12 +284,6 @@ class CombatEncountersController extends AppController
             ->findById($data['campaign_id'])
             ->contain(['PlayerCharacters'])
             ->firstOrFail();
-        if ($campaign->user_id !== $user['id']) {
-            $errorMsg = __('Please select a campaign that you own.');
-            $combatEncounter->setError('campaign_id', $errorMsg);
-            $this->Flash->error(__('The combat encounter could not be saved. Please try again.'));
-            return [false];
-        }
 
         $participantsData  = json_decode($data['participants'], true);
         $monsterIdsToCheck = [];

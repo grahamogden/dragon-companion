@@ -79,6 +79,29 @@ class AppController extends Controller
     }
 
     /**
+     * Retrieves the excluding IDs from the request object, removing blanks and
+     * non-numeric IDs in the process
+     *
+     * @return array
+     */
+    protected function getExcludesFromRequest(): array
+    {
+        $excludes = $this->request->getQuery('excludes')
+            ? explode(',', $this->request->getQuery('excludes'))
+            : [];
+
+        array_walk(
+            $excludes,
+            static function (&$value) {
+                $value = trim($value);
+                $value = is_numeric($value) ? (int) $value : null;
+            }
+        );
+
+        return array_unique(array_filter($excludes));
+    }
+
+    /**
      * Generates a json encoded string using the results
      * 
      * @param Entity     $entity - the entity that is going to be searched

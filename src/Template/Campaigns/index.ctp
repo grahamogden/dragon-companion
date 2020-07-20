@@ -18,7 +18,6 @@
         <tr>
             <th scope="col"><?= $this->Paginator->sort('name') ?></th>
             <th class="d-none d-md-table-cell" scope="col"><?= __('Synopsis') ?></th>
-            <th scope="col"><?= __('Clan') ?></th>
             <th scope="col" class="actions"><?= __('Actions') ?></th>
         </tr>
         </thead>
@@ -33,28 +32,18 @@
                         ]
                     ) ?></td>
                 <td class="d-none d-md-table-cell"><?= h($campaign->synopsis) ?></td>
-                <td><?= $campaign->has('clan') ? $this->Html->link(
-                        $campaign->clan->name,
-                        [
-                            'controller' => 'Clans',
-                            'action'     => 'view',
-                            $campaign->clan->id,
-                        ]
-                    ) : '' ?></td>
                 <td class="actions">
-                    <?=
-                    $this->Html->link(
-                        __('Timeline'),
-                        [
-                            '_name'      => 'TimelineSegmentsIndex',
-                            'campaignId' => $campaign->id,
-                        ],
-                        [
-                            'class' => ['btn', 'btn-outline-primary'],
-                        ]
-                    )
-                    ?><?=
-                    $this->Form->postLink(
+                    <?= $this->Form->postLink(
+                            __('Select'),
+                            ['action' => 'selectCampaign', $campaign->id],
+                            [
+                                'class'   => [
+                                    'btn',
+                                    'btn-outline-primary',
+                                ],
+                            ]
+                        )
+                    ?><?= $this->Form->postLink(
                         __('Delete'),
                         ['action' => 'delete', $campaign->id],
                         [

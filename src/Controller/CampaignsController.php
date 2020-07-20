@@ -1,14 +1,22 @@
 <?php
+
 namespace App\Controller;
 
-use App\Controller\AppController;
+use App\Application;
+use App\Model\Entity\Campaign;
+use App\Model\Entity\CampaignUser;
+use App\Model\Table\CampaignsTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Response;
+use Cake\ORM\Query;
 
 /**
  * Campaigns Controller
  *
- * @property \App\Model\Table\CampaignsTable $Campaigns
+ * @property CampaignsTable $Campaigns
  *
- * @method \App\Model\Entity\Campaign[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method Campaign[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class CampaignsController extends AppController
 {
@@ -16,18 +24,22 @@ class CampaignsController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Users', 'Clans'],
-        ];
+//        $this->paginate = [
+//            'contain' => ['Users'],
+//        ];
 
         $user = $this->getUserOrRedirect();
 
-        $campaigns = $this->Campaigns->find()
-            ->where(['Campaigns.user_id =' => $user['id']]);
+        $campaigns = $this->Campaigns->find()->matching(
+            'Users',
+            function (Query $q) use ($user) {
+                return $q->where(['Users.id =' => $user['id']]);
+            }
+        );
 
         $campaignsPaginated = $this->paginate($campaigns);
 
@@ -38,14 +50,17 @@ class CampaignsController extends AppController
      * View method
      *
      * @param string|null $id Campaign id.
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return void
      */
     public function view($id = null)
     {
-        $campaign = $this->Campaigns->get($id, [
-            'contain' => ['Users', 'Clans'],
-        ]);
+        $campaign = $this->Campaigns->get(
+            $id,
+            [
+                'contain' => ['Users', /*'Clans'*/],
+            ]
+        );
 
         $this->set('campaign', $campaign);
     }
@@ -53,16 +68,32 @@ class CampaignsController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return Response|null Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
         $campaign = $this->Campaigns->newEntity();
 
         if ($this->request->is('post')) {
-            $user = $this->getUserOrRedirect();
-            $data = $this->request->getData();
-            $data['user_id'] = $user['id'];
+            $user          = $this->getUserOrRedirect();
+            $data          = $this->request->getData();
+            $data['users'] = [
+                [
+                    'id'        => $user['id'],
+                    '_joinData' => [
+                        'user_id'       => $user['id'],
+                        'member_status' => CampaignUser::MEMBER_STATUS_ACTIVE,
+                        'account_level' => CampaignUser::ACCOUNT_LEVEL_CREATOR,
+                    ],
+                ],
+            ];
+
+//            $clan = $this->Clans->newEntity(
+//                $data,
+//                [
+//                    'associated' => ['Users._joinData'],
+//                ]
+//            );
 
             $campaign = $this->Campaigns->patchEntity($campaign, $data);
             if ($this->Campaigns->save($campaign)) {
@@ -73,33 +104,70 @@ class CampaignsController extends AppController
             $this->Flash->error(__('The campaign could not be saved. Please, try again.'));
         }
 
-        $this->loadModel('Clans');
-        $user = $this->getUserOrRedirect();
-
-        $clans = $this->Clans->find('list', ['limit' => 200])
-            ->where(['Clans.user_id =' => $user['id']]);
-        $this->set(compact('campaign', 'clans'));
+//        $this->loadModel('Users');
+//        $user = $this->getUserOrRedirect();
+//
+//        $users = $this->Users->find('list', ['limit' => 200])
+//            ->where(['Users.user_id =' => $user['id']]);
+        $this->set(compact('campaign'/*, 'users'*/));
     }
 
     /**
      * Edit method
      *
      * @param string|null $id Campaign id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|null Redirects on successful edit, renders view otherwise.
+     * @throws RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $campaign = $this->Campaigns->get($id, [
-            'contain' => [],
-        ]);
+       $this->loadModel('Users');
+
+        $campaign = $this->Campaigns->get(
+            $id,
+            [
+                'contain' => ['Users',],
+            ]
+        );
+
+        $campaignUserCreator = $this->Users->find()
+            ->matching('Campaigns', function (Query $q) use ($campaign) {
+                return $q
+                    ->where([
+                        'Campaigns.id =' => $campaign['id'],
+                    ]);
+            })
+            ->where(['CampaignUsers.account_level =' => CampaignUser::ACCOUNT_LEVEL_CREATOR,])
+            ->firstOrFail();
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->getUserOrRedirect();
-            $data = $this->request->getData();
-            $data['user_id'] = $user['id'];
+            $user            = $this->getUserOrRedirect();
+            $data            = $this->request->getData();
+            
+            $usersJson = json_decode($data['users_string'], true);
+// debug($campaignUserCreator);
+            $data['users'][] = [
+                'id'        => $campaignUserCreator['id'],
+                '_joinData' => [
+                    'user_id'       => $campaignUserCreator['id'],
+                    'member_status' => $campaignUserCreator['_matchingData']['CampaignUsers']->member_status,
+                    'account_level' => $campaignUserCreator['_matchingData']['CampaignUsers']->account_level,
+                ],
+            ];
 
+            foreach ($usersJson as $userJson) {
+                $data['users'][] = [
+                    'id'        => $userJson['value'],
+                    '_joinData' => [
+                        'user_id'       => $userJson['value'],
+                        'member_status' => CampaignUser::MEMBER_STATUS_PENDING,
+                        'account_level' => CampaignUser::ACCOUNT_LEVEL_USER,
+                    ],
+                ];
+            }
             $campaign = $this->Campaigns->patchEntity($campaign, $data);
+// debug($campaign);exit;
             if ($this->Campaigns->save($campaign)) {
                 $this->Flash->success(__('The campaign has been saved.'));
 
@@ -108,20 +176,25 @@ class CampaignsController extends AppController
             $this->Flash->error(__('The campaign could not be saved. Please, try again.'));
         }
 
-        $this->loadModel('Clans');
-        $user = $this->getUserOrRedirect();
+        $campaignUsers = $this->Users->find('list')
+            ->matching('Campaigns', function (Query $q) use ($campaign) {
+                return $q
+                    ->where([
+                        'Campaigns.id =' => $campaign['id'],
+                    ]);
+            })
+            ->where(['CampaignUsers.account_level !=' => CampaignUser::ACCOUNT_LEVEL_CREATOR,]);
 
-        $clans = $this->Clans->find('list', ['limit' => 200])
-            ->where(['Clans.user_id =' => $user['id']]);
-        $this->set(compact('campaign', 'clans'));
+        $this->set(compact('campaign', 'campaignUsers'));
     }
 
     /**
      * Delete method
      *
      * @param string|null $id Campaign id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return Response|null Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -138,9 +211,9 @@ class CampaignsController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool
@@ -149,10 +222,13 @@ class CampaignsController extends AppController
 
         // The add and tags actions are always allowed to logged in users
         if (
-            in_array($action, [
-            'add',
-            'index',
-        ])) {
+        in_array(
+            $action,
+            [
+                'add',
+                'index',
+            ]
+        )) {
             return true;
         }
 
@@ -163,9 +239,53 @@ class CampaignsController extends AppController
             return false;
         }
 
-        // Check that the timelineSegment belongs to the current user
-        $campaign = $this->Campaigns->findById($id)->firstOrFail();
+        try {
+            // Check that the timelineSegment belongs to the current user
+            $campaign = $this->Campaigns->findById($id)->matching('Users', function (Query $q) use ($user) {
+                return $q
+                    ->where(['Users.id' => $user['id']]);
+            })->firstOrFail();
+        } catch (RecordNotFoundException $e) {
+            return false;
+        }
 
-        return $campaign->user_id === $user['id'];
+        return true;
     }
+
+    public function selectCampaign($id = null)
+    {
+        // debug('selectCampaign');
+        if ($this->request->is(['post',])) {
+            $user = $this->getUserOrRedirect();
+            $data = $this->request->getData();
+
+            try {
+                // Check that the timelineSegment belongs to the current user
+                $campaign = $this->Campaigns->findById($id)->matching('Users', function (Query $q) use ($user) {
+                    return $q
+                        ->where(['Users.id' => $user['id']]);
+                })->firstOrFail();
+
+                // debug($campaign);
+                // debug($user);
+                if ($campaign && $campaign['id']) {
+                    // exit;
+                    $this->getRequest()->getSession()->write(Application::SESSION_KEY_CAMPAIGN, $campaign);
+
+                    return $this->redirect(
+                        [
+                            '_name' => 'TimelineSegmentsIndex',
+                            'campaignId' => $campaign->id,
+                        ]
+                    );
+                }
+            } catch (RecordNotFoundException $e) {
+                return false;
+            }
+
+            $this->Flash->error(__('The campaign could not be opened. Please, try again.'));
+        }
+        return $this->redirect($this->Auth->logout());
+    }
+
 }

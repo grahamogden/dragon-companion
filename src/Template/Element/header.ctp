@@ -1,7 +1,12 @@
 <?php
-$userIsLoggedIn = $this->request->getSession()->read('Auth.User');
-$flashMessages  = $this->Flash->render();
-$breadcrumbs    = $this->element('breadcrumbs');
+
+use App\Application;
+
+$session          = $this->request->getSession();
+$user             = $session->read('Auth.User');
+$flashMessages    = $this->Flash->render();
+$breadcrumbs      = $this->element('breadcrumbs');
+$selectedCampagin = $session->read(Application::SESSION_KEY_CAMPAIGN);
 ?>
 <header class="navbar navbar-dark bg-dark sticky-top navbar-expand-md p-2">
     <?= $this->Html->link(
@@ -19,7 +24,7 @@ $breadcrumbs    = $this->element('breadcrumbs');
                     ['controller' => '', 'action' => 'index']
                 ) ?>" class="nav-link p-4 text-center"><i class="fa fa-home"></i>Home</a>
             </li>
-            <?php if ($userIsLoggedIn) { ?>
+            <?php if (is_array($user) && $user['id']) { ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link p-4 text-center dropdown-toggle" href="#" id="navbarPlayerCharacterDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-alt"></i>Players</a>
                     <ul class="dropdown-menu dropdown-menu-right p-0 text-center text-md-left" aria-labelledby="navbarPlayerCharacterDropdownMenuLink">
@@ -53,35 +58,42 @@ $breadcrumbs    = $this->element('breadcrumbs');
                     <ul class="dropdown-menu dropdown-menu-right p-0 text-center text-md-left" aria-labelledby="navbarMonsterDropdownMenuLink">
                         <li class="nav-item">
                             <a href="<?= $this->Url->build(
-                                ['controller' => 'Clans', 'action' => 'index']
-                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-users"></i>Clans</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= $this->Url->build(
                                 ['controller' => 'Campaigns', 'action' => 'index']
-                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-feather-alt"></i>Campaigns</a>
+                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-feather-alt"></i><?php if ($selectedCampagin && $selectedCampagin['id']) { ?>Switch <?php } ?>Campaigns</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?= $this->Url->build(
-                                ['controller' => 'NonPlayableCharacters', 'action' => 'index']
-                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-user-cog"></i>Non Playable
-                                Characters</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= $this->Url->build(
-                                ['controller' => 'CombatEncounters', 'action' => 'index']
-                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-dice-d20"></i>Combat Tracker</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= $this->Url->build(
-                                ['controller' => 'Monsters', 'action' => 'index']
-                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-dragon"></i>Monsters</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= $this->Url->build(
-                                ['controller' => 'Tags', 'action' => 'index']
-                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-tags"></i>Tags</a>
-                        </li>
+                        <?php if ($selectedCampagin && $selectedCampagin['id']) { ?>
+                            <li class="nav-item">
+                                <a href="<?= $this->Url->build(
+                                    ['controller' => 'Campaigns', 'action' => 'edit', 'id' => $selectedCampagin['id']]
+                                ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-arrow-right"></i><?= $selectedCampagin['name'] ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= $this->Url->build(
+                                    ['controller' => 'Clans', 'action' => 'index']
+                                ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-users"></i>Clans</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= $this->Url->build(
+                                    ['controller' => 'NonPlayableCharacters', 'action' => 'index']
+                                ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-user-cog"></i>Non Playable
+                                    Characters</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= $this->Url->build(
+                                    ['controller' => 'CombatEncounters', 'action' => 'index']
+                                ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-dice-d20"></i>Combat Tracker</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= $this->Url->build(
+                                    ['controller' => 'Monsters', 'action' => 'index']
+                                ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-dragon"></i>Monsters</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= $this->Url->build(
+                                    ['controller' => 'Tags', 'action' => 'index']
+                                ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-tags"></i>Tags</a>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </li>
             <?php } ?>
@@ -92,7 +104,7 @@ $breadcrumbs    = $this->element('breadcrumbs');
                         'darkMode'
                     ) ? 'checked="checked"' : ''); ?> />Switch Dark Mode</label></li> -->
                     <!-- <li class="nav-item"><a href="#" id="switch-header-slider">Enable Header Slider</a></li> -->
-                    <?php if ($userIsLoggedIn) { ?>
+                    <?php if (is_array($user) && $user['id']) { ?>
                         <li><a href="<?= $this->Url->build(
                                 ['controller' => 'Users', 'action' => 'logout']
                             ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-sign-out-alt"></i>Log out</a></li>

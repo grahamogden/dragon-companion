@@ -486,7 +486,7 @@ label {
       min-width: max-content;
       overflow: hidden;
 
-      @media all and (max-width: 768px) {
+      @media all and (max-width: @widthMinTablet) {
         max-height: 20rem;
         overflow-x: hidden;
         overflow-y: scroll;
@@ -507,6 +507,10 @@ label {
 
       &.dropdown-link {
         min-width: 15rem;
+
+        @media all and (min-width: @widthMinTablet) {
+          max-width: 25rem;
+        }
       }
     }
   }

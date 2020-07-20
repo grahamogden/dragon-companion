@@ -28,6 +28,8 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  */
 class Application extends BaseApplication
 {
+    public const SESSION_KEY_CAMPAIGN = 'User.Campaign';
+    
     /**
      * {@inheritDoc}
      */

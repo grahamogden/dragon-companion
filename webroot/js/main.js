@@ -90,11 +90,18 @@ jQuery(function ($) {
 
     /**
      * Retrieves the "excludes" data attribute from an element
-     * @param  string name - the condition used to select an element, typically its ID
+     * @param  string $excludes
      * @return string
      */
-    const getExcludes = function (name) {
-        return JSON.stringify($(name).data("excludes"));
+    const getExcludes = function ($excludes, $currentValues) {
+        let excludeCurrentValues = [];
+        let currentValues = JSON.parse($($currentValues).val());
+
+        for (let i = 0; i < currentValues.length; i++) {
+            excludeCurrentValues.push(currentValues[i].value);
+        }
+
+        return $($excludes).data("excludes").concat(excludeCurrentValues);
     };
 
     /**
@@ -144,8 +151,13 @@ jQuery(function ($) {
                 event.preventDefault();
             }
         })
-                               .autocomplete(autocompleteOptions);
+            .autocomplete(autocompleteOptions);
     };
+
+    const addAutoCompleteValueToTable = function ($tableBody, label, value, targetForDelete) {
+        $($tableBody)
+        .append(`<tr><td>${label}</td><td><button class="btn btn-danger" onclick="removeAutocompleteItemFromTable(jQuery, this, '${targetForDelete}', ${value})" type="button">Remove</button></td></tr>`)
+    }
 
     $("input.autocomplete").each(function () {
         let autoCompleteOptions = {
@@ -166,7 +178,7 @@ jQuery(function ($) {
                 let $element = getJqueryElementForAutocomplete(this);
                 $.getJSON($($element).data("source"), {
                     term: extractLast(request.term),
-                    excludes: getExcludes("#autocomplete-" + $($element).attr("name"))
+                    conditions: getExcludes($("#autocomplete-" + $($element).attr("name")))
                 }, response);
                 $(".ui-helper-hidden-accessible").remove();
             }
@@ -179,6 +191,15 @@ jQuery(function ($) {
     });
 
     $("input.autocomplete-to-table").each(function () {
+        let autocompleteFor = $(this).data('autocompleteFor');
+        let $hiddenField    = $('#' + autocompleteFor);
+        let $tableBody      = $('#autocomplete-' + autocompleteFor + '-table').find('tbody');
+        let defaultValues   = JSON.parse($($hiddenField).val());
+
+        $.each(defaultValues, function (index, defaultValue) {
+            addAutoCompleteValueToTable($tableBody, defaultValue.label, defaultValue.value, autocompleteFor);
+        });
+
         let autoCompleteOptions = {
             select: function (event, ui) {
                 let autocompleteFor = $(this).data('autocompleteFor');
@@ -186,6 +207,7 @@ jQuery(function ($) {
                 let $table          = $('#autocomplete-' + autocompleteFor + '-table');
                 let $tableBody      = $($table).find('tbody');
                 let terms           = [];
+                
                 try {
                     terms = JSON.parse($($hiddenField).val());
                 } catch {
@@ -202,8 +224,8 @@ jQuery(function ($) {
                     // Update the hidden element with the updated data
                     $($hiddenField).val(JSON.stringify(terms)).change();
 
-                    $($tableBody)
-                        .append(`<tr><td>${ui.item.label}</td><td><button class="btn btn-danger" onclick="removeAutocompleteItemFromTable(jQuery, this, '${autocompleteFor}', ${ui.item.value})" type="button">Remove</button></td></tr>`);
+                    // Add the item to the table body
+                    addAutoCompleteValueToTable($tableBody, ui.item.label, ui.item.value, autocompleteFor);
 
                     // Reset the current element to blank for the next item to be selected
                     this.value = '';
@@ -217,22 +239,32 @@ jQuery(function ($) {
                 let sourceUrl          = $($element).data("source");
                 let autocompleteFor    = $($element).data("autocompleteFor");
                 let conditionalsString = $($element).data("conditionals").trim();
-                let conditionals       = {};
-
+                let term = extractLast(request.term);
+                let conditions = {
+                    includes: [{
+                        key: autocompleteFor,
+                        value: term
+                    }],
+                    excludes: getExcludes(
+                        $("#autocomplete-" + $($element).attr("name")),
+                        $("#" + autocompleteFor)
+                    )
+                };
                 if (conditionalsString !== "") {
                     let conditionalsArray = split(conditionalsString);
                     $.each(conditionalsArray, function (index, value) {
-                        conditionals[value] = parseInt($("[name=" + value + "]").val());
+                        conditions.includes.push({
+                            key: value,
+                            value: parseInt($("[name=" + value + "]").val())
+                        });
                     });
                 }
 
-                let conditionalsJson = JSON.stringify(conditionals);
-                let excludes         = $("#" + autocompleteFor).val();
+                let conditionsJson = JSON.stringify(conditions);
 
                 $.getJSON(sourceUrl, {
-                    term: extractLast(request.term),
-                    conditionals: conditionalsJson,
-                    excludes: excludes
+                    term: term,
+                    conditions: conditionsJson,
                 }, response);
                 $(".ui-helper-hidden-accessible").remove();
             }

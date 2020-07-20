@@ -263,6 +263,11 @@ label > input[type=checkbox].switch:checked {
 .navbar .navbar-nav .nav-link.dropdown-link {
   min-width: 15rem;
 }
+@media all and (min-width: 768px) {
+  .navbar .navbar-nav .nav-link.dropdown-link {
+    max-width: 25rem;
+  }
+}
 .navbar .navbar-toggler {
   border-color: rgba(255, 255, 255, 0.7);
   border-radius: 0.8rem;
