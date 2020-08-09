@@ -95,10 +95,13 @@ jQuery(function ($) {
      */
     const getExcludes = function ($excludes, $currentValues) {
         let excludeCurrentValues = [];
-        let currentValues = JSON.parse($($currentValues).val());
+        let currentStringValue = $($currentValues).val();
+        if (typeof currentStringValue !== 'undefined' && currentStringValue !== '') {
+            let currentValues = JSON.parse();
 
-        for (let i = 0; i < currentValues.length; i++) {
-            excludeCurrentValues.push(currentValues[i].value);
+            for (let i = 0; i < currentValues.length; i++) {
+                excludeCurrentValues.push(currentValues[i].value);
+            }
         }
 
         return $($excludes).data("excludes").concat(excludeCurrentValues);
