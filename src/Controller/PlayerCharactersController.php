@@ -7,6 +7,7 @@ use App\Model\Table\PlayerCharactersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Response;
+use Cake\ORM\Query;
 
 /**
  * PlayerCharacters Controller
@@ -103,6 +104,8 @@ class PlayerCharactersController extends AppController
             $this->Flash->error(__('The player character could not be saved. Please, try again.'));
         }
 
+        $this->loadModel('Campaigns');
+
         $characterClasses = $this->PlayerCharacters->CharacterClasses
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
@@ -111,10 +114,13 @@ class PlayerCharactersController extends AppController
             ->order(['name' => 'ASC']);
         $alignments       = $this->PlayerCharacters->Alignments
             ->find('list', ['limit' => 200]);
-        $campaigns        = $this->PlayerCharacters->Campaigns
-            ->find('list', ['limit' => 200])
-            ->where(['Campaigns.user_id =' => $user['id']])
-            ->order(['name' => 'ASC']);
+        $campaigns        = $this->Campaigns->find('list')
+            ->matching('Users', function (Query $q) use ($user) {
+                return $q
+                    ->where([
+                        'Users.id =' => $user['id'],
+                    ]);
+            });
 
         $this->set(
             compact(
