@@ -39,25 +39,9 @@ class AutocompleteToTableWidget implements WidgetInterface
         ];
 
 
-        $excludes = [];
-        foreach ($data[self::ATTR_EXCLUDES] as $key => $value) {
-            $excludes[] = [
-                'key'   => $key,
-                'value' => $value,
-            ];
-            unset ($key, $value);
-        }
-        $data[self::ATTR_EXCLUDES] = json_encode($excludes);
+        $data[self::ATTR_EXCLUDES] = $this->convertAttributeToJsonString($data, self::ATTR_EXCLUDES);
+        $data[self::ATTR_VALUE]    = $this->convertAttributeToJsonString($data, self::ATTR_VALUE);
 
-        $values = [];
-        foreach ($data[self::ATTR_VALUE] as $key => $value) {
-            $values[] = [
-                'label' => $value,
-                'value' => $key,
-            ];
-            unset($key, $value);
-        }
-        $data[self::ATTR_VALUE] = json_encode($values);
         $return = $this->_templates->format('autocomplete-to-table', [
             self::ATTR_ELEMENT_NAME => $data[self::ATTR_ELEMENT_NAME],
             self::ATTR_VALUE        => $data[self::ATTR_VALUE],
@@ -84,5 +68,30 @@ class AutocompleteToTableWidget implements WidgetInterface
     public function secureFields(array $data)
     {
         return [$data[self::ATTR_ELEMENT_NAME]];
+    }
+
+    /**
+     * Converts the data for the provided key into the desired json_encoded format of
+     * array values with a "key" and "value" properties
+     * 
+     * @var array $data
+     * 
+     * @return string
+     */
+    private function convertAttributeToJsonString(array $data, string $key): string
+    {
+        $values = [];
+
+        if (isset($data[$key])) {
+            foreach ($data[$key] as $key => $value) {
+                $values[] = [
+                    'key'   => $key,
+                    'value' => $value,
+                ];
+                unset ($key, $value);
+            }
+        }
+
+        return json_encode($values);
     }
 }
