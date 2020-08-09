@@ -320,11 +320,17 @@ textarea {
 }
 
 div.content-container {
-  box-shadow: 0 0 @distSixteen @distSixteen rgba(0, 0, 0, 0.2);
   flex: 1;
-  max-width: @contentMaxWidth;
   padding-bottom: @distSixteen;
   padding-top: @distSixteen;
+}
+
+div.content-shadow {
+  box-shadow: 0 0 @distSixteen @distSixteen rgba(0, 0, 0, 0.2);
+}
+
+div.content-width-restriction {
+  max-width: @contentMaxWidth;
 }
 
 .fa-dice-d20 {

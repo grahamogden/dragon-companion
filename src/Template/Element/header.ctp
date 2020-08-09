@@ -119,12 +119,12 @@ $selectedCampagin = $session->read(Application::SESSION_KEY_CAMPAIGN);
     </nav>
 </header>
 <?php if ($flashMessages) { ?>
-<div class="container-fluid content-container p-0">
+<div class="container-fluid content-width-restriction content-shadow p-0">
     <?= $flashMessages ?>
 </div>
 <?php } // endif ?>
 <?php if ($breadcrumbs) { ?>
-<div class="container-fluid content-container bg-white p-0">
+<div class="container-fluid content-width-restriction content-shadow bg-white p-0">
     <?= $breadcrumbs ?>
 </div>
 <?php } // endif ?>
