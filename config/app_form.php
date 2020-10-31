@@ -83,9 +83,9 @@ return [
                     <tr class="autocomplete-row">
                         <td colspan="2">
                             <div class="autocomplete-container input">
-                                <input type="text" name="{{name}}-field" id="autocomplete-{{name}}-field" value="{{val}}" {{attrs}} {{excludes}} data-source="{{source}}" data-conditionals="{{conditionals}}" data-autocomplete-for="{{name}}" />
+                                <input type="text" name="{{name}}-field" id="autocomplete-{{name}}-field" {{attrs}} data-excludes=\'{{excludes}}\' data-source="{{source}}" data-conditionals="{{conditionals}}" data-autocomplete-for="{{name}}" />
                                 <div class="autocomplete-results" id="results-autocomplete-{{name}}-field"></div>
-                                <input type="hidden" name="{{name}}" id="{{name}}" class="autocomplete-data" value="[]" />
+                                <input type="hidden" name="{{name}}" id="{{name}}" class="autocomplete-data" value=\'{{val}}\' />
                             </div>
                         </td>
                     </tr>

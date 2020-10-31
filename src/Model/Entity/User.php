@@ -2,7 +2,6 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use Cake\Auth\DefaultPasswordHasher;
 
 /**
  * User Entity
@@ -15,13 +14,14 @@ use Cake\Auth\DefaultPasswordHasher;
  * @property \Cake\I18n\FrozenTime $modified
  * @property int $status
  *
+ * @property \App\Model\Entity\Campaign[] $campaigns
  * @property \App\Model\Entity\CombatEncounter[] $combat_encounters
+ * @property \App\Model\Entity\Monster[] $monsters
  * @property \App\Model\Entity\NonPlayableCharacter[] $non_playable_characters
  * @property \App\Model\Entity\PlayerCharacter[] $player_characters
  * @property \App\Model\Entity\Puzzle[] $puzzles
  * @property \App\Model\Entity\Tag[] $tags
  * @property \App\Model\Entity\TimelineSegment[] $timeline_segments
- * @property \App\Model\Entity\Clan[] $clans
  */
 class User extends Entity
 {
@@ -41,13 +41,14 @@ class User extends Entity
         'created' => true,
         'modified' => true,
         'status' => true,
+        'campaigns' => true,
         'combat_encounters' => true,
+        'monsters' => true,
         'non_playable_characters' => true,
         'player_characters' => true,
         'puzzles' => true,
         'tags' => true,
         'timeline_segments' => true,
-        'clans' => true,
     ];
 
     /**
@@ -56,7 +57,7 @@ class User extends Entity
      * @var array
      */
     protected $_hidden = [
-        'password'
+        'password',
     ];
 
     protected function _setPassword($value)

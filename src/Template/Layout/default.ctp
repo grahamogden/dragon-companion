@@ -25,7 +25,7 @@ if ($this->request->getCookie('darkMode')) {
 <body class="<?= implode(' ', $bodyClasses); ?>">
     <?= $this->element('header') ?>
     <?= $this->Flash->render() ?>
-    <div class="container bg-white content-container">
+    <div class="container-fluid bg-white content-container content-shadow content-width-restriction">
         <?= $this->fetch('content') ?>
     </div>
 <?= $this->element('footer') ?>

@@ -8,10 +8,6 @@
     <h1><?= h($campaign->name) ?></h1>
     <table class="table">
         <tr>
-            <th scope="row"><?= __('User') ?></th>
-            <td><?= h($campaign->user->username) ?></td>
-        </tr>
-        <tr>
             <th scope="row"><?= __('Name') ?></th>
             <td><?= h($campaign->name) ?></td>
         </tr>
@@ -20,8 +16,10 @@
             <td><?= h($campaign->synopsis) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Clan') ?></th>
-            <td><?= h($campaign->clan->name) ?></td>
+            <th scope="row"><?= __('Users') ?></th>
+            <?php foreach ($campaign->users as $user) { ?>
+            <td><?= $user->name ?></td>
+            <?php } ?>
         </tr>
     </table>
 </div>

@@ -7,7 +7,7 @@ $title = 'Dragon Companion - The one and only Companion app for playing role pla
 <?= $this->element('head') ?>
 <body class="home">
 <?= $this->element('header') ?>
-    <div class="container bg-white content-container">
+    <div class="container bg-white content-container content-width-restriction content-shadow">
         <?= $this->Flash->render() ?>
         <h1>Welcome to Dragon Companion!</h1>
         <div>

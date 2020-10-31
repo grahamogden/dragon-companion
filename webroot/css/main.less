@@ -52,7 +52,7 @@
 @colorDarkBlueEight: rgba(152, 158, 164, 1);
 @colorDarkBlueNine: rgba(172, 178, 184, 1);
 
-@contentMaxWidth: 120rem;
+@contentMaxWidth: 140rem;
 
 @fontSizeDefault: 1.6rem;
 
@@ -320,10 +320,17 @@ textarea {
 }
 
 div.content-container {
-  box-shadow: 0 0 @distSixteen @distSixteen rgba(0, 0, 0, 0.2);
   flex: 1;
   padding-bottom: @distSixteen;
   padding-top: @distSixteen;
+}
+
+div.content-shadow {
+  box-shadow: 0 0 @distSixteen @distSixteen rgba(0, 0, 0, 0.2);
+}
+
+div.content-width-restriction {
+  max-width: @contentMaxWidth;
 }
 
 .fa-dice-d20 {
@@ -485,7 +492,7 @@ label {
       min-width: max-content;
       overflow: hidden;
 
-      @media all and (max-width: 768px) {
+      @media all and (max-width: @widthMinTablet) {
         max-height: 20rem;
         overflow-x: hidden;
         overflow-y: scroll;
@@ -506,6 +513,10 @@ label {
 
       &.dropdown-link {
         min-width: 15rem;
+
+        @media all and (min-width: @widthMinTablet) {
+          max-width: 25rem;
+        }
       }
     }
   }

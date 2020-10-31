@@ -66,6 +66,19 @@ Router::scope(
                         'path' => 'combat-encounters',
                     ]
                 );
+
+                $routes->resources(
+                    'Users',
+                    [
+                        'only' => [
+                            'index',
+                        ],
+                        'actions' => [
+                            'index' => 'get-users',
+                        ],
+                    ]
+                );
+
                 // $routes->connect(
                 //     '/combat-encounters',
                 //     [

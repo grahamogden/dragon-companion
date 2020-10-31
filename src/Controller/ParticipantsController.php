@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Application;
 use App\Controller\AppController;
 use Cake\ORM\Query;
 
@@ -172,7 +173,7 @@ class ParticipantsController extends AppController
 
         $user       = $this->getUserOrRedirect();
         $term       = $this->request->getQuery('term');
-        $campaignId = $this->getCampaignIdFromRequest();
+        $campaignId = $this->getCampaignIdFromSession();
         $excludes   = $this->getExcludesFromRequest();
 
         $conditions = [
@@ -192,12 +193,12 @@ class ParticipantsController extends AppController
                     'conditions' => $conditions,
                 ]
             )
-                ->matching(
+                /*->matching(
                     'Campaigns',
                     static function (Query $q) use ($user) {
                         return $q->where(['Campaigns.user_id =' => $user['id']]);
                     }
-                );
+                )*/;
 
             foreach ($results as $result) {
                 $playerCharacterName = $result->first_name . ($result->last_name ? ' ' . $result->last_name : '');
@@ -223,6 +224,8 @@ class ParticipantsController extends AppController
             ];
         }
 
+
+        header('Content-Type: application/json');
         echo json_encode($return);
         exit;
     }
@@ -232,58 +235,22 @@ class ParticipantsController extends AppController
      *
      * @return int
      */
-    private function getCampaignIdFromRequest(): int
+    private function getCampaignIdFromSession(): int
     {
-        $conditionals = json_decode($this->request->getQuery('conditionals'), true);
+        $campaign = $this->request->getSession()->read(Application::SESSION_KEY_CAMPAIGN);
 
-        if (json_last_error() !== JSON_ERROR_NONE
-            || !isset($conditionals['campaign_id'])
-        ) {
+        if (!$campaign || !$campaign['id']) {
+
+            header('Content-Type: application/json');
             echo json_encode(
                 [
-                    'label' => 'Please provide a campaign ID',
+                    'label' => 'Please provide a campaign ID ' . debug($campaign),
                 ]
             );
             exit;
         }
 
-        $campaignId = $conditionals['campaign_id'];
-
-        if (!is_numeric($campaignId)
-            || (int) $campaignId <= 0
-        ) {
-            echo json_encode(
-                [
-                    'label' => 'Please provide a campaign ID',
-                ]
-            );
-            exit;
-        }
-
-        return (int) $campaignId;
-    }
-
-    /**
-     * Retrieves the excluding IDs from the request object, removing blanks and
-     * non-numeric IDs in the process
-     *
-     * @return array
-     */
-    private function getExcludesFromRequest(): array
-    {
-        $excludes = $this->request->getQuery('excludes')
-            ? explode(',', $this->request->getQuery('excludes'))
-            : [];
-
-        array_walk(
-            $excludes,
-            static function (&$value) {
-                $value = trim($value);
-                $value = is_numeric($value) ? (int) $value : null;
-            }
-        );
-
-        return array_unique(array_filter($excludes));
+        return (int) $campaign['id'];
     }
 
     /**
@@ -299,7 +266,6 @@ class ParticipantsController extends AppController
         $this->loadModel('Monsters');
 
         $term         = $this->request->getQuery('term');
-        $conditionals = $this->request->getQuery('conditionals');
 
         echo $this->formatJsonResponse(
             $this->Monsters,

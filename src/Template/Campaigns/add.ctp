@@ -1,7 +1,11 @@
 <?php
+
+use App\Model\Entity\Campaign;
+use App\View\AppView;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Campaign $campaign
+ * @var AppView  $this
+ * @var Campaign $campaign
  */
 ?>
 <div class="campaigns form content">
@@ -10,8 +14,7 @@
         <fieldset>
             <?= $this->Form->control('name', ['class' => ['form-control']]) ?>
             <?= $this->Form->control('synopsis', ['class' => ['form-control'], 'type' => 'textarea']) ?>
-            <?= $this->Form->control('clan_id', ['class' => ['form-control'], 'options' => $clans, 'empty' => true]) ?>
         </fieldset>
-        <?= $this->Form->submit('Save', ['class' => ['btn','btn-lg','btn-block','btn-success']]) ?>
+        <?= $this->Form->submit('Save', ['class' => ['btn', 'btn-lg', 'btn-block', 'btn-success']]) ?>
     <?= $this->Form->end() ?>
 </div>

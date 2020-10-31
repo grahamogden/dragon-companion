@@ -21,9 +21,22 @@ use Cake\Event\Event;
 
 class ApiAppController extends Controller
 {
+    /**
+     * @throws \Exception
+     */
     public function initialize()
     {
         parent::initialize();
         $this->loadComponent('RequestHandler');
+    }
+
+    /**
+     * @param $data
+     */
+    public function output($data): void
+    {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
     }
 }

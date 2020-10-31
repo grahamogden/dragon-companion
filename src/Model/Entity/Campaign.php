@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,14 +7,14 @@ use Cake\ORM\Entity;
 /**
  * Campaign Entity
  *
- * @property int $id
- * @property int $user_id
- * @property string $name
- * @property string|null $synopsis
- * @property int|null $clan_id
+ * @property int               $id
+ * @property string            $name
+ * @property string|null       $synopsis
  *
- * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\Clan $clan
+ * @property CampaignUser[]    $campaign_users
+ * @property CombatEncounter[] $combat_encounters
+ * @property PlayerCharacter[] $player_characters
+ * @property TimelineSegment[] $timeline_segments
  */
 class Campaign extends Entity
 {
@@ -27,11 +28,12 @@ class Campaign extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'name' => true,
-        'synopsis' => true,
-        'clan_id' => true,
-        'user' => true,
-        'clan' => true,
+        'name'              => true,
+        'synopsis'          => true,
+        'campaign_users'    => true,
+        'combat_encounters' => true,
+        'player_characters' => true,
+        'timeline_segments' => true,
+        'users'             => true,
     ];
 }

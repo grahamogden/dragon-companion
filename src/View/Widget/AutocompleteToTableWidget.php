@@ -10,6 +10,7 @@ class AutocompleteToTableWidget implements WidgetInterface
     private const ATTR_ATTRIBUTES       = 'attrs';
     public const ATTR_CONDITIONALS      = 'conditionals';
     public const ATTR_ELEMENT_NAME      = 'name';
+    public const ATTR_EXCLUDES          = 'excludes';
     /** @var string - Array key for the table headings */
     public const ATTR_HEADING           = 'heading';
     public const ATTR_SOURCE            = 'source';
@@ -32,9 +33,14 @@ class AutocompleteToTableWidget implements WidgetInterface
                 self::ATTR_SOURCE_ACTION     => '',
                 self::ATTR_SOURCE_CONTROLLER => '',
             ],
-            self::ATTR_VALUE        => '',
+            self::ATTR_VALUE        => [],
             self::ATTR_CONDITIONALS => [],
+            self::ATTR_EXCLUDES     => [],
         ];
+
+
+        $data[self::ATTR_EXCLUDES] = $this->convertAttributeToJsonString($data, self::ATTR_EXCLUDES);
+        $data[self::ATTR_VALUE]    = $this->convertAttributeToJsonString($data, self::ATTR_VALUE);
 
         $return = $this->_templates->format('autocomplete-to-table', [
             self::ATTR_ELEMENT_NAME => $data[self::ATTR_ELEMENT_NAME],
@@ -42,14 +48,16 @@ class AutocompleteToTableWidget implements WidgetInterface
             self::ATTR_SOURCE       => Router::url($data[self::ATTR_SOURCE]),
             self::ATTR_HEADING      => ucfirst($data[self::ATTR_HEADING]),
             self::ATTR_CONDITIONALS => implode(',', $data[self::ATTR_CONDITIONALS]),
+            self::ATTR_EXCLUDES     => $data[self::ATTR_EXCLUDES],
             self::ATTR_ATTRIBUTES   => $this->_templates->formatAttributes(
                 $data,
                 [
                     self::ATTR_ELEMENT_NAME,
                     self::ATTR_SOURCE,
-                    'value',
+                    self::ATTR_EXCLUDES,
                     self::ATTR_HEADING,
                     self::ATTR_CONDITIONALS,
+                    self::ATTR_VALUE,
                 ]
             ),
         ]);
@@ -60,5 +68,30 @@ class AutocompleteToTableWidget implements WidgetInterface
     public function secureFields(array $data)
     {
         return [$data[self::ATTR_ELEMENT_NAME]];
+    }
+
+    /**
+     * Converts the data for the provided key into the desired json_encoded format of
+     * array values with a "key" and "value" properties
+     * 
+     * @var array $data
+     * 
+     * @return string
+     */
+    private function convertAttributeToJsonString(array $data, string $key): string
+    {
+        $values = [];
+
+        if (isset($data[$key])) {
+            foreach ($data[$key] as $key => $value) {
+                $values[] = [
+                    'key'   => $key,
+                    'value' => $value,
+                ];
+                unset ($key, $value);
+            }
+        }
+
+        return json_encode($values);
     }
 }

@@ -28,6 +28,8 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  */
 class Application extends BaseApplication
 {
+    public const SESSION_KEY_CAMPAIGN = 'User.Campaign';
+    
     /**
      * {@inheritDoc}
      */
@@ -35,6 +37,8 @@ class Application extends BaseApplication
     {
         // Call parent to load bootstrap from files.
         parent::bootstrap();
+        
+        $this->addPlugin('Migrations');
     }
 
     /**
