@@ -230,9 +230,9 @@ class Initial extends AbstractMigration
                 'limit' => null,
                 'null' => true,
             ])
-            ->addColumn('visible', 'boolean', [
-                'default' => false,
-                'limit' => null,
+            ->addColumn('visible', 'integer', [
+                'default' => '0',
+                'limit' => 1,
                 'null' => false,
             ])
             ->addIndex(
@@ -710,7 +710,7 @@ class Initial extends AbstractMigration
                 'null' => false,
                 'signed' => false,
             ])
-            ->addColumn('dexterity_modifier', 'tinyinteger', [
+            ->addColumn('dexterity_modifier', 'integer', [
                 'default' => null,
                 'limit' => 3,
                 'null' => false,
@@ -955,7 +955,7 @@ class Initial extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('status', 'tinyinteger', [
+            ->addColumn('status', 'integer', [
                 'default' => null,
                 'limit' => 3,
                 'null' => false,
