@@ -2,12 +2,12 @@
 use Migrations\AbstractMigration;
 
 class Initial extends AbstractMigration
-{
+    {
 
     public $autoId = false;
 
     public function up()
-    {
+        {
 
         $this->table('alignments')
             ->addColumn('id', 'integer', [
@@ -110,6 +110,39 @@ class Initial extends AbstractMigration
             ])
             ->create();
 
+        $this->table('character_classes_player_characters')
+            ->addColumn('id', 'integer', [
+                'autoIncrement' => true,
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addPrimaryKey(['id'])
+            ->addColumn('character_class_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('player_character_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addIndex(
+                [
+                    'character_class_id',
+                ]
+            )
+            ->addIndex(
+                [
+                    'player_character_id',
+                ]
+            )
+            ->create();
+
         $this->table('character_races')
             ->addColumn('id', 'integer', [
                 'autoIncrement' => true,
@@ -124,6 +157,39 @@ class Initial extends AbstractMigration
                 'limit' => 25,
                 'null' => false,
             ])
+            ->create();
+
+        $this->table('character_races_player_characters')
+            ->addColumn('id', 'integer', [
+                'autoIncrement' => true,
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addPrimaryKey(['id'])
+            ->addColumn('character_race_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('player_character_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addIndex(
+                [
+                    'character_race_id',
+                ]
+            )
+            ->addIndex(
+                [
+                    'player_character_id',
+                ]
+            )
             ->create();
 
         $this->table('clans')
@@ -394,6 +460,39 @@ class Initial extends AbstractMigration
             ])
             ->create();
 
+        $this->table('conditions_participants')
+            ->addColumn('id', 'integer', [
+                'autoIncrement' => true,
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addPrimaryKey(['id'])
+            ->addColumn('condition_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('participant_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addIndex(
+                [
+                    'condition_id',
+                ]
+            )
+            ->addIndex(
+                [
+                    'participant_id',
+                ]
+            )
+            ->create();
+
         $this->table('data_sources')
             ->addColumn('id', 'integer', [
                 'autoIncrement' => true,
@@ -582,6 +681,23 @@ class Initial extends AbstractMigration
             )
             ->create();
 
+        $this->table('non_playable_characters_timeline_segments')
+            ->addColumn('non_playable_character_id', 'integer', [
+                'autoIncrement' => true,
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addPrimaryKey(['non_playable_character_id'])
+            ->addColumn('timeline_segment_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->create();
+
         $this->table('participants')
             ->addColumn('id', 'integer', [
                 'autoIncrement' => true,
@@ -591,75 +707,11 @@ class Initial extends AbstractMigration
                 'signed' => false,
             ])
             ->addPrimaryKey(['id'])
-            ->addColumn('initiative', 'integer', [
-                'default' => null,
-                'limit' => 4,
-                'null' => false,
-            ])
-            ->addColumn('combat_encounter_id', 'integer', [
-                'default' => null,
-                'limit' => 11,
-                'null' => false,
-                'signed' => false,
-            ])
-            ->addColumn('monster_id', 'integer', [
-                'default' => null,
-                'limit' => 11,
-                'null' => true,
-                'signed' => false,
-            ])
-            ->addColumn('player_character_id', 'integer', [
-                'default' => null,
-                'limit' => 11,
-                'null' => true,
-                'signed' => false,
-            ])
             ->addColumn('name', 'string', [
                 'default' => null,
-                'limit' => 250,
+                'limit' => 255,
                 'null' => false,
             ])
-            ->addColumn('starting_hit_points', 'float', [
-                'default' => null,
-                'null' => false,
-                'precision' => 9,
-                'scale' => 3,
-                'signed' => false,
-            ])
-            ->addColumn('current_hit_points', 'float', [
-                'default' => null,
-                'null' => false,
-                'precision' => 9,
-                'scale' => 3,
-                'signed' => false,
-            ])
-            ->addColumn('armour_class', 'integer', [
-                'default' => null,
-                'limit' => 3,
-                'null' => false,
-                'signed' => false,
-            ])
-            ->addColumn('temporary_id', 'integer', [
-                'default' => null,
-                'limit' => 11,
-                'null' => false,
-                'signed' => false,
-            ])
-            ->addIndex(
-                [
-                    'combat_encounter_id',
-                ]
-            )
-            ->addIndex(
-                [
-                    'monster_id',
-                ]
-            )
-            ->addIndex(
-                [
-                    'player_character_id',
-                ]
-            )
             ->create();
 
         $this->table('player_characters')
@@ -747,47 +799,11 @@ class Initial extends AbstractMigration
                 'signed' => false,
             ])
             ->addPrimaryKey(['id'])
-            ->addColumn('user_id', 'integer', [
+            ->addColumn('name', 'string', [
                 'default' => null,
-                'limit' => 11,
-                'null' => false,
-                'signed' => false,
-            ])
-            ->addColumn('title', 'string', [
-                'default' => '',
-                'limit' => 250,
+                'limit' => 255,
                 'null' => false,
             ])
-            ->addColumn('description', 'string', [
-                'default' => '',
-                'limit' => 250,
-                'null' => false,
-            ])
-            ->addColumn('slug', 'string', [
-                'default' => '',
-                'limit' => 250,
-                'null' => false,
-            ])
-            ->addColumn('created', 'datetime', [
-                'default' => 'CURRENT_TIMESTAMP',
-                'limit' => null,
-                'null' => false,
-            ])
-            ->addColumn('modified', 'datetime', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-            ])
-            ->addColumn('map', 'text', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-            ])
-            ->addIndex(
-                [
-                    'user_id',
-                ]
-            )
             ->create();
 
         $this->table('tags')
@@ -839,6 +855,32 @@ class Initial extends AbstractMigration
             ->addIndex(
                 [
                     'user_id',
+                ]
+            )
+            ->create();
+
+        $this->table('tags_timeline_segments')
+            ->addColumn('tag_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('timeline_segment_id', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addPrimaryKey(['tag_id', 'timeline_segment_id'])
+            ->addIndex(
+                [
+                    'tag_id',
+                ]
+            )
+            ->addIndex(
+                [
+                    'timeline_segment_id',
                 ]
             )
             ->create();
@@ -930,41 +972,27 @@ class Initial extends AbstractMigration
                 'signed' => false,
             ])
             ->addPrimaryKey(['id'])
-            ->addColumn('username', 'string', [
-                'default' => '',
-                'limit' => 255,
-                'null' => false,
-            ])
-            ->addColumn('password', 'string', [
+            ->addColumn('player_character_id', 'integer', [
                 'default' => null,
-                'limit' => 255,
+                'limit' => 11,
                 'null' => false,
+                'signed' => false,
             ])
-            ->addColumn('email', 'string', [
-                'default' => '',
-                'limit' => 255,
-                'null' => false,
-            ])
-            ->addColumn('created', 'datetime', [
-                'default' => 'CURRENT_TIMESTAMP',
-                'limit' => null,
-                'null' => false,
-            ])
-            ->addColumn('modified', 'datetime', [
+            ->addColumn('participant_id', 'integer', [
                 'default' => null,
-                'limit' => null,
+                'limit' => 11,
                 'null' => false,
-            ])
-            ->addColumn('status', 'integer', [
-                'default' => null,
-                'limit' => 3,
-                'null' => false,
+                'signed' => false,
             ])
             ->addIndex(
                 [
-                    'username',
-                ],
-                ['unique' => true]
+                    'player_character_id',
+                ]
+            )
+            ->addIndex(
+                [
+                    'participant_id',
+                ]
             )
             ->create();
 
@@ -981,6 +1009,48 @@ class Initial extends AbstractMigration
             ->addForeignKey(
                 'user_id',
                 'users',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'CASCADE'
+                ]
+            )
+            ->update();
+
+        $this->table('character_classes_player_characters')
+            ->addForeignKey(
+                'character_class_id',
+                'character_classes',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'CASCADE'
+                ]
+            )
+            ->addForeignKey(
+                'player_character_id',
+                'player_characters',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'CASCADE'
+                ]
+            )
+            ->update();
+
+        $this->table('character_races_player_characters')
+            ->addForeignKey(
+                'character_race_id',
+                'character_races',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'CASCADE'
+                ]
+            )
+            ->addForeignKey(
+                'player_character_id',
+                'player_characters',
                 'id',
                 [
                     'update' => 'CASCADE',
@@ -1052,6 +1122,27 @@ class Initial extends AbstractMigration
             )
             ->addForeignKey(
                 'target_participant_id',
+                'participants',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'CASCADE'
+                ]
+            )
+            ->update();
+
+        $this->table('conditions_participants')
+            ->addForeignKey(
+                'condition_id',
+                'conditions',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'CASCADE'
+                ]
+            )
+            ->addForeignKey(
+                'participant_id',
                 'participants',
                 'id',
                 [
@@ -1196,6 +1287,27 @@ class Initial extends AbstractMigration
             )
             ->update();
 
+        $this->table('tags_timeline_segments')
+            ->addForeignKey(
+                'tag_id',
+                'tags',
+                'id',
+                [
+                    'update' => 'RESTRICT',
+                    'delete' => 'RESTRICT'
+                ]
+            )
+            ->addForeignKey(
+                'timeline_segment_id',
+                'timeline_segments',
+                'id',
+                [
+                    'update' => 'RESTRICT',
+                    'delete' => 'RESTRICT'
+                ]
+            )
+            ->update();
+
         $this->table('timeline_segments')
             ->addForeignKey(
                 'campaign_id',
@@ -1219,13 +1331,29 @@ class Initial extends AbstractMigration
     }
 
     public function down()
-    {
+        {
         $this->table('campaign_users')
             ->dropForeignKey(
                 'campaign_id'
             )
             ->dropForeignKey(
                 'user_id'
+            );
+
+        $this->table('character_classes_player_characters')
+            ->dropForeignKey(
+                'character_class_id'
+            )
+            ->dropForeignKey(
+                'player_character_id'
+            );
+
+        $this->table('character_races_player_characters')
+            ->dropForeignKey(
+                'character_race_id'
+            )
+            ->dropForeignKey(
+                'player_character_id'
             );
 
         $this->table('clans_users')
@@ -1253,6 +1381,14 @@ class Initial extends AbstractMigration
             )
             ->dropForeignKey(
                 'target_participant_id'
+            );
+
+        $this->table('conditions_participants')
+            ->dropForeignKey(
+                'condition_id'
+            )
+            ->dropForeignKey(
+                'participant_id'
             );
 
         $this->table('monsters')
@@ -1306,6 +1442,14 @@ class Initial extends AbstractMigration
                 'user_id'
             );
 
+        $this->table('tags_timeline_segments')
+            ->dropForeignKey(
+                'tag_id'
+            )
+            ->dropForeignKey(
+                'timeline_segment_id'
+            );
+
         $this->table('timeline_segments')
             ->dropForeignKey(
                 'campaign_id'
@@ -1318,21 +1462,28 @@ class Initial extends AbstractMigration
         $this->dropTable('campaign_users');
         $this->dropTable('campaigns');
         $this->dropTable('character_classes');
+        $this->dropTable('character_classes_player_characters');
         $this->dropTable('character_races');
+        $this->dropTable('character_races_player_characters');
         $this->dropTable('clans');
         $this->dropTable('clans_users');
         $this->dropTable('combat_actions');
         $this->dropTable('combat_encounters');
         $this->dropTable('combat_turns');
         $this->dropTable('conditions');
+        $this->dropTable('conditions_participants');
         $this->dropTable('data_sources');
         $this->dropTable('monster_instance_types');
         $this->dropTable('monsters');
         $this->dropTable('non_playable_characters');
+        $this->dropTable('non_playable_characters_timeline_segments');
         $this->dropTable('participants');
+        $this->dropTable('permissions');
         $this->dropTable('player_characters');
         $this->dropTable('puzzles');
+        $this->dropTable('roles');
         $this->dropTable('tags');
+        $this->dropTable('tags_timeline_segments');
         $this->dropTable('timeline_segments');
         $this->dropTable('users');
     }
