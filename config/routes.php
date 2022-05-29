@@ -18,9 +18,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-use Cake\Core\Plugin;
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 use Cake\Routing\Route\DashedRoute;
 
 /**
@@ -44,13 +42,13 @@ use Cake\Routing\Route\DashedRoute;
  * constructor in your `src/Application.php` file to change this behavior.
  *
  */
-Router::defaultRouteClass(DashedRoute::class);
+/** @var RouteBuilder $routes */
+$routes->setRouteClass(DashedRoute::class);
 
-Router::scope(
+$routes->scope(
     '/',
     function (RouteBuilder $routes) {
-
-        Router::prefix(
+        $routes->prefix(
             'api/v1',
             function (RouteBuilder $routes) {
                 $routes->setExtensions(['json']);

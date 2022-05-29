@@ -1,12 +1,16 @@
 <?php
+use App\Model\Entity\User;
+use App\View\AppView;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
+ * @var AppView $this
+ * @var User|null $user
  */
+
 ?>
 <h1>Register</h1>
 <div class="users form content">
-    <?= $this->Form->create($user) ?>
+    <?= $this->Form->create($user ?? null) ?>
         <fieldset>
             <p class="center">Already got an account? <?= $this->Html->link('login', ['action' => 'login']) ?> here!</p>
             <?= $this->Form->control('username', ['class' => ['form-control']]); ?>

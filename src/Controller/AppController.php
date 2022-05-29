@@ -47,7 +47,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler', [
             'enableBeforeRedirect' => false,
         ]);
-        $this->loadComponent('Csrf');
+        // $this->loadComponent('Csrf');
 
         /*
          * Enable the following component for recommended CakePHP security settings.
@@ -103,14 +103,14 @@ class AppController extends Controller
 
     /**
      * Generates a json encoded string using the results
-     * 
+     *
      * @param Entity     $entity - the entity that is going to be searched
      * @param string     $term - the search term (used to prevent searches of less than 3 characters)
      * @param array      $conditions - the conditions that are going to be used
      * @param string     $displayFieldName - the DB field name that is going to be shown to the user
      * @param string     $valueFieldName - the DB field name that is going to be used to used
      * @param array|null $additionalReturnData - list of fields to return in the 'data' property
-     * 
+     *
      * @return string
      */
     protected function formatJsonResponse(
@@ -150,7 +150,7 @@ class AppController extends Controller
                 'value'        => '',
             ];
         }
-        
+
         return json_encode($returnAray);
     }
 
