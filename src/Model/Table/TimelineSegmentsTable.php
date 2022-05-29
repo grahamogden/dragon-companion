@@ -39,7 +39,7 @@ class TimelineSegmentsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -87,7 +87,7 @@ class TimelineSegmentsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -114,7 +114,7 @@ class TimelineSegmentsTable extends Table
      * @param type $options 
      * @return bool
      */
-    public function beforeSave(Event $event, $entity, $options): bool
+    public function beforeSave(\Cake\Event\EventInterface $event, $entity, $options): bool
     {
         if ($entity->tag_string) {
             $entity->tags = $this->_buildTags($entity->tag_string);
@@ -149,7 +149,7 @@ class TimelineSegmentsTable extends Table
      * @param RulesChecker $rules The rules object to be modified.
      * @return RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         $rules->add($rules->existsIn(['campaign_id'], 'Campaigns'));
         $rules->add($rules->existsIn(['parent_id'], 'ParentTimelineSegments'));

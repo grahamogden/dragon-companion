@@ -34,7 +34,7 @@ class CombatTurnsTable extends Table
      *
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -81,7 +81,7 @@ class CombatTurnsTable extends Table
      *
      * @return Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -121,7 +121,7 @@ class CombatTurnsTable extends Table
      *
      * @return RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         $rules->add($rules->existsIn(['combat_encounter_id'], 'CombatEncounters'));
         $rules->add($rules->existsIn(['source_participant_id'], 'SourceParticipant'));

@@ -90,8 +90,8 @@ class TimelineSegment extends Entity
 
     protected function _getTagString()
     {
-        if (isset($this->_properties['tag_string'])) {
-            return $this->_properties['tag_string'];
+        if (isset($this->_fields['tag_string'])) {
+            return $this->_fields['tag_string'];
         }
         if (empty($this->tags)) {
             return '';
@@ -105,8 +105,8 @@ class TimelineSegment extends Entity
 
     protected function _getNonPlayableCharacterString()
     {
-        if (isset($this->_properties['non_playable_character_string'])) {
-            return $this->_properties['non_playable_character_string'];
+        if (isset($this->_fields['non_playable_character_string'])) {
+            return $this->_fields['non_playable_character_string'];
         }
         if (empty($this->non_playable_characters)) {
             return '';

@@ -24,7 +24,7 @@ class ApiAppController extends Controller
     /**
      * @throws \Exception
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadComponent('RequestHandler');
