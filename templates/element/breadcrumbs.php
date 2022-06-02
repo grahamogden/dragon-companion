@@ -1,25 +1,28 @@
 <?php
+
+use App\Model\Entity\TimelineSegment;
+
 if (isset($breadcrumbs)) {
     $breadcrumbCounter = 0; // Must be set to 0 if there is no origin crumb (the above one)
 
+    /** @var TimelineSegment[] $breadcrumbs */
     foreach($breadcrumbs as $breadcrumb) {
         if ($breadcrumbCounter === 0) {
             $crumbs[] = [
                 'title' => 'Timeline Segments',
                 'url'   => [
-                    'campaignId' => $breadcrumb->campaign_id,
-                    '_name'      => 'TimelineSegmentsIndex',
+                    'controller' => 'TimelineSegments',
+                    'action'     => 'index',
                 ],
             ];
         }
         $breadcrumbCounter++;
         $crumbs[] = [
-            'title' => $breadcrumb->getTitle(),
+            'title' => $breadcrumb->title,
             'url'   => [
                 'controller' => 'TimelineSegments',
                 'action'     => 'view',
-                'campaignId' => $breadcrumb->campaign_id,
-                'id'         => $breadcrumb->getId(),
+                'id'         => $breadcrumb->id,
             ],
         ];
     }
@@ -28,7 +31,7 @@ if (isset($breadcrumbs)) {
         $crumbs[$breadcrumbCounter]['url'] = '';
     }
 
-    $this->Breadcrumbs->add($crumbs);
+    $this->Breadcrumbs->add($crumbs ?? []);
     $this->Breadcrumbs->setTemplates([
         'itemWithoutLink' => '<li{{attrs}}><span{{innerAttrs}}>{{title}}</span></li>{{separator}}',
         'separator'       => '',

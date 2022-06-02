@@ -6,10 +6,9 @@ use Cake\ORM\Entity;
 /**
  * CharacterClass Entity
  *
- * @property int $id
- * @property string $name
- *
- * @property \App\Model\Entity\PlayerCharacter[] $player_characters
+ * @property int               $id
+ * @property string            $name
+ * @property PlayerCharacter[] $player_characters
  */
 class CharacterClass extends Entity
 {

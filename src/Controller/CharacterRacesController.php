@@ -48,7 +48,7 @@ class CharacterRacesController extends AppController
      */
     public function add()
     {
-        $characterRace = $this->CharacterRaces->newEntity();
+        $characterRace = $this->CharacterRaces->newEmptyEntity();
         if ($this->request->is('post')) {
             $characterRace = $this->CharacterRaces->patchEntity($characterRace, $this->request->getData());
             if ($this->CharacterRaces->save($characterRace)) {
@@ -109,9 +109,9 @@ class CharacterRacesController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool

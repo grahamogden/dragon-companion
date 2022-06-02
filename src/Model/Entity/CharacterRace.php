@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,10 +7,9 @@ use Cake\ORM\Entity;
 /**
  * CharacterRace Entity
  *
- * @property int $id
- * @property string $name
- *
- * @property \App\Model\Entity\PlayerCharacter[] $player_characters
+ * @property int               $id
+ * @property string            $name
+ * @property PlayerCharacter[] $player_characters
  */
 class CharacterRace extends Entity
 {

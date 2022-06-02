@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\Auth\DefaultPasswordHasher;
+use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
@@ -27,6 +28,11 @@ use Cake\ORM\Entity;
  */
 class User extends Entity
 {
+
+    public const STATUS_INACTIVE = 0;
+    public const STATUS_PENDING  = 5;
+    public const STATUS_ACTIVE   = 10;
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -69,29 +75,7 @@ class User extends Entity
 
             return $hasher->hash($value);
         }
-    }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getParentId(): int
-    {
-        return $this->parent_id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
+        throw new BadRequestException('Password is missing');
     }
 }

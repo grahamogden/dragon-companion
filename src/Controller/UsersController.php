@@ -6,6 +6,7 @@ use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
+use Cake\Event\EventInterface;
 use Cake\Http\Response;
 use Cake\Log\Log;
 use Exception;
@@ -23,7 +24,8 @@ class UsersController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        $this->Auth->allow(['logout', 'add']);
+        // $this->Auth->allow(['logout', 'add']);
+        $this->Authentication->allowUnauthenticated(['logout', 'add']);
     }
 
     /**
@@ -59,16 +61,18 @@ class UsersController extends AppController
      */
     public function add()
     {
+        $user = $this->Users->newEmptyEntity();
         try {
             if ($this->request->is('post')) {
-                $user = $this->Users->newEntity($this->request->getData());
-                // $user = $this->Users->patchEntity($user, $this->request->getData());
+                $data = $this->request->getData();
+                $data['status'] = User::STATUS_ACTIVE;
+                $user = $this->Users->patchEntity($user, $this->request->getData());
                 if ($this->Users->save($user)) {
                     $this->Flash->success(__('The user has been saved.'));
 
                     return $this->redirect(['controller' => 'Users', 'action' => 'login']);
                 }
-                Log::Debug(var_dump($user->getErrors()));
+                // Log::Debug(var_dump($user->getErrors()));
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
                 return $this->redirect(['controller' => 'Users', 'action' => 'register']);
             }
@@ -122,18 +126,42 @@ class UsersController extends AppController
     }
 
     /**
+     * @param EventInterface $event
+     *
+     * @return Response|void|null
+     */
+    public function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        $this->Authentication->allowUnauthenticated(['login']);
+    }
+
+    /**
      * @return Response|void|null
      */
     public function login()
     {
-        if ($this->request->is('post')) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $this->Auth->setUser($user);
-                return $this->redirect($this->Auth->redirectUrl());
-            }
-            $this->Flash->error('Your username or password is incorrect.');
+        $result = $this->Authentication->getResult();
+        // If the user is logged in send them away.
+        if ($result->isValid()) {
+            $target = $this->Authentication->getLoginRedirect() ?? '/';
+
+            return $this->redirect($target);
         }
+
+        if ($this->request->is('post') && !$result->isValid()) {
+            $this->Flash->error('Invalid username or password');
+        }
+
+        // if ($this->request->is('post')) {
+        //     $user = $this->Auth->identify();
+        //     if ($user) {
+        //         $this->Auth->setUser($user);
+        //         return $this->redirect($this->Auth->redirectUrl());
+        //     }
+        //     $this->Flash->error('Your username or password is incorrect.');
+        // }
     }
 
     /**
@@ -141,9 +169,10 @@ class UsersController extends AppController
      */
     public function logout()
     {
+        $this->Authentication->logout();
         $this->Flash->success('You are now logged out.');
         $this->request->getSession()->destroy();
-        return $this->redirect($this->Auth->logout());
+        return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
 
 }

@@ -11,10 +11,9 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
     $this->Html->link(
         __('Edit'),
         [
-            'action'     => 'edit',
-            '_name'      => 'TimelineSegmentsId',
-            'campaignId' => $timelineSegment->campaign_id,
-            'id'         => $timelineSegment->getId(),
+                'action'     => 'edit',
+                'controller' => 'TimelineSegments',
+                'id'         => $timelineSegment->id,
         ]
     )
     ); ?></h1>

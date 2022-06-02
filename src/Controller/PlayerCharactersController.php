@@ -12,8 +12,6 @@ use Cake\ORM\Query;
 /**
  * PlayerCharacters Controller
  *
- * @property PlayerCharactersTable $PlayerCharacters
- *
  * @method PlayerCharacter[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class PlayerCharactersController extends AppController
@@ -29,6 +27,16 @@ class PlayerCharactersController extends AppController
         ],
     ];
 
+    /** @var PlayerCharactersTable|null */
+    private $playerCharactersTable;
+
+    public function initialize(): void
+    {
+        parent::initialize();
+
+        $this->playerCharactersTable = $this->fetchTable('PlayerCharacters');
+    }
+
     /**
      * Index method
      *
@@ -42,7 +50,7 @@ class PlayerCharactersController extends AppController
 
         $user = $this->getUserOrRedirect();
 
-        $playerCharacters = $this->PlayerCharacters
+        $playerCharacters = $this->playerCharactersTable
             ->find()
             ->contain(['Campaigns'])
             ->where(['PlayerCharacters.user_id =' => $user['id']]);
@@ -62,7 +70,7 @@ class PlayerCharactersController extends AppController
      */
     public function view($id = null)
     {
-        $playerCharacter = $this->PlayerCharacters->get(
+        $playerCharacter = $this->playerCharactersTable->get(
             $id,
             [
                 'contain' => [
@@ -86,16 +94,16 @@ class PlayerCharactersController extends AppController
      */
     public function add()
     {
-        $playerCharacter = $this->PlayerCharacters->newEntity();
+        $playerCharacter = $this->playerCharactersTable->newEmptyEntity();
         $user            = $this->getUserOrRedirect();
 
         if ($this->request->is('post')) {
             $data               = $this->request->getData();
             $data['user_id']    = $user['id'];
 
-            $playerCharacter = $this->PlayerCharacters->patchEntity($playerCharacter, $data);
+            $playerCharacter = $this->playerCharactersTable->patchEntity($playerCharacter, $data);
 
-            if ($this->PlayerCharacters->save($playerCharacter)) {
+            if ($this->playerCharactersTable->save($playerCharacter)) {
                 $this->Flash->success(__('The player character has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -106,13 +114,13 @@ class PlayerCharactersController extends AppController
 
         $this->loadModel('Campaigns');
 
-        $characterClasses = $this->PlayerCharacters->CharacterClasses
+        $characterClasses = $this->playerCharactersTable->CharacterClasses
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
-        $characterRaces   = $this->PlayerCharacters->CharacterRaces
+        $characterRaces   = $this->playerCharactersTable->CharacterRaces
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
-        $alignments       = $this->PlayerCharacters->Alignments
+        $alignments       = $this->playerCharactersTable->Alignments
             ->find('list', ['limit' => 200]);
         $campaigns        = $this->Campaigns->find('list')
             ->matching('Users', function (Query $q) use ($user) {
@@ -143,7 +151,7 @@ class PlayerCharactersController extends AppController
      */
     public function edit($id = null)
     {
-        $playerCharacter = $this->PlayerCharacters->get(
+        $playerCharacter = $this->playerCharactersTable->get(
             $id,
             [
                 'contain' => [
@@ -155,8 +163,8 @@ class PlayerCharactersController extends AppController
         );
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $playerCharacter = $this->PlayerCharacters->patchEntity($playerCharacter, $this->request->getData());
-            if ($this->PlayerCharacters->save($playerCharacter)) {
+            $playerCharacter = $this->playerCharactersTable->patchEntity($playerCharacter, $this->request->getData());
+            if ($this->playerCharactersTable->save($playerCharacter)) {
                 $this->Flash->success(__('The player character has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -166,15 +174,15 @@ class PlayerCharactersController extends AppController
 
         $user = $this->getUserOrRedirect();
 
-        $characterClasses = $this->PlayerCharacters->CharacterClasses
+        $characterClasses = $this->playerCharactersTable->CharacterClasses
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
-        $characterRaces   = $this->PlayerCharacters->CharacterRaces
+        $characterRaces   = $this->playerCharactersTable->CharacterRaces
             ->find('list', ['limit' => 200])
             ->order(['name' => 'ASC']);
-        $alignments       = $this->PlayerCharacters->Alignments
+        $alignments       = $this->playerCharactersTable->Alignments
             ->find('list', ['limit' => 200]);
-        $campaigns        = $this->PlayerCharacters->Campaigns
+        $campaigns        = $this->playerCharactersTable->Campaigns
             ->find('list', ['limit' => 200])
             ->where(['Campaigns.user_id =' => $user['id']])
             ->order(['name' => 'ASC']);
@@ -201,9 +209,9 @@ class PlayerCharactersController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $playerCharacter = $this->PlayerCharacters->get($id);
+        $playerCharacter = $this->playerCharactersTable->get($id);
 
-        if ($this->PlayerCharacters->delete($playerCharacter)) {
+        if ($this->playerCharactersTable->delete($playerCharacter)) {
             $this->Flash->success(__('The player character has been deleted.'));
         } else {
             $this->Flash->error(__('The player character could not be deleted. Please, try again.'));
@@ -241,7 +249,7 @@ class PlayerCharactersController extends AppController
         }
 
         // Check that the playerCharacters belongs to the current user
-        $playerCharacters = $this->PlayerCharacters->findById($id)->firstOrFail();
+        $playerCharacters = $this->playerCharactersTable->findById($id)->firstOrFail();
 
         return $playerCharacters->user_id === $user['id'];
     }

@@ -1,10 +1,14 @@
 <?php
 
-use \App\View\Widget\AutocompleteToTableWidget;
+use App\Model\Entity\Campaign;
+use App\View\AppView;
+use App\View\Widget\AutocompleteToTableWidget;
+use Cake\ORM\Query;
 
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Campaign $campaign
+ * @var AppView $this
+ * @var Campaign $campaign
+ * @var Query $campaignUsers
  */
 ?>
 <div class="campaigns form content">
@@ -19,7 +23,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
                     'label'         => 'Users',
                     'type'          => 'autocomplete-to-table',
                     AutocompleteToTableWidget::ATTR_SOURCE => [
-                        'prefix'     => 'api/v1',
+                        'prefix'     => 'Api/V1',
                         AutocompleteToTableWidget::ATTR_SOURCE_CONTROLLER => 'users',
                         'action'     => 'get-users',
                         '_method'     => 'get',

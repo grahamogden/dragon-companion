@@ -42,9 +42,9 @@ use App\View\AppView;
         ])*/ ?>
         <?= $this->Form->control('body', [
             'type'         => 'textarea-editor',
-            'val'          => dbConverter::fromDatabase($timelineSegment->getBody()),
+            'val'          => dbConverter::fromDatabase($timelineSegment->body),
             'spellcheck'   => 'true',
-            'id'           => $timelineSegment->getId(),
+            'id'           => $timelineSegment->id,
             'class'        => ['form-control'],
             'templates' => [
                 'formGroup' => '<div class="col-12">{{label}}</div><div class="col-12">{{input}}</div>',

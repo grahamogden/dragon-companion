@@ -10,8 +10,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                 $childTimelineSegment->title,
                 [
                     'action'     => 'view',
-                    '_name'      => 'TimelineSegmentsId',
-                    'campaignId' => $childTimelineSegment->campaign_id,
+                    'controller' => 'TimelineSegments',
                     'id'         => $childTimelineSegment->id,
                 ]
             ) ?>
@@ -22,8 +21,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                         <?php // Move to top ?>
                         <?= $this->Form->postLink('Move to top', [
                             'action'     => 'moveUpTop',
-                            '_name'      => 'TimelineSegmentsId',
-                            'campaignId' => $childTimelineSegment->campaign_id,
+                            'controller' => 'TimelineSegments',
                             'id'         => $childTimelineSegment->id,
                         ], [
                             'class' => [
@@ -37,8 +35,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                         <?php // Move up ?>
                         <?= $this->Form->postLink('Move up', [
                             'action'     => 'moveUp',
-                            '_name'      => 'TimelineSegmentsId',
-                            'campaignId' => $childTimelineSegment->campaign_id,
+                            'controller' => 'TimelineSegments',
                             'id'         => $childTimelineSegment->id,
                         ], [
                             'class' => [
@@ -54,8 +51,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                         <?php // Move down ?>
                         <?= $this->Form->postLink('Move down', [
                             'action'     => 'moveDown',
-                            '_name'      => 'TimelineSegmentsId',
-                            'campaignId' => $childTimelineSegment->campaign_id,
+                            'controller' => 'TimelineSegments',
                             'id'         => $childTimelineSegment->id,
                         ], [
                             'class' => [
@@ -69,8 +65,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                         <?php // Move to bottom ?>
                         <?= $this->Form->postLink('Move to bottom', [
                             'action'     => 'moveDownBottom',
-                            '_name'      => 'TimelineSegmentsId',
-                            'campaignId' => $childTimelineSegment->campaign_id,
+                            'controller' => 'TimelineSegments',
                             'id'         => $childTimelineSegment->id,
                         ], [
                             'class' => [
@@ -84,8 +79,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
 
                     <?= $this->Html->link('Edit', [
                         'action'     => 'edit',
-                        '_name'      => 'TimelineSegmentsId',
-                        'campaignId' => $childTimelineSegment->campaign_id,
+                        'controller' => 'TimelineSegments',
                         'id'         => $childTimelineSegment->id,
                     ], [
                         'class'   => [
@@ -97,9 +91,9 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                     ]); ?>
 
                     <?= $this->Form->postLink('Delete', [
-                        'action' => 'delete',
-                        '_name'  => 'TimelineSegmentsDelete',
-                        'id'     => $childTimelineSegment->id,
+                        'action'     => 'delete',
+                        'controller' => 'TimelineSegments',
+                        'id'         => $childTimelineSegment->id,
                     ], [
                         'class'   => [
                             'btn',

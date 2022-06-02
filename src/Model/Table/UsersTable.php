@@ -23,9 +23,9 @@ use Cake\Validation\Validator;
  * @property PuzzlesTable&HasMany               $Puzzles
  * @property TagsTable&HasMany                  $Tags
  * @property TimelineSegmentsTable&HasMany      $TimelineSegments
- * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegments2020-04-10
- * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegmentsCopy
- * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegmentsCopy2
+ // * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegments2020-04-10
+ // * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegmentsCopy
+ // * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegmentsCopy2
  *
  // * @method User get($primaryKey, $options = [])
  // * @method User newEntity($data = null, array $options = [])
@@ -92,7 +92,7 @@ class UsersTable extends Table
      *
      * @return Validator
      */
-    public function validationDefault(Validator $validator): \Cake\Validation\Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -129,7 +129,7 @@ class UsersTable extends Table
      *
      * @return RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->isUnique(['email']));

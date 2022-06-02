@@ -25,8 +25,8 @@ class TagsController extends AppController
         'order'         => [
             'Tags.title' => 'asc',
         ],
-        'sortWhitelist' => [
-            'Tags.title',
+        'sortableFields' => [
+            'title',
         ],
     ];
 
@@ -54,7 +54,7 @@ class TagsController extends AppController
      *
      * @param string|null $id Tag id.
      *
-     * @return Response|void
+     * @return void
      * @throws RecordNotFoundException When record not found.
      */
     public function view($id = null)
@@ -84,7 +84,7 @@ class TagsController extends AppController
      */
     public function add()
     {
-        $tag  = $this->Tags->newEntity();
+        $tag  = $this->Tags->newEmptyEntity();
         $user = $this->getUserOrRedirect();
 
         if ($this->request->is('post')) {
@@ -118,7 +118,7 @@ class TagsController extends AppController
      * @param string|null $id Tag id.
      *
      * @return Response|null Redirects on successful edit, renders view otherwise.
-     * @throws NotFoundException When record not found.
+     * @throws RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {

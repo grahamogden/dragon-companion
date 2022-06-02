@@ -17,7 +17,6 @@ use Cake\ORM\Entity;
  * @property int               $alignment_id
  * @property string|null       $notes
  * @property int               $user_id
- *
  * @property Alignment         $alignment
  * @property User              $user
  * @property TimelineSegment[] $timeline_segments

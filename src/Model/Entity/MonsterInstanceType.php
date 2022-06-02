@@ -10,7 +10,6 @@ use Cake\ORM\Entity;
  * @property int         $id
  * @property string      $name
  * @property string|null $description
- *
  * @property Monster[]   $monsters
  */
 class MonsterInstanceType extends Entity
@@ -35,7 +34,7 @@ class MonsterInstanceType extends Entity
      *
      * @return string
      */
-    public function getLabel(): string
+    public function _getLabel(): string
     {
         return $this->name . ($this->description ? ' - ' . $this->description : '');
     }

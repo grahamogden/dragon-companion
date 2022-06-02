@@ -6,13 +6,19 @@ use App\Model\Entity\CombatEncounter;
 use App\Model\Entity\Participant;
 use App\Model\Table\CombatActionsTable;
 use App\Model\Table\CombatEncountersTable;
+use App\Model\Table\CombatTurnsTable;
+use App\Model\Table\MonstersTable;
+use App\Model\Table\ParticipantsTable;
+use Authentication\IdentityInterface;
 use Cake\Controller\ComponentRegistry;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\RepositoryInterface;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\EventManager;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use DateTime;
+use Exception;
 use http\Exception\InvalidArgumentException;
 
 /**
@@ -26,6 +32,18 @@ class CombatEncountersController extends AppController
 {
     private const PARTICIPANT_TYPE_PLAYER_CHARACTER = 'PlayerCharacter';
     private const PARTICIPANT_TYPE_MONSTER          = 'Monster';
+
+    /** @var CombatTurnsTable|null */
+    private $combatTurnsTable;
+
+    /** @var CombatActionsTable|null*/
+    private $combatActionsTable;
+
+    /** @var MonstersTable */
+    private $monstersTable;
+
+    /** @var ParticipantsTable */
+    private $participantsTable;
 
     /**
      * CombatEncountersController constructor.
@@ -46,10 +64,10 @@ class CombatEncountersController extends AppController
         parent::__construct($request, $response, $name, $eventManager, $components);
 
         // Load in all necessary models
-        $this->loadModel('CombatActions');
-        $this->loadModel('CombatTurns');
-        $this->loadModel('Monsters');
-        $this->loadModel('Participants');
+        $this->combatActionsTable = $this->fetchTable('CombatActions');
+        $this->combatTurnsTable = $this->fetchTable('CombatTurns');
+        $this->monstersTable = $this->fetchTable('Monsters');
+        $this->participantsTable = $this->fetchTable('Participants');
     }
 
     /**
@@ -83,7 +101,7 @@ class CombatEncountersController extends AppController
      *
      * @param string|null $id Combat Encounter id.
      *
-     * @return Response|void
+     * @return void
      * @throws RecordNotFoundException When record not found.
      */
     public function view(?string $id = null)
@@ -116,11 +134,12 @@ class CombatEncountersController extends AppController
      * Add method
      *
      * @return Response|void Redirects on successful add, renders view otherwise.
-     * @throws \Exception
+     * @throws Exception
      */
     public function add()
     {
-        $combatEncounter = $this->CombatEncounters->newEntity();
+        /** @var CombatEncounter $combatEncounter */
+        $combatEncounter = $this->CombatEncounters->newEmptyEntity();
         $user            = $this->getUserOrRedirect();
 
         if ($this->request->is('post')) {
@@ -138,13 +157,13 @@ class CombatEncountersController extends AppController
                 );
 
                 if ($this->CombatEncounters->save($combatEncounter)) {
-                    $participantsAfterSave = $this->Participants->findByCombatEncounterId($combatEncounter->id);
+                    $participantsAfterSave = $this->participantsTable->findByCombatEncounterId($combatEncounter->id);
 
                     $this->saveCombatTurns(
                         json_decode($data['turns'], true),
                         $combatEncounter,
                         $participantsAfterSave,
-                        $this->CombatActions
+                        $this->combatActionsTable
                             ->find(
                                 'list',
                                 [
@@ -167,7 +186,7 @@ class CombatEncountersController extends AppController
             ->find('list', ['limit' => 200])
             ->order(['Campaigns.name ASC']);
 
-        $combatActions = $this->CombatActions
+        $combatActions = $this->combatActionsTable
             ->find(
                 'list',
                 [
@@ -271,13 +290,13 @@ class CombatEncountersController extends AppController
     }
 
     /**
-     * @param array           $data
-     * @param array           $user
-     * @param CombatEncounter $combatEncounter
+     * @param array             $data
+     * @param IdentityInterface $user
+     * @param CombatEncounter   $combatEncounter
      *
      * @return array
      */
-    private function validateAndBlessData(array $data, array $user, CombatEncounter $combatEncounter): array
+    private function validateAndBlessData(array $data, IdentityInterface $user, CombatEncounter $combatEncounter): array
     {
         // Check that the campaign is for this user
         $campaign = $this->CombatEncounters->Campaigns
@@ -305,7 +324,6 @@ class CombatEncountersController extends AppController
                     $combatEncounter->setError('campaign_id', $errorMsg);
                     $this->Flash->error(__('The combat encounter could not be saved. Please try again.'));
                     return [false];
-                    break;
                 }
             } elseif ($participantData['participantType'] === self::PARTICIPANT_TYPE_MONSTER) {
                 // If this is a monster, then add it to the list of IDs we need to check
@@ -326,7 +344,7 @@ class CombatEncountersController extends AppController
 
         // Find all of the monsters that have been used and ensure that they actually exist
         if (!empty($monsterIdsToCheck)) {
-            $monsters      = $this->Monsters->find()
+            $monsters      = $this->monstersTable->find()
                 ->where(['id IN' => $monsterIdsToCheck]);
             $monstersCount = $monsters->count();
 
@@ -342,7 +360,7 @@ class CombatEncountersController extends AppController
 
         $newData = [
             'name'         => $data['name'],
-            'user_id'      => $user['id'],
+            'user_id'      => $user->getIdentifier(),
             'campaign_id'  => $data['campaign_id'],
             'participants' => $this->getParticipantEntities($participantsData),
         ];
@@ -425,10 +443,10 @@ class CombatEncountersController extends AppController
                 $combatTurnArray['target_participant_id'] = $participantEntitiesMapped[$combatTurnData['targetTempId']]->id;
             }
 
-            $combatTurns[] = $this->CombatTurns->newEntity($combatTurnArray);
+            $combatTurns[] = $this->combatTurnsTable->newEntity($combatTurnArray);
         }
         try {
-            $combatTurnsSaveResult = $this->CombatTurns->saveMany($combatTurns);
+            $combatTurnsSaveResult = $this->combatTurnsTable->saveMany($combatTurns);
 
             if (!$combatTurnsSaveResult) {
                 $this->Flash->error(

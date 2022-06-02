@@ -1,12 +1,18 @@
 <?php
 
 use App\Application;
+use App\Model\Entity\Campaign;
+use App\Model\Entity\User;
 
-$session          = $this->request->getSession();
-$user             = $session->read('Auth.User');
-$flashMessages    = $this->Flash->render();
-$breadcrumbs      = $this->element('breadcrumbs');
-$selectedCampagin = $session->read(Application::SESSION_KEY_CAMPAIGN);
+/** @var App\View\AppView $this */
+
+$session = $this->request->getSession();
+/** @var User|false|null $user */
+$user = $session->read('Auth');
+$flashMessages = $this->Flash->render();
+$breadcrumbs = $this->element('breadcrumbs');
+/** @var Campaign $selectedCampaign */
+$selectedCampaign = $session->read(Application::SESSION_KEY_CAMPAIGN);
 ?>
 <header class="navbar navbar-dark bg-dark sticky-top navbar-expand-md p-2">
     <?= $this->Html->link(
@@ -24,7 +30,7 @@ $selectedCampagin = $session->read(Application::SESSION_KEY_CAMPAIGN);
                     ['controller' => '', 'action' => 'index']
                 ) ?>" class="nav-link p-4 text-center"><i class="fa fa-home"></i>Home</a>
             </li>
-            <?php if (is_array($user) && $user['id']) { ?>
+            <?php if (null !== $user && $user->id) { ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link p-4 text-center dropdown-toggle" href="#" id="navbarPlayerCharacterDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-alt"></i>Players</a>
                     <ul class="dropdown-menu dropdown-menu-right p-0 text-center text-md-left" aria-labelledby="navbarPlayerCharacterDropdownMenuLink">
@@ -59,13 +65,13 @@ $selectedCampagin = $session->read(Application::SESSION_KEY_CAMPAIGN);
                         <li class="nav-item">
                             <a href="<?= $this->Url->build(
                                 ['controller' => 'Campaigns', 'action' => 'index']
-                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-feather-alt"></i><?php if ($selectedCampagin && $selectedCampagin['id']) { ?>Switch <?php } ?>Campaigns</a>
+                            ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-feather-alt"></i><?php if ($selectedCampaign && $selectedCampaign['id']) { ?>Switch <?php } ?>Campaigns</a>
                         </li>
-                        <?php if ($selectedCampagin && $selectedCampagin['id']) { ?>
+                        <?php if ($selectedCampaign && $selectedCampaign->id) { ?>
                             <li class="nav-item">
                                 <a href="<?= $this->Url->build(
-                                    ['controller' => 'Campaigns', 'action' => 'edit', 'id' => $selectedCampagin['id']]
-                                ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-arrow-right"></i><?= $selectedCampagin['name'] ?></a>
+                                    ['controller' => 'Campaigns', 'action' => 'edit', 'id' => $selectedCampaign['id']]
+                                ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-arrow-right"></i><?= $selectedCampaign['name'] ?></a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?= $this->Url->build(
@@ -104,7 +110,7 @@ $selectedCampagin = $session->read(Application::SESSION_KEY_CAMPAIGN);
                         'darkMode'
                     ) ? 'checked="checked"' : ''); ?> />Switch Dark Mode</label></li> -->
                     <!-- <li class="nav-item"><a href="#" id="switch-header-slider">Enable Header Slider</a></li> -->
-                    <?php if (is_array($user) && $user['id']) { ?>
+                    <?php if (null !== $user && $user->id) { ?>
                         <li><a href="<?= $this->Url->build(
                                 ['controller' => 'Users', 'action' => 'logout']
                             ) ?>" class="dropdown-link nav-link p-4"><i class="fa fa-sign-out-alt"></i>Log out</a></li>

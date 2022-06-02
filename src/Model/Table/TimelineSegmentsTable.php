@@ -1,7 +1,15 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\TimelineSegment;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\Event\EventInterface;
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Association\BelongsToMany;
+use Cake\ORM\Association\HasMany;
+use Cake\ORM\Behavior\TimestampBehavior;
+use Cake\ORM\Behavior\TreeBehavior;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -12,24 +20,24 @@ use App\Model\Behavior\DatabaseStringConverterBehavior;
 /**
  * TimelineSegments Model
  *
- * @property &\Cake\ORM\Association\BelongsTo $Campaigns
- * @property \App\Model\Table\TimelineSegmentsTable&\Cake\ORM\Association\BelongsTo $ParentTimelineSegments
- * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\TimelineSegmentsTable&\Cake\ORM\Association\HasMany $ChildTimelineSegments
- * @property \App\Model\Table\NonPlayableCharactersTable&\Cake\ORM\Association\BelongsToMany $NonPlayableCharacters
- * @property \App\Model\Table\TagsTable&\Cake\ORM\Association\BelongsToMany $Tags
+ * @property CampaignsTable&BelongsTo                 $Campaigns
+ * @property TimelineSegmentsTable&BelongsTo          $ParentTimelineSegments
+ * @property UsersTable&BelongsTo                     $Users
+ * @property TimelineSegmentsTable&HasMany            $ChildTimelineSegments
+ // * @property NonPlayableCharactersTable&BelongsToMany $NonPlayableCharacters
+ // * @property TagsTable&BelongsToMany                  $Tags
  *
- * @method \App\Model\Entity\TimelineSegment get($primaryKey, $options = [])
- * @method \App\Model\Entity\TimelineSegment newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\TimelineSegment[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\TimelineSegment|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\TimelineSegment saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\TimelineSegment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\TimelineSegment[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\TimelineSegment findOrCreate($search, callable $callback = null, $options = [])
+ * @method TimelineSegment get($primaryKey, $options = [])
+ * @method TimelineSegment newEntity($data = null, array $options = [])
+ * @method TimelineSegment[] newEntities(array $data, array $options = [])
+ * @method TimelineSegment|false save(EntityInterface $entity, $options = [])
+ * @method TimelineSegment saveOrFail(EntityInterface $entity, $options = [])
+ * @method TimelineSegment patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method TimelineSegment[] patchEntities($entities, array $data, array $options = [])
+ * @method TimelineSegment findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
- * @mixin \Cake\ORM\Behavior\TreeBehavior
+ * @mixin TimestampBehavior
+ * @mixin TreeBehavior
  */
 class TimelineSegmentsTable extends Table
 {
@@ -69,25 +77,26 @@ class TimelineSegmentsTable extends Table
             'className'  => 'TimelineSegments',
             'foreignKey' => 'parent_id',
         ]);
-        $this->belongsToMany('NonPlayableCharacters', [
-            'foreignKey'       => 'timeline_segment_id',
-            'targetForeignKey' => 'non_playable_character_id',
-            'joinTable'        => 'non_playable_characters_timeline_segments'
-        ]);
-        $this->belongsToMany('Tags', [
-            'foreignKey' => 'timeline_segment_id',
-            'targetForeignKey' => 'tag_id',
-            'joinTable' => 'tags_timeline_segments',
-        ]);
+        // $this->belongsToMany('NonPlayableCharacters', [
+        //     'foreignKey'       => 'timeline_segment_id',
+        //     'targetForeignKey' => 'non_playable_character_id',
+        //     'joinTable'        => 'non_playable_characters_timeline_segments'
+        // ]);
+        // $this->belongsToMany('Tags', [
+        //     'foreignKey' => 'timeline_segment_id',
+        //     'targetForeignKey' => 'tag_id',
+        //     'joinTable' => 'tags_timeline_segments',
+        // ]);
     }
 
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     *
+     * @return Validator
      */
-    public function validationDefault(Validator $validator): \Cake\Validation\Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -108,25 +117,25 @@ class TimelineSegmentsTable extends Table
 
     /**
      * Before saving
-     * 
-     * @param Event $event 
-     * @param type $entity 
-     * @param type $options 
+     *
+     * @param Event $event
+     * @param type $entity
+     * @param type $options
      * @return bool
      */
-    public function beforeSave(\Cake\Event\EventInterface $event, $entity, $options): bool
+    public function beforeSave(EventInterface $event, $entity, $options): bool
     {
-        if ($entity->tag_string) {
-            $entity->tags = $this->_buildTags($entity->tag_string);
-        } else {
-            $entity->tags = [];
-        }
+        // if ($entity->tag_string) {
+        //     $entity->tags = $this->_buildTags($entity->tag_string);
+        // } else {
+        //     $entity->tags = [];
+        // }
 
-        if ($entity->non_playable_character_string) {
-            $entity->non_playable_characters = $this->_buildNonPlayableCharacters($entity->non_playable_character_string);
-        } else {
-            $entity->non_playable_characters = [];
-        }
+        // if ($entity->non_playable_character_string) {
+        //     $entity->non_playable_characters = $this->_buildNonPlayableCharacters($entity->non_playable_character_string);
+        // } else {
+        //     $entity->non_playable_characters = [];
+        // }
 
         if ($entity->body) {
             // Ridiculous hack because TinyMCE adds new lines and using the \n
@@ -175,85 +184,85 @@ class TimelineSegmentsTable extends Table
             ->select($columns)
             ->distinct($columns);
 
-        if (empty($options['tags'])) {
-            // If there are no tags provided, find timeline segments that have no tags.
-            $query->leftJoinWith('Tags')
-                ->where(['Tags.title IS' => null]);
-        } else {
-            // Find timeline segments that have one or more of the provided tags.
-            $query->innerJoinWith('Tags')
-                ->where(['Tags.title IN' => $options['tags']]);
-        }
+        // if (empty($options['tags'])) {
+        //     // If there are no tags provided, find timeline segments that have no tags.
+        //     $query->leftJoinWith('Tags')
+        //         ->where(['Tags.title IS' => null]);
+        // } else {
+        //     // Find timeline segments that have one or more of the provided tags.
+        //     $query->innerJoinWith('Tags')
+        //         ->where(['Tags.title IN' => $options['tags']]);
+        // }
 
         return $query->group(['TimelineSegments.id']);
     }
-    
-    /**
-     * Finds tag records from the list provided and returns them to be added to the User
-     * 
-     * @param string $tagString 
-     * @return array
-     */
-    protected function _buildTags(string $tagString): array
-    {
-        // Trim tags
-        $newTags = array_map('trim', explode(',', $tagString));
-        // Remove all empty tags
-        $newTags = array_filter($newTags);
-        // Reduce duplicated tags
-        $newTags = array_unique($newTags);
 
-        $out = [];
-        $query = $this->Tags->find()
-            ->where(['Tags.title IN' => $newTags]);
+    // /**
+    //  * Finds tag records from the list provided and returns them to be added to the User
+    //  *
+    //  * @param string $tagString
+    //  * @return array
+    //  */
+    // protected function _buildTags(string $tagString): array
+    // {
+    //     // Trim tags
+    //     $newTags = array_map('trim', explode(',', $tagString));
+    //     // Remove all empty tags
+    //     $newTags = array_filter($newTags);
+    //     // Reduce duplicated tags
+    //     $newTags = array_unique($newTags);
+    //
+    //     $out = [];
+    //     $query = $this->Tags->find()
+    //         ->where(['Tags.title IN' => $newTags]);
+    //
+    //     // Remove existing tags from the list of new tags.
+    //     foreach ($query->extract('title') as $existing) {
+    //         $index = array_search($existing, $newTags);
+    //         if ($index !== false) {
+    //             unset($newTags[$index]);
+    //         }
+    //     }
+    //     // Add existing tags.
+    //     foreach ($query as $tag) {
+    //         $out[] = $tag;
+    //     }
+    //
+    //     return $out;
+    // }
 
-        // Remove existing tags from the list of new tags.
-        foreach ($query->extract('title') as $existing) {
-            $index = array_search($existing, $newTags);
-            if ($index !== false) {
-                unset($newTags[$index]);
-            }
-        }
-        // Add existing tags.
-        foreach ($query as $tag) {
-            $out[] = $tag;
-        }
-
-        return $out;
-    }
-    
-    /**
-     * Finds non-playable character records from the list provided and
-     * returns them to be added to the User
-     * 
-     * @param string $nonPlayableCharacterString 
-     * @return array
-     */
-    protected function _buildNonPlayableCharacters(string $nonPlayableCharacterString): array
-    {
-        // Trim nonPlayableCharacters
-        $newNonPlayableCharacters = array_map('trim', explode(',', $nonPlayableCharacterString));
-        // Remove all empty nonPlayableCharacters
-        $newNonPlayableCharacters = array_filter($newNonPlayableCharacters);
-        // Reduce duplicated nonPlayableCharacters
-        $newNonPlayableCharacters = array_unique($newNonPlayableCharacters);
-
-        $out = [];
-        $query = $this->NonPlayableCharacters->find()
-            ->where(['NonPlayableCharacters.name IN' => $newNonPlayableCharacters]);
-
-        // Remove existing nonPlayableCharacters from the list of new nonPlayableCharacters.
-        foreach ($query->extract('name') as $existing) {
-            $index = array_search($existing, $newNonPlayableCharacters);
-            if ($index !== false) {
-                unset($newNonPlayableCharacters[$index]);
-            }
-        }
-        // Add existing nonPlayableCharacters.
-        foreach ($query as $nonPlayableCharacter) {
-            $out[] = $nonPlayableCharacter;
-        }
-
-        return $out;
-    }
+    // /**
+    //  * Finds non-playable character records from the list provided and
+    //  * returns them to be added to the User
+    //  *
+    //  * @param string $nonPlayableCharacterString
+    //  * @return array
+    //  */
+    // protected function _buildNonPlayableCharacters(string $nonPlayableCharacterString): array
+    // {
+    //     // Trim nonPlayableCharacters
+    //     $newNonPlayableCharacters = array_map('trim', explode(',', $nonPlayableCharacterString));
+    //     // Remove all empty nonPlayableCharacters
+    //     $newNonPlayableCharacters = array_filter($newNonPlayableCharacters);
+    //     // Reduce duplicated nonPlayableCharacters
+    //     $newNonPlayableCharacters = array_unique($newNonPlayableCharacters);
+    //
+    //     $out = [];
+    //     $query = $this->NonPlayableCharacters->find()
+    //         ->where(['NonPlayableCharacters.name IN' => $newNonPlayableCharacters]);
+    //
+    //     // Remove existing nonPlayableCharacters from the list of new nonPlayableCharacters.
+    //     foreach ($query->extract('name') as $existing) {
+    //         $index = array_search($existing, $newNonPlayableCharacters);
+    //         if ($index !== false) {
+    //             unset($newNonPlayableCharacters[$index]);
+    //         }
+    //     }
+    //     // Add existing nonPlayableCharacters.
+    //     foreach ($query as $nonPlayableCharacter) {
+    //         $out[] = $nonPlayableCharacter;
+    //     }
+    //
+    //     return $out;
+    // }
 }

@@ -10,7 +10,6 @@ use Cake\ORM\Entity;
  * @property int          $id
  * @property string|null  $name
  * @property string|null  $description
- *
  * @property CombatTurn[] $combat_turns
  */
 class CombatAction extends Entity

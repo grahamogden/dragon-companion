@@ -4,21 +4,34 @@ namespace App\Controller;
 
 use App\Application;
 use App\Controller\AppController;
+use App\Model\Entity\Participant;
+use App\Model\Table\MonstersTable;
+use App\Model\Table\ParticipantsTable;
+use App\Model\Table\PlayerCharactersTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Response;
 use Cake\ORM\Query;
 
 /**
  * Participants Controller
  *
- * @property \App\Model\Table\ParticipantsTable $Participants
+ * @property ParticipantsTable $Participants
  *
- * @method \App\Model\Entity\Participant[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method Participant[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class ParticipantsController extends AppController
 {
+    /** @var PlayerCharactersTable */
+    private $playerCharactersTable;
+
+    /** @var MonstersTable */
+    private $monstersTable;
+
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|null
+     * @return void
      */
     public function index()
     {
@@ -35,8 +48,8 @@ class ParticipantsController extends AppController
      *
      * @param string|null $id Participant id.
      *
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return void
+     * @throws RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
@@ -53,11 +66,11 @@ class ParticipantsController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return Response|null Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
-        $participant = $this->Participants->newEntity();
+        $participant = $this->Participants->newEmptyEntity();
         if ($this->request->is('post')) {
             $participant = $this->Participants->patchEntity($participant, $this->request->getData());
             if ($this->Participants->save($participant)) {
@@ -77,8 +90,8 @@ class ParticipantsController extends AppController
      *
      * @param string|null $id Participant id.
      *
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return Response|null Redirects on successful edit, renders view otherwise.
+     * @throws RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
@@ -107,8 +120,8 @@ class ParticipantsController extends AppController
      *
      * @param string|null $id Participant id.
      *
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return Response|null Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -126,7 +139,7 @@ class ParticipantsController extends AppController
     /**
      * Determines whether the user is authorised to be able to use this action
      *
-     * @param type $user
+     * @param $user
      *
      * @return bool
      */
@@ -168,16 +181,16 @@ class ParticipantsController extends AppController
     public function getAvailablePlayerCharacters(): void
     {
         $this->autoRender = false;
-        // $this->loadModel('Campaigns');
-        $this->loadModel('PlayerCharacters');
+        $this->playerCharactersTable = $this->fetchTable('PlayerCharacters');
 
-        $user       = $this->getUserOrRedirect();
+        // $user       = $this->getUserOrRedirect();
         $term       = $this->request->getQuery('term');
         $campaignId = $this->getCampaignIdFromSession();
         $excludes   = $this->getExcludesFromRequest();
 
         $conditions = [
-            'Campaigns.user_id ='                                                  => $user['id'],
+            // TODO: May need to come back to this and add back in a check for the Campaigns.user_id
+            // 'Campaigns.user_id ='                                                  => $user['id'],
             'concat(PlayerCharacters.first_name, PlayerCharacters.last_name) LIKE' => sprintf('%%%s%%', $term),
             'PlayerCharacters.campaign_id ='                                       => $campaignId,
         ];
@@ -187,7 +200,7 @@ class ParticipantsController extends AppController
         }
 
         if ($this->request->is('ajax') && strlen($term) >= 3) {
-            $results = $this->PlayerCharacters->find(
+            $results = $this->playerCharactersTable->find(
                 'all',
                 [
                     'conditions' => $conditions,
@@ -224,7 +237,6 @@ class ParticipantsController extends AppController
             ];
         }
 
-
         header('Content-Type: application/json');
         echo json_encode($return);
         exit;
@@ -251,39 +263,5 @@ class ParticipantsController extends AppController
         }
 
         return (int) $campaign['id'];
-    }
-
-    /**
-     * Echos a JSON response for the monsters that are available to this user
-     * for a combat encounter
-     *
-     * @return void
-     */
-    public function getAvailableMonsters(): void
-    {
-        $this->autoRender = false;
-        // $this->loadModel('Campaigns');
-        $this->loadModel('Monsters');
-
-        $term         = $this->request->getQuery('term');
-
-        echo $this->formatJsonResponse(
-            $this->Monsters,
-            $term,
-            [
-                'Monsters.name LIKE' => sprintf('%%%s%%', $term),
-            ],
-            'name',
-            'id',
-            [
-                'name',
-                'id',
-                'armour_class',
-                'max_hit_points',
-                'dexterity_modifier',
-                'monster_instance_type_id',
-            ]
-        );
-        exit;
     }
 }
