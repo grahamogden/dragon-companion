@@ -10,11 +10,11 @@ use Cake\ORM\Entity;
  * @property int               $id
  * @property string            $name
  * @property string|null       $synopsis
- *
  * @property CampaignUser[]    $campaign_users
  * @property CombatEncounter[] $combat_encounters
  * @property PlayerCharacter[] $player_characters
  * @property TimelineSegment[] $timeline_segments
+ *
  */
 class Campaign extends Entity
 {

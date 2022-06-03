@@ -18,7 +18,6 @@ use Cake\ORM\Entity;
  * @property int|null            $monster_instance_type_id
  * @property string              $visibility
  * @property int                 $alignment_id
- *
  * @property User                $user
  * @property DataSource          $data_source
  * @property MonsterInstanceType $monster_instance_type

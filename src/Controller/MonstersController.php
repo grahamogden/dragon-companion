@@ -8,7 +8,6 @@ use App\Model\Table\MonstersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Response;
-use Cake\Network\Exception\NotFoundException;
 
 /**
  * Monsters Controller
@@ -24,7 +23,7 @@ class MonstersController extends AppController
         'order'         => [
             'name' => 'asc',
         ],
-        'sortWhitelist' => [
+        'sortableFields' => [
             'name',
         ],
     ];
@@ -89,7 +88,7 @@ class MonstersController extends AppController
      */
     public function add()
     {
-        $monster = $this->Monsters->newEntity();
+        $monster = $this->Monsters->newEmptyEntity();
         $user = $this->getUserOrRedirect();
 
         if ($this->request->is('post')) {
@@ -112,7 +111,7 @@ class MonstersController extends AppController
             [
                 'limit'      => 200,
                 'valueField' => static function (MonsterInstanceType $monsterInstanceType) {
-                    return $monsterInstanceType->getLabel();
+                    return $monsterInstanceType->label;
                 },
             ]
         );
@@ -133,7 +132,7 @@ class MonstersController extends AppController
      * @param string|null $id Monster id.
      *
      * @return Response|null Redirects on successful edit, renders view otherwise.
-     * @throws NotFoundException When record not found.
+     * @throws RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {

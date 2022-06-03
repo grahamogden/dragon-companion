@@ -12,7 +12,6 @@ use Cake\ORM\Entity;
  * @property string      $name
  * @property string|null $description
  * @property FrozenTime  $created
- *
  * @property User[]      $users
  */
 class Clan extends Entity

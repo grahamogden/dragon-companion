@@ -31,7 +31,7 @@ class ClansTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -78,7 +78,7 @@ class ClansTable extends Table
      * @param type $options
      * @return bool
      */
-    public function beforeSave(Event $event, $entity, $options): bool
+    public function beforeSave(\Cake\Event\EventInterface $event, $entity, $options): bool
     {
         if ($entity->users_string) {
             $entity->users = $this->_buildUsers($entity->users_string);

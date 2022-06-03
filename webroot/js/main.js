@@ -90,14 +90,15 @@ jQuery(function ($) {
 
     /**
      * Retrieves the "excludes" data attribute from an element
-     * @param  string $excludes
+     * @param $excludes
+     * @param $currentValues
      * @return string
      */
     const getExcludes = function ($excludes, $currentValues) {
         let excludeCurrentValues = [];
         let currentStringValue = $($currentValues).val();
         if (typeof currentStringValue !== 'undefined' && currentStringValue !== '') {
-            let currentValues = JSON.parse();
+            let currentValues = JSON.parse(currentStringValue);
 
             for (let i = 0; i < currentValues.length; i++) {
                 excludeCurrentValues.push(currentValues[i].value);
@@ -118,8 +119,9 @@ jQuery(function ($) {
 
     /**
      * Attaches the autocomplete events to an element
-     * @param  {[type]} $element [description]
-     * @return {[type]}          [description]
+     * @param $elementToBeAttached
+     * @param autocompleteArgOptions
+     * @return bool|void
      */
     const attachAutoCompleteEvent = function ($elementToBeAttached, autocompleteArgOptions) {
         if (autocompleteArgOptions.source === undefined
@@ -210,7 +212,7 @@ jQuery(function ($) {
                 let $table          = $('#autocomplete-' + autocompleteFor + '-table');
                 let $tableBody      = $($table).find('tbody');
                 let terms           = [];
-                
+
                 try {
                     terms = JSON.parse($($hiddenField).val());
                 } catch {

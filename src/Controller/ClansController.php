@@ -27,7 +27,7 @@ class ClansController extends AppController
      */
     public function index()
     {
-        $userId = $this->Auth->user('id');
+        $userId = $this->Authentication->getIdentity()->get('id');
         $query  = $this->Clans->find()->matching(
             'Users',
             function ($q) use ($userId) {
@@ -77,9 +77,9 @@ class ClansController extends AppController
      */
     public function add()
     {
-        $clan = $this->Clans->newEntity();
+        $clan = $this->Clans->newEmptyEntity();
         if ($this->request->is('post')) {
-            $userId          = $this->Auth->user('id');
+            $userId = $this->Authentication->getIdentity()->get('id');
             $data            = $this->request->getData();
             $data['users']   = [
                 [
@@ -107,7 +107,10 @@ class ClansController extends AppController
             }
             $this->Flash->error(__('The clan could not be saved. Please, try again.'));
         }
-        $users = $this->Clans->Users->find('list', ['limit' => 200])->where(['id !=' => $this->Auth->user('id')]);
+        $users = $this->Clans->Users->find('list', ['limit' => 200])
+            ->where([
+                'id !=' => $this->Authentication->getIdentity()->get('id'),
+            ]);
 
         $this->set(compact('clan', 'users'));
     }

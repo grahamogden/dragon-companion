@@ -7,21 +7,20 @@ use Cake\ORM\Entity;
 /**
  * CombatTurn Entity
  *
- * @property int               $id
- * @property int               $combat_encounter_id
- * @property int               $round_number
- * @property int               $turn_order
- * @property int|null          $source_participant_id
- * @property int|null          $target_participant_id
- * @property int               $combat_action_id
- * @property int               $roll_total
- * @property float|null        $net_action_total
- * @property int               $movement
- *
- * @property CombatEncounter   $combat_encounter
- * @property SourceParticipant $source_participant
- * @property TargetParticipant $target_participant
- * @property CombatAction      $combat_action
+ * @property int                           $id
+ * @property int                           $combat_encounter_id
+ * @property int                           $round_number
+ * @property int                           $turn_order
+ * @property int|null                      $source_participant_id
+ * @property int|null                      $target_participant_id
+ * @property int                           $combat_action_id
+ * @property int                           $roll_total
+ * @property float|null                    $net_action_total
+ * @property int                           $movement
+ * @property CombatEncounter               $combat_encounter
+ * @property SourceParticipant&Participant $source_participant
+ * @property TargetParticipant&Participant $target_participant
+ * @property CombatAction                  $combat_action
  */
 class CombatTurn extends Entity
 {

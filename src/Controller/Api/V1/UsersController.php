@@ -2,7 +2,6 @@
 namespace App\Controller\Api\V1;
 
 use App\Application;
-use App\Controller\AppController\Api\V1;
 use App\Model\Entity\CombatEncounter;
 use App\Model\Table\UsersTable;
 use Cake\Datasource\ResultSetInterface;
@@ -113,9 +112,9 @@ class UsersController extends ApiAppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool

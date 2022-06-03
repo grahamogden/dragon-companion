@@ -48,7 +48,7 @@ class CharacterClassesController extends AppController
      */
     public function add()
     {
-        $characterClass = $this->CharacterClasses->newEntity();
+        $characterClass = $this->CharacterClasses->newEmptyEntity();
         if ($this->request->is('post')) {
             $characterClass = $this->CharacterClasses->patchEntity($characterClass, $this->request->getData());
             if ($this->CharacterClasses->save($characterClass)) {
@@ -109,9 +109,9 @@ class CharacterClassesController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool

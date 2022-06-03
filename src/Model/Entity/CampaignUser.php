@@ -6,14 +6,13 @@ use Cake\ORM\Entity;
 /**
  * CampaignUser Entity
  *
- * @property int $id
- * @property int $campaign_id
- * @property int $user_id
- * @property int $member_status
- * @property int $account_level
- *
- * @property \App\Model\Entity\Campaign $campaign
- * @property \App\Model\Entity\User $user
+ * @property int      $id
+ * @property int      $campaign_id
+ * @property int      $user_id
+ * @property int      $member_status
+ * @property int      $account_level
+ * @property Campaign $campaign
+ * @property User     $user
  */
 class CampaignUser extends Entity
 {

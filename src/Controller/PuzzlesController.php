@@ -25,7 +25,7 @@ class PuzzlesController extends AppController
 
     /**
      * Initialises the class, including authentication
-     * 
+     *
      * @return void
      */
     public function initialize(): void
@@ -83,11 +83,12 @@ class PuzzlesController extends AppController
      */
     public function add()
     {
-        $puzzle = $this->Puzzles->newEntity();
+        $puzzle = $this->Puzzles->newEmptyEntity();
         if ($this->request->is('post')) {
             $puzzle = $this->Puzzles->patchEntity($puzzle, $this->request->getData());
             // Set the user ID on the item
-            $puzzle->user_id = $this->Auth->user('id');
+            $userId = $this->Authentication->getIdentity()->get('id');
+            $puzzle->user_id = $userId;
             // echo'<pre>';var_dump($puzzle);exit;
             if ($this->Puzzles->save($puzzle)) {
                 $this->Flash->success(__('The puzzle, {0}, has been saved.', $puzzle->title));
@@ -161,9 +162,9 @@ class PuzzlesController extends AppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool

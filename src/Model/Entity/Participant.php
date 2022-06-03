@@ -16,7 +16,6 @@ use Cake\ORM\Entity;
  * @property int|null        $monster_id
  * @property int|null        $player_character_id
  * @property int             $temporary_id
- *
  * @property CombatEncounter $combat_encounter
  * @property Monster         $monster
  * @property PlayerCharacter $player_character

@@ -74,7 +74,7 @@ class DatabaseStringConverterBehavior extends Behavior
     }
 
     public function beforeSave(
-        Event $event,
+        \Cake\Event\EventInterface $event,
         EntityInterface $entity,
         ArrayObject $options
     ) {

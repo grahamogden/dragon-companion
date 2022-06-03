@@ -1,30 +1,38 @@
 <?php
 namespace App\Model\Entity;
 
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\Http\Exception\BadRequestException;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
  * User Entity
  *
- * @property int $id
- * @property string $username
- * @property string $password
- * @property string $email
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
- * @property int $status
+ * @property int                    $id
+ * @property string                 $username
+ * @property string                 $password
+ * @property string                 $email
+ * @property FrozenTime             $created
+ * @property FrozenTime             $modified
+ * @property int                    $status
  *
- * @property \App\Model\Entity\Campaign[] $campaigns
- * @property \App\Model\Entity\CombatEncounter[] $combat_encounters
- * @property \App\Model\Entity\Monster[] $monsters
- * @property \App\Model\Entity\NonPlayableCharacter[] $non_playable_characters
- * @property \App\Model\Entity\PlayerCharacter[] $player_characters
- * @property \App\Model\Entity\Puzzle[] $puzzles
- * @property \App\Model\Entity\Tag[] $tags
- * @property \App\Model\Entity\TimelineSegment[] $timeline_segments
+ * @property Campaign[]             $campaigns
+ * @property CombatEncounter[]      $combat_encounters
+ * @property Monster[]              $monsters
+ * @property NonPlayableCharacter[] $non_playable_characters
+ * @property PlayerCharacter[]      $player_characters
+ * @property Puzzle[]               $puzzles
+ * @property Tag[]                  $tags
+ * @property TimelineSegment[]      $timeline_segments
  */
 class User extends Entity
 {
+
+    public const STATUS_INACTIVE = 0;
+    public const STATUS_PENDING  = 5;
+    public const STATUS_ACTIVE   = 10;
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -67,29 +75,7 @@ class User extends Entity
 
             return $hasher->hash($value);
         }
-    }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getParentId(): int
-    {
-        return $this->parent_id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
+        throw new BadRequestException('Password is missing');
     }
 }

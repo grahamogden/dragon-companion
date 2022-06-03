@@ -6,6 +6,7 @@ use App\Application;
 use App\Model\Entity\Campaign;
 use App\Model\Entity\CampaignUser;
 use App\Model\Table\CampaignsTable;
+use App\Model\Table\UsersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Response;
@@ -20,6 +21,8 @@ use Cake\ORM\Query;
  */
 class CampaignsController extends AppController
 {
+    /** @var UsersTable */
+    private $Users;
 
     /**
      * Index method
@@ -72,7 +75,7 @@ class CampaignsController extends AppController
      */
     public function add()
     {
-        $campaign = $this->Campaigns->newEntity();
+        $campaign = $this->Campaigns->newEmptyEntity();
 
         if ($this->request->is('post')) {
             $user          = $this->getUserOrRedirect();
@@ -88,7 +91,7 @@ class CampaignsController extends AppController
                 ],
             ];
 
-//            $clan = $this->Clans->newEntity(
+//            $clan = $this->Clans->newEmptyEntity(
 //                $data,
 //                [
 //                    'associated' => ['Users._joinData'],
@@ -122,7 +125,7 @@ class CampaignsController extends AppController
      */
     public function edit($id = null)
     {
-       $this->loadModel('Users');
+        $this->Users = $this->fetchTable('Users');
 
         $campaign = $this->Campaigns->get(
             $id,
@@ -144,7 +147,7 @@ class CampaignsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user            = $this->getUserOrRedirect();
             $data            = $this->request->getData();
-            
+
             $usersJson = json_decode($data['users_string'], true);
 // debug($campaignUserCreator);
             $data['users'][] = [
@@ -167,7 +170,7 @@ class CampaignsController extends AppController
                 ];
             }
             $campaign = $this->Campaigns->patchEntity($campaign, $data);
-// debug($campaign);exit;
+
             if ($this->Campaigns->save($campaign)) {
                 $this->Flash->success(__('The campaign has been saved.'));
 
@@ -176,6 +179,7 @@ class CampaignsController extends AppController
             $this->Flash->error(__('The campaign could not be saved. Please, try again.'));
         }
 
+        // Get all users in this campaign - except for the creator because we don't want to allow the creator to be removed
         $campaignUsers = $this->Users->find('list')
             ->matching('Campaigns', function (Query $q) use ($campaign) {
                 return $q
@@ -274,8 +278,8 @@ class CampaignsController extends AppController
 
                     return $this->redirect(
                         [
-                            '_name' => 'TimelineSegmentsIndex',
-                            'campaignId' => $campaign->id,
+                            'controller' => 'TimelineSegments',
+                            // 'campaignId' => $campaign->id,
                         ]
                     );
                 }
@@ -285,7 +289,7 @@ class CampaignsController extends AppController
 
             $this->Flash->error(__('The campaign could not be opened. Please, try again.'));
         }
-        return $this->redirect($this->Auth->logout());
+        return $this->redirect($this->Authentication->logout());
     }
 
 }
