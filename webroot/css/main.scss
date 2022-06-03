@@ -129,13 +129,6 @@ div.content-shadow {
     box-shadow: 0 0 $size-sixteen $size-sixteen rgba(0, 0, 0, 0.2);
 }
 
-.fa-dice-d20 {
-  &:hover {
-    -webkit-animation: fa-spin 2s linear infinite;
-    animation: fa-spin 2s linear infinite;
-  }
-}
-
 
 
 
@@ -153,10 +146,6 @@ h2 {
 h3 {
   font-size: 1.6rem;
   margin: 0 0 $size-twelve 0;
-}
-
-i {
-  margin: 0 $size-eight 0 0;
 }
 
 

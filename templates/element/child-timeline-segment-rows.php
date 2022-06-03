@@ -116,7 +116,7 @@ use App\Model\Entity\TimelineSegment;
     </tr>
     <tr>
         <td class="show-more-container">
-            <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($childTimelineSegment->body)); ?></div>
+            <div class="show-more-content"><?= dbConverter::fromDatabase($childTimelineSegment->body); ?></div>
         </td>
     </tr>
 <?php } // endforeach; ?>

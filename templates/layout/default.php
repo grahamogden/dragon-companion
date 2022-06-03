@@ -27,12 +27,12 @@ if ($this->getRequest()->getCookie('darkMode')) {
     <?= $this->element('header') ?>
     <div class="container-fluid content-container content-shadow content-width-restriction background-colour-primary">
         <?php if ($flashMessages) { ?>
-            <div class="container-fluid content-width-restriction content-shadow p-0">
+            <div class="container-fluid content-width-restriction p-0">
                 <?= $flashMessages ?>
             </div>
         <?php } // endif ?>
         <?php if ($breadcrumbs) { ?>
-            <div class="container-fluid content-width-restriction content-shadow background-colour-primary p-0">
+            <div class="container-fluid content-width-restriction p-0 mb-4">
                 <?= $breadcrumbs ?>
             </div>
         <?php } // endif ?>

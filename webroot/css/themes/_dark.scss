@@ -32,11 +32,7 @@ body.dark-mode {
     input[type=search],
     input[type=text],
     select,
-    textarea,
-    //.textarea-editor .tox .tox-edit-area__iframe,
-    //.textarea-editor .tox .tox-menubar,
-    //.textarea-editor .tox .tox-statusbar
-    {
+    textarea {
         background-color: $input-background-colour-primary__dark;
         color: $input-font-colour-primary__dark;
     }
