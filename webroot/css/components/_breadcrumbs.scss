@@ -1,0 +1,81 @@
+ul {
+    // margin: 0 0 $size-eight 0;
+    // padding: 0 $size-eight 0 $distTwentyFour;
+
+    &.breadcrumbs-trail {
+
+        @include background-colour-styles(rgba(255, 255, 255, 1), $transition, $no-hover, $dark-mode);
+        // .body-container-widths();
+        font-size: 0;
+        line-height: 0;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: scroll;
+        white-space: nowrap;
+
+        li {
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+
+            &:last-of-type {
+                a,
+                span {
+                    padding-right: $size-eight;
+                }
+            }
+
+            & + li {
+                border-left-width: 0;
+                margin-left: -$size-twenty;
+                padding-left: $size-sixteen;
+
+                > *:before {
+                    border-radius: 0 100% 0 0;
+                    border-style: solid;
+                    border-width: 0 0 $size-one $size-one;
+                    box-shadow: -$size-two $size-two 3px 0px rgba(0, 0, 0, .03);
+                    content: '';
+                    height: 2.1rem;
+                    left: 0.7rem;
+                    position: absolute;
+                    top: 0.3rem;
+                    transform: rotate(45deg);
+                    transform-origin: center;
+                    width: 2.1rem;
+                }
+            }
+
+            a,
+            span {
+                border-style: solid;
+                border-width: 0 $size-one $size-one $size-one;
+                border-radius: 0 0 $size-two $size-two;
+                display: inline-block;
+                font-size: 1.4rem;
+                line-height: 1.6rem;
+                margin: 0;
+                max-width: 16rem;
+                overflow: hidden;
+                padding: $size-six $size-twenty $size-six $size-eight;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            a,
+            span,
+            a:before,
+            span:before {
+                @include background-border-colour(rgba(255, 255, 255, 1), $transition, $no-hover, $dark-mode);
+            }
+
+            span {
+                @include background-border-colour(rgba(255, 255, 255, 1), $transition, $no-hover, $dark-mode, $text-color);
+            }
+        }
+    }
+}

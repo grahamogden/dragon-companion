@@ -1,12 +1,7 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\User;
-use Cake\Datasource\EntityInterface;
-use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\Association\HasMany;
-use Cake\ORM\Behavior\TimestampBehavior;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -23,18 +18,6 @@ use Cake\Validation\Validator;
  * @property PuzzlesTable&HasMany               $Puzzles
  * @property TagsTable&HasMany                  $Tags
  * @property TimelineSegmentsTable&HasMany      $TimelineSegments
- // * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegments2020-04-10
- // * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegmentsCopy
- // * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegmentsCopy2
- *
- // * @method User get($primaryKey, $options = [])
- // * @method User newEntity($data = null, array $options = [])
- // * @method User[] newEntities(array $data, array $options = [])
- // * @method User|false save(EntityInterface $entity, $options = [])
- // * @method User saveOrFail(EntityInterface $entity, $options = [])
- // * @method User patchEntity(EntityInterface $entity, array $data, array $options = [])
- // * @method User[] patchEntities($entities, array $data, array $options = [])
- // * @method User findOrCreate($search, callable $callback = null, $options = [])
  */
 class UsersTable extends Table
 {

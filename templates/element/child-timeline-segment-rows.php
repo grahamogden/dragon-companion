@@ -1,11 +1,13 @@
 <?php
 use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
+use App\Model\Entity\TimelineSegment;
 ?>
 <?php $childCounter = 0; ?>
+<?php /** @var TimelineSegment[] $childTimelineSegments */ ?>
 <?php foreach ($childTimelineSegments as $childTimelineSegment) { ?>
     <?php $childCounter++; ?>
     <tr>
-        <th class="align-items-center d-flex bg-light">
+        <th class="align-items-center d-flex background-colour-secondary">
             <?= $this->Html->link(
                 $childTimelineSegment->title,
                 [
@@ -16,7 +18,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
             ) ?>
             <div class="dropdown d-inline-block ml-auto">
                 <button class="btn btn-secondary dropdown-toggle shadow-none" type="button" id="timelineDropdownMenuButton<?=$childCounter?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</button>
-                <div class="dropdown-menu dropdown-menu-right flex-column" aria-labelledby="timelineDropdownMenuButton<?=$childCounter?>">
+                <div class="dropdown-menu dropdown-menu-right flex-column background-colour-secondary border-colour-primary" aria-labelledby="timelineDropdownMenuButton<?=$childCounter?>">
                     <?php if ($childCounter > 1) { ?>
                         <?php // Move to top ?>
                         <?= $this->Form->postLink('Move to top', [
@@ -27,7 +29,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                             'class' => [
                                 'btn',
                                 'btn-info',
-                                'mb-2'
+                                'mb-3',
+                                'm-0',
                             ],
                             'role' => 'button',
                         ]); ?>
@@ -41,7 +44,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                             'class' => [
                                 'btn',
                                 'btn-info',
-                                'mb-2'
+                                'mb-3',
+                                'm-0',
                             ],
                             'role' => 'button',
                         ]); ?>
@@ -57,7 +61,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                             'class' => [
                                 'btn',
                                 'btn-info',
-                                'mb-2'
+                                'mb-3',
+                                'm-0',
                             ],
                             'role' => 'button',
                         ]); ?>
@@ -71,7 +76,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                             'class' => [
                                 'btn',
                                 'btn-info',
-                                'mb-2'
+                                'mb-3',
+                                'm-0',
                             ],
                             'role' => 'button',
                         ]); ?>
@@ -85,7 +91,8 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                         'class'   => [
                             'btn',
                             'btn-primary',
-                            'mb-2'
+                            'mb-3',
+                            'm-0',
                         ],
                         'role' => 'button',
                     ]); ?>
@@ -98,9 +105,10 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
                         'class'   => [
                             'btn',
                             'btn-danger',
+                            'm-0',
                         ],
                         'role' => 'button',
-                        'confirm' => __('Are you sure you want to delete {0}?', $childTimelineSegment->name),
+                        'confirm' => __('Are you sure you want to delete "{0}"?', $childTimelineSegment->title),
                     ]); ?>
                 </div>
             </div>

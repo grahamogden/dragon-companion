@@ -63,11 +63,19 @@ jQuery(function ($) {
     });
 
     // setDarkMode(getCookie('darkMode'));
+    const setDarkMode = function (enable) {
+        setCookie('darkMode', enable ? 1 : 0);
+        if (enable) {
+            $('body').addClass('dark-mode');
+        } else {
+            $('body').removeClass('dark-mode');
+        }
+    }
 
     $('#switch-dark-mode').on('change', function () {
-        let isChecked = $(this).is(':checked');
-        // console.log(isChecked);
-        setDarkMode(isChecked);
+        // let isChecked = $(this).is(':checked');
+        let enabled = getCookie('darkMode');
+        setDarkMode(enabled !== '1');
     });
 
     /**

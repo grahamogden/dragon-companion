@@ -1,0 +1,25 @@
+.body-container-widths {
+    margin: 0 auto;
+    // max-width: $contentMaxWidth;
+
+    @media all and (min-width: $width-min-desktop) {
+        margin: 0 $size-forty-eight;
+    }
+}
+
+div.content-container {
+    background-color: $background-colour-primary;
+    color: $font-colour-primary;
+    flex: 1;
+    padding-bottom: $size-sixteen;
+    padding-top: $size-sixteen;
+
+    //body.dark-mode & {
+    //    background-color: $background-colour-primary__dark;
+    //    color: $font-colour-primary__dark;
+    //}
+}
+
+div.content-width-restriction {
+    max-width: $content-max-width;
+}
