@@ -1287,27 +1287,6 @@ class Initial extends AbstractMigration
             )
             ->update();
 
-        $this->table('tags_timeline_segments')
-            ->addForeignKey(
-                'tag_id',
-                'tags',
-                'id',
-                [
-                    'update' => 'RESTRICT',
-                    'delete' => 'RESTRICT'
-                ]
-            )
-            ->addForeignKey(
-                'timeline_segment_id',
-                'timeline_segments',
-                'id',
-                [
-                    'update' => 'RESTRICT',
-                    'delete' => 'RESTRICT'
-                ]
-            )
-            ->update();
-
         $this->table('timeline_segments')
             ->addForeignKey(
                 'campaign_id',
@@ -1442,14 +1421,6 @@ class Initial extends AbstractMigration
                 'user_id'
             );
 
-        $this->table('tags_timeline_segments')
-            ->dropForeignKey(
-                'tag_id'
-            )
-            ->dropForeignKey(
-                'timeline_segment_id'
-            );
-
         $this->table('timeline_segments')
             ->dropForeignKey(
                 'campaign_id'
@@ -1476,14 +1447,12 @@ class Initial extends AbstractMigration
         $this->dropTable('monster_instance_types');
         $this->dropTable('monsters');
         $this->dropTable('non_playable_characters');
-        $this->dropTable('non_playable_characters_timeline_segments');
         $this->dropTable('participants');
         $this->dropTable('permissions');
         $this->dropTable('player_characters');
         $this->dropTable('puzzles');
         $this->dropTable('roles');
         $this->dropTable('tags');
-        $this->dropTable('tags_timeline_segments');
         $this->dropTable('timeline_segments');
         $this->dropTable('users');
     }
