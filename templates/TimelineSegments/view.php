@@ -1,10 +1,14 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\TimelineSegment $timelineSegment
- */
 
 use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
+use App\Model\Entity\TimelineSegment;
+use App\View\AppView;
+
+/**
+ * @var AppView         $this
+ * @var TimelineSegment $timelineSegment
+ * @var string          $childTimelineParts
+ */
 ?>
 <h1><?= sprintf('%s Timeline Segment (%s)',
     h($timelineSegment->title),
@@ -19,7 +23,7 @@ use App\Model\Behavior\DatabaseStringConverterBehavior as dbConverter;
     ); ?></h1>
 <div class="timelineSegments view columns content">
     <div class="segment-row show-more-container">
-        <div class="show-more-content"><?= dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body)); ?></div>
+        <div class="show-more-content"><?= dbConverter::fromDatabase($timelineSegment->body); ?></div>
     </div>
     <hr>
     <?php if ($childTimelineParts) { ?>

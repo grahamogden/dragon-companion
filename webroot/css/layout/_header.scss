@@ -1,0 +1,8 @@
+header {
+
+    @media all and (max-width: 767px) {
+        .nav-item:not(:last-of-type) {
+            border-bottom: 0.1rem solid rgba(0, 0, 0, 0.3);
+        }
+    }
+}

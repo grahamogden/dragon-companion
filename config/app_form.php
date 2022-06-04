@@ -26,7 +26,7 @@ return [
     // Close tag used by end().
     'formEnd'               => '</form>',
     // General grouping container for control(). Defines input/label ordering.
-    'formGroup'             => '<div class="col-12 col-md-4 col-lg-3">{{label}}</div><div class="col-12 col-md-8 col-lg-9">{{input}}</div>',
+    'formGroup'             => '<div class="col-12 col-md-2 col-lg-2">{{label}}</div><div class="col-12 col-md-10 col-lg-10">{{input}}</div>',
     // Wrapper content used to hide other content.
     'hiddenBlock'           => '<div style="display:none;">{{content}}</div>',
     // Generic input element.

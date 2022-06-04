@@ -1,0 +1,12 @@
+fieldset {
+
+    & ~ fieldset {
+        display: none;
+    }
+
+    legend {
+        border-bottom: 0.2rem solid rgb(220, 220, 220);
+        font-size: 1.6rem;
+        margin: 0 0 $size-twelve 0;
+    }
+}

@@ -1,0 +1,46 @@
+// Sizes
+$size-one: 0.1rem; // 1px
+$size-two: 0.2rem; // 2px
+$size-four: 0.4rem; // 4px
+$size-six: 0.6rem; // 6px
+$size-eight: 0.8rem; // 8px
+$size-twelve: 1.2rem; // 12px
+$size-sixteen: 1.6rem; // 16px
+$size-twenty: 2rem; // 20px
+$size-twenty-four: 2.4rem; // 24px
+$size-thirty-two: 3.2rem; // 32px
+$size-forty: 4rem; // 40px
+$size-forty-eight: 4.8rem; // 48px
+$size-sixty-four: 6.4rem; // 64px
+
+$box-shadow-small: 0 $size-two $size-two $size-one rgba(0, 0, 0, 0.1);
+
+$button-icon-height: 3.6rem;
+$button-icon-width: 3.6rem;
+
+$font-size-default: 1.6rem;
+$font-line-height-default: 1.8rem;
+
+$radius-one: 0.2rem;
+$radius-small: 0.3rem;
+$radius-two: 0.5rem;
+$radius-three: 1rem;
+
+$transition-speed-fast: 0.07s;
+$transition-speed-two: 0.15s;
+$transition-speed-slow: 0.3s;
+$transition-speed-background-color: 0.2s;
+
+$width-min-mobile: 320px;
+$width-min-tablet: 768px;
+$width-min-desktop: 1024px;
+$content-max-width: 140rem;
+
+$transition: true;
+$no-transition: false;
+$hover: true;
+$no-hover: false;
+$dark-mode: true;
+$no-dark-mode: false;
+$text-color: true;
+$no-text-color: false;

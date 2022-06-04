@@ -1,0 +1,47 @@
+.paginator {
+    margin: 0 0 $size-sixteen 0;
+}
+
+ul {
+    &.pagination {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        padding: 0;
+
+        li {
+            text-align: center;
+            width: 25%;
+
+            &.first {
+
+            }
+
+            &.first, &.prev:before {
+
+            }
+
+            &.last {
+
+            }
+
+            &.last, &.next:before {
+
+            }
+
+            &.next {
+
+            }
+
+            &.prev {
+
+            }
+
+            a {
+                display: block;
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}

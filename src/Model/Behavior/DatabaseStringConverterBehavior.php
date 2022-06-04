@@ -4,6 +4,7 @@ namespace App\Model\Behavior;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
@@ -74,7 +75,7 @@ class DatabaseStringConverterBehavior extends Behavior
     }
 
     public function beforeSave(
-        \Cake\Event\EventInterface $event,
+        EventInterface $event,
         EntityInterface $entity,
         ArrayObject $options
     ) {

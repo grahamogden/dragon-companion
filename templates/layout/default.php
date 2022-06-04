@@ -13,9 +13,10 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-$cakeDescription = 'CakePHP: the rapid development php framework';
-$bodyClasses = ['bg-secondary'];
-if ($this->request->getCookie('darkMode')) {
+$breadcrumbs = $this->element('breadcrumbs');
+$flashMessages = $this->Flash->render();
+$bodyClasses = [];
+if ($this->getRequest()->getCookie('darkMode')) {
     $bodyClasses[] = 'dark-mode';
 }
 ?>
@@ -24,8 +25,17 @@ if ($this->request->getCookie('darkMode')) {
 <?= $this->element('head') ?>
 <body class="<?= implode(' ', $bodyClasses); ?>">
     <?= $this->element('header') ?>
-    <?= $this->Flash->render() ?>
-    <div class="container-fluid bg-white content-container content-shadow content-width-restriction">
+    <div class="container-fluid content-container content-shadow content-width-restriction background-colour-primary">
+        <?php if ($flashMessages) { ?>
+            <div class="container-fluid content-width-restriction p-0">
+                <?= $flashMessages ?>
+            </div>
+        <?php } // endif ?>
+        <?php if ($breadcrumbs) { ?>
+            <div class="container-fluid content-width-restriction p-0 mb-4">
+                <?= $breadcrumbs ?>
+            </div>
+        <?php } // endif ?>
         <?= $this->fetch('content') ?>
     </div>
 <?= $this->element('footer') ?>

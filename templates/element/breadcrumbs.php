@@ -33,13 +33,12 @@ if (isset($breadcrumbs)) {
 
     $this->Breadcrumbs->add($crumbs ?? []);
     $this->Breadcrumbs->setTemplates([
-        'itemWithoutLink' => '<li{{attrs}}><span{{innerAttrs}}>{{title}}</span></li>{{separator}}',
-        'separator'       => '',
+        'itemWithoutLink' => '<li {{attrs}}><span{{innerAttrs}}>{{title}}</span></li>{{separator}}',
     ]);
 
     echo $this->Breadcrumbs->render(
         ['class' => 'breadcrumbs-trail'],
-        ['separator' => '']
+        ['separator' => '<i class="fa fa-chevron-left"></i>']
     );
 
 }

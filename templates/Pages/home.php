@@ -1,11 +1,15 @@
 <?php
 $this->layout = false;
 $title = 'Dragon Companion - The one and only Companion app for playing role playing games!';
+$bodyClasses = ['home'];
+if ($this->request->getCookie('darkMode')) {
+    $bodyClasses[] = 'dark-mode';
+}
 ?>
 <!DOCTYPE html>
 <html>
 <?= $this->element('head') ?>
-<body class="home">
+<body class="<?= implode(' ', $bodyClasses); ?>">
 <?= $this->element('header') ?>
     <div class="container bg-white content-container content-width-restriction content-shadow">
         <?= $this->Flash->render() ?>

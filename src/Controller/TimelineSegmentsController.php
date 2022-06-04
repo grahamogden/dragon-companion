@@ -500,7 +500,7 @@ class TimelineSegmentsController extends AppController
     /**
      * Uses a regular expression to extract any content that is within a <blockquote> element
      *
-     * @param TimelineSegmentEntity $timeline The timeline segment object
+     * @param TimelineSegmentEntity $timelineSegment The timeline segment object
      *
      * @return string
      */
