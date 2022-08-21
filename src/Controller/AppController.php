@@ -26,6 +26,7 @@ use Authorization\Controller\Component\AuthorizationComponent;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
+use Cake\ORM\Table;
 use Exception;
 
 use RuntimeException;
@@ -124,7 +125,7 @@ class AppController extends Controller
     /**
      * Generates a json encoded string using the results
      *
-     * @param Entity     $entity - the entity that is going to be searched
+     * @param Table      $entity - the entity that is going to be searched
      * @param string     $term - the search term (used to prevent searches of less than 3 characters)
      * @param array      $conditions - the conditions that are going to be used
      * @param string     $displayFieldName - the DB field name that is going to be shown to the user
@@ -134,14 +135,14 @@ class AppController extends Controller
      * @return string
      */
     protected function formatJsonResponse(
-        $entity,
+        Table $entity,
         string $term,
         array $conditions,
         string $displayFieldName,
         string $valueFieldName,
         ?array $additionalReturnData
     ): string {
-        $returnAray = [];
+        $returnArray = [];
 
         if ($this->request->is('ajax') && strlen($term) >= 3) {
             $results = $entity->find('all', [
@@ -160,20 +161,19 @@ class AppController extends Controller
                     }
                 }
 
-                $returnAray[] = $return;
+                $returnArray[] = $return;
             }
         }
 
-        if (empty($returnAray)) {
-            $returnAray[] = [
+        if (empty($returnArray)) {
+            $returnArray[] = [
                 'label'        => 'No results found',
                 'value'        => '',
             ];
         }
 
-        return json_encode($returnAray);
+        return json_encode($returnArray);
     }
-
 
     /**
      * Retrieves the User array from Auth or redirects the user
@@ -200,6 +200,13 @@ class AppController extends Controller
     {
         /** @var Campaign $campaign */
         $campaign = $this->getRequest()->getSession()->readOrFail(Application::SESSION_KEY_CAMPAIGN);
+
+        if (empty($campaign)) {
+            $this->Flash->error('Please select a campaign');
+            $this->redirect(['controller' => 'Campaigns', 'action' => 'index']);
+
+            // TODO: Redirect does not take user to the campaign page
+        }
 
         return $campaign->id;
     }

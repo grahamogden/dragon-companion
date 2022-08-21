@@ -1,7 +1,7 @@
 // var darkMode = console.log(getCookie('darkMode'));
 
 let mcePlugins = 'advlist autosave autolink autoresize lists link image code fullscreen print preview anchor paste hr'
-    + ' wordcount table searchreplace help';
+    + ' wordcount table searchreplace help tagmentions';
 let mceMenu = {
     view: {title: 'View', items: 'code fullscreen'},
     insert: {title: 'Insert', items: 'bullist numlist link hr inserttable'},
@@ -47,7 +47,6 @@ var mceConfig = {
 
         editor.on('load', function () {
         let enable = getCookie('darkMode') === '1';
-            console.log(enable);
             let $body = tinymce.activeEditor.dom.select('body');
             if (enable) {
                 tinymce.activeEditor.dom.addClass($body, 'dark-mode');
@@ -55,6 +54,9 @@ var mceConfig = {
                 tinymce.activeEditor.dom.removeClass($body, 'dark-mode');
             }
         });
+    },
+    tag_mentions_config: {
+        source: '/api/v1/tag-mentions'
     },
     skin: 'combine',
     toolbar: false,

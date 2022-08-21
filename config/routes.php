@@ -87,6 +87,15 @@ $routes->scope(
             }
         );
 
+        $routes->connect(
+            '/api/v1/tag-mentions',
+            [
+                'prefix' => 'Api/V1',
+                'controller' => 'TagMentions',
+                'action' => 'get'
+            ],
+            ['_name' => 'tagmentions']
+        );
         /**
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
          * its action called 'display', and we pass a param to select the view file
