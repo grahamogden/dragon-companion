@@ -8,30 +8,13 @@ services:
       dockerfile: Dockerfile
 #    command: sh -c "yarn install && yarn run dev"
     ports:
-      - "80:80"
+      - "5980:80"
     working_dir: /var/www/
     volumes:
       - ./:/var/www/html/dragon-companion/
     env_file:
       - config/.env
     restart: always
-#    environment:
-#      MYSQL_HOST: mysql
-#      MYSQL_USER: root
-#      MYSQL_PASSWORD: secret
-#      MYSQL_DB: todos
-#      RDS_HOSTNAME: localhost
-#      RDS_PORT: 8889
-#      RDS_DB_NAME: dungeons_and_dragons
-#      RDS_USERNAME: root
-#      RDS_PASSWORD: root
-#      APP_NAME: ""
-#      DEBUG: 1
-#      APP_ENCODING: UTF-8
-#      APP_DEFAULT_LOCALE: en_GB
-#      APP_DEFAULT_TIMEZONE: UTC
-#      SECURITY_SALT: 35e8da8f198d6946835de9384af24363605e74b0f5b0329ae18fd165e1c2674c
-#      EMAIL_FROM_ADDRESS: graham2693@hotmail.co.uk
 
   mysql:
     image: mysql:8
@@ -40,10 +23,10 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: dungeons_and_dragons
-      MYSQL_USER: graham
-      MYSQL_PASSWORD: graham1
+      MYSQL_ROOT_PASSWORD: ${MSSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MSSQL_DATABASE}
+      MYSQL_USER: ${MSSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_HOST: 127.0.0.1
     ports:
       - "3306:3306"
