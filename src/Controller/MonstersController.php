@@ -111,7 +111,7 @@ class MonstersController extends AppController
             [
                 'limit'      => 200,
                 'valueField' => static function (MonsterInstanceType $monsterInstanceType) {
-                    return $monsterInstanceType->label;
+                    return $monsterInstanceType->name;
                 },
             ]
         );

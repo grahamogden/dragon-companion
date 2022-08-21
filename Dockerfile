@@ -6,9 +6,11 @@ WORKDIR /var/www/html
 RUN apt-get update
 #RUN apt-get upgrade --assume-yes --quiet
 #RUN apt-get dist-upgrade --assume-yes --quiet
-#RUN apt-get autoclean
-#RUN apt-get clean
+RUN apt-get autoclean
+RUN apt-get clean
 RUN apt install -y nano
+RUN apt-get install -y npm
+RUN npm install -g yo generator-tinymce --unsafe-perm=true --allow-root
 #RUN apt install php-intl
 
 #RUN mkdir /var/www/html/dragon-companion

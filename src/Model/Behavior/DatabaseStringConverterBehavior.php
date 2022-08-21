@@ -20,7 +20,7 @@ class DatabaseStringConverterBehavior extends Behavior
      */
     const WHITE_LIST_HTML_TAGS = [
         'blockquote',
-        'span',
+        // 'span',
         'strike',
         'strong',
         'table',
@@ -44,7 +44,7 @@ class DatabaseStringConverterBehavior extends Behavior
     const WHITE_LIST_HTML_ATTRIBUTES = [
         'href',
         'target',
-        'style',
+        // 'style',
     ];
 
     public static function toDatabase($string)
