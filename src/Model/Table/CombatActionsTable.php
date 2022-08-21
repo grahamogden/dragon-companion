@@ -54,7 +54,7 @@ class CombatActionsTable extends Table
      *
      * @return Validator
      */
-    public function validationDefault(Validator $validator): \Cake\Validation\Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->nonNegativeInteger('id')

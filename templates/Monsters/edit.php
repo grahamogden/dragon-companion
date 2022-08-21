@@ -20,7 +20,7 @@ use App\View\AppView;
             'visibility',
             [
                 'class'   => 'form-control',
-                'options' => [Monster::VISIBILITY_PUBLIC => 'Public', Monster::VISIBILITY_PRIVATE => 'Private',],
+                'options' => Monster::VISIBILITY_OPTIONS,
             ]
         ) ?>
         <?= $this->Form->control('max_hit_points', ['class' => 'form-control',]) ?>

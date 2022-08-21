@@ -198,7 +198,7 @@ class InitiativeTable extends TableHelper {
         let initiativeInput             = this.getInputInitiative(
             participant.getTempId(),
             participant.getDexterityModifier(),
-            participant.getInitiative()
+            participant.getInitiative() ? participant.getInitiative() : ''
         );
         let startingHitPointInput       = this.getInputStartingHitPoint(
             participant.getTempId(),
@@ -224,7 +224,7 @@ class InitiativeTable extends TableHelper {
     }
 
     getInputInitiative (tempId, dexterityModifier, initiative = '') {
-        return `<input type="text" inputmode="number" id="participant-initiative-${tempId}" class="participant-initiative" name="participant-initiative[]" value="${initiative}" pattern="\-?[0-9]*" placeholder="(${dexterityModifier})" />`;
+        return `<input type="text" inputmode="number" id="participant-initiative-${tempId}" class="participant-initiative" name="participant-initiative[]" value="${initiative}" pattern="\-?[0-9]*" placeholder="(+${dexterityModifier})" />`;
     }
 
     getInputStartingHitPoint (tempId, maxHitPoints, currentHitPoints = '') {
@@ -585,8 +585,10 @@ jQuery(function ($) {
     };
 
     const getParticipantsFromSeparateJson = function () {
-        let playerCharacters  = JSON.parse($('#player-characters').val());
-        let monsters          = JSON.parse($('#monsters').val());
+        let $playerCharacters = $('#player-characters');
+        let $monsters = $('#monsters');
+        let playerCharacters = JSON.parse($playerCharacters.val() ? $playerCharacters.val() : '{}');
+        let monsters = JSON.parse($monsters.val() ? $monsters.val() : '{}');
         let participantsArray = [];
 
         $.each(playerCharacters, function (index, playerCharacterObj) {

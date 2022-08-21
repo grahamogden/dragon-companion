@@ -28,6 +28,11 @@ class Monster extends Entity
     public const VISIBILITY_PRIVATE = 'PRIVATE';
     public const VISIBILITY_PUBLIC  = 'PUBLIC';
 
+    public const VISIBILITY_OPTIONS = [
+        self::VISIBILITY_PRIVATE => 'Private',
+        self::VISIBILITY_PUBLIC  => 'Public',
+    ];
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

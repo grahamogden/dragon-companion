@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Application;
 use App\Controller\AppController;
+use App\Model\Entity\Monster;
 use App\Model\Entity\Participant;
+use App\Model\Entity\PlayerCharacter;
 use App\Model\Table\MonstersTable;
 use App\Model\Table\ParticipantsTable;
 use App\Model\Table\PlayerCharactersTable;
@@ -184,22 +186,26 @@ class ParticipantsController extends AppController
         $this->playerCharactersTable = $this->fetchTable('PlayerCharacters');
 
         // $user       = $this->getUserOrRedirect();
-        $term       = $this->request->getQuery('term');
+        $term = $this->request->getQuery('term');
         $campaignId = $this->getCampaignIdFromSession();
-        $excludes   = $this->getExcludesFromRequest();
-
-        $conditions = [
-            // TODO: May need to come back to this and add back in a check for the Campaigns.user_id
-            // 'Campaigns.user_id ='                                                  => $user['id'],
-            'concat(PlayerCharacters.first_name, PlayerCharacters.last_name) LIKE' => sprintf('%%%s%%', $term),
-            'PlayerCharacters.campaign_id ='                                       => $campaignId,
-        ];
-
-        if ($excludes) {
-            $conditions['PlayerCharacters.id NOT IN'] = $excludes;
-        }
+        $excludes = $this->getExcludesFromRequest();
 
         if ($this->request->is('ajax') && strlen($term) >= 3) {
+            $conditions = [
+                // TODO: May need to come back to this and add back in a check for the Campaigns.user_id
+                // 'Campaigns.user_id ='                                                  => $user['id'],
+                'concat(PlayerCharacters.first_name, PlayerCharacters.last_name) LIKE' => sprintf(
+                    '%%%s%%',
+                    $term
+                ),
+                'PlayerCharacters.campaign_id ='                                       => $campaignId,
+            ];
+
+            if ($excludes) {
+                $conditions['PlayerCharacters.id NOT IN'] = $excludes;
+            }
+
+            /** @var PlayerCharacter[] $results */
             $results = $this->playerCharactersTable->find(
                 'all',
                 [
@@ -239,6 +245,75 @@ class ParticipantsController extends AppController
 
         header('Content-Type: application/json');
         echo json_encode($return);
+        exit;
+    }
+
+    /**
+     * Echos a JSON response for the player characters that are available to this user
+     * for a combat encounter
+     *
+     * @return void
+     */
+    public function getAvailableMonsters(): void
+    {
+        $this->autoRender = false;
+        $this->monstersTable = $this->fetchTable('Monsters');
+
+        // $user       = $this->getUserOrRedirect();
+        $term = $this->request->getQuery('term');
+
+        // if ($this->request->is('ajax') && strlen($term) >= 3) {
+            $conditions = [
+                'Monsters.name LIKE' => sprintf('%%%s%%', $term),
+            ];
+        //
+        //     /** @var Monster[] $results */
+        //     $results = $this->monstersTable->find(
+        //         'all',
+        //         [
+        //             'conditions' => $conditions,
+        //         ]
+        //     );
+        //
+        //     foreach ($results as $result) {
+        //         $return[] = [
+        //             'label' => $result->name,
+        //             'value' => $result->id,
+        //             'data'  => [
+        //                 'id'                 => $result->id,
+        //                 'name'               => $result->name,
+        //                 'armour_class'       => $result->armour_class,
+        //                 'max_hit_points'     => $result->max_hit_points,
+        //                 'dexterity_modifier' => $result->dexterity_modifier,
+        //             ],
+        //         ];
+        //     }
+        // }
+        //
+        // if (empty($return)) {
+        //     $return[] = [
+        //         'label' => 'No results found',
+        //         'value' => '',
+        //     ];
+        // }
+        //
+        // header('Content-Type: application/json');
+        // echo json_encode($return);
+        header('Content-Type: application/json');
+        echo $this->formatJsonResponse(
+            $this->monstersTable,
+        $term,
+            $conditions,
+            'name',
+            'id',
+            [
+                'id',
+                'name',
+                'armour_class',
+                'max_hit_points',
+                'dexterity_modifier',
+            ]
+        );
         exit;
     }
 
