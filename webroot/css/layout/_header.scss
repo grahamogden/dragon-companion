@@ -5,4 +5,12 @@ header {
             border-bottom: 0.1rem solid rgba(0, 0, 0, 0.3);
         }
     }
+
+    img {
+        max-height: 4rem;
+    }
+
+    .navbar-brand {
+        font-size: $font-size-default;
+    }
 }

@@ -1,4 +1,7 @@
-.navbar {
+.navbar,
+.nav-sidebar {
+    align-content: flex-start;
+
     .fa-dice-d20 {
       &:hover {
         -webkit-animation: fa-spin 2s linear infinite;
@@ -8,14 +11,6 @@
 
     i {
       margin: 0 $size-eight 0 0;
-    }
-
-    img {
-        max-height: 4rem;
-    }
-
-    .navbar-brand {
-        font-size: $font-size-default;
     }
 
     .navbar-nav {
@@ -66,5 +61,11 @@
             height: 3rem;
             width: 3rem;
         }
+    }
+}
+
+.sidebar .nav {
+    .nav-item {
+
     }
 }

@@ -4,6 +4,7 @@
 @import 'themes/dark';
 
 @import 'base/reset';
+
 @import 'components/autocomplete';
 @import 'components/buttons';
 @import 'components/breadcrumbs';
@@ -16,10 +17,11 @@
 @import 'components/tables';
 @import 'components/tags';
 @import 'components/text-editor';
+
 @import 'layout/content';
 @import 'layout/fieldsets';
 @import 'layout/header';
-@import 'layout/nav-header';
+@import 'layout/navigation';
 
 /*
  * Generic Styles
