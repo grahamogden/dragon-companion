@@ -4,6 +4,7 @@ namespace App\Model\Behavior;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
@@ -19,7 +20,7 @@ class DatabaseStringConverterBehavior extends Behavior
      */
     const WHITE_LIST_HTML_TAGS = [
         'blockquote',
-        'span',
+        // 'span',
         'strike',
         'strong',
         'table',
@@ -43,7 +44,7 @@ class DatabaseStringConverterBehavior extends Behavior
     const WHITE_LIST_HTML_ATTRIBUTES = [
         'href',
         'target',
-        'style',
+        // 'style',
     ];
 
     public static function toDatabase($string)
@@ -74,7 +75,7 @@ class DatabaseStringConverterBehavior extends Behavior
     }
 
     public function beforeSave(
-        Event $event,
+        EventInterface $event,
         EntityInterface $entity,
         ArrayObject $options
     ) {

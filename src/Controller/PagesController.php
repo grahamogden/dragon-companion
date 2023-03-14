@@ -17,6 +17,7 @@ namespace App\Controller;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Response;
 use Cake\View\Exception\MissingTemplateException;
 
 /**
@@ -33,12 +34,12 @@ class PagesController extends AppController
      * Displays a view
      *
      * @param array ...$path Path segments.
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Http\Exception\ForbiddenException When a directory traversal attempt.
-     * @throws \Cake\Http\Exception\NotFoundException When the view file could not
+     * @return Response|null
+     * @throws ForbiddenException When a directory traversal attempt.
+     * @throws NotFoundException When the view file could not
      *   be found or \Cake\View\Exception\MissingTemplateException in debug mode.
      */
-    public function display(...$path)
+    public function display(...$path): Response
     {
         $count = count($path);
         if (!$count) {
@@ -58,7 +59,8 @@ class PagesController extends AppController
         $this->set(compact('page', 'subpage'));
 
         try {
-            $this->render(implode('/', $path));
+            $this->viewBuilder()->disableAutoLayout();
+            return $this->render(implode('/', $path));
         } catch (MissingTemplateException $exception) {
             if (Configure::read('debug')) {
                 throw $exception;

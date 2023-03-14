@@ -1,20 +1,20 @@
 <?php
 namespace App\Model\Entity;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
  * Puzzle Entity
  *
- * @property int $id
- * @property int $user_id
- * @property string $title
- * @property string $description
- * @property string $slug
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
- *
- * @property \App\Model\Entity\User $user
+ * @property int        $id
+ * @property int        $user_id
+ * @property string     $title
+ * @property string     $description
+ * @property string     $slug
+ * @property FrozenTime $created
+ * @property FrozenTime $modified
+ * @property User       $user
  */
 class Puzzle extends Entity
 {

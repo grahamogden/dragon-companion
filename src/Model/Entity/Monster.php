@@ -18,7 +18,6 @@ use Cake\ORM\Entity;
  * @property int|null            $monster_instance_type_id
  * @property string              $visibility
  * @property int                 $alignment_id
- *
  * @property User                $user
  * @property DataSource          $data_source
  * @property MonsterInstanceType $monster_instance_type
@@ -28,6 +27,11 @@ class Monster extends Entity
 {
     public const VISIBILITY_PRIVATE = 'PRIVATE';
     public const VISIBILITY_PUBLIC  = 'PUBLIC';
+
+    public const VISIBILITY_OPTIONS = [
+        self::VISIBILITY_PRIVATE => 'Private',
+        self::VISIBILITY_PUBLIC  => 'Public',
+    ];
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

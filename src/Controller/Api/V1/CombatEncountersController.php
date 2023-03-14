@@ -42,9 +42,9 @@ class CombatEncountersController extends ApiAppController
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     * 
+     *
      * @param type $user
-     * 
+     *
      * @return bool
      */
     public function isAuthorized($user): bool

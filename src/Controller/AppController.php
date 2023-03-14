@@ -16,9 +16,22 @@
 
 namespace App\Controller;
 
+use App\Application;
+use App\Model\Entity\Campaign;
+use App\Model\Entity\User;
+use Authentication\Controller\Component\AuthenticationComponent;
+use Authentication\IdentityInterface;
+use Authentication\Middleware\AuthenticationMiddleware;
+use Authorization\Controller\Component\AuthorizationComponent;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
+use Cake\ORM\Table;
+use Exception;
+
+use RuntimeException;
+
+use function mysql_xdevapi\getSession;
 
 /**
  * Application Controller
@@ -27,6 +40,8 @@ use Cake\ORM\Entity;
  * will inherit them.
  *
  * @link https://book.cakephp.org/3.0/en/controllers.html#the-app-controller
+ * @property AuthenticationComponent $Authentication
+ * @property AuthorizationComponent $Authorization
  */
 class AppController extends Controller
 {
@@ -39,15 +54,16 @@ class AppController extends Controller
      * e.g. `$this->loadComponent('Security');`
      *
      * @return void
+     * @throws Exception
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
         $this->loadComponent('RequestHandler', [
             'enableBeforeRedirect' => false,
         ]);
-        $this->loadComponent('Csrf');
+        // $this->loadComponent('Csrf');
 
         /*
          * Enable the following component for recommended CakePHP security settings.
@@ -55,27 +71,32 @@ class AppController extends Controller
          */
         //$this->loadComponent('Security');
         $this->loadComponent('Flash');
-        $this->loadComponent('Auth', [
-            'authorize'=> 'Controller',
-            'authenticate' => [
-                'Form' => [
-                    'fields' => [
-                        'username' => 'username',
-                        'password' => 'password'
-                    ],
-                ],
-            ],
-            'loginAction' => [
-                'controller' => 'Users',
-                'action' => 'login'
-            ],
-             // If unauthorized, return them to page they were just on
-            'unauthorizedRedirect' => $this->referer()
-        ]);
+
+        // $this->loadComponent('Auth', [
+        //     'authorize'=> 'Controller',
+        //     'authenticate' => [
+        //         'Form' => [
+        //             'fields' => [
+        //                 'username' => 'username',
+        //                 'password' => 'password'
+        //             ],
+        //         ],
+        //     ],
+        //     'loginAction' => [
+        //         'controller' => 'Users',
+        //         'action' => 'login'
+        //     ],
+        //      // If unauthorized, return them to page they were just on
+        //     'unauthorizedRedirect' => $this->referer()
+        // ]);
+        $this->loadComponent('Authentication.Authentication');
+        $this->loadComponent('Authorization.Authorization');
 
         // Allow the display action so our PagesController
         // continues to work. Also enable the read only actions.
-        $this->Auth->allow(['display']);
+        // $this->Auth->allow(['display']);
+        $this->Authentication->allowUnauthenticated(['display', 'view']);
+        $this->Authorization->skipAuthorization();
     }
 
     /**
@@ -103,25 +124,25 @@ class AppController extends Controller
 
     /**
      * Generates a json encoded string using the results
-     * 
-     * @param Entity     $entity - the entity that is going to be searched
+     *
+     * @param Table      $entity - the entity that is going to be searched
      * @param string     $term - the search term (used to prevent searches of less than 3 characters)
      * @param array      $conditions - the conditions that are going to be used
      * @param string     $displayFieldName - the DB field name that is going to be shown to the user
      * @param string     $valueFieldName - the DB field name that is going to be used to used
      * @param array|null $additionalReturnData - list of fields to return in the 'data' property
-     * 
+     *
      * @return string
      */
     protected function formatJsonResponse(
-        $entity,
+        Table $entity,
         string $term,
         array $conditions,
         string $displayFieldName,
         string $valueFieldName,
         ?array $additionalReturnData
     ): string {
-        $returnAray = [];
+        $returnArray = [];
 
         if ($this->request->is('ajax') && strlen($term) >= 3) {
             $results = $entity->find('all', [
@@ -140,34 +161,54 @@ class AppController extends Controller
                     }
                 }
 
-                $returnAray[] = $return;
+                $returnArray[] = $return;
             }
         }
 
-        if (empty($returnAray)) {
-            $returnAray[] = [
+        if (empty($returnArray)) {
+            $returnArray[] = [
                 'label'        => 'No results found',
                 'value'        => '',
             ];
         }
-        
-        return json_encode($returnAray);
-    }
 
+        return json_encode($returnArray);
+    }
 
     /**
      * Retrieves the User array from Auth or redirects the user
-     * @return array
+     * @return IdentityInterface
      */
-    protected function getUserOrRedirect(): array
+    protected function getUserOrRedirect(): IdentityInterface
     {
-        $user = $this->Auth->user();
+        $user = $this->Authentication->getIdentity();//user();
 
         if (null === $user || empty($user)) {
-            $this->redirect($this->Auth->logout());
+            $this->redirect($this->Authentication->logout());
         }
 
         return $user;
+    }
+
+    /**
+     * Retrieves the Campaign ID from the session or throws an exception
+     *
+     * @return int
+     * @throws RuntimeException
+     */
+    protected function getCampaignIdOrRedirect(): int
+    {
+        /** @var Campaign $campaign */
+        $campaign = $this->getRequest()->getSession()->readOrFail(Application::SESSION_KEY_CAMPAIGN);
+
+        if (empty($campaign)) {
+            $this->Flash->error('Please select a campaign');
+            $this->redirect(['controller' => 'Campaigns', 'action' => 'index']);
+
+            // TODO: Redirect does not take user to the campaign page
+        }
+
+        return $campaign->id;
     }
 
     public function isAuthorized($user): bool

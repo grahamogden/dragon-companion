@@ -23,7 +23,7 @@ class NonPlayableCharactersController extends AppController
         'order'         => [
             'NonPlayableCharacters.name' => 'asc',
         ],
-        'sortWhitelist' => [
+        'sortableFields' => [
             'NonPlayableCharacters.name',
             'NonPlayableCharacters.age',
             'NonPlayableCharacters.occupation',
@@ -80,7 +80,7 @@ class NonPlayableCharactersController extends AppController
      */
     public function add()
     {
-        $nonPlayableCharacter = $this->NonPlayableCharacters->newEntity();
+        $nonPlayableCharacter = $this->NonPlayableCharacters->newEmptyEntity();
         $user                 = $this->getUserOrRedirect();
 
         if ($this->request->is('post')) {

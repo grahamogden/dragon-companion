@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -6,10 +7,9 @@ use Cake\ORM\Entity;
 /**
  * DataSource Entity
  *
- * @property int $id
- * @property string $name
- *
- * @property \App\Model\Entity\Monster[] $monsters
+ * @property int       $id
+ * @property string    $name
+ * @property Monster[] $monsters
  */
 class DataSource extends Entity
 {
@@ -23,7 +23,7 @@ class DataSource extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
+        'name'     => true,
         'monsters' => true,
     ];
 }

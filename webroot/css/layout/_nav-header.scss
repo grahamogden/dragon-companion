@@ -1,0 +1,70 @@
+.navbar {
+    .fa-dice-d20 {
+      &:hover {
+        -webkit-animation: fa-spin 2s linear infinite;
+        animation: fa-spin 2s linear infinite;
+      }
+    }
+
+    i {
+      margin: 0 $size-eight 0 0;
+    }
+
+    img {
+        max-height: 4rem;
+    }
+
+    .navbar-brand {
+        font-size: $font-size-default;
+    }
+
+    .navbar-nav {
+
+        .dropdown-menu {
+            background-color: $colorDarkBlueTwo;
+            border-width: $size-one;
+            border-style: solid;
+            min-width: max-content;
+            overflow: hidden;
+
+            @media all and (max-width: $width-min-tablet) {
+                max-height: 20rem;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+        }
+
+        .nav-link {
+            color: $colorEleven;
+            margin: 0;
+            padding: $size-twelve $size-sixteen;
+
+            &:focus,
+            &:hover {
+                background-color: $colorDarkBlueFour;
+                color: $colorThirteen;
+                cursor: pointer;
+            }
+
+            &.dropdown-link {
+                min-width: 15rem;
+
+                @media all and (min-width: $width-min-tablet) {
+                    max-width: 25rem;
+                }
+            }
+        }
+    }
+
+    .navbar-toggler {
+        border-color: rgba(255, 255, 255, 0.7);
+        @include border-radius-styles($size-eight);
+        padding: $size-four;
+
+        .navbar-toggler-icon {
+            background-image: url('data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 30 30\'%3e%3cpath stroke=\'rgba(255, 255, 255, 0.7)\' stroke-linecap=\'round\' stroke-miterlimit=\'10\' stroke-width=\'4\' d=\'M4 7h22M4 15h22M4 23h22\'/%3e%3c/svg%3e');
+            height: 3rem;
+            width: 3rem;
+        }
+    }
+}

@@ -13,7 +13,6 @@ use Cake\ORM\Entity;
  * @property int           $user_id
  * @property FrozenTime    $created
  * @property int           $campaign_id
- *
  * @property User          $user
  * @property Campaign      $campaign
  * @property Participant[] $participants

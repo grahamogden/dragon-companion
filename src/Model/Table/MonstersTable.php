@@ -37,7 +37,7 @@ class MonstersTable extends Table
      *
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -87,7 +87,7 @@ class MonstersTable extends Table
      *
      * @return Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -121,7 +121,8 @@ class MonstersTable extends Table
 
         $validator
             ->scalar('visibility')
-            ->notEmptyString('visibility');
+            ->notEmptyString('visibility')
+            ->inList('visibility', array_keys(Monster::VISIBILITY_OPTIONS));
 
         return $validator;
     }
@@ -134,7 +135,7 @@ class MonstersTable extends Table
      *
      * @return RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['data_source_id'], 'DataSources'));

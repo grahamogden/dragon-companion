@@ -1,0 +1,47 @@
+.autocomplete-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+
+    .autocomplete-results {
+        position: absolute;
+        top: calc(100% - #{$size-two});
+        width: 100%;
+        z-index: 1;
+    }
+}
+
+ul.ui-autocomplete {
+    background-color: transparent;
+    border-width: 0 $size-one $size-one $size-one;
+    border-style: solid;
+    border-top: 3px double;
+    border-color: $colour-grey;
+    box-shadow: $box-shadow-small;
+    list-style-type: none;
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+    width: 100%;
+    z-index: 2;
+
+    li .ui-menu-item-wrapper,
+    li {
+        background-color: $background-colour-primary;
+        color: $font-colour-primary;
+        cursor: pointer;
+        padding: $size-eight;
+
+        body.dark-mode & {
+            //@include background-colour-styles(rgba(255, 255, 255, 1), $no-transition, $no-hover, $dark-mode);
+            background-color: $background-colour-primary__dark;
+            color: $font-colour-primary__dark;
+        }
+
+        &.active,
+        &.ui-state-active {
+            background-color: rgba(240, 240, 240, 1);
+        }
+    }
+}

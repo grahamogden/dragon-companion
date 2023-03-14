@@ -9,6 +9,7 @@ use App\Model\Table\TimelineSegmentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Session;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Routing\Router;
 use Cake\Http\Response;
@@ -17,15 +18,22 @@ use Exception;
 /**
  * TimelineSegments Controller
  *
- * @property TimelineSegmentsTable $TimelineSegments
+ * @property
  *
  * @method TimelineSegmentEntity[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class TimelineSegmentsController extends AppController
 {
     const CONTROLLER_NAME = 'Timeline Segments';
+
     /** @var Session */
     private $session;
+
+    /** @var int */
+    private $campaignId;
+
+    /** @var TimelineSegmentsTable */
+    private $timelineSegmentsTable;
 
     /**
      * Initialises the class, including authentication
@@ -40,18 +48,16 @@ class TimelineSegmentsController extends AppController
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
 
+        $this->timelineSegmentsTable = $this->fetchTable('TimelineSegments');
+
         $this->session = $this->getRequest()->getSession();
+        $this->campaignId = $this->getCampaignIdOrRedirect();
     }
 
     /**
-     * Index method
-     *
-     * @param int|null $campaignId The ID for the campaign that the timeline segments
-     *                 should belong to
-     *
      * @return Response|void
      */
-    public function index(?int $campaignId): void
+    public function index(): void
     {
         $this->session->write(
             'referer',
@@ -68,9 +74,9 @@ class TimelineSegmentsController extends AppController
 
         $user = $this->getUserOrRedirect();
 
-        $timelineSegments = $this->TimelineSegments
+        $timelineSegments = $this->timelineSegmentsTable
             ->find()
-            ->where(['TimelineSegments.campaign_id =' => $campaignId])
+            ->where(['TimelineSegments.campaign_id =' => $this->campaignId])
             ->where(['TimelineSegments.parent_id IS' => null])
             ->where(['TimelineSegments.user_id =' => $user['id']])
             ->order('TimelineSegments.lft asc');
@@ -84,12 +90,11 @@ class TimelineSegmentsController extends AppController
     /**
      * View method
      *
-     * @param int|null $campaignId
-     * @param int      $id Timeline Segment id.
+     * @param int|null $id Timeline Segment id
      *
      * @return Response|void
      */
-    public function view(int $campaignId = null, int $id = null)
+    public function view(int $id = null)
     {
         $this->session->write(
             'referer',
@@ -100,18 +105,18 @@ class TimelineSegmentsController extends AppController
             ]
         );
 
-        $timelineSegment = $this->TimelineSegments->get(
+        $timelineSegment = $this->timelineSegmentsTable->get(
             $id,
             [
                 'contain' => [
                     'ParentTimelineSegments',
                     'Users',
-                    'Tags'                  => [
-                        'sort' => ['title' => 'ASC',],
-                    ],
-                    'NonPlayableCharacters' => [
-                        'sort' => ['name' => 'ASC',],
-                    ],
+                    // 'Tags'                  => [
+                    //     'sort' => ['title' => 'ASC',],
+                    // ],
+                    // 'NonPlayableCharacters' => [
+                    //     'sort' => ['name' => 'ASC',],
+                    // ],
                     'ChildTimelineSegments' => [
                         'sort' => ['lft' => 'ASC',],
                     ],
@@ -119,7 +124,7 @@ class TimelineSegmentsController extends AppController
             ]
         );
 
-        $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ?: 0]));
+        $this->set('breadcrumbs', $this->timelineSegmentsTable->find('path', ['for' => $id ?: 0]));
         $this->set('timelineSegment', $timelineSegment);
         $this->set('childTimelineParts', $this->getChildTimelineParts($timelineSegment));
         $this->set(
@@ -135,74 +140,69 @@ class TimelineSegmentsController extends AppController
     /**
      * Add method
      *
-     * @param int|null $campaignId
-     * @param int||string|null $parentId
-     *
      * @return Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add(?int $campaignId = null, $parentId = null)
+    public function add()
     {
-        $timelineSegment = $this->TimelineSegments->newEntity();
+        $timelineSegment = $this->timelineSegmentsTable->newEmptyEntity();
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             if ($data['parent_id']) {
-                $data['campaign_id'] = $this->TimelineSegments
+                $data['campaign_id'] = $this->timelineSegmentsTable
                     ->findById($data['parent_id'])
                     ->firstOrFail()
                     ->campaign_id;
-            } elseif ($campaignId) {
-                $data['campaign_id'] = $campaignId;
+            } elseif ($this->campaignId) {
+                $data['campaign_id'] = $this->campaignId;
             } else {
                 throw new BadRequestException('Please provide the ID for a campaign.');
             }
 
-            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $data);
+            $timelineSegment = $this->timelineSegmentsTable->patchEntity($timelineSegment, $data);
             // Set the user ID on the item
-            $timelineSegment->user_id = $this->Auth->user('id');
+            $userId = $this->Authentication->getIdentity()->get('id');
+            $timelineSegment->user_id = $userId;
 
-            if ($this->TimelineSegments->save($timelineSegment)) {
+            if ($this->timelineSegmentsTable->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->generateReturnUrl(
-                    $timelineSegment->campaign_id,
-                    $timelineSegment->parent_id
-                );
+                return $this->redirect($this->generateReturnUrl($timelineSegment->parent_id));
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
 
-        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find(
+        $parentTimelineSegments = $this->timelineSegmentsTable->ParentTimelineSegments->find(
             'treeList',
             [
                 'limit'  => 200,
                 'spacer' => '↳ ',
             ]
         );
-        $users                  = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
-        $tags                   = $this->TimelineSegments->Tags->find(
-            'list',
-            [
-                'limit' => 200,
-                'order' => ['Tags.title' => 'ASC'],
-                // TODO: it appears as though the ordering is being ignored, need to look into this
-            ]
-        );
-        $nonPlayableCharacters  = $this->TimelineSegments->NonPlayableCharacters->find(
-            'list',
-            [
-                'limit' => 200,
-                'order' => ['NonPlayableCharacters.name' => 'ASC'],
-                // TODO: it appears as though the ordering is being ignored, need to look into this
-            ]
-        );
+        $users                  = $this->timelineSegmentsTable->Users->find('list', ['limit' => 200]);
+        // $tags                   = $this->timelineSegmentsTable->Tags->find(
+        //     'list',
+        //     [
+        //         'limit' => 200,
+        //         'order' => ['Tags.title' => 'ASC'],
+        //         // TODO: it appears as though the ordering is being ignored, need to look into this
+        //     ]
+        // );
+        // $nonPlayableCharacters  = $this->timelineSegmentsTable->NonPlayableCharacters->find(
+        //     'list',
+        //     [
+        //         'limit' => 200,
+        //         'order' => ['NonPlayableCharacters.name' => 'ASC'],
+        //         // TODO: it appears as though the ordering is being ignored, need to look into this
+        //     ]
+        // );
 
         $this->set(
             compact(
                 'timelineSegment',
                 'parentTimelineSegments',
-                'users',
-                'tags',
-                'nonPlayableCharacters'
+                'users'
+                // 'tags',
+                // 'nonPlayableCharacters'
             )
         );
         $this->set(
@@ -218,25 +218,24 @@ class TimelineSegmentsController extends AppController
     /**
      * Edit method
      *
-     * @param int $campaignId
-     * @param int $id Timeline Segment id.
+     * @param int|null $id Timeline Segment id
      *
      * @return Response|void Redirects on successful edit, renders view otherwise.
      */
-    public function edit(int $campaignId, ?int $id = null)
+    public function edit(?int $id = null)
     {
-        $timelineSegment = $this->TimelineSegments->get(
+        $timelineSegment = $this->timelineSegmentsTable->get(
             $id,
             [
                 'contain' => [
                     'ParentTimelineSegments',
                     'Users',
-                    'Tags'                  => [
-                        'sort' => ['title' => 'ASC',],
-                    ],
-                    'NonPlayableCharacters' => [
-                        'sort' => ['name' => 'ASC',],
-                    ],
+                    // 'Tags'                  => [
+                    //     'sort' => ['title' => 'ASC',],
+                    // ],
+                    // 'NonPlayableCharacters' => [
+                    //     'sort' => ['name' => 'ASC',],
+                    // ],
                     'ChildTimelineSegments' => [
                         'sort' => ['lft' => 'ASC',],
                     ],
@@ -245,50 +244,47 @@ class TimelineSegmentsController extends AppController
         );
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $timelineSegment = $this->TimelineSegments->patchEntity($timelineSegment, $this->request->getData());
-            if ($this->TimelineSegments->save($timelineSegment)) {
+            $timelineSegment = $this->timelineSegmentsTable->patchEntity($timelineSegment, $this->request->getData());
+            if ($this->timelineSegmentsTable->save($timelineSegment)) {
                 $this->Flash->success(__('The timeline segment, {0}, has been saved.', $timelineSegment->title));
 
-                return $this->generateReturnUrl(
-                    $timelineSegment->campaign_id,
-                    $timelineSegment->parent_id
-                );
+                return $this->redirect($this->generateReturnUrl($timelineSegment->parent_id));
             }
             $this->Flash->error(__('The timeline segment could not be saved. Please, try again.'));
         }
-        $parentTimelineSegments = $this->TimelineSegments->ParentTimelineSegments->find(
+        $parentTimelineSegments = $this->timelineSegmentsTable->ParentTimelineSegments->find(
             'treeList',
             [
                 'limit'  => 200,
                 'spacer' => '↳ ',
             ]
         );
-        $users                  = $this->TimelineSegments->Users->find('list', ['limit' => 200]);
-        $tags                   = $this->TimelineSegments->Tags->find(
-            'list',
-            [
-                'limit' => 200,
-                'order' => ['title' => 'ASC'],
-                // TODO: it appears as though the ordering is being ignored, need to look into this
-            ]
-        );
-        $nonPlayableCharacters  = $this->TimelineSegments->NonPlayableCharacters->find(
-            'list',
-            [
-                'limit' => 200,
-                'order' => ['name' => 'ASC'],
-                // TODO: it appears as though the ordering is being ignored, need to look into this
-            ]
-        );
+        $users                  = $this->timelineSegmentsTable->Users->find('list', ['limit' => 200]);
+        // $tags                   = $this->timelineSegmentsTable->Tags->find(
+        //     'list',
+        //     [
+        //         'limit' => 200,
+        //         'order' => ['title' => 'ASC'],
+        //         // TODO: it appears as though the ordering is being ignored, need to look into this
+        //     ]
+        // );
+        // $nonPlayableCharacters  = $this->timelineSegmentsTable->NonPlayableCharacters->find(
+        //     'list',
+        //     [
+        //         'limit' => 200,
+        //         'order' => ['name' => 'ASC'],
+        //         // TODO: it appears as though the ordering is being ignored, need to look into this
+        //     ]
+        // );
 
-        $this->set('breadcrumbs', $this->TimelineSegments->find('path', ['for' => $id ?: 0]));
+        $this->set('breadcrumbs', $this->timelineSegmentsTable->find('path', ['for' => $id ?: 0]));
         $this->set(
             compact(
                 'timelineSegment',
                 'parentTimelineSegments',
-                'users',
-                'tags',
-                'nonPlayableCharacters'
+                'users'
+                // 'tags',
+                // 'nonPlayableCharacters'
             )
         );
         $this->set('childTimelineParts', $this->getChildTimelineParts($timelineSegment));
@@ -305,37 +301,30 @@ class TimelineSegmentsController extends AppController
     /**
      * Delete method
      *
-     * @param int $id Timeline Segment id.
+     * @param int|null $id Timeline Segment id
      *
      * @return Response Redirects to index or to the view for the parent.
      * @throws RecordNotFoundException When record not found.
      */
-    public function delete(int $id = null): Response
+    public function delete(int $id): Response
     {
         $this->request->allowMethod(['post', 'delete']);
-        $timelineSegment = $this->TimelineSegments->get($id);
+        $timelineSegment = $this->timelineSegmentsTable->get($id);
 
-//        $url = $this->generateReturnUrl($timelineSegment);
-
-        $campaignId = $timelineSegment->campaign_id;
+        $this->campaignId = $timelineSegment->campaign_id;
         $parentId   = $timelineSegment->parent_id;
 
-        if ($this->TimelineSegments->delete($timelineSegment)) {
+        if ($this->timelineSegmentsTable->delete($timelineSegment)) {
             $this->Flash->success(__('The timeline segment, {0}, has been deleted.', $timelineSegment->title));
         } else {
             $this->Flash->error(__('The timeline segment could not be deleted. Please, try again.'));
         }
 
         if ($parentId) {
-            return $this->generateReturnUrl($campaignId, $parentId);
+            return $this->redirect($this->generateReturnUrl($parentId));
         }
 
-        return $this->redirect(
-            [
-                '_name'      => 'TimelineSegments',
-                'campaignId' => $campaignId,
-            ]
-        );
+        return $this->redirect(['controller' => 'TimelineSegments', 'action' => 'index']);
     }
 
     /**
@@ -357,8 +346,8 @@ class TimelineSegmentsController extends AppController
                 'add',
                 'index',
                 'tags',
-                'getTags',
-                'getNonPlayableCharacters',
+                // 'getTags',
+                // 'getNonPlayableCharacters',
             ]
         )) {
             return true;
@@ -372,7 +361,7 @@ class TimelineSegmentsController extends AppController
         }
 
         // Check that the timelineSegment belongs to the current user
-        $timelineSegment = $this->TimelineSegments->findById($id)->firstOrFail();
+        $timelineSegment = $this->timelineSegmentsTable->findById($id)->firstOrFail();
 
         return $timelineSegment->user_id === $user['id'];
     }
@@ -380,27 +369,24 @@ class TimelineSegmentsController extends AppController
     /**
      * Generates the URL for returning the user after saving
      *
-     * @param int      $campaignId
      * @param int|null $parentId
      *
-     * @return Response
+     * @return string
      */
-    private function generateReturnUrl(int $campaignId, ?int $parentId): Response
+    private function generateReturnUrl(?int $parentId): string
     {
         $urlParams = [
-            '_name'      => 'TimelineSegments',
-            'campaignId' => $campaignId,
+            'controller' => 'TimelineSegments',
         ];
 
         if ($parentId) {
-            $urlParams['_name']  = 'TimelineSegmentsId';
             $urlParams['action'] = 'view';
-            $urlParams['id']     = $parentId;
+            $urlParams['id'] = $parentId;
         } else {
             $urlParams['action'] = 'index';
         }
 
-        return $this->redirect(Router::url($urlParams));
+        return Router::url($urlParams);
     }
 
     /**
@@ -412,11 +398,11 @@ class TimelineSegmentsController extends AppController
      *
      * @return
      */
-    public function moveUp(int $campaignId, int $id, $top = 1)
+    public function moveUp(int $id, $top = 1)
     {
         $this->request->allowMethod(['post', 'put']);
-        $timelineSegment = $this->TimelineSegments->get($id);
-        if ($this->TimelineSegments->moveUp($timelineSegment, $top)) {
+        $timelineSegment = $this->timelineSegmentsTable->get($id);
+        if ($this->timelineSegmentsTable->moveUp($timelineSegment, $top)) {
             $this->Flash->success('The timeline segment has been moved up.');
         } else {
             $this->Flash->error('The timeline segment could not be moved up. Please, try again.');
@@ -431,9 +417,9 @@ class TimelineSegmentsController extends AppController
      *
      * @return
      */
-    public function moveUpTop(int $campaignId, int $id)
+    public function moveUpTop(int $id)
     {
-        return $this->moveUp($campaignId, $id, true);
+        return $this->moveUp($this->campaignId, $id, true);
     }
 
     /**
@@ -445,11 +431,11 @@ class TimelineSegmentsController extends AppController
      *
      * @return
      */
-    public function moveDown(int $campaignId, int $id, $bottom = 1)
+    public function moveDown(int $id, $bottom = 1)
     {
         $this->request->allowMethod(['post', 'put']);
-        $timelineSegment = $this->TimelineSegments->get($id);
-        if ($this->TimelineSegments->moveDown($timelineSegment, $bottom)) {
+        $timelineSegment = $this->timelineSegmentsTable->get($id);
+        if ($this->timelineSegmentsTable->moveDown($timelineSegment, $bottom)) {
             $this->Flash->success('The timeline segment has been moved down.');
         } else {
             $this->Flash->error('The timeline segment could not be moved down. Please, try again.');
@@ -464,80 +450,71 @@ class TimelineSegmentsController extends AppController
      *
      * @return
      */
-    public function moveDownBottom(int $campaignId, int $id)
+    public function moveDownBottom(int $id)
     {
-        return $this->moveDown($campaignId, $id, true);
+        return $this->moveDown($this->campaignId, $id, true);
     }
 
-    /**
-     * Looks up tags based on a wildcard search term,
-     * starting with at least three character
-     *
-     * @return string
-     */
-    public function getTags()
-    {
-        $this->autoRender = false;
+    // /**
+    //  * Looks up tags based on a wildcard search term,
+    //  * starting with at least three character
+    //  *
+    //  * @return string
+    //  */
+    // public function getTags()
+    // {
+    //     $this->autoRender = false;
+    //
+    //     $term = $this->request->getQuery('term');
+    //
+    //     echo $this->formatJsonResponse(
+    //         $this->timelineSegmentsTable->Tags,
+    //         $term,
+    //         ['Tags.title LIKE' => '%' . $term . '%'],
+    //         'title',
+    //         'title'
+    //     );
+    // }
 
-        $term = $this->request->getQuery('term');
-
-        echo $this->formatJsonResponse(
-            $this->TimelineSegments->Tags,
-            $term,
-            ['Tags.title LIKE' => '%' . $term . '%'],
-            'title',
-            'title'
-        );
-    }
-
-    /**
-     * Looks up tags based on a wildcard search term,
-     * starting with at least three character
-     *
-     * @return string
-     */
-    public function getNonPlayableCharacters()
-    {
-        $this->autoRender = false;
-
-        $term = $this->request->getQuery('term');
-
-        echo $this->formatJsonResponse(
-            $this->TimelineSegments->NonPlayableCharacters,
-            $term,
-            ['NonPlayableCharacters.name LIKE' => '%' . $term . '%'],
-            'name',
-            'name'
-        );
-    }
+    // /**
+    //  * Looks up tags based on a wildcard search term,
+    //  * starting with at least three character
+    //  *
+    //  * @return string
+    //  */
+    // public function getNonPlayableCharacters()
+    // {
+    //     $this->autoRender = false;
+    //
+    //     $term = $this->request->getQuery('term');
+    //
+    //     echo $this->formatJsonResponse(
+    //         $this->timelineSegmentsTable->NonPlayableCharacters,
+    //         $term,
+    //         ['NonPlayableCharacters.name LIKE' => '%' . $term . '%'],
+    //         'name',
+    //         'name'
+    //     );
+    // }
 
     /**
      * Uses a regular expression to extract any content that is within a <blockquote> element
      *
-     * @param TimeLineSegment $timeline The timeline segment object
+     * @param TimelineSegmentEntity $timelineSegment The timeline segment object
      *
      * @return string
      */
     private function getChildTimelineParts(TimelineSegmentEntity $timelineSegment): string
     {
-        $content            = '';
         $timelinePartsArray = [];
-        $timelineParts      = '';
 
         if ($timelineSegment->child_timeline_segments) {
-            // echo '<pre>';
-            /** @var TimelineSegment $childTimeline */
             foreach ($timelineSegment->child_timeline_segments as $childTimeline) {
-                // var_dump($childTimeline->body);
                 preg_match_all(
                     '/\{\{blockquote\}\}(\{\{p\}\})?(.*?)(\{\{\/p\}\})?\{\{\/blockquote\}\}/i',
                     $childTimeline->body,
                     $out
                 );
-                // if (!empty($out[2])) {
-                //     // var_dump($out,'-----------------------------------');
-                //     $timelinePartsArray[] = implode(' | ', $out[2]);
-                // }
 
                 if (!empty($out[2])) {
                     $timelinePartsArray[] = sprintf(
@@ -547,10 +524,6 @@ class TimelineSegmentsController extends AppController
                     );
                 }
             }
-
-            // var_dump($timelineSegment);exit();
-            // } else {
-            // $content = dbConverter::fromDatabase($this->Text->autoParagraph($timelineSegment->body));
         }
 
         return implode('', $timelinePartsArray);

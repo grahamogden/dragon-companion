@@ -48,7 +48,7 @@ class ConditionsController extends AppController
      */
     public function add()
     {
-        $condition = $this->Conditions->newEntity();
+        $condition = $this->Conditions->newEmptyEntity();
         if ($this->request->is('post')) {
             $condition = $this->Conditions->patchEntity($condition, $this->request->getData());
             if ($this->Conditions->save($condition)) {

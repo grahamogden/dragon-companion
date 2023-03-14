@@ -6,14 +6,13 @@ use Cake\ORM\Entity;
 /**
  * ClansUser Entity
  *
- * @property int $id
- * @property int $clan_id
- * @property int $user_id
- * @property int $member_status
- * @property int $account_level
- *
- * @property \App\Model\Entity\Clan $clan
- * @property \App\Model\Entity\User $user
+ * @property int  $id
+ * @property int  $clan_id
+ * @property int  $user_id
+ * @property int  $member_status
+ * @property int  $account_level
+ * @property Clan $clan
+ * @property User $user
  */
 class ClansUser extends Entity
 {

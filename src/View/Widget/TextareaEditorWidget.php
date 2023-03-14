@@ -4,7 +4,6 @@ namespace App\View\Widget;
 
 use Cake\View\Form\ContextInterface;
 use Cake\View\Widget\WidgetInterface;
-use Cake\Routing\Router;
 
 class TextareaEditorWidget implements WidgetInterface
 {
@@ -16,7 +15,7 @@ class TextareaEditorWidget implements WidgetInterface
         $this->_templates = $templates;
     }
 
-    public function render(array $data, ContextInterface $context)
+    public function render(array $data, ContextInterface $context): string
     {
         $data += [
             'name' => '',
@@ -42,7 +41,12 @@ class TextareaEditorWidget implements WidgetInterface
         );
     }
 
-    public function secureFields(array $data)
+    /**
+     * @param array $data
+     *
+     * @return array|string[]
+     */
+    public function secureFields(array $data): array
     {
         return [$data['name']];
     }

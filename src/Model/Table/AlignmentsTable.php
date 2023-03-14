@@ -33,7 +33,7 @@ class AlignmentsTable extends Table
      *
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -68,7 +68,7 @@ class AlignmentsTable extends Table
      *
      * @return Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator
             ->nonNegativeInteger('id')

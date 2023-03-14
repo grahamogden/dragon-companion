@@ -6,12 +6,11 @@ use Cake\ORM\Entity;
 /**
  * Condition Entity
  *
- * @property int $id
- * @property string $name
- * @property string $description
- *
- * @property \App\Model\Entity\CombatTurn[] $combat_turns
- * @property \App\Model\Entity\Participant[] $participants
+ * @property int           $id
+ * @property string        $name
+ * @property string        $description
+ * @property CombatTurn[]  $combat_turns
+ * @property Participant[] $participants
  */
 class Condition extends Entity
 {

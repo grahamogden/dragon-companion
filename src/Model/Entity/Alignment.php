@@ -10,7 +10,6 @@ use Cake\ORM\Entity;
  * @property int                    $id
  * @property string                 $name
  * @property string|null            $description
- *
  * @property Monster[]              $monsters
  * @property NonPlayableCharacter[] $non_playable_characters
  * @property PlayerCharacter[]      $player_characters

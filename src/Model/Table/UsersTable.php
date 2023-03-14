@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
+use Cake\ORM\Association\HasMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -9,30 +9,15 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @property &\Cake\ORM\Association\HasMany $CampaignUsers
- * @property \App\Model\Table\ClansTable&\Cake\ORM\Association\HasMany $Clans
- * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\HasMany $CombatEncounters
- * @property \App\Model\Table\MonstersTable&\Cake\ORM\Association\HasMany $Monsters
- * @property \App\Model\Table\NonPlayableCharactersTable&\Cake\ORM\Association\HasMany $NonPlayableCharacters
- * @property \App\Model\Table\PlayerCharactersTable&\Cake\ORM\Association\HasMany $PlayerCharacters
- * @property \App\Model\Table\PuzzlesTable&\Cake\ORM\Association\HasMany $Puzzles
- * @property \App\Model\Table\TagsTable&\Cake\ORM\Association\HasMany $Tags
- * @property \App\Model\Table\TimelineSegmentsTable&\Cake\ORM\Association\HasMany $TimelineSegments
- * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegments2020-04-10
- * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegmentsCopy
- * @property &\Cake\ORM\Association\HasMany $ZBackupTimelineSegmentsCopy2
- * @property \App\Model\Table\ClansTable&\Cake\ORM\Association\BelongsToMany $Clans
- *
- * @method \App\Model\Entity\User get($primaryKey, $options = [])
- * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\User|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\User saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\User[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\User findOrCreate($search, callable $callback = null, $options = [])
- *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property CampaignsTable&HasMany             $CampaignUsers
+ * @property ClansTable&HasMany                 $Clans
+ * @property CombatEncountersTable&HasMany      $CombatEncounters
+ * @property MonstersTable&HasMany              $Monsters
+ * @property NonPlayableCharactersTable&HasMany $NonPlayableCharacters
+ * @property PlayerCharactersTable&HasMany      $PlayerCharacters
+ * @property PuzzlesTable&HasMany               $Puzzles
+ * @property TagsTable&HasMany                  $Tags
+ * @property TimelineSegmentsTable&HasMany      $TimelineSegments
  */
 class UsersTable extends Table
 {
@@ -42,7 +27,7 @@ class UsersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -90,7 +75,7 @@ class UsersTable extends Table
      *
      * @return Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -127,7 +112,7 @@ class UsersTable extends Table
      *
      * @return RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->isUnique(['email']));

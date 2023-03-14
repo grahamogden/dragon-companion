@@ -1,0 +1,51 @@
+table {
+
+    &#combat-table {
+
+        .combat-turn-active {
+            //background-color: rgba(255, 240, 125, 1);
+            background-color: rgba(185, 239, 255, 1);
+        }
+    }
+
+    &#initiative-table input {
+        width: 5rem;
+    }
+
+    &#puzzle-table {
+        // display: block;
+        max-width: 100%;
+        overflow-x: scroll;
+    }
+
+    &.table {
+
+        &.table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.025);
+            color: inherit;
+        }
+
+        td,
+        th {
+            position: relative;
+
+            p {
+                word-break: break-word;
+
+                &:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    &.timeline-segments {
+        th {
+
+            a {
+                padding: $size-eight $size-eight $size-eight 0;
+                display: block;
+            }
+        }
+    }
+}

@@ -17,7 +17,6 @@ use Cake\ORM\Entity;
  * @property int              $armour_class
  * @property int              $dexterity_modifier
  * @property int              $alignment_id
- *
  * @property User             $user
  * @property Campaign         $campaign
  * @property Participant[]    $participants

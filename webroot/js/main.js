@@ -63,11 +63,19 @@ jQuery(function ($) {
     });
 
     // setDarkMode(getCookie('darkMode'));
+    const setDarkMode = function (enable) {
+        setCookie('darkMode', enable ? 1 : 0);
+        if (enable) {
+            $('body').addClass('dark-mode');
+        } else {
+            $('body').removeClass('dark-mode');
+        }
+    }
 
     $('#switch-dark-mode').on('change', function () {
-        let isChecked = $(this).is(':checked');
-        // console.log(isChecked);
-        setDarkMode(isChecked);
+        // let isChecked = $(this).is(':checked');
+        let enabled = getCookie('darkMode');
+        setDarkMode(enabled !== '1');
     });
 
     /**
@@ -90,14 +98,15 @@ jQuery(function ($) {
 
     /**
      * Retrieves the "excludes" data attribute from an element
-     * @param  string $excludes
+     * @param $excludes
+     * @param $currentValues
      * @return string
      */
     const getExcludes = function ($excludes, $currentValues) {
         let excludeCurrentValues = [];
         let currentStringValue = $($currentValues).val();
         if (typeof currentStringValue !== 'undefined' && currentStringValue !== '') {
-            let currentValues = JSON.parse();
+            let currentValues = JSON.parse(currentStringValue);
 
             for (let i = 0; i < currentValues.length; i++) {
                 excludeCurrentValues.push(currentValues[i].value);
@@ -118,8 +127,9 @@ jQuery(function ($) {
 
     /**
      * Attaches the autocomplete events to an element
-     * @param  {[type]} $element [description]
-     * @return {[type]}          [description]
+     * @param $elementToBeAttached
+     * @param autocompleteArgOptions
+     * @return bool|void
      */
     const attachAutoCompleteEvent = function ($elementToBeAttached, autocompleteArgOptions) {
         if (autocompleteArgOptions.source === undefined
@@ -210,7 +220,7 @@ jQuery(function ($) {
                 let $table          = $('#autocomplete-' + autocompleteFor + '-table');
                 let $tableBody      = $($table).find('tbody');
                 let terms           = [];
-                
+
                 try {
                     terms = JSON.parse($($hiddenField).val());
                 } catch {

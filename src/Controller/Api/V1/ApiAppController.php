@@ -18,13 +18,14 @@ namespace App\Controller\Api\V1;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Exception;
 
 class ApiAppController extends Controller
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadComponent('RequestHandler');

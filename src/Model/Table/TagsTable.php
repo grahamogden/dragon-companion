@@ -5,6 +5,7 @@ use \App\Model\Entity\Tag;
 use \App\Model\Table\UsersTable;
 use \App\Model\Table\TimelineSegmentsTable;
 use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\Query;
@@ -39,7 +40,7 @@ class TagsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -63,13 +64,13 @@ class TagsTable extends Table
 
     /**
      * Before saving
-     * 
-     * @param type $event 
-     * @param type $entity 
-     * @param type $options 
+     *
+     * @param type $event
+     * @param type $entity
+     * @param type $options
      * @return type
      */
-    public function beforeSave($event, $entity, $options)
+    public function beforeSave(EventInterface $event, $entity, $options)
     {
         $sluggedTitle = Text::slug(strtolower($entity->title));
         // trim slug to maximum length defined in schema
@@ -79,10 +80,11 @@ class TagsTable extends Table
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     *
+     * @return Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -93,7 +95,6 @@ class TagsTable extends Table
             ->minLength('title', 3)
             ->maxLength('title', 255)
             ->notEmptyString('title')
-            ->notEmpty('title')
             ->add('title', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
@@ -113,10 +114,11 @@ class TagsTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     *
+     * @return RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['title']));
         $rules->add($rules->existsIn(['user_id'], 'Users'));

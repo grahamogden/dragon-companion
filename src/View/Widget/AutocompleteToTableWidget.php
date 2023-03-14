@@ -25,7 +25,7 @@ class AutocompleteToTableWidget implements WidgetInterface
         $this->_templates = $templates;
     }
 
-    public function render(array $data, ContextInterface $context)
+    public function render(array $data, ContextInterface $context): string
     {
         $data += [
             self::ATTR_ELEMENT_NAME => '',
@@ -38,9 +38,8 @@ class AutocompleteToTableWidget implements WidgetInterface
             self::ATTR_EXCLUDES     => [],
         ];
 
-
-        $data[self::ATTR_EXCLUDES] = $this->convertAttributeToJsonString($data, self::ATTR_EXCLUDES);
-        $data[self::ATTR_VALUE]    = $this->convertAttributeToJsonString($data, self::ATTR_VALUE);
+        $data[self::ATTR_EXCLUDES] = $this->convertAttributeToJsonString($data[self::ATTR_EXCLUDES] ?? [], self::ATTR_EXCLUDES);
+        $data[self::ATTR_VALUE]    = $this->convertAttributeToJsonString($data[self::ATTR_VALUE] ?? [], self::ATTR_VALUE);
 
         $return = $this->_templates->format('autocomplete-to-table', [
             self::ATTR_ELEMENT_NAME => $data[self::ATTR_ELEMENT_NAME],
@@ -65,7 +64,7 @@ class AutocompleteToTableWidget implements WidgetInterface
         return $return;
     }
 
-    public function secureFields(array $data)
+    public function secureFields(array $data): array
     {
         return [$data[self::ATTR_ELEMENT_NAME]];
     }
@@ -73,23 +72,24 @@ class AutocompleteToTableWidget implements WidgetInterface
     /**
      * Converts the data for the provided key into the desired json_encoded format of
      * array values with a "key" and "value" properties
-     * 
-     * @var array $data
-     * 
+     *
+     *
+     * @param array  $data
+     * @param string $key
+     *
      * @return string
      */
     private function convertAttributeToJsonString(array $data, string $key): string
     {
         $values = [];
 
-        if (isset($data[$key])) {
-            foreach ($data[$key] as $key => $value) {
+        // if (isset($data[$key])) {
+            foreach ($data as $key => $value) {
                 $values[] = [
-                    'key'   => $key,
-                    'value' => $value,
+                    'value' => $key,
+                    'label' => $value,
                 ];
-                unset ($key, $value);
-            }
+            // }
         }
 
         return json_encode($values);

@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  app:
+    image: dragon
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    command: sh -c "yarn install && yarn run dev"
+    ports:
+      - "5980:80"
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www/html/dragon-companion/
+    env_file:
+      - config/.env
+    restart: always
+
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MSSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MSSQL_DATABASE}
+      MYSQL_USER: ${MSSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_HOST: 127.0.0.1
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
