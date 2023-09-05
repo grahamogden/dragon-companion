@@ -1,0 +1,32 @@
+a:not(.btn) {
+    color: $font-colour-link;
+
+    &:hover {
+        color: $font-colour-link__hover;
+        text-decoration: underline;
+    }
+
+    body.dark-mode & {
+        color: $font-colour-link__dark;
+
+        &:hover {
+            color: $font-colour-link__hover__dark;
+        }
+    }
+}
+
+h1 {
+    font-size: 2.6rem;
+    margin: 0 0 $size-sixteen 0;
+}
+
+h2 {
+    font-size: 2rem;
+    margin: 0 0 $size-sixteen 0;
+}
+
+h3 {
+    font-size: 1.6rem;
+    margin: 0 0 $size-twelve 0;
+}
+

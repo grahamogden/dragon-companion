@@ -25,6 +25,7 @@ use Authentication\Middleware\AuthenticationMiddleware;
 use Authorization\Controller\Component\AuthorizationComponent;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Http\Response;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Exception;
@@ -193,19 +194,18 @@ class AppController extends Controller
     /**
      * Retrieves the Campaign ID from the session or throws an exception
      *
-     * @return int
      * @throws RuntimeException
      */
-    protected function getCampaignIdOrRedirect(): int
+    protected function getCampaignIdOrRedirect(): int|Response
     {
+        $user = $this->getUserOrRedirect();
+
         /** @var Campaign $campaign */
-        $campaign = $this->getRequest()->getSession()->readOrFail(Application::SESSION_KEY_CAMPAIGN);
+        $campaign = $this->getRequest()->getSession()->read(Application::SESSION_KEY_CAMPAIGN);
 
-        if (empty($campaign)) {
+        if (empty($campaign) || null === $campaign) {
             $this->Flash->error('Please select a campaign');
-            $this->redirect(['controller' => 'Campaigns', 'action' => 'index']);
-
-            // TODO: Redirect does not take user to the campaign page
+            return $this->redirect(['controller' => 'Campaigns', 'action' => 'index']);
         }
 
         return $campaign->id;
