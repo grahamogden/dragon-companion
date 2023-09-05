@@ -71,15 +71,18 @@ input[type=text],
 input[type=username],
 select,
 textarea {
-    background-color: $input-background-colour-primary;
-    border: 0.1rem solid rgb(220, 220, 220);
-    border-radius: 0.25rem;
-    color: $input-font-colour-primary;
-    padding: 0.375rem 0.75rem;
+    &,
+    &:focus {
+        background-color: $input-background-colour-primary;
+        border: 0.1rem solid rgb(220, 220, 220);
+        border-radius: 0.25rem;
+        color: $input-font-colour-primary;
+        padding: 0.375rem 0.75rem;
 
-    body.dark-mode & {
-        background-color: $input-background-colour-primary__dark;
-        color: $input-font-colour-primary__dark;
+        body.dark-mode & {
+            background-color: $input-background-colour-primary__dark;
+            color: $input-font-colour-primary__dark;
+        }
     }
 }
 

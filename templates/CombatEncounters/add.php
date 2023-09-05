@@ -12,7 +12,8 @@ use \App\View\Widget\AutocompleteToTableWidget;
  * @var string          $combatEncounterSuggestedName
  */
 ?>
-<?= $this->Html->script('combat-encounters.js') ?>
+<?php //= $this->Html->script('combat-encounters.js') ?>
+<?= $this->Html->script('dist/combatEncounters.bundle.js') ?>
 <div class="combatEncounters form content">
     <h1><?= __('Add Combat Encounter') ?></h1>
     <?= $this->Form->create($combatEncounter) ?>
@@ -199,7 +200,7 @@ use \App\View\Widget\AutocompleteToTableWidget;
                     __('Name'),
                     __('Init'),
                     __('AC'),
-                    __('HP'),
+                    __('HP (max HP)'),
                 ]
             ) ?>
             </thead>
@@ -252,16 +253,16 @@ use \App\View\Widget\AutocompleteToTableWidget;
                         'placeholder' => 'The total damage/healing done to the target',
                     ]
                 ) ?>
-                <?= $this->Form->control(
-                    'combat-movement',
-                    [
-                        'label'       => 'Movement',
-                        'class'       => ['form-control',],
-                        'type'        => 'text',
-                        'inputmode'   => 'number',
-                        'placeholder' => 'How many spaces moved',
-                    ]
-                ) ?>
+                <?php //= $this->Form->control(
+                //     'combat-movement',
+                //     [
+                //         'label'       => 'Movement',
+                //         'class'       => ['form-control',],
+                //         'type'        => 'text',
+                //         'inputmode'   => 'number',
+                //         'placeholder' => 'How many spaces moved',
+                //     ]
+                // ) ?>
             </div>
         </div>
         <div class="row form-group" role="group" aria-label="">

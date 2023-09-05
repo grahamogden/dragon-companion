@@ -19,8 +19,9 @@ class TagMentionsController extends ApiAppController
     public function get(): void
     {
         $this->autoRender = false;
-        $term             = $this->request->getQuery('search');
-        $conditions       = json_decode($this->request->getQuery('conditions'), true);
+        $term = $this->request->getQuery('search');
+        $conditionsRaw = $this->request->getQuery('conditions') ?? '';
+        $conditions = json_decode($conditionsRaw, true);
 // debug($term);
         if (/*$this->request->is('ajax') &&*/ strlen($term) >= 3) {
             /** @var Campaign $campaign */

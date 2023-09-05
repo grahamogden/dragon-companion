@@ -334,7 +334,6 @@ class CombatEncountersController extends AppController
                 $combatEncounter->setError('participants', $errorMsg);
                 $this->Flash->error(__('The combat encounter could not be saved. Please try again.'));
                 return [false];
-                break;
             }
             unset($participantData);
         }

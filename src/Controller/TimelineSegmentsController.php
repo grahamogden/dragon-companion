@@ -35,6 +35,10 @@ class TimelineSegmentsController extends AppController
     /** @var TimelineSegmentsTable */
     private $timelineSegmentsTable;
 
+    public $paginate = [
+        'limit' => 25,
+    ];
+
     /**
      * Initialises the class, including authentication
      *
@@ -45,7 +49,7 @@ class TimelineSegmentsController extends AppController
     {
         parent::initialize();
 
-        $this->loadComponent('Paginator');
+        // $this->loadComponent('Paginator');
         $this->loadComponent('Flash');
 
         $this->timelineSegmentsTable = $this->fetchTable('TimelineSegments');
@@ -67,10 +71,6 @@ class TimelineSegmentsController extends AppController
                 isset($id) ?: null,
             ]
         );
-
-        $this->paginate = [
-            'contain' => ['ParentTimelineSegments', 'Users'],
-        ];
 
         $user = $this->getUserOrRedirect();
 

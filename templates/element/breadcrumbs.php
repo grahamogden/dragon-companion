@@ -38,7 +38,7 @@ if (isset($breadcrumbs)) {
 
     echo $this->Breadcrumbs->render(
         ['class' => 'breadcrumbs-trail'],
-        ['separator' => '<i class="fa fa-chevron-left"></i>']
+        ['separator' => '<i class="fa fa-chevron-right"></i>']
     );
 
 }

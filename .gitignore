@@ -37,6 +37,8 @@ nbproject/*
 .vscode
 # Sass preprocessor
 .sass-cache/
+# NPM
+node_modules/*
 
 
 # User Files #
@@ -46,3 +48,4 @@ webroot/img/orig/
 deployments/*
 *.pem
 *.zip
+webroot/js/dist/*

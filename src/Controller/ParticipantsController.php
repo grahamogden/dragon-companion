@@ -312,6 +312,7 @@ class ParticipantsController extends AppController
                 'armour_class',
                 'max_hit_points',
                 'dexterity_modifier',
+                'monster_instance_type_id',
             ]
         );
         exit;
