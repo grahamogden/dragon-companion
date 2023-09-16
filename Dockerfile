@@ -6,18 +6,20 @@ WORKDIR /var/www/html
 RUN apt-get update
 #RUN apt-get upgrade --assume-yes --quiet
 #RUN apt-get dist-upgrade --assume-yes --quiet
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 RUN apt-get autoclean
 RUN apt-get clean
 RUN apt install -y nano
 RUN apt-get install -y npm
-RUN nvm install --lts
-RUN npm install --save-dev
-RUN npm install -g yo generator-tinymce --unsafe-perm=true --allow-root
-RUN #npm install -g typescript
-RUN #npm install -g  --save-devwebpack webpack-cli
-RUN #npm install -D @webpack-cli/generators
-RUN #npm install -g ts-loader source-map-loader
+ADD package.json /tmp/package.json
+# RUN nvm install --lts
+# RUN npm install --save-dev
+RUN cd /tmp && npm install --save-dev
+# RUN npm install -g yo generator-tinymce --unsafe-perm=true --allow-root
+# RUN #npm install -g typescript
+# RUN #npm install -g  --save-devwebpack webpack-cli
+# RUN #npm install -D @webpack-cli/generators
+# RUN #npm install -g ts-loader source-map-loader
 #RUN apt install php-intl
 
 #RUN mkdir /var/www/html/dragon-companion
@@ -32,6 +34,9 @@ RUN apt-get install -y libicu-dev
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
 RUN docker-php-ext-enable intl
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --dev
 
 #RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 #RUN cp /usr/local/etc/php/php.ini-production /etc/php/php.ini

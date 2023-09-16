@@ -8,12 +8,10 @@ services:
       dockerfile: Dockerfile
 #    command: sh -c "yarn install && yarn run dev"
     ports:
-      - "5980:80"
+      - "80:80"
     working_dir: /var/www/html/dragon-companion
     volumes:
       - ./:/var/www/html/dragon-companion/
-    env_file:
-      - config/.env
     restart: always
 
   mysql:
@@ -23,9 +21,9 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MSSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MSSQL_DATABASE}
-      MYSQL_USER: ${MSSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_HOST: 127.0.0.1
     ports:

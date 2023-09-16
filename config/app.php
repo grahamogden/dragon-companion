@@ -76,7 +76,7 @@ return [
      *   You should treat it as extremely sensitive data.
      */
     'Security' => [
-        'salt' => env('SECURITY_SALT', '__SALT__'),
+        'salt' => env('SECURITY_SALT', 'f9cbdf791529a86d4c7607f28c35b6987af025347cc19ee8735464cec089835b'),
     ],
 
     /**
@@ -264,16 +264,16 @@ return [
              */
             // 'port' => 'non_standard_port_number',
             // 'port' => '8889',
-            'port' => env('RDS_PORT', null),
+            'port' => env('MYSQL_PORT', null),
             // 'username' => 'my_app',
             // 'password' => 'secret',
             // 'database' => 'my_app',
             // 'username' => 'root',
-            'username' => env('RDS_USERNAME', null),
+            'username' => env('MYSQL_USER', null),
             // 'password' => 'root',
-            'password' => env('RDS_PASSWORD', null),
+            'password' => env('MYSQL_PASSWORD', null),
             // 'database' => 'dungeons_and_dragons',
-            'database' => env('RDS_DB_NAME', null),
+            'database' => env('MYSQL_DATABASE', null),
             /*
              * You do not need to set this flag to use full utf-8 encoding (internal default since CakePHP 3.6).
              */
