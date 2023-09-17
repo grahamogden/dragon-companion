@@ -38,6 +38,7 @@ export class CombatTableHelper extends TableHelper {
     public updateHitPointsForParticipantTempId(
         participant: ParticipantAbstract,
     ) {
+        console.debug('Updating hit point:');
         const hitPointsElement = this._tableBodies[0].querySelector(
             `.combat-participant-${participant.temporaryId} .hit-points`,
         ) as HTMLTableRowElement | null;
@@ -48,6 +49,7 @@ export class CombatTableHelper extends TableHelper {
             );
         }
 
+        console.debug(`${participant.currentHitPoints}`);
         hitPointsElement.innerText = `${participant.currentHitPoints}`;
     }
 }

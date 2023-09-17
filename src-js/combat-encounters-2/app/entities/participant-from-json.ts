@@ -12,6 +12,11 @@ export interface ParticipantFromJson {
 
 export interface MonsterParticipantFromJson extends ParticipantFromJson {
     data: {
+        id: number;
+        name: string;
+        armour_class: number;
+        max_hit_points: number;
+        dexterity_modifier: number;
         monster_instance_type_id?: number;
     };
 }

@@ -11,6 +11,7 @@ import {
 } from './entities';
 import { CombatTableHelper } from './table';
 import { NotFoundException } from './exceptions';
+import { ParticipantTypeEnum } from './enums';
 
 export class CombatEncounterHandler {
     readonly sessionStorageCampaign = 'campaign';
@@ -349,6 +350,7 @@ export class CombatEncounterHandler {
             this.STORAGE_KEY,
             this._combatEncounter.getStateAsString(),
         );
+
         if (null !== targetParticipant) {
             combatTableHelper.updateHitPointsForParticipantTempId(
                 targetParticipant,
@@ -511,17 +513,14 @@ export class CombatEncounterHandler {
             currentParticipantKey,
         );
 
-        console.debug(this._combatEncounter);
-        console.debug(participants);
         for (const participantAbstract of participants ?? []) {
             let participant: Monster | PlayerCharacter;
             if (
                 // typeof participantAbstract?.monsterInstanceTypeId !== undefined
                 // participantAbstract.constructor === Monster
 
-                // participantAbstract.ParticipantType ===
-                // ParticipantTypeEnum.MONSTER
-
+                participantAbstract.ParticipantType ===
+                    ParticipantTypeEnum.MONSTER &&
                 `MonsterInstanceType` in participantAbstract
             ) {
                 participant = new Monster(
@@ -549,7 +548,6 @@ export class CombatEncounterHandler {
             }
             this._combatEncounter.addParticipant(participant);
         }
-        console.debug(this._combatEncounter);
     }
 
     private validateTurnData(combatTurn: CombatTurnEntity) {

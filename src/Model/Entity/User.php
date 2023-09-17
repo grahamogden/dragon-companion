@@ -26,7 +26,7 @@ use Cake\ORM\Entity;
  * @property Tag[]                  $tags
  * @property TimelineSegment[]      $timeline_segments
  */
-class User extends Entity
+final class User extends Entity
 {
 
     public const STATUS_INACTIVE = 0;
@@ -77,5 +77,16 @@ class User extends Entity
         }
 
         throw new BadRequestException('Password is missing');
+    }
+
+    public function setStatus(int $status): self
+    {
+        if (!in_array($status, [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PENDING])) {
+            throw new BadRequestException('Status is invalid');
+        }
+
+        $this->set('status', $status);
+
+        return $this;
     }
 }

@@ -49,7 +49,7 @@ $routes->scope(
     '/',
     function (RouteBuilder $routes) {
         $routes->prefix(
-            'Api/V1',
+            'api/v1',
             function (RouteBuilder $routes) {
                 $routes->setExtensions(['json']);
                 $routes->resources(
@@ -117,7 +117,7 @@ $routes->scope(
         );
 
         $routes->connect(
-            '/users/register',
+            '/user/register',
             ['controller' => 'Users', 'action' => 'add'],
             ['_name' => 'register']
         );

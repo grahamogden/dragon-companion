@@ -1,5 +1,10 @@
 import { FormPage } from '../form-helper/form-page';
-import { Monster, ParticipantFromJson, PlayerCharacter } from '../entities';
+import {
+    Monster,
+    MonsterParticipantFromJson,
+    ParticipantFromJson,
+    PlayerCharacter,
+} from '../entities';
 import { CombatEncounterHandler } from '../combat-encounter-handler';
 import { NotFoundException } from '../exceptions';
 import { FormPageInterface } from '../form-helper';
@@ -17,7 +22,7 @@ export class ParticipantsPage extends FormPage implements FormPageInterface {
 
     buildForm(): void {
         console.debug('Building participants page');
-        this.
+        // this.
     }
 
     private initPlayerCharacterInput() {
@@ -84,12 +89,12 @@ export class ParticipantsPage extends FormPage implements FormPageInterface {
         }
     }
 
-    private getMonsterInputValues(): ParticipantFromJson[] {
+    private getMonsterInputValues(): MonsterParticipantFromJson[] {
         const monsterValue = this._monsterInput.value;
 
         return JSON.parse(
             '' !== monsterValue ? monsterValue : '[]',
-        ) as ParticipantFromJson[];
+        ) as MonsterParticipantFromJson[];
     }
 
     private getPlayerCharacterInputValues() {

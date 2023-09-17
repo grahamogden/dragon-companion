@@ -12,7 +12,6 @@ use App\Model\Table\ParticipantsTable;
 use Authentication\IdentityInterface;
 use Cake\Controller\ComponentRegistry;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Datasource\RepositoryInterface;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\EventManager;
 use Cake\Http\Response;
@@ -171,7 +170,8 @@ class CombatEncountersController extends AppController
                                     'valueField' => 'id',
                                 ]
                             )
-                            ->where(['visible' => true])->toArray()
+                            ->where(['visible' => true])
+                            ->toArray()
                     );
 
                     $this->Flash->success(__('The combat encounter has been saved.'));

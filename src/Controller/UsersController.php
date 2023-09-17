@@ -20,14 +20,6 @@ use Exception;
  */
 class UsersController extends AppController
 {
-
-    public function initialize(): void
-    {
-        parent::initialize();
-        // $this->Auth->allow(['logout', 'add']);
-        $this->Authentication->allowUnauthenticated(['logout', 'add']);
-    }
-
     /**
      * Index method
      *
@@ -65,9 +57,10 @@ class UsersController extends AppController
         try {
             if ($this->request->is('post')) {
                 $data = $this->request->getData();
-                $data['status'] = User::STATUS_ACTIVE;
                 $user = $this->Users->patchEntity($user, $this->request->getData());
-                if ($this->Users->save($user)) {
+                $user->set('status', User::STATUS_ACTIVE);
+                $isSaved = $this->Users->save($user);
+                if ($isSaved) {
                     $this->Flash->success(__('The user has been saved.'));
 
                     return $this->redirect(['controller' => 'Users', 'action' => 'login']);
@@ -134,7 +127,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
 
-        $this->Authentication->allowUnauthenticated(['login']);
+        $this->Authentication->allowUnauthenticated(['login', 'logout', 'add']);
     }
 
     /**
@@ -174,5 +167,4 @@ class UsersController extends AppController
         $this->request->getSession()->destroy();
         return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
-
 }
