@@ -4,6 +4,7 @@ import { ParticipantTypeEnum } from '../enums';
 export class PlayerCharacter extends ParticipantAbstract {
     constructor(
         id: number,
+        temporaryId: number,
         participantName: string,
         armourClass: number,
         maxHitPoints: number,
@@ -21,6 +22,7 @@ export class PlayerCharacter extends ParticipantAbstract {
             startingHitPoints,
             currentHitPoints,
             initiative,
+            temporaryId,
             ParticipantTypeEnum.PLAYER_CHARACTER,
         );
     }

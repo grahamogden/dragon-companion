@@ -160,29 +160,29 @@ export class CombatHandler {
         this._participants = [];
     }
 
-    public updatePlayerCharacters(playerCharacters: ParticipantFromJson[]) {
-        const playerCharacterIds: number[] = [];
-        this._playerCharacters.forEach((playerCharacter) => {
-            playerCharacterIds.push(playerCharacter.id);
-        });
+    // public updatePlayerCharacters(playerCharacters: ParticipantFromJson[]) {
+    //     const playerCharacterIds: number[] = [];
+    //     this._playerCharacters.forEach((playerCharacter) => {
+    //         playerCharacterIds.push(playerCharacter.id);
+    //     });
 
-        playerCharacters.forEach((playerCharacter) => {
-            // add player character if they do not already exist in the list of participants
-            if (playerCharacterIds.indexOf(playerCharacter.data.id) < 0) {
-                this.addPlayerCharacter(
-                    new PlayerCharacter(
-                        playerCharacter.data.id,
-                        playerCharacter.data.name,
-                        playerCharacter.data.armour_class,
-                        playerCharacter.data.max_hit_points,
-                        playerCharacter.data.dexterity_modifier,
-                    ),
-                );
-            }
-        });
+    //     playerCharacters.forEach((playerCharacter) => {
+    //         // add player character if they do not already exist in the list of participants
+    //         if (playerCharacterIds.indexOf(playerCharacter.data.id) < 0) {
+    //             this.addPlayerCharacter(
+    //                 new PlayerCharacter(
+    //                     playerCharacter.data.id,
+    //                     playerCharacter.data.name,
+    //                     playerCharacter.data.armour_class,
+    //                     playerCharacter.data.max_hit_points,
+    //                     playerCharacter.data.dexterity_modifier,
+    //                 ),
+    //             );
+    //         }
+    //     });
 
-        return this._playerCharacters;
-    }
+    //     return this._playerCharacters;
+    // }
 
     public addPlayerCharacter(playerCharacter: PlayerCharacter) {
         this._playerCharacters.push(playerCharacter);
@@ -192,30 +192,30 @@ export class CombatHandler {
         return this._playerCharacters;
     }
 
-    public updateMonsters(monsters: ParticipantFromJson[]) {
-        const monsterIds: number[] = [];
-        this._monsters.forEach((monster) => {
-            monsterIds.push(monster.id);
-        });
+    // public updateMonsters(monsters: ParticipantFromJson[]) {
+    //     const monsterIds: number[] = [];
+    //     this._monsters.forEach((monster) => {
+    //         monsterIds.push(monster.id);
+    //     });
 
-        monsters.forEach((monster) => {
-            // add player character if they do not already exist in the list of participants
-            if (monsterIds.indexOf(monster.data.id) < 0) {
-                this.addMonster(
-                    new Monster(
-                        monster.data.id,
-                        monster.data.name,
-                        monster.data.armour_class,
-                        monster.data.max_hit_points,
-                        monster.data.dexterity_modifier,
-                        MonsterInstanceTypeEnum.INDIVIDUAL,
-                    ),
-                );
-            }
-        });
+    //     monsters.forEach((monster) => {
+    //         // add player character if they do not already exist in the list of participants
+    //         if (monsterIds.indexOf(monster.data.id) < 0) {
+    //             this.addMonster(
+    //                 new Monster(
+    //                     monster.data.id,
+    //                     monster.data.name,
+    //                     monster.data.armour_class,
+    //                     monster.data.max_hit_points,
+    //                     monster.data.dexterity_modifier,
+    //                     MonsterInstanceTypeEnum.INDIVIDUAL,
+    //                 ),
+    //             );
+    //         }
+    //     });
 
-        return this._monsters;
-    }
+    //     return this._monsters;
+    // }
 
     public addMonster(monster: Monster) {
         this._monsters.push(monster);

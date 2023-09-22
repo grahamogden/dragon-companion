@@ -48,18 +48,30 @@ export class CombatEncounterHandler {
      * Doesn't actually end the combat, it just updates the JSON
      */
     endCombat() {
+        const participants = this._combatEncounter.getParticipants();
+        const participantsArray = [];
+        for (const participant of participants) {
+            participantsArray.push(participant.getState());
+        }
+        const participantsString = JSON.stringify(participantsArray);
+
+        const participantsInput = document.getElementById(
+            'participants',
+        ) as HTMLInputElement;
+        participantsInput.value = participantsString;
+
         const combatTurnsString = JSON.stringify(
             this._combatEncounter.combatTurns,
         );
 
         const turnsInput = document.getElementById('turns') as HTMLInputElement;
         turnsInput.value = combatTurnsString;
-        if (this._temporaryStorage) {
-            this._temporaryStorage.save(
-                this.sessionStorageTurns,
-                combatTurnsString,
-            );
-        }
+        // if (this._temporaryStorage) {
+        //     this._temporaryStorage.save(
+        //         this.sessionStorageTurns,
+        //         combatTurnsString,
+        //     );
+        // }
     }
 
     /**
@@ -70,11 +82,12 @@ export class CombatEncounterHandler {
             return;
         }
 
-        this._temporaryStorage.delete(this.sessionStorageCampaign);
-        this._temporaryStorage.delete(this.sessionStoragePlayerCharacters);
-        this._temporaryStorage.delete(this.sessionStorageMonsters);
-        this._temporaryStorage.delete(this.sessionStorageParticipants);
-        this._temporaryStorage.delete(this.sessionStorageTurns);
+        this._temporaryStorage.delete(this.STORAGE_KEY);
+        // this._temporaryStorage.delete(this.sessionStorageCampaign);
+        // this._temporaryStorage.delete(this.sessionStoragePlayerCharacters);
+        // this._temporaryStorage.delete(this.sessionStorageMonsters);
+        // this._temporaryStorage.delete(this.sessionStorageParticipants);
+        // this._temporaryStorage.delete(this.sessionStorageTurns);
     }
 
     public updateCampaign(campaignId: number) {
@@ -525,6 +538,7 @@ export class CombatEncounterHandler {
             ) {
                 participant = new Monster(
                     participantAbstract.Id,
+                    participantAbstract.TemporaryId,
                     participantAbstract.ParticipantName,
                     participantAbstract.ArmourClass,
                     participantAbstract.MaxHitPoints,
@@ -537,6 +551,7 @@ export class CombatEncounterHandler {
             } else {
                 participant = new PlayerCharacter(
                     participantAbstract.Id,
+                    participantAbstract.TemporaryId,
                     participantAbstract.ParticipantName,
                     participantAbstract.ArmourClass,
                     participantAbstract.MaxHitPoints,

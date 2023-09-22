@@ -7,6 +7,7 @@ export interface ParticipantFromJson {
         armour_class: number;
         max_hit_points: number;
         dexterity_modifier: number;
+        temporary_id: number;
     };
 }
 
@@ -17,6 +18,7 @@ export interface MonsterParticipantFromJson extends ParticipantFromJson {
         armour_class: number;
         max_hit_points: number;
         dexterity_modifier: number;
+        temporary_id: number;
         monster_instance_type_id?: number;
     };
 }

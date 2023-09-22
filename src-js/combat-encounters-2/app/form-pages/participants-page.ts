@@ -61,6 +61,7 @@ export class ParticipantsPage extends FormPage implements FormPageInterface {
         for (const playerCharacterJson of playerCharacters) {
             const playerCharacter = new PlayerCharacter(
                 playerCharacterJson.data.id,
+                playerCharacterJson.data.temporary_id,
                 playerCharacterJson.data.name,
                 playerCharacterJson.data.armour_class,
                 playerCharacterJson.data.max_hit_points,
@@ -75,6 +76,7 @@ export class ParticipantsPage extends FormPage implements FormPageInterface {
         for (const monsterJson of monsters) {
             const monster = new Monster(
                 monsterJson.data.id,
+                monsterJson.data.temporary_id,
                 monsterJson.data.name,
                 monsterJson.data.armour_class,
                 monsterJson.data.max_hit_points,
