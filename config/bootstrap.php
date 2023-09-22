@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -113,9 +114,9 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
  */
 $isCli = PHP_SAPI === 'cli';
 // if ($isCli) {
-    (new ExceptionTrap(Configure::read('Error')))->register();
+(new ExceptionTrap(Configure::read('Error')))->register();
 // } else {
-    (new ErrorTrap(Configure::read('Error')))->register();
+(new ErrorTrap(Configure::read('Error')))->register();
 // }
 
 /*
@@ -209,6 +210,6 @@ try {
         ],
         'timeout' => 259200,
     ]);
-} catch(Exception $e) {
+} catch (Exception $e) {
     exit($e->getMessage() . "\n");
 }
