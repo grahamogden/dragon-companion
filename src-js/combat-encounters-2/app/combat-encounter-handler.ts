@@ -11,6 +11,7 @@ import {
 } from './entities';
 import { CombatTableHelper } from './table';
 import { NotFoundException } from './exceptions';
+import { ParticipantTypeEnum } from './enums';
 
 export class CombatEncounterHandler {
     readonly sessionStorageCampaign = 'campaign';
@@ -47,18 +48,30 @@ export class CombatEncounterHandler {
      * Doesn't actually end the combat, it just updates the JSON
      */
     endCombat() {
+        const participants = this._combatEncounter.getParticipants();
+        const participantsArray = [];
+        for (const participant of participants) {
+            participantsArray.push(participant.getState());
+        }
+        const participantsString = JSON.stringify(participantsArray);
+
+        const participantsInput = document.getElementById(
+            'participants',
+        ) as HTMLInputElement;
+        participantsInput.value = participantsString;
+
         const combatTurnsString = JSON.stringify(
             this._combatEncounter.combatTurns,
         );
 
         const turnsInput = document.getElementById('turns') as HTMLInputElement;
         turnsInput.value = combatTurnsString;
-        if (this._temporaryStorage) {
-            this._temporaryStorage.save(
-                this.sessionStorageTurns,
-                combatTurnsString,
-            );
-        }
+        // if (this._temporaryStorage) {
+        //     this._temporaryStorage.save(
+        //         this.sessionStorageTurns,
+        //         combatTurnsString,
+        //     );
+        // }
     }
 
     /**
@@ -69,11 +82,12 @@ export class CombatEncounterHandler {
             return;
         }
 
-        this._temporaryStorage.delete(this.sessionStorageCampaign);
-        this._temporaryStorage.delete(this.sessionStoragePlayerCharacters);
-        this._temporaryStorage.delete(this.sessionStorageMonsters);
-        this._temporaryStorage.delete(this.sessionStorageParticipants);
-        this._temporaryStorage.delete(this.sessionStorageTurns);
+        this._temporaryStorage.delete(this.STORAGE_KEY);
+        // this._temporaryStorage.delete(this.sessionStorageCampaign);
+        // this._temporaryStorage.delete(this.sessionStoragePlayerCharacters);
+        // this._temporaryStorage.delete(this.sessionStorageMonsters);
+        // this._temporaryStorage.delete(this.sessionStorageParticipants);
+        // this._temporaryStorage.delete(this.sessionStorageTurns);
     }
 
     public updateCampaign(campaignId: number) {
@@ -349,6 +363,7 @@ export class CombatEncounterHandler {
             this.STORAGE_KEY,
             this._combatEncounter.getStateAsString(),
         );
+
         if (null !== targetParticipant) {
             combatTableHelper.updateHitPointsForParticipantTempId(
                 targetParticipant,
@@ -511,21 +526,19 @@ export class CombatEncounterHandler {
             currentParticipantKey,
         );
 
-        console.debug(this._combatEncounter);
-        console.debug(participants);
         for (const participantAbstract of participants ?? []) {
             let participant: Monster | PlayerCharacter;
             if (
                 // typeof participantAbstract?.monsterInstanceTypeId !== undefined
                 // participantAbstract.constructor === Monster
 
-                // participantAbstract.ParticipantType ===
-                // ParticipantTypeEnum.MONSTER
-
+                participantAbstract.ParticipantType ===
+                    ParticipantTypeEnum.MONSTER &&
                 `MonsterInstanceType` in participantAbstract
             ) {
                 participant = new Monster(
                     participantAbstract.Id,
+                    participantAbstract.TemporaryId,
                     participantAbstract.ParticipantName,
                     participantAbstract.ArmourClass,
                     participantAbstract.MaxHitPoints,
@@ -538,6 +551,7 @@ export class CombatEncounterHandler {
             } else {
                 participant = new PlayerCharacter(
                     participantAbstract.Id,
+                    participantAbstract.TemporaryId,
                     participantAbstract.ParticipantName,
                     participantAbstract.ArmourClass,
                     participantAbstract.MaxHitPoints,
@@ -549,7 +563,6 @@ export class CombatEncounterHandler {
             }
             this._combatEncounter.addParticipant(participant);
         }
-        console.debug(this._combatEncounter);
     }
 
     private validateTurnData(combatTurn: CombatTurnEntity) {

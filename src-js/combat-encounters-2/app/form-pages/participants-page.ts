@@ -1,5 +1,10 @@
 import { FormPage } from '../form-helper/form-page';
-import { Monster, ParticipantFromJson, PlayerCharacter } from '../entities';
+import {
+    Monster,
+    MonsterParticipantFromJson,
+    ParticipantFromJson,
+    PlayerCharacter,
+} from '../entities';
 import { CombatEncounterHandler } from '../combat-encounter-handler';
 import { NotFoundException } from '../exceptions';
 import { FormPageInterface } from '../form-helper';
@@ -17,7 +22,7 @@ export class ParticipantsPage extends FormPage implements FormPageInterface {
 
     buildForm(): void {
         console.debug('Building participants page');
-        this.
+        // this.
     }
 
     private initPlayerCharacterInput() {
@@ -56,6 +61,7 @@ export class ParticipantsPage extends FormPage implements FormPageInterface {
         for (const playerCharacterJson of playerCharacters) {
             const playerCharacter = new PlayerCharacter(
                 playerCharacterJson.data.id,
+                playerCharacterJson.data.temporary_id,
                 playerCharacterJson.data.name,
                 playerCharacterJson.data.armour_class,
                 playerCharacterJson.data.max_hit_points,
@@ -70,6 +76,7 @@ export class ParticipantsPage extends FormPage implements FormPageInterface {
         for (const monsterJson of monsters) {
             const monster = new Monster(
                 monsterJson.data.id,
+                monsterJson.data.temporary_id,
                 monsterJson.data.name,
                 monsterJson.data.armour_class,
                 monsterJson.data.max_hit_points,
@@ -84,12 +91,12 @@ export class ParticipantsPage extends FormPage implements FormPageInterface {
         }
     }
 
-    private getMonsterInputValues(): ParticipantFromJson[] {
+    private getMonsterInputValues(): MonsterParticipantFromJson[] {
         const monsterValue = this._monsterInput.value;
 
         return JSON.parse(
             '' !== monsterValue ? monsterValue : '[]',
-        ) as ParticipantFromJson[];
+        ) as MonsterParticipantFromJson[];
     }
 
     private getPlayerCharacterInputValues() {

@@ -97,7 +97,9 @@ export class CombatPage extends FormPage implements FormPageInterface {
                 return false;
             }
 
+            self._combatEncounter.endCombat();
             self._combatEncounter.clearEncounter();
+            form.submit();
         });
     }
 
@@ -117,6 +119,7 @@ export class CombatPage extends FormPage implements FormPageInterface {
         //     participants[0].temporaryId,
         // );
 
+        // if (this._combatEncounter.)
         // Select the first participant
         this._combatEncounter.startNewRound(this._combatTableHelper);
     }

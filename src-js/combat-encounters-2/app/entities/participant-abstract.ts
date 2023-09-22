@@ -41,6 +41,7 @@ export class ParticipantAbstract {
         startingHitPoints: number | undefined = undefined,
         currentHitPoints: number | undefined = undefined,
         initiative: number | undefined = undefined,
+        temporaryId: number | undefined = undefined,
         participantType: ParticipantTypeEnum,
     ) {
         this._id = id;
@@ -52,7 +53,10 @@ export class ParticipantAbstract {
         this._currentHitPoints = currentHitPoints ?? this.startingHitPoints;
         this._participantType = participantType;
         this._initiative = initiative;
-        this._temporaryId = this.createTemporaryId();
+        if (typeof temporaryId === 'undefined') {
+            temporaryId = this.createTemporaryId();
+        }
+        this._temporaryId = temporaryId;
     }
 
     get id(): number {
@@ -150,6 +154,7 @@ export class ParticipantAbstract {
             CurrentHitPoints: this.currentHitPoints,
             Initiative: this.initiative,
             ParticipantType: this.participantType,
+            TemporaryId: this.temporaryId,
         };
     }
 }
@@ -164,4 +169,5 @@ export interface ParticipantAbstractStateInterface {
     CurrentHitPoints: number;
     Initiative: number | undefined;
     ParticipantType: ParticipantTypeEnum;
+    TemporaryId: number;
 }

@@ -11,6 +11,7 @@ export class Monster extends ParticipantAbstract {
 
     constructor(
         id: number,
+        temporaryId: number,
         participantName: string,
         armourClass: number,
         maxHitPoints: number,
@@ -29,6 +30,7 @@ export class Monster extends ParticipantAbstract {
             startingHitPoints,
             currentHitPoints,
             initiative,
+            temporaryId,
             ParticipantTypeEnum.MONSTER,
         );
         this._monsterInstanceTypeId = _monsterInstanceTypeId;
