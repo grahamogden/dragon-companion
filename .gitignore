@@ -49,3 +49,4 @@ deployments/*
 *.pem
 *.zip
 webroot/js/dist/*
+node_modules/*
