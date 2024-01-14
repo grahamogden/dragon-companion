@@ -9,6 +9,7 @@ services:
 #    command: sh -c "yarn install && yarn run dev"
     ports:
       - "80:80"
+      - "443:443"
     working_dir: /var/www/html/dragon-companion
     volumes:
       - ./:/var/www/html/dragon-companion/
