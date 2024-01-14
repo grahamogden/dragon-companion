@@ -50,3 +50,5 @@ deployments/*
 *.zip
 webroot/js/dist/*
 node_modules/*
+build/certs
+build/private
