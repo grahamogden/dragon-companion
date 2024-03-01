@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Routes configuration
  *
@@ -96,6 +97,17 @@ $routes->scope(
             ],
             ['_name' => 'tagmentions']
         );
+
+        $routes->connect(
+            '/ui',
+            [
+                // 'prefix' => 'Ui',
+                'controller' => 'Ui',
+                'action' => 'view'
+            ],
+            ['_name' => 'ui']
+        );
+
         /**
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
          * its action called 'display', and we pass a param to select the view file

@@ -43,7 +43,7 @@ node_modules/*
 
 # User Files #
 ##############
-notes.txt
+notes.md
 webroot/img/orig/
 deployments/*
 *.pem
