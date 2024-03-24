@@ -10,9 +10,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    working_dir: /var/www/html/dragon-companion
+    working_dir: /var/www/dragon-companion
     volumes:
-      - ./:/var/www/html/dragon-companion/
+      - ./:/var/www/dragon-companion/
     restart: always
 
   mysql:

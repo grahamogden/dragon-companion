@@ -2,121 +2,133 @@
 
 namespace App\Controller\Api\V1;
 
-use App\Controller\AppController\Api\V1;
+use App\Model\Entity\CampaignUser;
+use App\Model\Table\CampaignsTable;
+use App\Model\Entity\Campaign;
+use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Response;
 
 /**
  * Campaigns Controller
  *
- * @property \App\Model\Table\CampaignsTable $Campaigns
+ * @property CampaignsTable $Campaigns
  *
- * @method \App\Model\Entity\Campaign[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method Campaign[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class CampaignsController extends ApiAppController
 {
-    /**
-     * Search method
-     *
-     * @return \Cake\Http\Response|void
-     */
-    public function search(int $campaignId): void
+    public function view(int $id): void
     {
-        $this->autoRender = false;
+        $campaign = $this->Campaigns->findByIdWithUsers($id);
 
-        $query = (string) $this->request->getQuery('term');
+        $this->isAuthorized($campaign);
 
-        if (!$query || !is_string($query)) {
-            http_response_code(400);
+        // unset($campaign->users);
+        // return $this->output(['Campaign' => $campaign]);
+        $this->set(compact('campaign'));
+        // $this->viewBuilder()->setOption('serialize', 'campaign');
+    }
+
+    public function index(): void
+    {
+        $this->Authorization->skipAuthorization();
+        $user = $this->user;
+
+        $campaigns = $this->Campaigns->findAllByUserId($user['id']);
+
+        $this->set(compact('campaigns'));
+        // $this->viewBuilder()->setTemplate('index');
+        $this->apiResponseHeaderService->returnOkResponse($this->response);
+        // return $this->response;
+    }
+
+    public function add(): Response
+    {
+        $data = $this->request->getData();
+        // $campaign = $this->Campaigns->newEmptyEntity();
+        $campaign = new Campaign();
+        // $data['users'] = [
+        //     [
+        //         'id'        => $this->user['id'],
+        //         '_joinData' => [
+        //             'user_id'       => $this->user['id'],
+        //             'member_status' => CampaignUser::MEMBER_STATUS_ACTIVE,
+        //             'account_level' => CampaignUser::ACCOUNT_LEVEL_CREATOR,
+        //         ],
+        //     ],
+        // ];
+        $this->isAuthorized($campaign);
+        $campaign->setName($data['name']);
+        $campaign->setSynopsis($data['synopsis']);
+        // $campaign->addUser($this->user['id'], CampaignUser::MEMBER_STATUS_ACTIVE, CampaignUser::ACCOUNT_LEVEL_CREATOR);
+        $campaign->setAccess('users', true);
+        $campaign = $this->Campaigns->patchEntity($campaign, [
+            'users' => [
+                [
+                    'id'        => $this->user['id'],
+                    '_joinData' => [
+                        'user_id'       => $this->user['id'],
+                        'member_status' => CampaignUser::MEMBER_STATUS_ACTIVE,
+                        'account_level' => CampaignUser::ACCOUNT_LEVEL_CREATOR,
+                    ],
+                ],
+            ],
+        ]);
+
+        if ($this->Campaigns->save($campaign)) {
+            $this->set(compact('campaign'));
+            $this->apiResponseHeaderService->returnCreatedResponse($this->response);
+        } else {
+            $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
+        }
+        return $this->response;
+    }
+
+    public function edit(int $id): Response
+    {
+        $campaign = $this->Campaigns->get($id, ['contain' => 'Users']);
+        $data            = $this->request->getData();
+        // dd($data);
+        $this->isAuthorized($campaign);
+        $campaign = $this->Campaigns->patchEntity($campaign, $data);
+
+        if ($this->Campaigns->save($campaign)) {
+            // header('HTTP/1.0 204 No content');
+            // exit;
+            $this->apiResponseHeaderService->returnNoContentResponse($this->response);
+        } else {
+            $this->apiResponseHeaderService->returnNotFoundResponse($this->response);
+            // header('HTTP/1.0 404 Not found');
+            // exit;
         }
 
-        $data = [];
+        return $this->response;
+    }
 
-        $this->loadModel('NonPlayableCharacters');
-        /** @var NonPlayableCharacters $nonPlayableCharacters */
-        $nonPlayableCharactersModel = $this->NonPlayableCharacters;
-        $nonPlayableCharacters = $nonPlayableCharactersModel
-            ->find('all', ['limit' => 5])
-            ->where(['NonPlayableCharacters.name LIKE' => sprintf('%%%s%%', $query)]);
-
-        foreach ($nonPlayableCharacters as $nonPlayableCharacter) {
-            $nonPlayableCharacter['type'] = 'Non-Playable Character';
-            $nonPlayableCharacter['model_type'] = 'non-playable-character';
-            $data[] = $nonPlayableCharacter;
+    public function delete(int $id): Response
+    {
+        $campaign = $this->Campaigns->get($id, ['contain' => 'Users']);
+        $this->isAuthorized($campaign);
+        if ($this->Campaigns->delete($campaign)) {
+            // header('HTTP/1.0 204 No content');
+            // exit;
+            $this->apiResponseHeaderService->returnNoContentResponse($this->response);
+        } else {
+            $this->apiResponseHeaderService->returnNotFoundResponse($this->response);
+            // header('HTTP/1.0 404 Not found');
+            // exit;
         }
 
-        $this->loadModel('PlayerCharacters');
-        /** @var PlayerCharacters $playerCharacters */
-        $playerCharactersModel = $this->PlayerCharacters;
-        $playerCharacters = $playerCharactersModel
-            ->find('all', ['limit' => 5])
-            ->where(['concat(PlayerCharacters.first_name, PlayerCharacters.last_name) LIKE' => sprintf('%%%s%%', $query)]);
-
-        foreach ($playerCharacters as $playerCharacter) {
-            $playerCharacter['type'] = 'Player Character';
-            $playerCharacter['model_type'] = 'player-character';
-            $playerCharacter['name'] = $playerCharacter['first_name'] . ' ' . $playerCharacter['last_name'];
-            $data[] = $playerCharacter;
-        }
-
-        $this->loadModel('Monsters');
-        /** @var Monsters $monsters */
-        $monstersModel = $this->Monsters;
-        $monsters = $monstersModel
-            ->find('all', ['limit' => 5])
-            ->where(['Monsters.name LIKE' => sprintf('%%%s%%', $query)]);
-
-        foreach ($monsters as $monster) {
-            $monster['type'] = 'monster';
-            $monster['model_type'] = 'Monster';
-            $data[] = $monster;
-        }
-
-        $this->loadModel('Tags');
-        /** @var Tags $tags */
-        $tagsModel = $this->Tags;
-        $tags = $tagsModel
-            ->find('all', ['limit' => 5])
-            ->where(['Tags.title LIKE' => sprintf('%%%s%%', $query)]);
-
-        foreach ($tags as $tag) {
-            $tag['type'] = 'Tag';
-            $tag['model_type'] = 'tag';
-            $tag['name'] = $tag['title'];
-            $data[] = $tag;
-        }
-
-        $this->output($data);
+        return $this->response;
     }
 
     /**
      * Determines whether the user is authorised to be able to use this action
      *
-     * @param type $user
-     *
      * @return bool
      */
-    public function isAuthorized($user): bool
+    public function isAuthorized($campaign): void
     {
-        $action = $this->request->getParam('action');
-
-        // The add and tags actions are always allowed to logged in users
-        if (
-            in_array($action, [
-            'add',
-            'index',
-        ])) {
-            return true;
-        }
-
-        // All other actions require an item ID
-        $id = $this->request->getParam('id');
-
-        if (!$id) {
-            return false;
-        }
-
-        // Check that the timelineSegment belongs to the current user
-        $campaign = $this->Campaigns->findById($id)->firstOrFail();
-
-        return $campaign->user_id === $user['id'];
+        $this->Authorization->authorize($campaign);
     }
 }

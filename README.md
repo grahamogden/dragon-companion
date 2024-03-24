@@ -1,11 +1,13 @@
 # Welcome to Dragon Companion!
 
-This is a dungeons and dragons companion application that can be used alongside your games to help you with various aspects of running the game as a dungeon master or keeping track of your character as a player.
+This is my full-stack project, showcasing:
 
-This project has been created using:
-
--   [CakePHP](https://cakephp.org/)
+-   [CakePHP](https://cakephp.org/) for the backend
+-   [Next.js](https://nextjs.org/) + [React](https://react.dev/) for the UI
+-   [Bootstrap](https://getbootstrap.com/) and [SCSS](https://sass-lang.com/documentation/syntax/) for styling
 -   [Webpack](https://webpack.js.org/)
+
+This is a roll-playing game companion application that can be used offline alongside your games to help you with various aspects of running the game as a dungeon master or keeping track of your character as a player.
 
 ## Installation
 
@@ -15,3 +17,5 @@ This project has been created using:
 4. Run `bin/cake migrations migrate` to create the DB up to the latest schema
 5. Run `npm run watch:dev` to watch .ts files and generate the appropriate .js files
 6. Generate the CSS files from the SCSS
+
+For issues for around importing when using Microsoft VSCode in Vue files, follow instructions on: [Volar takeover mode](https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode)

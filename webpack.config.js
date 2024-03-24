@@ -1,13 +1,15 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require('path');
-// const HtmlWebpackPlugin = require("html-webpack-plugin");
+// const HtmlWebpackPlugin = require("html-webpack-plugin");dist/serviceWorker.bundle.js
 // const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
 
 const config = {
-    entry: { combatEncounters: './src-js/combat-encounters-2/main.ts' },
+    entry: {
+        combatEncounters: './src-js/combat-encounters-2/main.ts',
+    },
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'webroot/js/dist'),

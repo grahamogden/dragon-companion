@@ -18,11 +18,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "build": "webpack --mode=production --node-env=production",
-    "build:dev": "webpack --mode=development",
+    "build:dev": "webpack --mode=development --node-env=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
-    "watch:dev": "webpack --mode=development --watch",
+    "watch:dev": "webpack --mode=development --node-env=development --watch",
     "watch:prod": "webpack --mode=production --node-env=production --watch",
     "serve": "webpack serve",
     "init": "webpack init"
@@ -42,6 +41,7 @@
     "html-webpack-plugin": "^5.5.3",
     "prettier": "2.8.8",
     "ts-loader": "^9.4.4",
+    "vue": "^3.4.13",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
     "workbox-webpack-plugin": "^7.0.0"

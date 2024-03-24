@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Routes configuration
  *
@@ -49,41 +50,64 @@ $routes->scope(
     '/',
     function (RouteBuilder $routes) {
         $routes->prefix(
-            'api/v1',
+            'Api',
             function (RouteBuilder $routes) {
-                $routes->setExtensions(['json']);
-                $routes->resources(
-                    'CombatEncounters',
-                    [
-                        // 'actions' => [
-                        //     'create' => 'apiAdd',
-                        //     'read'   => 'apiView',
-                        //     'update' => 'apiUpdate',
-                        //     'delete' => 'apiDelete',
-                        // ],
-                        'path' => 'combat-encounters',
-                    ]
-                );
+                $routes->prefix('V1', function (RouteBuilder $routes) {
+                    $routes->setExtensions(['json']);
+                    $routes->resources(
+                        'CombatEncounters',
+                        [
+                            // 'actions' => [
+                            //     'create' => 'apiAdd',
+                            //     'read'   => 'apiView',
+                            //     'update' => 'apiUpdate',
+                            //     'delete' => 'apiDelete',
+                            // ],
+                            'path' => 'combat-encounters',
+                            // 'prefix' => 'V1'
+                        ]
+                    );
 
-                $routes->resources(
-                    'Users',
-                    [
-                        'only' => [
-                            'index',
-                        ],
-                        'actions' => [
-                            'index' => 'get-users',
-                        ],
-                    ]
-                );
+                    $routes->resources(
+                        'Users',
+                        [
+                            'only' => [
+                                'index',
+                            ],
+                            'actions' => [
+                                'index' => 'get-users',
+                            ],
+                            // 'prefix' => 'V1'
+                        ]
+                    );
 
-                // $routes->connect(
-                //     '/combat-encounters',
-                //     [
-                //         'controller' => 'CombatEncounters',
-                //         'action' => 'add',
-                //         // 'prefix' => 'api',
-                //     ]);
+                    // $routes->connect(
+                    //     '/combat-encounters',
+                    //     [
+                    //         'controller' => 'CombatEncounters',
+                    //         'action' => 'add',
+                    //         // 'prefix' => 'api',
+                    //     ]);
+
+                    $routes->resources(
+                        'Campaigns',
+                        [
+                            // 'prefix' => 'V1'
+                        ]
+                    );
+
+                    // Need to catch all of the OPTIONS calls
+                    $routes->options(
+                        '/*',
+                        [
+                            'controller' => 'ApiApp',
+                            'action' => 'options',
+                        ]
+                    );
+                    // $routes->fallbacks(DashedRoute::class);
+                });
+
+                // $routes->fallbacks(DashedRoute::class);
             }
         );
 
@@ -96,6 +120,17 @@ $routes->scope(
             ],
             ['_name' => 'tagmentions']
         );
+
+        $routes->connect(
+            '/ui',
+            [
+                // 'prefix' => 'Ui',
+                'controller' => 'Ui',
+                'action' => 'view'
+            ],
+            ['_name' => 'ui']
+        );
+
         /**
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
          * its action called 'display', and we pass a param to select the view file

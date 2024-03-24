@@ -1,25 +1,27 @@
 <head>
     <?= $this->Html->charset() ?>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,shrink-to-fit=no"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,shrink-to-fit=no" />
     <!-- <link rel="apple-touch-icon" href="/img/icons/HTML5_Badge_64.png" /> -->
     <title>
         <?= trim('Dragon Companion - ' . ($title ?? $this->fetch('title'))) ?>
     </title>
+
+    <link rel="manifest" href="manifest.json" />
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
 
     <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
     <script src="https://kit.fontawesome.com/c68e483c7b.js" crossorigin="anonymous"></script>
 
-    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon/57.png"/>
-    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon/72.png"/>
-    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon/114.png"/>
-    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon/144.png"/>
-    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon/144.png"/>
+    <!-- <link rel="apple-touch-icon" sizes="57x57" href="/img/icon/57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icon/72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icon/114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/icon/144.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/icon/144.png" /> -->
 
-    <link rel="shortcut icon" href="/img/apple-icon/favicon.png" type="image/x-icon">
-    <link rel="icon" href="/img/apple-icon/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/img/icon/favicon.png" type="image/x-icon">
+    <link rel="icon" href="/img/icon/favicon.png" type="image/x-icon">
 
     <!-- <?= $this->Html->meta('icon') ?> -->
 

@@ -43,7 +43,7 @@ node_modules/*
 
 # User Files #
 ##############
-notes.txt
+notes.md
 webroot/img/orig/
 deployments/*
 *.pem
@@ -52,3 +52,4 @@ webroot/js/dist/*
 node_modules/*
 build/certs
 build/private
+config/keys/*
