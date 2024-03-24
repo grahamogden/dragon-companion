@@ -19,7 +19,7 @@ use Cake\ORM\Entity;
  */
 class Campaign extends Entity
 {
-    protected $_hidden = [
+    protected array $_hidden = [
         'campaign_users',
         'combat_encounters',
         'player_characters',
@@ -37,7 +37,7 @@ class Campaign extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         // 'name'              => false,
         // 'synopsis'          => false,
         // 'campaign_users'    => false,

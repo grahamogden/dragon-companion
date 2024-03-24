@@ -15,7 +15,7 @@ class NonPlayableCharactersControllerTest extends IntegrationTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.non_playable_characters',
         'app.tags'
     ];

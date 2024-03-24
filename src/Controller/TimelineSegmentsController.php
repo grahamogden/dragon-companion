@@ -35,7 +35,7 @@ class TimelineSegmentsController extends AppController
     /** @var TimelineSegmentsTable */
     private $timelineSegmentsTable;
 
-    public $paginate = [
+    public array $paginate = [
         'limit' => 25,
     ];
 
@@ -79,7 +79,7 @@ class TimelineSegmentsController extends AppController
             ->where(['TimelineSegments.campaign_id =' => $this->campaignId])
             ->where(['TimelineSegments.parent_id IS' => null])
             ->where(['TimelineSegments.user_id =' => $user['id']])
-            ->order('TimelineSegments.lft asc');
+            ->orderBy('TimelineSegments.lft asc');
 
         $timelineSegments = $this->paginate($timelineSegments);
 
@@ -107,24 +107,22 @@ class TimelineSegmentsController extends AppController
 
         $timelineSegment = $this->timelineSegmentsTable->get(
             $id,
-            [
-                'contain' => [
-                    'ParentTimelineSegments',
-                    'Users',
-                    // 'Tags'                  => [
-                    //     'sort' => ['title' => 'ASC',],
-                    // ],
-                    // 'NonPlayableCharacters' => [
-                    //     'sort' => ['name' => 'ASC',],
-                    // ],
-                    'ChildTimelineSegments' => [
-                        'sort' => ['lft' => 'ASC',],
-                    ],
+            contain: [
+                'ParentTimelineSegments',
+                'Users',
+                // 'Tags'                  => [
+                //     'sort' => ['title' => 'ASC',],
+                // ],
+                // 'NonPlayableCharacters' => [
+                //     'sort' => ['name' => 'ASC',],
+                // ],
+                'ChildTimelineSegments' => [
+                    'sort' => ['lft' => 'ASC',],
                 ],
             ]
         );
 
-        $this->set('breadcrumbs', $this->timelineSegmentsTable->find('path', ['for' => $id ?: 0]));
+        $this->set('breadcrumbs', $this->timelineSegmentsTable->find('path', for: $id ?: 0));
         $this->set('timelineSegment', $timelineSegment);
         $this->set('childTimelineParts', $this->getChildTimelineParts($timelineSegment));
         $this->set(
@@ -226,19 +224,17 @@ class TimelineSegmentsController extends AppController
     {
         $timelineSegment = $this->timelineSegmentsTable->get(
             $id,
-            [
-                'contain' => [
-                    'ParentTimelineSegments',
-                    'Users',
-                    // 'Tags'                  => [
-                    //     'sort' => ['title' => 'ASC',],
-                    // ],
-                    // 'NonPlayableCharacters' => [
-                    //     'sort' => ['name' => 'ASC',],
-                    // ],
-                    'ChildTimelineSegments' => [
-                        'sort' => ['lft' => 'ASC',],
-                    ],
+            contain: [
+                'ParentTimelineSegments',
+                'Users',
+                // 'Tags'                  => [
+                //     'sort' => ['title' => 'ASC',],
+                // ],
+                // 'NonPlayableCharacters' => [
+                //     'sort' => ['name' => 'ASC',],
+                // ],
+                'ChildTimelineSegments' => [
+                    'sort' => ['lft' => 'ASC',],
                 ],
             ]
         );
@@ -277,7 +273,7 @@ class TimelineSegmentsController extends AppController
         //     ]
         // );
 
-        $this->set('breadcrumbs', $this->timelineSegmentsTable->find('path', ['for' => $id ?: 0]));
+        $this->set('breadcrumbs', $this->timelineSegmentsTable->find('path', for: $id ?: 0));
         $this->set(
             compact(
                 'timelineSegment',

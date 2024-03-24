@@ -15,8 +15,8 @@ use Cake\ORM\Entity;
  * @property string                 $username
  * @property string                 $password
  * @property string                 $email
- * @property FrozenTime             $created
- * @property FrozenTime             $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property int                    $status
  * @property string                 $external_user_id
  *
@@ -45,7 +45,7 @@ final class User extends Entity implements IdentityInterface
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'username' => true,
         'password' => true,
         'email' => true,
@@ -68,7 +68,7 @@ final class User extends Entity implements IdentityInterface
      *
      * @var array
      */
-    protected $_hidden = [
+    protected array $_hidden = [
         'password',
         '_matchingData',
     ];

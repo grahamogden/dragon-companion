@@ -28,7 +28,7 @@ class ClansUser extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'clan_id' => true,
         'user_id' => true,
         'member_status' => true,

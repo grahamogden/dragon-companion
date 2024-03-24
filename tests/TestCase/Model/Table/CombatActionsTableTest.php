@@ -22,7 +22,7 @@ class CombatActionsTableTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.CombatActions',
         'app.CombatTurns',
     ];

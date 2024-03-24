@@ -15,7 +15,7 @@ class ConditionsControllerTest extends IntegrationTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.conditions',
         'app.combat_turns'
     ];

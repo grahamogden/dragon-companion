@@ -146,9 +146,7 @@ class AppController extends Controller
         $returnArray = [];
 
         if ($this->request->is('ajax') && strlen($term) >= 3) {
-            $results = $entity->find('all', [
-                'conditions' => $conditions
-            ]);
+            $results = $entity->find('all', conditions: $conditions);
 
             foreach ($results as $result) {
                 $return = [

@@ -60,9 +60,7 @@ class CampaignsController extends AppController
     {
         $campaign = $this->Campaigns->get(
             $id,
-            [
-                'contain' => ['Users', /*'Clans'*/],
-            ]
+            contain: ['Users', /*'Clans'*/]
         );
 
         $this->set('campaign', $campaign);
@@ -129,9 +127,7 @@ class CampaignsController extends AppController
 
         $campaign = $this->Campaigns->get(
             $id,
-            [
-                'contain' => ['Users',],
-            ]
+            contain: ['Users',]
         );
 
         $campaignUserCreator = $this->Users->find()

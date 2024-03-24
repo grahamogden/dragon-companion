@@ -34,9 +34,7 @@ class CharacterClassesController extends AppController
      */
     public function view($id = null)
     {
-        $characterClass = $this->CharacterClasses->get($id, [
-            'contain' => ['PlayerCharacters']
-        ]);
+        $characterClass = $this->CharacterClasses->get($id, contain: ['PlayerCharacters']);
 
         $this->set('characterClass', $characterClass);
     }
@@ -71,9 +69,7 @@ class CharacterClassesController extends AppController
      */
     public function edit($id = null)
     {
-        $characterClass = $this->CharacterClasses->get($id, [
-            'contain' => ['PlayerCharacters']
-        ]);
+        $characterClass = $this->CharacterClasses->get($id, contain: ['PlayerCharacters']);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $characterClass = $this->CharacterClasses->patchEntity($characterClass, $this->request->getData());
             if ($this->CharacterClasses->save($characterClass)) {

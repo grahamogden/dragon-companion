@@ -22,7 +22,7 @@ class NonPlayableCharactersTableTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.NonPlayableCharacters',
         'app.Alignments',
         'app.Users',

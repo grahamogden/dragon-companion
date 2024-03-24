@@ -18,7 +18,7 @@ use Cake\Network\Exception\NotFoundException;
  */
 class NonPlayableCharactersController extends AppController
 {
-    public $paginate = [
+    public array $paginate = [
         'limit'         => 50,
         'order'         => [
             'NonPlayableCharacters.name' => 'asc',
@@ -62,11 +62,9 @@ class NonPlayableCharactersController extends AppController
 
         $nonPlayableCharacter = $this->NonPlayableCharacters->get(
             $id,
-            [
-                'contain' => [
-                    'TimelineSegments',
-                    'Alignments',
-                ],
+            contain: [
+                'TimelineSegments',
+                'Alignments',
             ]
         );
 
@@ -117,9 +115,7 @@ class NonPlayableCharactersController extends AppController
     {
         $nonPlayableCharacter = $this->NonPlayableCharacters->get(
             $id,
-            [
-                'contain' => ['Alignments',],
-            ]
+            contain: ['Alignments',]
         );
 
         if ($this->request->is(['patch', 'post', 'put'])) {

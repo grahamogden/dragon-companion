@@ -22,7 +22,7 @@ class DataSourcesTableTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.DataSources',
         'app.Monsters',
     ];

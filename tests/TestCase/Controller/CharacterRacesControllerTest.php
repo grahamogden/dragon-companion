@@ -15,7 +15,7 @@ class CharacterRacesControllerTest extends IntegrationTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.character_races',
         'app.player_characters',
         'app.character_races_player_characters'

@@ -19,7 +19,7 @@ class CampaignsControllerTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.Campaigns',
         'app.Users',
         'app.Clans',

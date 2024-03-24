@@ -16,7 +16,7 @@ use Cake\ORM\Query;
  */
 class PlayerCharactersController extends AppController
 {
-    public $paginate = [
+    public array $paginate = [
         'limit'         => 50,
         'order'         => [
             'first_name' => 'asc',
@@ -72,15 +72,13 @@ class PlayerCharactersController extends AppController
     {
         $playerCharacter = $this->playerCharactersTable->get(
             $id,
-            [
-                'contain' => [
-                    'Alignments',
-                    'Campaigns',
-                    'Users',
-                    'CharacterClasses',
-                    'CharacterRaces',
-                    'Participants',
-                ],
+            contain: [
+                'Alignments',
+                'Campaigns',
+                'Users',
+                'CharacterClasses',
+                'CharacterRaces',
+                'Participants',
             ]
         );
 
@@ -153,12 +151,10 @@ class PlayerCharactersController extends AppController
     {
         $playerCharacter = $this->playerCharactersTable->get(
             $id,
-            [
-                'contain' => [
-                    'CharacterClasses',
-                    'CharacterRaces',
-                    'Alignments',
-                ],
+            contain: [
+                'CharacterClasses',
+                'CharacterRaces',
+                'Alignments',
             ]
         );
 

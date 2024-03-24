@@ -15,7 +15,7 @@ class MonstersControllerTest extends IntegrationTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.monsters',
         'app.monster_instances'
     ];

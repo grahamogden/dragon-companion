@@ -33,7 +33,7 @@ class Participant extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'name'                => true,
         'initiative'          => true,
         'combat_encounter_id' => true,

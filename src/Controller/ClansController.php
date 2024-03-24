@@ -51,9 +51,7 @@ class ClansController extends AppController
     {
         $clan = $this->Clans->get(
             $id,
-            [
-                'contain' => ['Users'],
-            ]
+            contain: ['Users']
         );
 
         $adminUsers  = [];
@@ -129,9 +127,7 @@ class ClansController extends AppController
     ) {
         $clan = $this->Clans->get(
             $id,
-            [
-                'contain' => ['Users'],
-            ]
+            contain: ['Users']
         );
 
         if ($this->request->is(['patch', 'post', 'put'])) {

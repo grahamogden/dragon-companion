@@ -33,7 +33,7 @@ class CombatTurn extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'combat_encounter_id'   => true,
         'round_number'          => true,
         'turn_order'            => true,

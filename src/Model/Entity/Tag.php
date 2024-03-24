@@ -12,8 +12,8 @@ use Cake\ORM\Entity;
  * @property string            $title
  * @property string            $description
  * @property string            $slug
- * @property FrozenTime        $created
- * @property FrozenTime        $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property int               $user_id
  * @property TimelineSegment[] $timeline_segments
  */
@@ -28,7 +28,7 @@ class Tag extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'title'             => true,
         'description'       => true,
         'slug'              => true,

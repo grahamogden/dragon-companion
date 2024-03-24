@@ -20,7 +20,7 @@ use Exception;
 class TagsController extends AppController
 {
     private const CONTROLLER_NAME = 'Tags';
-    public $paginate = [
+    public array $paginate = [
         'limit'         => 50,
         'order'         => [
             'Tags.title' => 'asc',
@@ -61,9 +61,7 @@ class TagsController extends AppController
     {
         $tag = $this->Tags->get(
             $id,
-            [
-                'contain' => ['TimelineSegments'],
-            ]
+            contain: ['TimelineSegments']
         );
 
         $this->set('tag', $tag);
@@ -124,9 +122,7 @@ class TagsController extends AppController
     {
         $tag = $this->Tags->get(
             $id,
-            [
-                'contain' => ['TimelineSegments'],
-            ]
+            contain: ['TimelineSegments']
         );
         if ($this->request->is(['patch', 'post', 'put'])) {
             $tag = $this->Tags->patchEntity($tag, $this->request->getData());

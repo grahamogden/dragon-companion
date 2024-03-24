@@ -34,7 +34,7 @@ class PlayerCharacter extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'user_id'            => true,
         'campaign_id'        => true,
         'first_name'         => true,

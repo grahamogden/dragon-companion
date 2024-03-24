@@ -11,7 +11,7 @@ use Cake\ORM\Entity;
  * @property int         $id
  * @property string      $name
  * @property string|null $description
- * @property FrozenTime  $created
+ * @property \Cake\I18n\DateTime $created
  * @property User[]      $users
  */
 class Clan extends Entity
@@ -25,7 +25,7 @@ class Clan extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'name'        => true,
         'description' => true,
         'created'     => true,

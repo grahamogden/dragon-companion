@@ -34,9 +34,7 @@ class ConditionsController extends AppController
      */
     public function view($id = null)
     {
-        $condition = $this->Conditions->get($id, [
-            'contain' => ['CombatTurns']
-        ]);
+        $condition = $this->Conditions->get($id, contain: ['CombatTurns']);
 
         $this->set('condition', $condition);
     }
@@ -70,9 +68,7 @@ class ConditionsController extends AppController
      */
     public function edit($id = null)
     {
-        $condition = $this->Conditions->get($id, [
-            'contain' => []
-        ]);
+        $condition = $this->Conditions->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $condition = $this->Conditions->patchEntity($condition, $this->request->getData());
             if ($this->Conditions->save($condition)) {

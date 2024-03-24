@@ -42,7 +42,7 @@ class Monster extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'user_id'                  => true,
         'name'                     => true,
         'data_source_id'           => true,

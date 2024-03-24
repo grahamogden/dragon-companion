@@ -86,7 +86,7 @@ class CampaignsController extends ApiAppController
 
     public function edit(int $id): Response
     {
-        $campaign = $this->Campaigns->get($id, ['contain' => 'Users']);
+        $campaign = $this->Campaigns->get($id, contain: 'Users');
         $data            = $this->request->getData();
         // dd($data);
         $this->isAuthorized($campaign);
@@ -107,7 +107,7 @@ class CampaignsController extends ApiAppController
 
     public function delete(int $id): Response
     {
-        $campaign = $this->Campaigns->get($id, ['contain' => 'Users']);
+        $campaign = $this->Campaigns->get($id, contain: 'Users');
         $this->isAuthorized($campaign);
         if ($this->Campaigns->delete($campaign)) {
             // header('HTTP/1.0 204 No content');

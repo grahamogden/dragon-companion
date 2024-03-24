@@ -13,7 +13,7 @@ use App\Controller\AppController;
 class PuzzlesController extends AppController
 {
     const CONTROLLER_NAME = 'Puzzles';
-    public $paginate = [
+    public array $paginate = [
         'limit' => 50,
         'order' => [
             'Puzzles.title' => 'asc'
@@ -64,9 +64,7 @@ class PuzzlesController extends AppController
      */
     public function view($id = null)
     {
-        $puzzle = $this->Puzzles->get($id, [
-            'contain' => ['Users']
-        ]);
+        $puzzle = $this->Puzzles->get($id, contain: ['Users']);
 
         $this->set('puzzle', $puzzle);
         $this->set('title', sprintf(
@@ -116,9 +114,7 @@ class PuzzlesController extends AppController
      */
     public function edit($id = null)
     {
-        $puzzle = $this->Puzzles->get($id, [
-            'contain' => []
-        ]);
+        $puzzle = $this->Puzzles->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $puzzle = $this->Puzzles->patchEntity($puzzle, $this->request->getData());
             // Set the user ID on the item

@@ -18,7 +18,7 @@ use Cake\Http\Response;
  */
 class MonstersController extends AppController
 {
-    public $paginate = [
+    public array $paginate = [
         'limit'         => 50,
         'order'         => [
             'name' => 'asc',
@@ -69,12 +69,10 @@ class MonstersController extends AppController
     {
         $monster = $this->Monsters->get(
             $id,
-            [
-                'contain' => [
-                    'Alignments',
-                    'DataSources',
-                    'MonsterInstanceTypes',
-                ],
+            contain: [
+                'Alignments',
+                'DataSources',
+                'MonsterInstanceTypes',
             ]
         );
 
@@ -138,9 +136,7 @@ class MonstersController extends AppController
     {
         $monster = $this->Monsters->get(
             $id,
-            [
-                'contain' => [],
-            ]
+            contain: []
         );
         if ($this->request->is(['patch', 'post', 'put'])) {
             $monster = $this->Monsters->patchEntity($monster, $this->request->getData());

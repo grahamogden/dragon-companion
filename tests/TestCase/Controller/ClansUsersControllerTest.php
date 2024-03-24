@@ -19,7 +19,7 @@ class ClansUsersControllerTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.ClansUsers',
         'app.Clans',
         'app.Users',

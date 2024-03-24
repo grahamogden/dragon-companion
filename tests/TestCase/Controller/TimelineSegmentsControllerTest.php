@@ -15,7 +15,7 @@ class TimelineSegmentsControllerTest extends IntegrationTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.timeline_segments',
         'app.users',
         'app.tags',

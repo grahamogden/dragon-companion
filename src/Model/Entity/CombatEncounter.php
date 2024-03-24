@@ -11,7 +11,7 @@ use Cake\ORM\Entity;
  * @property int           $id
  * @property string|null   $name
  * @property int           $user_id
- * @property FrozenTime    $created
+ * @property \Cake\I18n\DateTime $created
  * @property int           $campaign_id
  * @property User          $user
  * @property Campaign      $campaign
@@ -29,7 +29,7 @@ class CombatEncounter extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'name'         => true,
         'user_id'      => true,
         'created'      => true,

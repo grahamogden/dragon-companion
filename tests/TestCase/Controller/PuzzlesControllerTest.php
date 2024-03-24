@@ -15,7 +15,7 @@ class PuzzlesControllerTest extends IntegrationTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.puzzles',
         'app.users'
     ];

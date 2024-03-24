@@ -22,7 +22,7 @@ class ConditionsTableTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.Conditions',
         'app.CombatTurns',
         'app.Participants',

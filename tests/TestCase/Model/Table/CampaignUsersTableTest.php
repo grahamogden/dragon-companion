@@ -22,7 +22,7 @@ class CampaignUsersTableTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.CampaignUsers',
         'app.Campaigns',
         'app.Users',

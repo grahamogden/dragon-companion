@@ -32,7 +32,7 @@ class CampaignUser extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'campaign_id' => true,
         'user_id' => true,
         'member_status' => true,

@@ -22,7 +22,7 @@ class PlayerCharactersTableTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.PlayerCharacters',
         'app.Users',
         'app.Campaigns',

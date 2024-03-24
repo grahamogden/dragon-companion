@@ -101,7 +101,7 @@ class CampaignsTable extends Table
 
     public function findByIdWithUsers(int $id): Campaign
     {
-        return $this->get($id, ['contain' => 'Users']);
+        return $this->get($id, contain: 'Users');
     }
 
     public function findAllByUserId($userId): Query

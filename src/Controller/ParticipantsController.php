@@ -57,9 +57,7 @@ class ParticipantsController extends AppController
     {
         $participant = $this->Participants->get(
             $id,
-            [
-                'contain' => ['CombatEncounters', 'Conditions'],
-            ]
+            contain: ['CombatEncounters', 'Conditions']
         );
 
         $this->set('participant', $participant);
@@ -99,9 +97,7 @@ class ParticipantsController extends AppController
     {
         $participant = $this->Participants->get(
             $id,
-            [
-                'contain' => ['Conditions'],
-            ]
+            contain: ['Conditions']
         );
         if ($this->request->is(['patch', 'post', 'put'])) {
             $participant = $this->Participants->patchEntity($participant, $this->request->getData());
@@ -208,9 +204,7 @@ class ParticipantsController extends AppController
             /** @var PlayerCharacter[] $results */
             $results = $this->playerCharactersTable->find(
                 'all',
-                [
-                    'conditions' => $conditions,
-                ]
+                conditions: $conditions
             )
                 /*->matching(
                     'Campaigns',

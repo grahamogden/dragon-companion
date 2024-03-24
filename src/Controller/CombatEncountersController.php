@@ -92,7 +92,7 @@ class CombatEncountersController extends AppController
         $combatEncounters = $this->CombatEncounters
             ->find()
             ->where(['CombatEncounters.user_id =' => $user['id']])
-            ->order(['CombatEncounters.created DESC']);
+            ->orderBy(['CombatEncounters.created DESC']);
 
         $combatEncountersPagination = $this->paginate($combatEncounters);
 
@@ -111,21 +111,19 @@ class CombatEncountersController extends AppController
     {
         $combatEncounter = $this->CombatEncounters->get(
             $id,
-            [
-                'contain' => [
-                    'Users',
-                    'Campaigns',
-                    'Participants' => [
-                        'sort' => ['Participants.initiative' => 'DESC',],
-                        'Monsters',
-                        'PlayerCharacters',
-                    ],
-                    'CombatTurns'  => [
-                        'sort'              => ['CombatTurns.turn_order' => 'ASC',],
-                        'CombatActions',
-                        'SourceParticipant' => ['Monsters', 'PlayerCharacters',],
-                        'TargetParticipant' => ['Monsters', 'PlayerCharacters',],
-                    ],
+            contain: [
+                'Users',
+                'Campaigns',
+                'Participants' => [
+                    'sort' => ['Participants.initiative' => 'DESC',],
+                    'Monsters',
+                    'PlayerCharacters',
+                ],
+                'CombatTurns'  => [
+                    'sort'              => ['CombatTurns.turn_order' => 'ASC',],
+                    'CombatActions',
+                    'SourceParticipant' => ['Monsters', 'PlayerCharacters',],
+                    'TargetParticipant' => ['Monsters', 'PlayerCharacters',],
                 ],
             ]
         );
@@ -168,10 +166,8 @@ class CombatEncountersController extends AppController
                         $this->combatActionsTable
                             ->find(
                                 'list',
-                                [
-                                    'keyField'   => 'external_id',
-                                    'valueField' => 'id',
-                                ]
+                                keyField: 'external_id',
+                                valueField: 'id'
                             )
                             ->where(['visible' => true])
                             ->toArray()
@@ -192,14 +188,12 @@ class CombatEncountersController extends AppController
         $combatActions = $this->combatActionsTable
             ->find(
                 'list',
-                [
-                    'keyField'   => 'external_id',
-                    'valueField' => 'name',
-                    'limit'      => 200,
-                ]
+                keyField: 'external_id',
+                valueField: 'name',
+                limit: 200
             )
             ->where(['visible' => 1])
-            ->order(['CombatActions.name ASC']);
+            ->orderBy(['CombatActions.name ASC']);
 
         $this->set(
             compact(
