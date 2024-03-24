@@ -16,7 +16,6 @@
 
 namespace App;
 
-use App\Controller\Api\V1\CampaignsController;
 use App\Middleware\HttpOptionsMiddleware;
 use App\Services\Api\Response\ApiResponseHeaderService;
 use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
@@ -25,7 +24,6 @@ use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Client;
-use Cake\Http\Exception\UnauthorizedException;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -35,18 +33,16 @@ use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
-use Authentication\Identifier\IdentifierInterface;
+use Authentication\Identifier\AbstractIdentifier;
 use Cake\Core\ContainerInterface;
 use Cake\Routing\Router;
 use DateTime;
 use DateTimeImmutable;
 use Firebase\JWT\JWT;
-use Cake\Event\EventManager;
 
 /**
  * Application setup class.
@@ -68,6 +64,13 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         $this->addPlugin('Migrations');
         $this->addPlugin('Authorization');
+        /*
+         * Only try to load DebugKit in development mode
+         * Debug Kit should not be installed on a production system
+         */
+        if (Configure::read('debug')) {
+            $this->addPlugin('DebugKit', ['bootstrap' => false]);
+        }
     }
 
     /**
@@ -76,7 +79,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      * @param MiddlewareQueue $middlewareQueue The middleware queue to setup.
      * @return MiddlewareQueue The updated middleware queue.
      */
-    public function middleware($middlewareQueue): MiddlewareQueue
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
             // Catch any exceptions in the lower layers,
@@ -97,7 +100,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // CakePHP doesn't seem to handle OPTIONS requests to the API very well and instead
             // returns errors, so we need to intercept them with this middleware to return back
             // 200 OK responses
-            ->add(new HttpOptionsMiddleware())
+            ->add(HttpOptionsMiddleware::class)
 
             // If you are using Authentication it should be *before* Authorization.
             ->add(new AuthenticationMiddleware($this))
@@ -127,8 +130,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $service = new AuthenticationService();
 
         $fields = [
-            IdentifierInterface::CREDENTIAL_USERNAME => 'username',
-            IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
+            AbstractIdentifier::CREDENTIAL_USERNAME => 'username',
+            AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
         ];
 
         $uri = $request->getUri()->getPath();

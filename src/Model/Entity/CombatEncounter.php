@@ -2,7 +2,7 @@
 
 namespace App\Model\Entity;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
 /**
@@ -11,7 +11,7 @@ use Cake\ORM\Entity;
  * @property int           $id
  * @property string|null   $name
  * @property int           $user_id
- * @property \Cake\I18n\DateTime $created
+ * @property DateTime $created
  * @property int           $campaign_id
  * @property User          $user
  * @property Campaign      $campaign

@@ -12,8 +12,6 @@ use Cake\Http\Response;
  * Campaigns Controller
  *
  * @property CampaignsTable $Campaigns
- *
- * @method Campaign[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class CampaignsController extends ApiAppController
 {
@@ -38,7 +36,7 @@ class CampaignsController extends ApiAppController
 
         $this->set(compact('campaigns'));
         // $this->viewBuilder()->setTemplate('index');
-        $this->apiResponseHeaderService->returnOkResponse($this->response);
+        $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
         // return $this->response;
     }
 
@@ -88,7 +86,7 @@ class CampaignsController extends ApiAppController
     {
         $campaign = $this->Campaigns->get($id, contain: 'Users');
         $data            = $this->request->getData();
-        // dd($data);
+
         $this->isAuthorized($campaign);
         $campaign = $this->Campaigns->patchEntity($campaign, $data);
 

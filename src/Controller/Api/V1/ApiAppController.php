@@ -18,6 +18,7 @@ namespace App\Controller\Api\V1;
 
 use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
+use Cake\Event\EventManagerInterface;
 use Cake\Http\Response;
 use Cake\View\JsonView;
 use Exception;
@@ -27,6 +28,7 @@ use App\Services\Api\Response\ApiResponseHeaderServiceInterface;
 use Authorization\Controller\Component\AuthorizationComponent;
 use Authorization\Identity;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\ServerRequest;
 
 /**
  * @property AuthenticationComponent $Authentication
@@ -38,18 +40,14 @@ class ApiAppController extends Controller
     protected Identity $user;
 
     public function __construct(
-        $request = null,
-        $response = null,
-        $name = null,
-        $eventManager = null,
-        $components = null,
+        ServerRequest $request = null,
+        ?string $name = null,
+        ?EventManagerInterface $eventManager = null,
     ) {
         parent::__construct(
             $request,
-            $response,
             $name,
             $eventManager,
-            $components
         );
         $this->apiResponseHeaderService = (new ApiResponseHeaderServiceFactory())();
         // $this->Users = $this->fetchTable('Users');
@@ -61,7 +59,7 @@ class ApiAppController extends Controller
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadComponent('RequestHandler');
+        // $this->loadComponent('RequestHandler');
         $this->loadComponent('Authentication.Authentication');
         $this->loadComponent('Authorization.Authorization');
     }

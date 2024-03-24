@@ -15,15 +15,6 @@ use Cake\Validation\Validator;
  * @property CombatEncountersTable&HasMany $CombatEncounters
  * @property PlayerCharactersTable&HasMany $PlayerCharacters
  * @property TimelineSegmentsTable&HasMany $TimelineSegments
- *
- * @method Campaign get($primaryKey, $options = [])
- * @method Campaign newEntity($data = null, array $options = [])
- * @method Campaign[] newEntities(array $data, array $options = [])
- * @method Campaign|false save(EntityInterface $entity, $options = [])
- * @method Campaign saveOrFail(EntityInterface $entity, $options = [])
- * @method Campaign patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method Campaign[] patchEntities($entities, array $data, array $options = [])
- * @method Campaign findOrCreate($search, callable $callback = null, $options = [])
  */
 class CampaignsTable extends Table
 {

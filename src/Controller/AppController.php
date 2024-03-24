@@ -18,15 +18,11 @@ namespace App\Controller;
 
 use App\Application;
 use App\Model\Entity\Campaign;
-use App\Model\Entity\User;
 use Authentication\Controller\Component\AuthenticationComponent;
 use Authentication\IdentityInterface;
-use Authentication\Middleware\AuthenticationMiddleware;
 use Authorization\Controller\Component\AuthorizationComponent;
 use Cake\Controller\Controller;
-use Cake\Event\Event;
 use Cake\Http\Response;
-use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Exception;
 
@@ -61,9 +57,9 @@ class AppController extends Controller
     {
         parent::initialize();
 
-        $this->loadComponent('RequestHandler', [
-            'enableBeforeRedirect' => false,
-        ]);
+        // $this->loadComponent('RequestHandler', [
+        //     'enableBeforeRedirect' => false,
+        // ]);
         // $this->loadComponent('Csrf');
 
         /*
@@ -180,7 +176,7 @@ class AppController extends Controller
      */
     protected function getUserOrRedirect(): IdentityInterface
     {
-        $user = $this->Authentication->getIdentity();//user();
+        $user = $this->Authentication->getIdentity();
 
         if (null === $user || empty($user)) {
             $this->redirect($this->Authentication->logout());

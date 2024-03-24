@@ -3,30 +3,30 @@
 namespace App\Model\Entity;
 
 use Cake\Collection\Collection;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
 /**
-* TimelineSegment Entity
-*
-* @property int                    $id
-* @property int                    $campaign_id
-* @property int|null               $parent_id
-* @property string                 $title
-* @property string                 $body
-* @property \Cake\I18n\DateTime $created
-* @property \Cake\I18n\DateTime $modified
-* @property string                 $slug
-* @property int                    $user_id
-* @property int                    $lft
-* @property int                    $rght
-* @property int                    $level
-* @property TimelineSegment        $parent_timeline_segment
-* @property User                   $user
-* @property TimelineSegment[]      $child_timeline_segments
+ * TimelineSegment Entity
+ *
+ * @property int                    $id
+ * @property int                    $campaign_id
+ * @property int|null               $parent_id
+ * @property string                 $title
+ * @property string                 $body
+ * @property DateTime $created
+ * @property DateTime $modified
+ * @property string                 $slug
+ * @property int                    $user_id
+ * @property int                    $lft
+ * @property int                    $rght
+ * @property int                    $level
+ * @property TimelineSegment        $parent_timeline_segment
+ * @property User                   $user
+ * @property TimelineSegment[]      $child_timeline_segments
 // * @property Tag[]                  $tags
 // * @property NonPlayableCharacter[] $non_playable_characters
-*/
+ */
 class TimelineSegment extends Entity
 {
     /**

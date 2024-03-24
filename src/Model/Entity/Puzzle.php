@@ -1,7 +1,8 @@
 <?php
+
 namespace App\Model\Entity;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
 /**
@@ -12,8 +13,8 @@ use Cake\ORM\Entity;
  * @property string     $title
  * @property string     $description
  * @property string     $slug
- * @property \Cake\I18n\DateTime $created
- * @property \Cake\I18n\DateTime $modified
+ * @property DateTime $created
+ * @property DateTime $modified
  * @property User       $user
  */
 class Puzzle extends Entity

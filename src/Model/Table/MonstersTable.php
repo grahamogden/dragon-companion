@@ -18,15 +18,6 @@ use Cake\Validation\Validator;
  * @property MonsterInstanceTypesTable&BelongsTo $MonsterInstanceTypes
  * @property AlignmentsTable&BelongsTo           $Alignments
  * @property ParticipantsTable&HasMany           $Participants
- *
- * @method Monster get($primaryKey, $options = [])
- * @method Monster newEntity($data = null, array $options = [])
- * @method Monster[] newEntities(array $data, array $options = [])
- * @method Monster|false save(EntityInterface $entity, $options = [])
- * @method Monster saveOrFail(EntityInterface $entity, $options = [])
- * @method Monster patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method Monster[] patchEntities($entities, array $data, array $options = [])
- * @method Monster findOrCreate($search, callable $callback = null, $options = [])
  */
 class MonstersTable extends Table
 {

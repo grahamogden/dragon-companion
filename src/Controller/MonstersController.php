@@ -6,15 +6,12 @@ use App\Model\Entity\Monster;
 use App\Model\Entity\MonsterInstanceType;
 use App\Model\Table\MonstersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Response;
 
 /**
  * Monsters Controller
  *
  * @property MonstersTable $Monsters
- *
- * @method Monster[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class MonstersController extends AppController
 {

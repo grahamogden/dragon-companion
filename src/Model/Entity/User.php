@@ -2,10 +2,10 @@
 
 namespace App\Model\Entity;
 
+use ArrayAccess;
 use Authentication\IdentityInterface;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
@@ -95,12 +95,12 @@ final class User extends Entity implements IdentityInterface
         return $this;
     }
 
-    public function getIdentifier()
+    public function getIdentifier(): array | string | int | null
     {
         return $this->id;
     }
 
-    public function getOriginalData()
+    public function getOriginalData(): array | ArrayAccess
     {
         return $this;
     }
