@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Model\Entity;
 
+use Authentication\IdentityInterface;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\FrozenTime;
@@ -16,6 +18,7 @@ use Cake\ORM\Entity;
  * @property FrozenTime             $created
  * @property FrozenTime             $modified
  * @property int                    $status
+ * @property string                 $external_user_id
  *
  * @property Campaign[]             $campaigns
  * @property CombatEncounter[]      $combat_encounters
@@ -26,7 +29,7 @@ use Cake\ORM\Entity;
  * @property Tag[]                  $tags
  * @property TimelineSegment[]      $timeline_segments
  */
-final class User extends Entity
+final class User extends Entity implements IdentityInterface
 {
 
     public const STATUS_INACTIVE = 0;
@@ -57,6 +60,7 @@ final class User extends Entity
         'puzzles' => true,
         'tags' => true,
         'timeline_segments' => true,
+        'external_user_id' => true,
     ];
 
     /**
@@ -66,6 +70,7 @@ final class User extends Entity
      */
     protected $_hidden = [
         'password',
+        '_matchingData',
     ];
 
     protected function _setPassword($value)
@@ -87,6 +92,16 @@ final class User extends Entity
 
         $this->set('status', $status);
 
+        return $this;
+    }
+
+    public function getIdentifier()
+    {
+        return $this->id;
+    }
+
+    public function getOriginalData()
+    {
         return $this;
     }
 }

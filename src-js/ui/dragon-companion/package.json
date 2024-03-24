@@ -13,9 +13,11 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write ."
   },
   "dependencies": {
+    "@vueuse/core": "^10.9.0",
+    "firebase": "^10.8.1",
     "pinia": "^2.1.7",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"

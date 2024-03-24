@@ -3,9 +3,9 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Campaign;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Association\HasMany;
 use Cake\ORM\Table;
+use Cake\ORM\Query;
 use Cake\Validation\Validator;
 
 /**
@@ -80,7 +80,7 @@ class CampaignsTable extends Table
      *
      * @return Validator
      */
-    public function validationDefault(Validator $validator): \Cake\Validation\Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->nonNegativeInteger('id')
@@ -97,5 +97,20 @@ class CampaignsTable extends Table
             ->allowEmptyString('synopsis');
 
         return $validator;
+    }
+
+    public function findByIdWithUsers(int $id): Campaign
+    {
+        return $this->get($id, ['contain' => 'Users']);
+    }
+
+    public function findAllByUserId($userId): Query
+    {
+        return $this->find()->matching(
+            'Users',
+            function (Query $q) use ($userId) {
+                return $q->where(['Users.id =' => $userId]);
+            }
+        );
     }
 }

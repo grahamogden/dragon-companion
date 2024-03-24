@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -45,6 +46,11 @@ define('APP', ROOT . DS . APP_DIR . DS);
  * Path to the config directory.
  */
 define('CONFIG', ROOT . DS . 'config' . DS);
+
+/**
+ * Path to the keys directory.
+ */
+define('CONFIG_KEYS', ROOT . DS . 'config' . DS . 'keys' . DS);
 
 /**
  * File path to the webroot directory.

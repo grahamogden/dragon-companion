@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
+import { readFileSync } from 'node:fs'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -10,6 +11,13 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  server: {
+    host: 'dragon-companion.develop',
+    https: {
+      key: readFileSync('../../../build/private/dragon-companion.key'),
+      cert: readFileSync('../../../build/certs/dragon-companion.crt'),
     },
   },
 })

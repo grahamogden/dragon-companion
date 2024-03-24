@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Association\HasMany;
@@ -87,15 +88,15 @@ class UsersTable extends Table
             ->notEmptyString('username')
             ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
-        $validator
-            ->scalar('password')
-            ->maxLength('password', 255)
-            ->requirePresence('password', 'create')
-            ->notEmptyString('password');
+        // $validator
+        //     ->scalar('password')
+        //     ->maxLength('password', 255)
+        //     ->requirePresence('password', 'create')
+        //     ->notEmptyString('password');
 
-//        $validator
-//            ->email('email')
-//            ->notEmptyString('email');
+        //        $validator
+        //            ->email('email')
+        //            ->notEmptyString('email');
 
         $validator
             ->requirePresence('status', 'create')

@@ -14,10 +14,20 @@ use Cake\ORM\Entity;
  * @property CombatEncounter[] $combat_encounters
  * @property PlayerCharacter[] $player_characters
  * @property TimelineSegment[] $timeline_segments
+ * @property User[]            $users
  *
  */
 class Campaign extends Entity
 {
+    protected $_hidden = [
+        'campaign_users',
+        'combat_encounters',
+        'player_characters',
+        'timeline_segments',
+        'users',
+        '_matchingData',
+    ];
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -28,12 +38,58 @@ class Campaign extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name'              => true,
-        'synopsis'          => true,
-        'campaign_users'    => true,
-        'combat_encounters' => true,
-        'player_characters' => true,
-        'timeline_segments' => true,
-        'users'             => true,
+        // 'name'              => false,
+        // 'synopsis'          => false,
+        // 'campaign_users'    => false,
+        // 'combat_encounters' => false,
+        // 'player_characters' => false,
+        // 'timeline_segments' => false,
+        // 'users'             => false,
+        '*'                 => false,
     ];
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setSynopsis(string $synopsis): self
+    {
+        $this->synopsis = $synopsis;
+
+        return $this;
+    }
+
+    public function getSynopsis(): string
+    {
+        return $this->synopsis;
+    }
+
+    public function addUser(int $userId, int $memberStatus, int $accountLevel): self
+    {
+        $this->users = [
+            [
+                'id'        => $userId,
+                '_joinData' => [
+                    'user_id'       => $userId,
+                    'member_status' => $memberStatus, // CampaignUser::MEMBER_STATUS_ACTIVE,
+                    'account_level' => $accountLevel, // CampaignUser::ACCOUNT_LEVEL_CREATOR,
+                ],
+            ],
+        ];
+
+        return $this;
+    }
 }

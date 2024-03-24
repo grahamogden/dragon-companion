@@ -1,5 +1,5 @@
 FROM php:8.1-apache
-WORKDIR /var/www/html
+WORKDIR /var/www
 
 #COPY ./build/config/fastcgi.conf /etc/nginx/conf.d/fastcgi.conf
 
@@ -10,11 +10,14 @@ RUN apt-get update
 RUN apt-get autoclean
 RUN apt-get clean
 RUN apt install -y nano
-RUN apt-get install -y npm
-ADD package.json /tmp/package.json
+# RUN apt-get install -y nodejs
+# RUN apt-get install -y npm
+# ADD package.json /tmp/package.json
+
 # RUN nvm install --lts
 # RUN npm install --save-dev
-RUN cd /tmp && npm install --save-dev
+# RUN cd /tmp && npm install --save-dev
+
 # RUN npm install -g yo generator-tinymce --unsafe-perm=true --allow-root
 # RUN #npm install -g typescript
 # RUN #npm install -g  --save-devwebpack webpack-cli
@@ -26,6 +29,7 @@ RUN cd /tmp && npm install --save-dev
 
 # Apache rewrite configuration
 RUN a2enmod rewrite
+RUN a2enmod headers
 COPY ./build/sites-available/dragon-companion.conf /etc/apache2/sites-available/dragon-companion.conf
 
 # SSL Certificates and private keys

@@ -12,6 +12,7 @@
         "cakephp/cakephp": "^4.4",
         "cakephp/migrations": "^3.0@beta",
         "cakephp/plugin-installer": "^1.0",
+        "firebase/php-jwt": "^6.10",
         "josegonzalez/dotenv": "3.*"
     },
     "require-dev": {

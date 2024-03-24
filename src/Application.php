@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -12,12 +13,19 @@
  * @since     3.3.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App;
 
+use App\Controller\Api\V1\CampaignsController;
+use App\Middleware\HttpOptionsMiddleware;
+use App\Services\Api\Response\ApiResponseHeaderService;
+use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
+use Cake\Http\Client;
+use Cake\Http\Exception\UnauthorizedException;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -33,8 +41,12 @@ use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Identifier\IdentifierInterface;
+use Cake\Core\ContainerInterface;
 use Cake\Routing\Router;
-
+use DateTime;
+use DateTimeImmutable;
+use Firebase\JWT\JWT;
+use Cake\Event\EventManager;
 
 /**
  * Application setup class.
@@ -82,6 +94,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new RoutingMiddleware($this))
             ->add(new BodyParserMiddleware())
 
+            // CakePHP doesn't seem to handle OPTIONS requests to the API very well and instead
+            // returns errors, so we need to intercept them with this middleware to return back
+            // 200 OK responses
+            ->add(new HttpOptionsMiddleware())
+
             // If you are using Authentication it should be *before* Authorization.
             ->add(new AuthenticationMiddleware($this))
 
@@ -90,6 +107,12 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new AuthorizationMiddleware($this));
 
         return $middlewareQueue;
+    }
+
+    public function services(ContainerInterface $container): void
+    {
+        // The factory here only exists as an exampe of how I can do this in the future
+        $container->add(ApiResponseHeaderService::class, ApiResponseHeaderServiceFactory::class);
     }
 
     /**
@@ -103,6 +126,30 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $service = new AuthenticationService();
 
+        $fields = [
+            IdentifierInterface::CREDENTIAL_USERNAME => 'username',
+            IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
+        ];
+
+        $uri = $request->getUri()->getPath();
+
+        if (strpos($uri, '/api') === 0) {
+            $service->loadIdentifier('Authentication.JwtSubject', [
+                'tokenField' => 'external_user_id',
+                'resolver' => 'Authentication.Orm'
+            ]);
+            $service->loadAuthenticator('Authentication.Jwt', [
+                'jwks' => $this->getSecretKeys($request),
+                'algorithm' => 'RS256',
+                'returnPayload' => false,
+                'header' => 'Authorization',
+                'queryParam' => null,
+                'tokenPrefix' => 'Bearer',
+            ]);
+
+            return $service;
+        }
+
         // Define where users should be redirected to when they are not authenticated
         $service->setConfig([
             'unauthenticatedRedirect' => Router::url([
@@ -114,11 +161,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'queryParam'              => 'redirect',
         ]);
 
-        $fields = [
-            IdentifierInterface::CREDENTIAL_USERNAME => 'username',
-            IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
-        ];
-        // Load the authenticators. Session should be first.
+        // Session should always come before the form
         $service->loadAuthenticator('Authentication.Session');
         $service->loadAuthenticator('Authentication.Form', [
             'fields'   => $fields,
@@ -141,5 +184,68 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $resolver = new OrmResolver();
 
         return new AuthorizationService($resolver);
+    }
+
+    private function getSecretKeys(ServerRequestInterface $request): array
+    {
+        $keyExpiration = json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwt-config.json'), true);
+        $keyExpirationDateTime = unserialize($keyExpiration['time'] ?? '') ?: new DateTime();
+        $currentDateTime = new DateTime();
+
+        if ($keyExpirationDateTime <= $currentDateTime) {
+            $jwks = $this->getJwks();
+            $keys = $jwks['keys'];
+            $expiryTime = $jwks['expiry'];
+
+            file_put_contents(
+                CONFIG_KEYS . 'firebase/jwt-config.json',
+                json_encode(
+                    [
+                        'time' => serialize($expiryTime),
+                    ]
+                )
+            );
+            file_put_contents(CONFIG_KEYS . 'firebase/jwks.json', json_encode($keys, JSON_OBJECT_AS_ARRAY));
+        } else {
+            $keys = json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwks.json'), true);
+        }
+
+        return $keys;
+    }
+
+    private function getJwks(): array
+    {
+        $client = new Client();
+        $response = $client->get(
+            'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com'
+        );
+        $googleKeys = $response->getJson();
+        preg_match(
+            '/max-age\=(\d+)/',
+            ($response->getHeaderLine('Cache-Control') ?: ''),
+            $cacheControlHeader
+        );
+        $maxAgeInSeconds = (int) $cacheControlHeader[1];
+        $expiryTime = (new DateTimeImmutable())->modify('+' . ($maxAgeInSeconds - 30) . ' seconds');
+
+        $defaultConfig = [
+            'use' => 'sig',
+            'kty' => 'RSA',
+            'alg' => 'RS256',
+        ];
+
+        $keys = ['keys' => []];
+        foreach ($googleKeys as $kid => $key) {
+            $res = openssl_pkey_get_public($key);
+            $detail = openssl_pkey_get_details($res);
+            $keys['keys'][] = [
+                ...$defaultConfig,
+                'kid' => $kid,
+                'e' => JWT::urlsafeB64Encode($detail['rsa']['e']),
+                'n' => JWT::urlsafeB64Encode($detail['rsa']['n']),
+            ];
+        }
+
+        return ['keys' => $keys, 'expiry' => $expiryTime];
     }
 }

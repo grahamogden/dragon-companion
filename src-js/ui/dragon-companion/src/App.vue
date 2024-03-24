@@ -1,11 +1,55 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { inject, ref } from 'vue'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
+import { firebaseAppKey } from './keys'
+import type { FirebaseApp } from 'firebase/app'
+import { useCampaignStore } from './stores/campaign'
+import CampaignPicker from './components/campaign-picker/CampaignPicker.vue'
 
-const campaignId = 1
+const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
+const auth = getAuth(firebaseApp);
+const isLoggedIn = ref(false)
+const campaignStore = useCampaignStore()
+
+onAuthStateChanged(
+  auth,
+  (user) => {
+    isLoggedIn.value = user !== null
+    if(user !== null) {
+      user.getIdToken()
+        .then((idToken) => {
+          console.dir('Is logged in!')
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    } else {
+      campaignStore.reset()
+      console.debug('Reset campaign storage')
+    }
+  }
+)
+
+const router = useRouter()
+
+const logOut = () => {
+  const auth = getAuth(inject(firebaseAppKey));
+
+  signOut(auth).then(() => {
+    console.debug(('Logged out'));
+    campaignStore.reset()
+
+    router.push('/login')
+  }).catch((error) => {
+    console.error(error)
+  });
+}
+
 </script>
-
 <template>
+  <a href="#main-content">Skip to main content</a>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
@@ -13,18 +57,25 @@ const campaignId = 1
       <HelloWorld msg="You did it!" />
 
       <nav>
-        <RouterLink to="/">Home!</RouterLink>
-        <RouterLink to="/campaign">Campaigns</RouterLink>
-        <RouterLink to="/campaign/{{campaignId}}/character">Characters</RouterLink>
-        <RouterLink to="/campaign/{{campaignId}}/class">Classes</RouterLink>
-        <RouterLink to="/campaign/{{campaignId}}/combat-encounter">Combat Encounters</RouterLink>
-        <RouterLink to="/campaign/{{campaignId}}/species">Species</RouterLink>
-        <RouterLink to="/campaign/{{campaignId}}/timeline">Timelines</RouterLink>
+        <router-link to="/">Home!</router-link>
+        <router-link v-if="!isLoggedIn" to="/register">Register</router-link>
+        <router-link v-if="!isLoggedIn" to="/login">Log In</router-link>
+        <router-link v-if="isLoggedIn" to="/profile">Profile</router-link>
+        <a v-if="isLoggedIn" @click="logOut">Log Out</a>
+        <router-link :to="{ name: 'campaigns.list' }">Campaigns</router-link>
+        <router-link v-if="campaignStore.isCampaignSelected" :to="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId }}">Characters</router-link>
+        <router-link v-if="campaignStore.isCampaignSelected" :to="{ name: 'classes', params: { externalCampaignId: campaignStore.campaignId }}">Classes</router-link>
+        <router-link v-if="campaignStore.isCampaignSelected" :to="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId }}">Combat Encounters</router-link>
+        <router-link v-if="campaignStore.isCampaignSelected" :to="{ name: 'species', params: { externalCampaignId: campaignStore.campaignId }}">Species</router-link>
+        <router-link v-if="campaignStore.isCampaignSelected" :to="{ name: 'timelines', params: { externalCampaignId: campaignStore.campaignId }}">Timelines</router-link>
       </nav>
+      <CampaignPicker />
     </div>
   </header>
 
-  <RouterView />
+  <main id="main-content">
+    <RouterView />
+  </main>
 </template>
 
 <style scoped>

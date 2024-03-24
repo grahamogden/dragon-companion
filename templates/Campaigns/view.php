@@ -1,7 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+use App\Model\Entity\Campaign;
+use App\View\AppView;
+
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Campaign $campaign
+ * @var AppView  $this
+ * @var Campaign $campaign
  */
 ?>
 <div class="campaigns view content">
@@ -18,7 +24,7 @@
         <tr>
             <th scope="row"><?= __('Users') ?></th>
             <?php foreach ($campaign->users as $user) { ?>
-            <td><?= $user->name ?></td>
+                <td><?= $user->name ?></td>
             <?php } ?>
         </tr>
     </table>
