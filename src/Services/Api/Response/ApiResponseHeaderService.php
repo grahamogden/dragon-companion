@@ -10,43 +10,31 @@ final class ApiResponseHeaderService implements ApiResponseHeaderServiceInterfac
 {
     public function returnOkResponse(Response $response): void
     {
-        $response->withStatus(200); //, 'Ok');
-        // header('HTTP/1.0 200 Ok');
-        // exit;
+        $response = $response->withStatus(200);
     }
 
     public function returnNotFoundResponse(Response $response): void
     {
-        $response->withStatus(404); //, 'Not found');
-        // header('HTTP/1.0 404 Not found');
-        // exit;
+        $response = $response->withStatus(404);
     }
 
     public function returnBadRequestResponse(Response $response): void
     {
-        $response->withStatus(400); //, 'Bad request');
-        // header('HTTP/1.0 400 Bad request');
-        // exit;
+        $response = $response->withStatus(400);
     }
 
     public function returnCreatedResponse(Response $response): void
     {
-        $response->withStatus(201); //, 'Created');
-        // header('HTTP/1.0 201 Created');
-        // exit;
+        $response = $response->withStatus(201);
     }
 
     public function returnNoContentResponse(Response $response): void
     {
-        $response->withStatus(204); //, 'No content');
-        // header('HTTP/1.0 204 No content');
-        // exit;
+        $response = $response->withStatus(204);
     }
 
     public function returnUnauthorizedResponse(Response $response): void
     {
-        $response->withStatus(401); //, 'Unauthorized');
-        // header('HTTP/1.0 401 Unauthorized');
-        // exit;
+        $response = $response->withStatus(401);
     }
 }

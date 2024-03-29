@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -50,7 +52,6 @@ class ApiAppController extends Controller
             $eventManager,
         );
         $this->apiResponseHeaderService = (new ApiResponseHeaderServiceFactory())();
-        // $this->Users = $this->fetchTable('Users');
     }
 
     /**
@@ -59,12 +60,12 @@ class ApiAppController extends Controller
     public function initialize(): void
     {
         parent::initialize();
-        // $this->loadComponent('RequestHandler');
         $this->loadComponent('Authentication.Authentication');
         $this->loadComponent('Authorization.Authorization');
     }
 
     /**
+     * @deprecated
      * @param $data
      */
     public function output($data): Response
@@ -83,25 +84,34 @@ class ApiAppController extends Controller
         $authenticationResult = $this->Authentication->getResult();
         if (!$authenticationResult->isValid()) {
             $this->Authorization->skipAuthorization();
-            return $this->getResponse()->withType('application/json')
-                ->withStringBody(json_encode($authenticationResult->getErrors(), JSON_OBJECT_AS_ARRAY))
-                ->withStatus(401);
-            // $this->apiResponseHeaderService->returnUnauthorizedResponse();
+            $this->apiResponseHeaderService->returnUnauthorizedResponse($this->response);
+            return $this->response->withType('application/json')
+                ->withStringBody(json_encode($authenticationResult->getErrors(), JSON_OBJECT_AS_ARRAY));
         }
         $this->user = $this->Authentication->getIdentity();
     }
 
-    public function beforeRender(EventInterface $event)
+    /**
+     * Determines whether the user is authorised to be able to use this action
+     *
+     * @return bool
+     */
+    public function isAuthorized($entity): void
     {
-        $exception = $event->getData('exception');
-
-        if ($exception) {
-            switch (true) {
-                case ($exception instanceof NotFoundException):
-                    break;
-                default:
-                    break;
-            }
-        }
+        $this->Authorization->authorize($entity);
     }
+
+    // public function beforeRender(EventInterface $event)
+    // {
+    //     $exception = $event->getData('exception');
+
+    //     if ($exception) {
+    //         switch (true) {
+    //             case ($exception instanceof NotFoundException):
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    // }
 }

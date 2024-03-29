@@ -1,13 +1,14 @@
 <?php
+
 use Migrations\AbstractMigration;
 
 class Initial extends AbstractMigration
-    {
+{
 
     public $autoId = false;
 
     public function up()
-        {
+    {
 
         $this->table('alignments')
             ->addColumn('id', 'integer', [
@@ -1310,7 +1311,7 @@ class Initial extends AbstractMigration
     }
 
     public function down()
-        {
+    {
         $this->table('campaign_users')
             ->dropForeignKey(
                 'campaign_id'

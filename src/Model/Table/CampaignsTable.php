@@ -3,9 +3,10 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Campaign;
+use Cake\Database\Query;
 use Cake\ORM\Association\HasMany;
 use Cake\ORM\Table;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Validation\Validator;
 
 /**
@@ -92,10 +93,13 @@ class CampaignsTable extends Table
 
     public function findByIdWithUsers(int $id): Campaign
     {
-        return $this->get($id, contain: 'Users');
+        /** @var Campaign $entity */
+        $entity = $this->get($id, contain: 'Users');
+
+        return $entity;
     }
 
-    public function findAllByUserId($userId): Query
+    public function findAllByUserId($userId): SelectQuery
     {
         return $this->find()->matching(
             'Users',

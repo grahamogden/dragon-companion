@@ -27,6 +27,7 @@ Thumbs.db
 *.stTheme.cache
 *.tmlanguage.cache
 *.tmPreferences.cache
+.phpunit.cache
 # Eclipse
 .settings/*
 # JetBrains, aka PHPStorm, IntelliJ IDEA

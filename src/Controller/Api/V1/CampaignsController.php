@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Api\V1;
 
 use App\Model\Entity\CampaignUser;
 use App\Model\Table\CampaignsTable;
 use App\Model\Entity\Campaign;
-use Cake\Datasource\ResultSetInterface;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 
 /**
@@ -21,10 +23,7 @@ class CampaignsController extends ApiAppController
 
         $this->isAuthorized($campaign);
 
-        // unset($campaign->users);
-        // return $this->output(['Campaign' => $campaign]);
         $this->set(compact('campaign'));
-        // $this->viewBuilder()->setOption('serialize', 'campaign');
     }
 
     public function index(): void
@@ -35,12 +34,9 @@ class CampaignsController extends ApiAppController
         $campaigns = $this->Campaigns->findAllByUserId($user['id']);
 
         $this->set(compact('campaigns'));
-        // $this->viewBuilder()->setTemplate('index');
-        $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
-        // return $this->response;
     }
 
-    public function add(): Response
+    public function add(): void
     {
         $data = $this->request->getData();
         // $campaign = $this->Campaigns->newEmptyEntity();
@@ -79,10 +75,9 @@ class CampaignsController extends ApiAppController
         } else {
             $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
         }
-        return $this->response;
     }
 
-    public function edit(int $id): Response
+    public function edit(int $id): void
     {
         $campaign = $this->Campaigns->get($id, contain: 'Users');
         $data            = $this->request->getData();
@@ -91,42 +86,20 @@ class CampaignsController extends ApiAppController
         $campaign = $this->Campaigns->patchEntity($campaign, $data);
 
         if ($this->Campaigns->save($campaign)) {
-            // header('HTTP/1.0 204 No content');
-            // exit;
             $this->apiResponseHeaderService->returnNoContentResponse($this->response);
         } else {
             $this->apiResponseHeaderService->returnNotFoundResponse($this->response);
-            // header('HTTP/1.0 404 Not found');
-            // exit;
         }
-
-        return $this->response;
     }
 
-    public function delete(int $id): Response
+    public function delete(int $id): void
     {
         $campaign = $this->Campaigns->get($id, contain: 'Users');
         $this->isAuthorized($campaign);
         if ($this->Campaigns->delete($campaign)) {
-            // header('HTTP/1.0 204 No content');
-            // exit;
             $this->apiResponseHeaderService->returnNoContentResponse($this->response);
         } else {
             $this->apiResponseHeaderService->returnNotFoundResponse($this->response);
-            // header('HTTP/1.0 404 Not found');
-            // exit;
         }
-
-        return $this->response;
-    }
-
-    /**
-     * Determines whether the user is authorised to be able to use this action
-     *
-     * @return bool
-     */
-    public function isAuthorized($campaign): void
-    {
-        $this->Authorization->authorize($campaign);
     }
 }
