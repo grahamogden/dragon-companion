@@ -3,6 +3,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Campaign;
+use App\Model\Entity\User;
 use Cake\Database\Query;
 use Cake\ORM\Association\HasMany;
 use Cake\ORM\Table;
@@ -94,7 +95,7 @@ class CampaignsTable extends Table
     public function findByIdWithUsers(int $id): Campaign
     {
         /** @var Campaign $entity */
-        $entity = $this->get($id, contain: 'Users');
+        $entity = $this->get($id, contain: UsersTable::TABLE_NAME);
 
         return $entity;
     }
@@ -102,9 +103,9 @@ class CampaignsTable extends Table
     public function findAllByUserId($userId): SelectQuery
     {
         return $this->find()->matching(
-            'Users',
+            UsersTable::TABLE_NAME,
             function (Query $q) use ($userId) {
-                return $q->where(['Users.id =' => $userId]);
+                return $q->where([UsersTable::TABLE_NAME . '.' . User::FIELD_ID => $userId]);
             }
         );
     }

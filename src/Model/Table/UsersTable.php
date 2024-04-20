@@ -2,6 +2,8 @@
 
 namespace App\Model\Table;
 
+use App\Model\Entity\User;
+use Cake\Database\Query\SelectQuery;
 use Cake\ORM\Association\HasMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -22,6 +24,8 @@ use Cake\Validation\Validator;
  */
 class UsersTable extends Table
 {
+    public const TABLE_NAME = 'Users';
+
     /**
      * Initialize method
      *
@@ -79,14 +83,14 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('id')
-            ->allowEmptyString('id', null, 'create');
+            ->nonNegativeInteger(User::FIELD_ID)
+            ->allowEmptyString(User::FIELD_ID, null, 'create');
 
         $validator
-            ->scalar('username')
-            ->maxLength('username', 255)
-            ->notEmptyString('username')
-            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->scalar(User::FIELD_USERNAME)
+            ->maxLength(User::FIELD_USERNAME, 255)
+            ->notEmptyString(User::FIELD_USERNAME)
+            ->add(User::FIELD_USERNAME, 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         // $validator
         //     ->scalar('password')
@@ -99,8 +103,13 @@ class UsersTable extends Table
         //            ->notEmptyString('email');
 
         $validator
-            ->requirePresence('status', 'create')
-            ->notEmptyString('status');
+            ->requirePresence(User::FIELD_STATUS, 'create')
+            ->notEmptyString(User::FIELD_STATUS)
+            ->inList(User::FIELD_STATUS, User::USER_STATUSES);
+
+        $validator
+            ->requirePresence(User::FIELD_EXTERNAL_USER_ID, 'create')
+            ->notEmptyString(User::FIELD_EXTERNAL_USER_ID);
 
         return $validator;
     }
@@ -115,9 +124,20 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['username']));
-        $rules->add($rules->isUnique(['email']));
+        $rules->add($rules->isUnique([User::FIELD_USERNAME]));
+        $rules->add($rules->isUnique([User::FIELD_EMAIL]));
+        $rules->add($rules->isUnique([User::FIELD_EXTERNAL_USER_ID]));
 
         return $rules;
+    }
+
+    public function findByExternalUserId(string $externalUserId): User | null
+    {
+        /** @var User $user */
+        $user = $this->find()
+            ->where([User::FIELD_EXTERNAL_USER_ID => $externalUserId])
+            ->first();
+
+        return $user;
     }
 }

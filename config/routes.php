@@ -71,12 +71,12 @@ $routes->scope(
                     $routes->resources(
                         'Users',
                         [
-                            'only' => [
-                                'index',
-                            ],
-                            'actions' => [
-                                'index' => 'get-users',
-                            ],
+                            // 'only' => [
+                            //     'add',
+                            // ],
+                            // 'actions' => [
+                            //     'add' => 'addUsers',
+                            // ],
                             // 'prefix' => 'V1'
                         ]
                     );

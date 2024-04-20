@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 use Migrations\AbstractMigration;
 
 class Restart extends AbstractMigration
 {
-    public $autoId = false;
+    public bool $autoId = false;
 
     /**
      * Up Method.

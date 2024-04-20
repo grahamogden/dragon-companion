@@ -8,7 +8,7 @@ use App\Model\Entity\CampaignUser;
 use App\Model\Table\CampaignsTable;
 use App\Model\Entity\Campaign;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
+use Cake\Http\Exception\UnauthorizedException;
 
 /**
  * Campaigns Controller
@@ -21,6 +21,10 @@ class CampaignsController extends ApiAppController
     {
         $campaign = $this->Campaigns->findByIdWithUsers($id);
 
+        if ($campaign === null) {
+            throw new NotFoundException('Campaign not found');
+        }
+
         $this->isAuthorized($campaign);
 
         $this->set(compact('campaign'));
@@ -28,8 +32,16 @@ class CampaignsController extends ApiAppController
 
     public function index(): void
     {
+        // We can skip authorization here because we are only going to get Campaigns
+        // that are actually linked to the user ID provided - so you can't sneakily
+        // get someone else's
         $this->Authorization->skipAuthorization();
+
         $user = $this->user;
+
+        if ($user === null) {
+            throw new UnauthorizedException();
+        }
 
         $campaigns = $this->Campaigns->findAllByUserId($user['id']);
 
@@ -52,10 +64,10 @@ class CampaignsController extends ApiAppController
         //     ],
         // ];
         $this->isAuthorized($campaign);
-        $campaign->setName($data['name']);
-        $campaign->setSynopsis($data['synopsis']);
+        $campaign->setName($data['name'])
+            ->setSynopsis($data['synopsis'])
+            ->setAccess('users', true);
         // $campaign->addUser($this->user['id'], CampaignUser::MEMBER_STATUS_ACTIVE, CampaignUser::ACCOUNT_LEVEL_CREATOR);
-        $campaign->setAccess('users', true);
         $campaign = $this->Campaigns->patchEntity($campaign, [
             'users' => [
                 [
@@ -72,15 +84,15 @@ class CampaignsController extends ApiAppController
         if ($this->Campaigns->save($campaign)) {
             $this->set(compact('campaign'));
             $this->apiResponseHeaderService->returnCreatedResponse($this->response);
-        } else {
-            $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
         }
+
+        $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
     }
 
     public function edit(int $id): void
     {
         $campaign = $this->Campaigns->get($id, contain: 'Users');
-        $data            = $this->request->getData();
+        $data = $this->request->getData();
 
         $this->isAuthorized($campaign);
         $campaign = $this->Campaigns->patchEntity($campaign, $data);

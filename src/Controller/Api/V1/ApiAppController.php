@@ -27,10 +27,12 @@ use Exception;
 use Authentication\Controller\Component\AuthenticationComponent;
 use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
 use App\Services\Api\Response\ApiResponseHeaderServiceInterface;
+use Authentication\Authenticator\ResultInterface;
 use Authorization\Controller\Component\AuthorizationComponent;
 use Authorization\Identity;
-use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
+use Cake\Log\Log;
+use App\Model\Entity\User;
 
 /**
  * @property AuthenticationComponent $Authentication
@@ -40,6 +42,7 @@ class ApiAppController extends Controller
 {
     protected readonly ApiResponseHeaderServiceInterface $apiResponseHeaderService;
     protected Identity $user;
+    protected Log $logger;
 
     public function __construct(
         ServerRequest $request = null,
@@ -52,6 +55,7 @@ class ApiAppController extends Controller
             $eventManager,
         );
         $this->apiResponseHeaderService = (new ApiResponseHeaderServiceFactory())();
+        $this->logger = new Log();
     }
 
     /**
@@ -79,16 +83,65 @@ class ApiAppController extends Controller
         return [JsonView::class,];
     }
 
-    public function beforeFilter(EventInterface $event)
+    /**
+     * @return Response
+     */
+    public function beforeFilter(EventInterface $event): Response
     {
         $authenticationResult = $this->Authentication->getResult();
-        if (!$authenticationResult->isValid()) {
-            $this->Authorization->skipAuthorization();
-            $this->apiResponseHeaderService->returnUnauthorizedResponse($this->response);
-            return $this->response->withType('application/json')
-                ->withStringBody(json_encode($authenticationResult->getErrors(), JSON_OBJECT_AS_ARRAY));
+
+        /** @var Identity $user */
+        $user = $this->Authentication->getIdentity();
+
+        if (
+            $authenticationResult->isValid()
+            && $user[User::FIELD_STATUS] > User::STATUS_PENDING
+        ) {
+            // User is authenticated and has verified their account, continue
+            $this->user = $user;
+            return $this->response;
         }
-        $this->user = $this->Authentication->getIdentity();
+
+        $this->Authorization->skipAuthorization();
+        $this->logger->debug(
+            sprintf(
+                'Authentication Result: %s; Data: %s; Errors: %s;',
+                $authenticationResult->getStatus(),
+                $authenticationResult->getData(),
+                json_encode($authenticationResult->getErrors()),
+            )
+        );
+
+        switch ($authenticationResult->getStatus()) {
+            case ResultInterface::FAILURE_CREDENTIALS_MISSING:
+                $errors = [
+                    'Provide authentication credentials',
+                ];
+            case ResultInterface::SUCCESS:
+                if ($user[User::FIELD_STATUS] === User::STATUS_PENDING) {
+                    $errors = [
+                        'Please verify your account by email',
+                    ];
+                    break;
+                }
+            default:
+                $errors = [
+                    'Could not authenticate user',
+                ];
+        }
+
+        if (env('DEBUG', false)) {
+            $errors[] = $authenticationResult->getStatus();
+            $errors[] = $authenticationResult->getErrors();
+        }
+
+        return $this->apiResponseHeaderService->returnUnauthorizedResponse(
+            $this->response->withStringBody(json_encode([
+                'errors' => $errors,
+            ]))
+        );
+        // return $this->response->withType('application/json')
+        //     ->withStringBody(json_encode($authenticationResult->getErrors(), JSON_OBJECT_AS_ARRAY));
     }
 
     /**

@@ -6,6 +6,8 @@
 const CSS_CLASS_BUTTON_LINK           = 'button';
 const CSS_CLASS_RED_ITEM              = 'red-button';
 // const MAX_TIMELINE_SEGMENT_DEPTH      = 3;
+use Cake\Database\Driver\Mysql;
+use Cake\Log\Engine\FileLog;
 
 return [
     /**
@@ -17,7 +19,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN),
+    'debug' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN) && env('ENV_LEVEL', 'production') === 'development',
 
     /**
      * Configure basic information about the application.
@@ -177,7 +179,8 @@ return [
      */
     'Error' => [
         'errorLevel' => E_ALL,
-        'exceptionRenderer' => 'Cake\Error\ExceptionRenderer',
+        // 'errorRenderer' => 'Cake\Error\Renderer\WebExceptionRenderer',
+        // 'exceptionRenderer' => 'Cake\Error\Renderer\WebExceptionRenderer',
         'skipLog' => [],
         'log' => true,
         'trace' => true,
@@ -253,7 +256,7 @@ return [
     'Datasources' => [
         'default' => [
             'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'driver' => Mysql::class,
             'persistent' => false,
             // 'host' => 'localhost',
             'host' => env('MYSQL_HOSTNAME', null),
@@ -310,13 +313,26 @@ return [
          */
         'test' => [
             'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'driver' => Mysql::class,
             'persistent' => false,
-            'host' => 'localhost',
-            //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'test_myapp',
+            // 'host' => 'localhost',
+            // //'port' => 'non_standard_port_number',
+            // 'username' => 'my_app',
+            // 'password' => 'secret',
+            // 'database' => 'test_myapp',
+
+            'host' => env('MYSQL_HOSTNAME', null),
+            'port' => env('MYSQL_PORT', null),
+            // 'username' => 'my_app',
+            // 'password' => 'secret',
+            // 'database' => 'my_app',
+            // 'username' => 'root',
+            'username' => env('MYSQL_USER', null),
+            // 'password' => 'root',
+            'password' => env('MYSQL_PASSWORD', null),
+            // 'database' => 'dungeons_and_dragons',
+            'database' => '' . env('MYSQL_DATABASE', null),
+
             //'encoding' => 'utf8mb4',
             'timezone' => 'UTC',
             'cacheMetadata' => true,
@@ -332,7 +348,7 @@ return [
      */
     'Log' => [
         'debug' => [
-            'className' => 'Cake\Log\Engine\FileLog',
+            'className' => FileLog::class,
             'path' => LOGS,
             'file' => 'debug',
             'url' => env('LOG_DEBUG_URL', null),
@@ -340,7 +356,7 @@ return [
             'levels' => ['notice', 'info', 'debug'],
         ],
         'error' => [
-            'className' => 'Cake\Log\Engine\FileLog',
+            'className' => FileLog::class,
             'path' => LOGS,
             'file' => 'error',
             'url' => env('LOG_ERROR_URL', null),
@@ -349,7 +365,7 @@ return [
         ],
         // To enable this dedicated query log, you need set your datasource's log flag to true
         'queries' => [
-            'className' => 'Cake\Log\Engine\FileLog',
+            'className' => FileLog::class,
             'path' => LOGS,
             'file' => 'queries',
             'url' => env('LOG_QUERIES_URL', null),

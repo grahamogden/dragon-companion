@@ -139,7 +139,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (strpos($uri, '/api') === 0) {
             $service->loadIdentifier('Authentication.JwtSubject', [
                 'tokenField' => 'external_user_id',
-                'resolver' => 'Authentication.Orm'
+                'resolver' => 'Authentication.Orm',
             ]);
             $service->loadAuthenticator('Authentication.Jwt', [
                 'jwks' => $this->getSecretKeys($request),

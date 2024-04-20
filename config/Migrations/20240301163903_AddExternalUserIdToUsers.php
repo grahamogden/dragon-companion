@@ -49,6 +49,7 @@ class AddExternalUserIdToUsers extends AbstractMigration
                 'default' => null,
                 'null' => false,
             ])
+            ->addIndex('external_user_id', ['unique' => true])
             ->update();
     }
 }
