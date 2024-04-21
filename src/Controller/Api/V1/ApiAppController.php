@@ -86,7 +86,7 @@ class ApiAppController extends Controller
     /**
      * @return Response
      */
-    public function beforeFilter(EventInterface $event): Response
+    public function beforeFilter(EventInterface $event): ?Response
     {
         $authenticationResult = $this->Authentication->getResult();
 
@@ -99,7 +99,7 @@ class ApiAppController extends Controller
         ) {
             // User is authenticated and has verified their account, continue
             $this->user = $user;
-            return $this->response;
+            return null;
         }
 
         $this->Authorization->skipAuthorization();
