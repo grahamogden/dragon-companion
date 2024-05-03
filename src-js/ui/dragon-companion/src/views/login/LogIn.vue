@@ -3,6 +3,10 @@ import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersis
 import { inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { firebaseAppKey } from '../../keys';
+import TextInput from '../../components/elements/TextInput.vue';
+import PasswordInput from '../../components/elements/PasswordInput.vue';
+import PrimaryButton from '../../components/elements/PrimaryButton.vue'
+import LinkButton from '../../components/elements/LinkButton.vue'
 
 const email = ref('dragon.companion.app@gmail.com')
 const password = ref('password123')
@@ -29,17 +33,23 @@ const logIn = () => {
 
 <template>
   <div>
-    <h2>Login</h2>
-    <form @submit.prevent="logIn">
-      <div>
+    <h1 class="">Login</h1>
+    <form @submit.prevent="logIn" class="flex flex-col">
+      <!-- <div>
         <label>Email:</label>
         <input type="email" v-model="email" required />
       </div>
       <div>
         <label>Password:</label>
         <input type="password" v-model="password" required />
+      </div> -->
+      <TextInput input-name="email" label="Email" v-model="email" />
+      <PasswordInput input-name="password" label="Password" v-model="password" />
+      <!-- <button class="primary-button" type="submit">Login</button> -->
+      <div class="mt-10">
+          <PrimaryButton text="Save" />
+          <LinkButton text="Cancel" :destination="{ name: 'home' }" />
       </div>
-      <button type="submit">Login</button>
     </form>
   </div>
 </template>

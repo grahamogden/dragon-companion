@@ -1,5 +1,6 @@
 import RestClientService from '../../repository/rest/RestClientService'
-import type CampaignEntityInterface from '../CampaignEntityInterface'
+import type { NewCampaignEntityInterface } from '../CampaignEntityInterface'
+import { type CampaignEntityInterface } from '../CampaignEntityInterface'
 import type CampaignRepositoryInterface from '../CampaignRepositoryInterface'
 
 export default class CampaignRestRepository implements CampaignRepositoryInterface {
@@ -11,7 +12,7 @@ export default class CampaignRestRepository implements CampaignRepositoryInterfa
     }
 
     public async findById(id: number): Promise<CampaignEntityInterface | null> {
-        const res = await this.restClient.get(this.route)
+        const res = await this.restClient.get(this.route + '/' + id)
         let campaignResponse: CampaignEntityInterface = await res.json()
         return campaignResponse
     }
@@ -22,8 +23,8 @@ export default class CampaignRestRepository implements CampaignRepositoryInterfa
         return campaignsResponse
     }
 
-    public async add(data: { name: string; synopsis: string }): Promise<number> {
-        const res = await this.restClient.post(this.route, data)
+    public async add(campaign: NewCampaignEntityInterface): Promise<number> {
+        const res = await this.restClient.post(this.route, campaign)
         if (res.ok) {
             const campaignResponse = await res.json()
             return campaignResponse.id
@@ -31,8 +32,8 @@ export default class CampaignRestRepository implements CampaignRepositoryInterfa
         throw new Error()
     }
 
-    public async update(data: CampaignEntityInterface): Promise<void> {
-        const res = await this.restClient.put(this.route + '/' + data.id, data)
+    public async update(campaign: CampaignEntityInterface): Promise<void> {
+        const res = await this.restClient.put(this.route + '/' + campaign.id, campaign)
         if (res.ok) {
             return
         }

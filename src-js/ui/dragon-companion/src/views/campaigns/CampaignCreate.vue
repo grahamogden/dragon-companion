@@ -2,7 +2,7 @@
 import { useCampaignStore } from '../../stores/campaign';
 import router from '../../router';
 import CampaignForm from './CampaignForm.vue';
-import type CampaignEntityInterface from '../../services/campaign/CampaignEntityInterface';
+import {type CampaignEntityInterface} from '../../services/campaign/CampaignEntityInterface';
 
 const campaignStore = useCampaignStore()
 
@@ -19,7 +19,7 @@ async function createCampaign(formData: CampaignEntityInterface): Promise<void> 
 
 <template>
   <div class="campaign-create">
-    <h1>This is the campaigns page - where you can create your campaigns!</h1>
+    <h1>Create a Campaign</h1>
     <CampaignForm @save-campaign="createCampaign" />
   </div>
 </template>

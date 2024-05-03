@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage, type RemovableRef } from '@vueuse/core'
-import type CampaignEntityInterface from '../services/campaign/CampaignEntityInterface'
+import { type CampaignEntityInterface } from '../services/campaign/CampaignEntityInterface'
 import CampaignRestRepository from '@/services/campaign/rest/CampaignRestRepository'
+import type CampaignRepositoryInterface from '../services/campaign/CampaignRepositoryInterface'
+import { CampaignEntity } from '../services/campaign'
 
 interface CampaignStoreInterface {
     campaignId: RemovableRef<number | null>
@@ -25,7 +27,7 @@ export const useCampaignStore = defineStore('campaign', {
         },
     },
     actions: {
-        _getCampaignRespository(): CampaignRestRepository {
+        _getCampaignRespository(): CampaignRepositoryInterface {
             return new CampaignRestRepository(this.restClient)
         },
         selectCampaign(campaignId: number | null): number | null {
@@ -55,10 +57,11 @@ export const useCampaignStore = defineStore('campaign', {
         },
         async addCampaign(campaign: { name: string; synopsis: string }) {
             const campaignId = await this._getCampaignRespository().add(campaign)
-            const newCampaign: CampaignEntityInterface = {
-                id: campaignId,
-                ...campaign,
-            }
+            const newCampaign: CampaignEntityInterface = new CampaignEntity(
+                campaignId,
+                campaign.name,
+                campaign.synopsis,
+            )
             this.campaigns.push(newCampaign)
         },
         async updateCampaign(campaign: CampaignEntityInterface) {

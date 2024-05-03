@@ -1,7 +1,13 @@
 import type RepositoryInterface from '../repository/RepositoryInterface'
-import type CampaignEntityInterface from './CampaignEntityInterface'
+import {
+    type CampaignEntityInterface,
+    type NewCampaignEntityInterface,
+} from './CampaignEntityInterface'
 
 export default interface CampaignRepositoryInterface extends RepositoryInterface {
-  findById(id: number, authToken: string): Promise<CampaignEntityInterface | null>
-  findAllByUser(authToken: string): Promise<CampaignEntityInterface[] | null>
+    findById(id: number): Promise<CampaignEntityInterface | null>
+    findAllByUser(): Promise<CampaignEntityInterface[] | null>
+    add(campaign: NewCampaignEntityInterface): Promise<number>
+    update(campaign: CampaignEntityInterface): Promise<void>
+    delete(campaignId: number): Promise<void>
 }

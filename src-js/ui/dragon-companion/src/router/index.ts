@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import ProfileView from '../views/profile/Profile.vue'
+import UserAccountView from '../views/users/account/UserAccount.vue'
 import LogInView from '../views/login/LogIn.vue'
 import LogOutView from '../views/logout/LogOut.vue'
-import RegisterView from '../views/register/Register.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +19,11 @@ const router = createRouter({
                     path: 'edit',
                     name: 'campaigns.edit',
                     component: () => import('../views/campaigns/CampaignEdit.vue'),
+                },
+                {
+                    path: 'view',
+                    name: 'campaigns.view',
+                    component: () => import('../views/campaigns/CampaignView.vue'),
                 },
                 {
                     path: 'characters',
@@ -64,32 +68,23 @@ const router = createRouter({
                     name: 'campaigns.add',
                     component: () => import('../views/campaigns/CampaignCreate.vue'),
                 },
-                // {
-                //     path: 'edit/:externalCampaignId(\\d+)',
-                //     name: 'campaign.edit',
-                //     component: () => import('../views/campaigns/CampaignEdit.vue'),
-                // },
             ],
         },
-        // {
-        //     path: '/campaigns',
-        //     children: [
-        //         //     // {
-        //         //     //   path: 'delete/:externalCampaignId(\\d+)',
-        //         //     //   name: 'campaign.delete',
-        //         //     //   component: CampaignCreate,
-        //         //     // },
-        //         {
-        //             path: 'add',
-        //             name: 'campaigns.add',
-        //             component: () => import('../views/campaigns/CampaignCreate.vue'),
-        //         },
-        //     ],
-        // },
         {
-            path: '/profile',
-            name: 'profile',
-            component: ProfileView,
+            path: '/users',
+            children: [
+                { path: '/account', name: 'user-account', component: UserAccountView },
+                {
+                    path: '/verify',
+                    name: 'user-verify',
+                    component: () => import('../views/users/verify/UserVerify.vue'),
+                },
+                {
+                    path: '/register',
+                    name: 'user-register',
+                    component: () => import('../views/register/Register.vue'),
+                },
+            ],
         },
         {
             path: '/login',
@@ -100,11 +95,6 @@ const router = createRouter({
             path: '/logout',
             name: 'logout',
             component: LogOutView,
-        },
-        {
-            path: '/register',
-            name: 'register',
-            component: RegisterView,
         },
     ],
 })
