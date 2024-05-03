@@ -24,7 +24,7 @@ use Cake\Validation\Validator;
  */
 class UsersTable extends Table
 {
-    public const TABLE_NAME = 'Users';
+    public const TABLE_NAME = 'users';
 
     /**
      * Initialize method
@@ -36,7 +36,7 @@ class UsersTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('users');
+        $this->setTable(self::TABLE_NAME);
         $this->setDisplayField('username');
         $this->setPrimaryKey('id');
 

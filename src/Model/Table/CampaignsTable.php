@@ -20,6 +20,8 @@ use Cake\Validation\Validator;
  */
 class CampaignsTable extends Table
 {
+    public const TABLE_NAME = 'campaigns';
+
     /**
      * Initialize method
      *
@@ -31,9 +33,9 @@ class CampaignsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('campaigns');
-        $this->setDisplayField('name');
-        $this->setPrimaryKey('id');
+        $this->setTable(self::TABLE_NAME);
+        $this->setDisplayField(Campaign::FIELD_NAME);
+        $this->setPrimaryKey(Campaign::FIELD_ID);
 
         $this->hasMany(
             'CampaignUsers',
@@ -76,18 +78,19 @@ class CampaignsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('id')
-            ->allowEmptyString('id', null, 'create');
+            ->nonNegativeInteger(Campaign::FIELD_ID)
+            ->allowEmptyString(Campaign::FIELD_ID, null, 'create');
 
         $validator
-            ->scalar('name')
-            ->maxLength('name', 250)
-            ->notEmptyString('name');
+            ->scalar(Campaign::FIELD_NAME)
+            ->maxLength(Campaign::FIELD_NAME, 250)
+            ->requirePresence(Campaign::FIELD_NAME)
+            ->notEmptyString(Campaign::FIELD_NAME);
 
         $validator
-            ->scalar('synopsis')
-            ->maxLength('synopsis', 1000)
-            ->allowEmptyString('synopsis');
+            ->scalar(Campaign::FIELD_SYNOPSIS)
+            ->maxLength(Campaign::FIELD_SYNOPSIS, 1000)
+            ->allowEmptyString(Campaign::FIELD_SYNOPSIS);
 
         return $validator;
     }
@@ -103,9 +106,9 @@ class CampaignsTable extends Table
     public function findAllByUserId($userId): SelectQuery
     {
         return $this->find()->matching(
-            UsersTable::TABLE_NAME,
+            User::ENTITY_NAME,
             function (Query $q) use ($userId) {
-                return $q->where([UsersTable::TABLE_NAME . '.' . User::FIELD_ID => $userId]);
+                return $q->where([User::ENTITY_NAME . '.' . User::FIELD_ID => $userId]);
             }
         );
     }

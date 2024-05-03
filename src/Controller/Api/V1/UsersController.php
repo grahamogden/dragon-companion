@@ -6,6 +6,7 @@ use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Event\EventInterface;
+use Cake\Http\Response;
 
 /**
  * Users Controller
@@ -36,17 +37,17 @@ class UsersController extends ApiAppController
 
         if ($this->Users->save($user)) {
             $this->set(compact($user));
-            $this->apiResponseHeaderService->returnCreatedResponse($this->response);
+            $this->response = $this->apiResponseHeaderService->returnCreatedResponse($this->response);
+        } else {
+            $this->response = $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
         }
-
-        $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
     }
 
-    public function beforeFilter(EventInterface $event)
+    public function beforeFilter(EventInterface $event): ?Response
     {
         // Configure the add action to not require authentication, otherwise it will attempt
         // to check that they exist before the user has even been added
         $this->Authentication->addUnauthenticatedActions(['add']);
-        parent::beforeFilter($event);
+        return parent::beforeFilter($event);
     }
 }

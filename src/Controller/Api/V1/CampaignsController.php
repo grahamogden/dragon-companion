@@ -7,6 +7,8 @@ namespace App\Controller\Api\V1;
 use App\Model\Entity\CampaignUser;
 use App\Model\Table\CampaignsTable;
 use App\Model\Entity\Campaign;
+use App\Model\Table\UsersTable;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\UnauthorizedException;
 
@@ -22,7 +24,7 @@ class CampaignsController extends ApiAppController
         $campaign = $this->Campaigns->findByIdWithUsers($id);
 
         if ($campaign === null) {
-            throw new NotFoundException('Campaign not found');
+            throw new NotFoundException("Campaign $id not found");
         }
 
         $this->isAuthorized($campaign);
@@ -51,42 +53,31 @@ class CampaignsController extends ApiAppController
     public function add(): void
     {
         $data = $this->request->getData();
-        // $campaign = $this->Campaigns->newEmptyEntity();
-        $campaign = new Campaign();
-        // $data['users'] = [
-        //     [
-        //         'id'        => $this->user['id'],
-        //         '_joinData' => [
-        //             'user_id'       => $this->user['id'],
-        //             'member_status' => CampaignUser::MEMBER_STATUS_ACTIVE,
-        //             'account_level' => CampaignUser::ACCOUNT_LEVEL_CREATOR,
-        //         ],
-        //     ],
-        // ];
-        $this->isAuthorized($campaign);
-        $campaign->setName($data['name'])
-            ->setSynopsis($data['synopsis'])
-            ->setAccess('users', true);
-        // $campaign->addUser($this->user['id'], CampaignUser::MEMBER_STATUS_ACTIVE, CampaignUser::ACCOUNT_LEVEL_CREATOR);
-        $campaign = $this->Campaigns->patchEntity($campaign, [
-            'users' => [
-                [
-                    'id'        => $this->user['id'],
-                    '_joinData' => [
-                        'user_id'       => $this->user['id'],
-                        'member_status' => CampaignUser::MEMBER_STATUS_ACTIVE,
-                        'account_level' => CampaignUser::ACCOUNT_LEVEL_CREATOR,
-                    ],
+        /** @var Campaign $campaign */
+        $campaign = $this->Campaigns->newEmptyEntity();
+        $data['users'] = [
+            [
+                'id'        => $this->user['id'],
+                '_joinData' => [
+                    'user_id'       => $this->user['id'],
+                    'member_status' => CampaignUser::MEMBER_STATUS_ACTIVE,
+                    'account_level' => CampaignUser::ACCOUNT_LEVEL_CREATOR,
                 ],
             ],
-        ]);
+        ];
+        $this->isAuthorized($campaign);
+        $campaign->setAccess(UsersTable::TABLE_NAME, true);
+        $campaign = $this->Campaigns->patchEntity(
+            $campaign,
+            $data
+        );
 
         if ($this->Campaigns->save($campaign)) {
             $this->set(compact('campaign'));
-            $this->apiResponseHeaderService->returnCreatedResponse($this->response);
+            $this->response = $this->apiResponseHeaderService->returnCreatedResponse($this->response);
+        } elseif ($campaign->getErrors()) {
+            throw new BadRequestException();
         }
-
-        $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
     }
 
     public function edit(int $id): void
@@ -98,9 +89,9 @@ class CampaignsController extends ApiAppController
         $campaign = $this->Campaigns->patchEntity($campaign, $data);
 
         if ($this->Campaigns->save($campaign)) {
-            $this->apiResponseHeaderService->returnNoContentResponse($this->response);
+            $this->response = $this->apiResponseHeaderService->returnNoContentResponse($this->response);
         } else {
-            $this->apiResponseHeaderService->returnNotFoundResponse($this->response);
+            throw new NotFoundException("Campaign $id not found");
         }
     }
 
@@ -109,9 +100,9 @@ class CampaignsController extends ApiAppController
         $campaign = $this->Campaigns->get($id, contain: 'Users');
         $this->isAuthorized($campaign);
         if ($this->Campaigns->delete($campaign)) {
-            $this->apiResponseHeaderService->returnNoContentResponse($this->response);
+            $this->response = $this->apiResponseHeaderService->returnNoContentResponse($this->response);
         } else {
-            $this->apiResponseHeaderService->returnNotFoundResponse($this->response);
+            throw new NotFoundException("Campaign $id not found");
         }
     }
 }

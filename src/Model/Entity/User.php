@@ -32,6 +32,7 @@ use Cake\I18n\DateTime;
  */
 final class User extends Entity implements IdentityInterface
 {
+    public const ENTITY_NAME = 'Users';
 
     public const STATUS_INACTIVE = 0;
     public const STATUS_PENDING  = 5;

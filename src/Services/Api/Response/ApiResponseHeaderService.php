@@ -16,31 +16,31 @@ final class ApiResponseHeaderService implements ApiResponseHeaderServiceInterfac
 
     public function returnCreatedResponse(Response $response): Response
     {
-        $response = $response->withStatus(201);
-        return $response;
+        return $response->withStatus(201);
     }
 
     public function returnNoContentResponse(Response $response): Response
     {
-        $response = $response->withStatus(204);
-        return $response;
+        return $response->withStatus(204);
     }
 
     public function returnBadRequestResponse(Response $response): Response
     {
-        $response = $response->withStatus(400);
-        return $response;
+        return $response->withStatus(400);
     }
 
     public function returnUnauthorizedResponse(Response $response): Response
     {
-        $response = $response->withStatus(401);
-        return $response;
+        return $response->withStatus(401);
     }
 
     public function returnNotFoundResponse(Response $response): Response
     {
-        $response = $response->withStatus(404);
-        return $response;
+        return $response->withStatus(404);
+    }
+
+    public function returnUnknownServerErrorResponse(Response $response): Response
+    {
+        return $response->withStatus(500);
     }
 }
