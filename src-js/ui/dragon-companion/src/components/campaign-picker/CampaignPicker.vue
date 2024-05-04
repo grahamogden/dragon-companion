@@ -1,29 +1,22 @@
 <script setup lang="ts">
-  import { inject, defineModel } from 'vue'
-  import { getAuth } from 'firebase/auth'
-  import { firebaseAppKey } from '../../keys'
-  import type { FirebaseApp } from 'firebase/app'
-  import { useCampaignStore } from '../../stores/campaign';
+  import { ref } from 'vue'
   import router from '../../router'
-  import { useUserAuthStore } from '../../stores';
+  import { useCampaignStore, useUserAuthStore } from '../../stores';
 
-  const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
   const campaignStore = useCampaignStore()
   const userAuthStore = useUserAuthStore()
 
-  const selectedCampaign = defineModel<number|null>({default: null})
-  selectedCampaign.value = campaignStore.selectedCampaignId
+  const selectedCampaignId = ref<number>(0);
+  selectedCampaignId.value = campaignStore.selectedCampaignId ? campaignStore.selectedCampaignId : 0
 
   function changeCampaign() {
-    campaignStore.selectCampaign(selectedCampaign.value)
+    campaignStore.selectCampaign(selectedCampaignId.value !== 0 ? selectedCampaignId.value : null)
     const routeName = router.currentRoute.value.name !== null ? router.currentRoute.value.name : undefined;
-    console.debug(routeName)
     if (routeName) {
       router.push({ name: routeName, params: { externalCampaignId: campaignStore.campaignId }})
     }
   }
 
-  const auth = getAuth(firebaseApp)
   userAuthStore.$subscribe(
     (mutation, state) => {
       if(state.user !== null) {
@@ -37,14 +30,13 @@
 </script>
 
 <template>
-  <div class="campaign-picker flex flex-col" v-if="userAuthStore.isLoggedIn">
+  <div class="campaign-picker flex flex-col md:flex-row md:items-center md:gap-x-4 text-parchment-pale p-2 md:p-0 text-center" v-if="userAuthStore.isLoggedIn">
     <p>Pick a campaign:</p>
     <div>
-      <select v-model.number="selectedCampaign" @change="changeCampaign()" class="w-full border border-parchment-pale roundness-2 text-base">
-        <option value="" disabled>Please select</option>
+      <select v-model.number="selectedCampaignId" @change="changeCampaign" class="w-full md:w-auto md:min-w-56 border border-parchment-pale roundness-2 text-base">
+        <option value="0">Please select</option>
         <option v-for="campaign in campaignStore.campaigns" :value="campaign.id">{{ campaign.name }}</option>
       </select>
     </div>
-    <!-- <p>Selected campaign: {{ campaignStore.campaignId }} - {{ campaignStore.campaignName }}</p> -->
   </div>
 </template>

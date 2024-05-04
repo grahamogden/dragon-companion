@@ -32,6 +32,8 @@ export const useCampaignStore = defineStore('campaign', {
         },
         selectCampaign(campaignId: number | null): number | null {
             if (campaignId === null) {
+                this.campaignId = null
+                this.campaignName = null
                 return this.campaignId
             }
 
@@ -45,7 +47,7 @@ export const useCampaignStore = defineStore('campaign', {
             return this.campaignId
         },
         async fetchCampaigns(): Promise<CampaignEntityInterface[]> {
-            this._resetCampaigns()
+            this.campaigns = []
 
             console.debug('Fetching campaigns in store')
 
@@ -75,12 +77,11 @@ export const useCampaignStore = defineStore('campaign', {
             await this._getCampaignRespository().delete(campaignId)
             this.campaigns = this.campaigns.filter((campaign) => campaign.id !== campaignId)
         },
-        _resetCampaigns() {
-            console.debug('Reset campaigns in store')
-            this.campaigns = []
-        },
         reset() {
-            this._resetCampaigns()
+            console.debug('Resetting campaign store')
+            this.campaigns = []
+            this.campaignId = null
+            this.campaignName = null
             this.$reset()
         },
     },

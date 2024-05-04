@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import KebabMenu from '../kebab-menu/KebabMenu.vue'
-import { type LinkInterface, LinkInterfaceTypeEnum } from '../../components/interfaces/link-interface';
 
 const props = defineProps<{
     headings: string[]

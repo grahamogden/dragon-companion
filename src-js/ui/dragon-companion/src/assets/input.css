@@ -88,14 +88,10 @@
         @apply py-2 px-4 border-2 border-red-600 rounded-md text-center;
     }
 
-    .nav-link {
-        @apply hover:underline;
-    }
-
-    .campaign-picker,
+    /* .campaign-picker,
     .nav-link {
         @apply text-parchment-pale p-2 text-center;
-    }
+    } */
 
     /* .kebab-menu-container {
         > .kebab-menu {
@@ -118,6 +114,10 @@
             @apply flex;
         }
     } */
+
+    nav a.router-link-active {
+        @apply top-2;
+    }
 
     .entity-list-table {
         @apply border border-0 border-dark-brown dark:border-parchment-pale w-full border-collapse;
@@ -149,12 +149,6 @@
 
         th {
             @apply font-bold;
-        }
-    }
-
-    header {
-        @media (min-width: 1024px) {
-            
         }
     }
 }

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, type UserCredential } from 'firebase/auth'
 import { inject, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
 import { firebaseAppKey } from '../../keys';
 import TextInput from '../../components/elements/TextInput.vue';
 import PasswordInput from '../../components/elements/PasswordInput.vue';
 import PrimaryButton from '../../components/elements/PrimaryButton.vue'
-import LinkButton from '../../components/elements/LinkButton.vue'
+// import LinkButton from '../../components/elements/LinkButton.vue'
 
 const email = ref('dragon.companion.app@gmail.com')
 const password = ref('password123')
@@ -19,7 +19,7 @@ const logIn = () => {
     .then(() => {
       signInWithEmailAndPassword(auth, email.value, password.value)
         .then((data: UserCredential) => {
-          router.push('/profile')
+          router.push('account')
         })
         .catch((error) => {
           console.error(error)
@@ -33,7 +33,7 @@ const logIn = () => {
 
 <template>
   <div>
-    <h1 class="">Login</h1>
+    <h1>Log in</h1>
     <form @submit.prevent="logIn" class="flex flex-col">
       <!-- <div>
         <label>Email:</label>
@@ -46,9 +46,9 @@ const logIn = () => {
       <TextInput input-name="email" label="Email" v-model="email" />
       <PasswordInput input-name="password" label="Password" v-model="password" />
       <!-- <button class="primary-button" type="submit">Login</button> -->
-      <div class="mt-10">
-          <PrimaryButton text="Save" />
-          <LinkButton text="Cancel" :destination="{ name: 'home' }" />
+      <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-6">
+          <div class="md:order-last"><PrimaryButton text="Log in" /></div>
+          <div class="w-full md:w-auto text-center"><router-link :to="{ name: 'home' }" class="my-2">Cancel</router-link></div>
       </div>
     </form>
   </div>

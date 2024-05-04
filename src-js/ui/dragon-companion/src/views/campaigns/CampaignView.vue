@@ -39,6 +39,7 @@
 <template>
   <div class="campaign-edit" v-if="isLoading">
     <h1>{{ campaign?.name ?? 'Unknown' }}</h1>
+    <router-link :to="{ name: 'campaigns.edit', params: {externalCampaignId: campaignId} }" class="mb-4">Edit</router-link>
     <div>
       {{ campaign?.synopsis }}
     </div>

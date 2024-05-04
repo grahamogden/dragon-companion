@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [],
-  darkMode: 'media',
+  // darkMode: 'media',
+  darkMode: 'selector',
   theme: {
     extend: {
       colors: {
@@ -66,6 +67,19 @@ export default {
           800: '#544E3F',
           900: '#4A4439',
           950: '#201D18',
+
+          // DEFAULT: '#282120',
+          // '50': '#F5F3F1',
+          // '100': '#E5E2DC',
+          // '200': '#CCC6BC',
+          // '300': '#AFA595',
+          // '400': '#978A78',
+          // '500': '#7F7162',
+          // '600': '#756559',
+          // '700': '#5F5149',
+          // '800': '#524641',
+          // '900': '#483E3B',
+          // '950': '#282120',
         },
         'dark-brown': '#1A1918',
         'bright-blue': '#194AED',
@@ -91,6 +105,9 @@ export default {
       }
     },
   },
+  safelist: [
+    'router-link-active'
+  ],
   variants: {
     extend: {}
   },
