@@ -98,7 +98,7 @@ class CampaignsTable extends Table
     public function findByIdWithUsers(int $id): Campaign
     {
         /** @var Campaign $entity */
-        $entity = $this->get($id, contain: UsersTable::TABLE_NAME);
+        $entity = $this->get($id, contain: User::ENTITY_NAME);
 
         return $entity;
     }

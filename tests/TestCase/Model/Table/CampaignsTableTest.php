@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table;
 
+use App\Model\Entity\Campaign;
 use App\Model\Table\CampaignsTable;
 use Cake\TestSuite\TestCase;
 use Cake\Validation\Validator;
@@ -27,6 +28,7 @@ class CampaignsTableTest extends TestCase
      * @var list<string>
      */
     protected array $fixtures = [
+        'app.Alignments',
         'app.Campaigns',
         'app.CampaignUsers',
         'app.CombatEncounters',
@@ -74,9 +76,24 @@ class CampaignsTableTest extends TestCase
      *
      * @uses CampaignsTable::findByIdWithUsers()
      */
-    public function testFindByIdWithUsers(): void
+    public function testFindByIdWithUsersReturnsCampaignEntityResult(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $expected = [
+            'id' => 1,
+            'name' => 'Lorem ipsum dolor sit amet',
+            'synopsis' => 'Lorem ipsum dolor sit amet',
+        ];
+
+        $result = $this->Campaigns->findByIdWithUsers(1);
+
+        $this->assertInstanceOf(
+            expected: Campaign::class,
+            actual: $result
+        );
+        $this->assertSame(
+            expected: $expected,
+            actual: $result->toArray(),
+        );
     }
 
     /**
@@ -84,9 +101,24 @@ class CampaignsTableTest extends TestCase
      *
      * @uses CampaignsTable::findAllByUserId()
      */
-    public function testFindAllByUserId(): void
+    public function testFindAllByUserIdReturnsCampaignEntityResult(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $expected = [
+            'id' => 1,
+            'name' => 'Lorem ipsum dolor sit amet',
+            'synopsis' => 'Lorem ipsum dolor sit amet',
+        ];
+
+        $result = $this->Campaigns->findAllByUserId(1)->toArray();
+
+        $this->assertInstanceOf(
+            expected: Campaign::class,
+            actual: $result[0],
+        );
+        $this->assertSame(
+            expected: $expected,
+            actual: $result[0]->toArray(),
+        );
     }
 
     private function mockValidator(): Validator&MockObject

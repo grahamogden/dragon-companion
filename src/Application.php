@@ -128,11 +128,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $service = new AuthenticationService();
 
-        $fields = [
-            AbstractIdentifier::CREDENTIAL_USERNAME => 'username',
-            AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
-        ];
-
         $uri = $request->getUri()->getPath();
 
         if (strpos($uri, '/api') === 0) {
@@ -141,7 +136,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
                 'resolver' => 'Authentication.Orm',
             ]);
             $service->loadAuthenticator('Authentication.Jwt', [
-                'jwks' => $this->getSecretKeys($request),
+                'jwks' => $this->getSecretKeys(),
                 'algorithm' => 'RS256',
                 'returnPayload' => false,
                 'header' => 'Authorization',
@@ -163,10 +158,14 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'queryParam'              => 'redirect',
         ]);
 
+
         // Session should always come before the form
         $service->loadAuthenticator('Authentication.Session');
         $service->loadAuthenticator('Authentication.Form', [
-            'fields'   => $fields,
+            'fields'   => [
+                AbstractIdentifier::CREDENTIAL_USERNAME => 'username',
+                AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+            ],
             'loginUrl' => Router::url([
                 'prefix'     => false,
                 'plugin'     => null,
@@ -188,8 +187,12 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         return new AuthorizationService($resolver);
     }
 
-    private function getSecretKeys(ServerRequestInterface $request): array
+    private function getSecretKeys(): array
     {
+        if (env('ENV_LEVEL', 'production') === 'development') {
+            return json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwks-test.json'), true);
+        }
+
         $keyExpiration = json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwt-config.json'), true);
         $keyExpirationDateTime = unserialize($keyExpiration['time'] ?? '') ?: new DateTime();
         $currentDateTime = new DateTime();
