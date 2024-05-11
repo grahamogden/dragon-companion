@@ -158,14 +158,15 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'queryParam'              => 'redirect',
         ]);
 
+        $fields = [
+            AbstractIdentifier::CREDENTIAL_USERNAME => 'username',
+            AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+        ];
 
         // Session should always come before the form
         $service->loadAuthenticator('Authentication.Session');
         $service->loadAuthenticator('Authentication.Form', [
-            'fields'   => [
-                AbstractIdentifier::CREDENTIAL_USERNAME => 'username',
-                AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
-            ],
+            'fields'   => $fields,
             'loginUrl' => Router::url([
                 'prefix'     => false,
                 'plugin'     => null,
