@@ -57,3 +57,4 @@ config/keys/*
 
 src-js/ui/dragon-companion/dist/*
 src-js/ui/dragon-companion/node_modules/*
+config/Migrations/schema-dump-test.lock
