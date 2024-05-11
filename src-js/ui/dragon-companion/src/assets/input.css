@@ -116,7 +116,7 @@
     } */
 
     nav a.router-link-active {
-        @apply top-2;
+        @apply top-4;
     }
 
     .entity-list-table {

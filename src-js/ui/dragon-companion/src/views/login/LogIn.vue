@@ -6,7 +6,6 @@ import { firebaseAppKey } from '../../keys';
 import TextInput from '../../components/elements/TextInput.vue';
 import PasswordInput from '../../components/elements/PasswordInput.vue';
 import PrimaryButton from '../../components/elements/PrimaryButton.vue'
-// import LinkButton from '../../components/elements/LinkButton.vue'
 
 const email = ref('dragon.companion.app@gmail.com')
 const password = ref('password123')

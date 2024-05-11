@@ -145,7 +145,7 @@
       <div class="hidden lg:inline-block">
         <CampaignPicker />
       </div>
-      <div class="hidden lg:flex flex-row gap-x-8 justify-between items-center">
+      <nav class="hidden lg:flex flex-row gap-x-8 justify-between items-center">
         <router-link class="text-parchment" to="/"
           @click="toggleNavMenu(false); toggleAccountMenu(false)">Home!</router-link>
         <div class="text-parchment">
@@ -157,9 +157,9 @@
           @click="toggleNavMenu(false); toggleAccountMenu(false)">Log In</router-link>
         <router-link class="text-parchment" v-if="userAuthStore.isLoggedIn" :to="{ name: 'user-account' }"
           @click="toggleNavMenu(false); toggleAccountMenu(false)">Account</router-link>
-        <a class="text-parchment" v-if="userAuthStore.isLoggedIn"
-          @click="toggleNavMenu(false); toggleAccountMenu(false); logOut();">Log Out</a>
-      </div>
+        <button class="text-parchment" v-if="userAuthStore.isLoggedIn"
+          @click="toggleNavMenu(false); toggleAccountMenu(false); logOut();" type="button">Log Out</button>
+      </nav>
       <button class="nav w-full block lg:hidden" @click="toggleNavMenu(); toggleAccountMenu(false)" type="button"
         aria-label="Navigation menu toggle"></button>
     </div>
@@ -193,30 +193,30 @@
 
     <nav class="flex-row gap-x-4 hidden lg:flex -z-10 absolute top-8 px-12 text-center">
       <router-link
-        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-2"
+        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-4"
         :to="{ name: 'campaigns.list' }" @click="toggleNavMenu(false); toggleAccountMenu(false)">Campaigns</router-link>
       <router-link
-        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-2"
+        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-4"
         v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected"
         :to="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"
         @click="toggleNavMenu(false); toggleAccountMenu(false)">Characters</router-link>
       <router-link
-        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-2"
+        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-4"
         v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected"
         :to="{ name: 'classes', params: { externalCampaignId: campaignStore.campaignId } }"
         @click="toggleNavMenu(false); toggleAccountMenu(false)">Classes</router-link>
       <router-link
-        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-2"
+        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-4"
         v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected"
         :to="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }"
         @click="toggleNavMenu(false); toggleAccountMenu(false)">Combat Encounters</router-link>
       <router-link
-        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-2"
+        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-4"
         v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected"
         :to="{ name: 'species', params: { externalCampaignId: campaignStore.campaignId } }"
         @click="toggleNavMenu(false); toggleAccountMenu(false)">Species</router-link>
       <router-link
-        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-2"
+        class="text-parchment p-2 hover:underline bg-navigation-leather-tab bg-bottom px-4 pb-6 pt-8 bg-no-repeat bg-cover w-44 top-0 relative transition-all hover:top-4"
         v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected"
         :to="{ name: 'timelines', params: { externalCampaignId: campaignStore.campaignId } }"
         @click="toggleNavMenu(false); toggleAccountMenu(false)">Timelines</router-link>
@@ -245,7 +245,7 @@
   </header>
 
   <main id="main-content"
-    class="z-10 pt-20 p-2 bg-parchment dark:bg-parchment-dark bg-content-texture bg-repeat bg-left-top dark:bg-none h-full md:p-6 md:pt-24">
+    class="z-10 pt-20 p-2 bg-parchment dark:bg-parchment-dark bg-content-texture bg-repeat bg-left-top dark:bg-none h-full md:p-6 md:pt-28">
     <RouterView />
   </main>
 
