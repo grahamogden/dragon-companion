@@ -39,10 +39,12 @@ use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Identifier\AbstractIdentifier;
 use Cake\Core\ContainerInterface;
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use DateTime;
 use DateTimeImmutable;
 use Firebase\JWT\JWT;
+use Cake\Http\Middleware\CsrfProtectionMiddleware;
 
 /**
  * Application setup class.
@@ -71,6 +73,16 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (Configure::read('debug')) {
             $this->addPlugin('DebugKit', ['bootstrap' => false]);
         }
+    }
+
+    public function routes(RouteBuilder $routes): void
+    {
+        $routes->registerMiddleware('csrf', new CsrfProtectionMiddleware([
+            'secure' => true,
+            'samesite' => 'Strict',
+            'httponly' => true,
+        ]));
+        parent::routes($routes);
     }
 
     /**
@@ -152,8 +164,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'unauthenticatedRedirect' => Router::url([
                 'prefix'     => false,
                 'plugin'     => null,
-                'controller' => 'Users',
-                'action'     => 'login',
+                'controller' => 'Pages',
+                'action'     => 'display',
             ]),
             'queryParam'              => 'redirect',
         ]);
@@ -170,8 +182,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'loginUrl' => Router::url([
                 'prefix'     => false,
                 'plugin'     => null,
-                'controller' => 'Users',
-                'action'     => 'login',
+                'controller' => 'Pages',
+                'action'     => 'display',
             ]),
         ]);
 

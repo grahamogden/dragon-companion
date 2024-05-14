@@ -9,6 +9,18 @@ import { firebaseAppKey } from './keys'
 import { getAuth } from 'firebase/auth'
 import RestClientService from './services/repository/rest/RestClientService'
 
+function getCookie(key: string): string | null {
+    const cookies = document.cookie.split('; ')
+    let cookieValue = null
+    cookies.forEach((cookie) => {
+        const [name, value] = cookie.split('=')
+        if (name === key) {
+            cookieValue = decodeURIComponent(value)
+        }
+    })
+    return cookieValue
+}
+
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -24,12 +36,18 @@ const firebaseApp = initializeApp(firebaseConfig)
 const app = createApp(App)
 const pinia = createPinia()
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL
-console.debug(baseUrl)
 const auth = getAuth(firebaseApp)
 
+const csrfTokenElem: HTMLDivElement | null =  document.getElementById('csrf-token') as HTMLDivElement | null
+let csrfToken: string = ''
+if (csrfTokenElem?.dataset.csrfToken) {
+    csrfToken = csrfTokenElem.dataset.csrfToken
+}
+
 pinia.use(({ store }) => {
-    store.restClient = markRaw(new RestClientService(baseUrl, auth))
+    store.restClient = markRaw(
+        new RestClientService(import.meta.env.VITE_API_BASE_URL, auth, csrfToken),
+    )
 })
 
 app.use(createPinia())

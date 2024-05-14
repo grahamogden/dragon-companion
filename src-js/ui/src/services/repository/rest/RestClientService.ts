@@ -5,14 +5,20 @@ import BadRequestError from '../errors/BadRequestError'
 class RestClientService {
     private baseUrl: string
     private auth: Auth
-    private defaultHeaders: object = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    }
+    private csrfToken: string
 
-    public constructor(baseUrl: string, auth: Auth) {
+    public constructor(baseUrl: string, auth: Auth, csrfToken: string) {
         this.baseUrl = baseUrl
         this.auth = auth
+        this.csrfToken = csrfToken
+    }
+
+    private getDefaultHeaders(): object {
+        return {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': this.csrfToken,
+        }
     }
 
     public async get(path: string): Promise<Response> {
@@ -25,17 +31,18 @@ class RestClientService {
             .then(async (authToken: string) => {
                 const res = await fetch(url, {
                     method: 'GET',
-                    credentials: 'omit',
+                    credentials: 'include',
                     mode: 'cors',
                     headers: {
-                        ...this.defaultHeaders,
+                        ...this.getDefaultHeaders(),
                         Authorization: 'Bearer ' + authToken,
                     },
                 })
                 return res
             })
-            .catch((error) => {
-                throw new Error(error)
+            .catch((error: Error) => {
+                console.debug(error.message)
+                throw error
             })
 
         if (res.ok) {
@@ -54,10 +61,10 @@ class RestClientService {
             .then(async (authToken: string) => {
                 const res = await fetch(url, {
                     method: 'POST',
-                    credentials: 'omit',
+                    credentials: 'include',
                     mode: 'cors',
                     headers: {
-                        ...this.defaultHeaders,
+                        ...this.getDefaultHeaders(),
                         Authorization: 'Bearer ' + authToken,
                     },
                     body: JSON.stringify(data),
@@ -84,10 +91,10 @@ class RestClientService {
             .then(async (authToken: string) => {
                 const res = await fetch(url, {
                     method: 'PUT',
-                    credentials: 'omit',
+                    credentials: 'include',
                     mode: 'cors',
                     headers: {
-                        ...this.defaultHeaders,
+                        ...this.getDefaultHeaders(),
                         Authorization: 'Bearer ' + authToken,
                     },
                     body: JSON.stringify(data),
@@ -114,10 +121,10 @@ class RestClientService {
             .then(async (authToken: string) => {
                 const res = await fetch(url, {
                     method: 'DELETE',
-                    credentials: 'omit',
+                    credentials: 'include',
                     mode: 'cors',
                     headers: {
-                        ...this.defaultHeaders,
+                        ...this.getDefaultHeaders(),
                         Authorization: 'Bearer ' + authToken,
                     },
                 })

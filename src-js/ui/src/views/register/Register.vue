@@ -2,9 +2,10 @@
   import { inject, ref } from 'vue'
   import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, setPersistence, browserLocalPersistence, type UserCredential, signOut } from 'firebase/auth'
   import { firebaseAppKey } from '../../keys';
-  import { useUserAuthStore } from '../../stores';
-  import TextInput from '../../components/elements/TextInput.vue';
-  import PasswordInput from '../../components/elements/PasswordInput.vue';
+  import { useUserAuthStore } from '../../stores'
+  import TextInput from '../../components/elements/TextInput.vue'
+  import PasswordInput from '../../components/elements/PasswordInput.vue'
+  import PrimaryButton from '../../components/elements/PrimaryButton.vue'
   import { useRouter } from 'vue-router';
 
   const username = ref('TheDragon')
@@ -41,7 +42,7 @@
                 }
                 sendEmailVerification(data.user)
                   .then(() => {
-                    router.push({name: 'user-verify'})
+                    router.push({ name: 'user-verify' })
                   })
               } catch (e) {
                 console.debug('something went wrong adding user')
@@ -73,7 +74,14 @@
         <label>Password:</label>
         <input type="password" v-model="password" required />
       </div> -->
-      <button type="submit">Register</button>
+      <!-- <button class="primary-button" type="submit">Login</button> -->
+      <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-6">
+        <div class="md:order-last">
+          <PrimaryButton text="Register" />
+        </div>
+        <div class="w-full md:w-auto text-center"><router-link :to="{ name: 'home' }" class="my-2">Cancel</router-link>
+        </div>
+      </div>
     </form>
   </div>
 </template>
