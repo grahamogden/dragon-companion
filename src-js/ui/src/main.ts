@@ -38,7 +38,9 @@ const pinia = createPinia()
 
 const auth = getAuth(firebaseApp)
 
-const csrfTokenElem: HTMLDivElement | null =  document.getElementById('csrf-token') as HTMLDivElement | null
+const csrfTokenElem: HTMLDivElement | null = document.getElementById(
+    'csrf-token',
+) as HTMLDivElement | null
 let csrfToken: string = ''
 if (csrfTokenElem?.dataset.csrfToken) {
     csrfToken = csrfTokenElem.dataset.csrfToken

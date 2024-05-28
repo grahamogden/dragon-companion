@@ -23,7 +23,8 @@ export default defineConfig(({ command, mode }) => {
             },
         },
         build: {
-            outDir: '../../webroot/ui/dist'
-        }
+            outDir: '../../webroot/ui/dist',
+            emptyOutDir: true,
+        },
     }
 })

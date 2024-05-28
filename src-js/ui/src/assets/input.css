@@ -38,7 +38,7 @@
     }
 
     a {
-        @apply text-bright-blue underline dark:text-light-blue;
+        @apply text-biscay-800 underline dark:text-biscay-300;
     }
 
     pre {
@@ -47,6 +47,12 @@
 }
 
 @layer components {
+    .header-transition {
+        transition-property: background-position;
+        /* transition-duration: 350ms; */
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);;
+    }
+
     .stitching {
         position: relative;
 
@@ -88,61 +94,34 @@
         @apply py-2 px-4 border-2 border-red-600 rounded-md text-center;
     }
 
-    /* .campaign-picker,
-    .nav-link {
-        @apply text-parchment-pale p-2 text-center;
-    } */
-
-    /* .kebab-menu-container {
-        > .kebab-menu {
-            display: none;
-            text-align: left;
-        }
-
-        &:hover {
-            > .kebab-menu {
-                display: block;
-            }
-        }
-    } */
-
-    /* nav,
-    .nav {
-        @apply bg-leather-brown bg-leather-texture bg-repeat bg-left-top flex-col shadow-md shadow-neutral-950 py-4 min-h-12;
-
-        &.hidden.open {
-            @apply flex;
-        }
-    } */
-
-    nav a.router-link-active {
-        @apply top-4;
+    .app-name {
+        text-shadow: 0 1px 3px rgba(30, 30, 90, 0.7);
     }
 
     .entity-list-table {
-        @apply border border-0 border-dark-brown dark:border-parchment-pale w-full border-collapse;
+        @apply border-0 w-full border-collapse;
 
         thead {
-            @apply bg-parchment-300 dark:bg-parchment-dark-800;
+            @apply bg-timberwolf-300 dark:bg-woodsmoke-800;
         }
 
-        tbody tr:nth-of-type(odd) {
-            @apply bg-parchment-200 dark:bg-parchment-dark;
-        }
+        /* tbody tr:nth-of-type(odd) {
+            @apply bg-timberwolf-200 dark:bg-woodsmoke-950;
+        } */
 
         tbody tr:nth-of-type(even) {
-            @apply bg-parchment-100 dark:bg-parchment-dark-900;
+            @apply bg-timberwolf-100 dark:bg-woodsmoke-900;
         }
 
         th,
         td {
-            @apply border border-y-0 border-x-0 border-dark-brown dark:border-parchment-pale px-2 py-2 align-top text-left;
+            @apply border-0 px-2 py-2 align-top text-left;
 
             &.action-cell {
                 @apply text-right;
 
                 > .kebab-menu-container {
-                    display: inline-block;
+                    @apply inline-block;
                 }
             }
         }

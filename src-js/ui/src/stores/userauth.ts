@@ -7,19 +7,22 @@ import type UserRepositoryInterface from '../services/user/UserRepositoryInterfa
 import UserRestRepository from '../services/user/rest/UserRestRepository'
 
 export interface UserStoreInterface {
-    user: User | null //RemovableRef<User | null>
+    user: User | null
+    tempUserIsLoggedIn: RemovableRef<boolean>
 }
 
 export const useUserAuthStore = defineStore('userAuth', {
     state: (): UserStoreInterface => ({
         user: null, // useLocalStorage<User | null>('userAuth', null),
+        tempUserIsLoggedIn: useLocalStorage<boolean>('tempUserIsLoggedIn', false),
     }),
     getters: {
         getUser: (state) => state.user,
-        isLoggedIn: (state) => state.user !== null,
+        isLoggedIn: (state) => state.user !== null || state.tempUserIsLoggedIn,
     },
     actions: {
         setUser(user: User | null): void {
+            this.tempUserIsLoggedIn = user !== null
             this.user = user
         },
         _getUserRepository(): UserRepositoryInterface {

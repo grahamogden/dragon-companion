@@ -30,13 +30,11 @@
 </script>
 
 <template>
-  <div class="campaign-picker flex flex-col md:flex-row md:items-center md:gap-x-4 text-parchment-pale p-2 md:p-0 text-center" v-if="userAuthStore.isLoggedIn">
-    <p>Pick a campaign:</p>
-    <div>
-      <select v-model.number="selectedCampaignId" @change="changeCampaign" class="w-full md:w-auto md:min-w-56 border border-parchment-pale roundness-2 text-base bg-leather-brown">
-        <option value="0">Please select</option>
-        <option v-for="campaign in campaignStore.campaigns" :value="campaign.id">{{ campaign.name }}</option>
-      </select>
-    </div>
+  <div class="campaign-picker flex flex-col md:flex-row md:items-center md:gap-x-2 text-spring-wood-50 p-2 md:p-0 text-center" v-if="userAuthStore.isLoggedIn">
+    <label for="selected-campaign">Selected Campaign:</label>
+    <select id="selected-campaign" v-model.number="selectedCampaignId" @change="changeCampaign" class="w-full md:w-auto md:min-w-56 border border-spring-wood-50 rounded-lg text-base">
+      <option value="0">Please select</option>
+      <option v-for="campaign in campaignStore.campaigns" :value="campaign.id">{{ campaign.name }}</option>
+    </select>
   </div>
 </template>

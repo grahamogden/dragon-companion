@@ -36,7 +36,9 @@ name: {{ formData.name }}
 synopsis: {{ formData.synopsis }}
         </pre>
         <!-- <TextInput inputName="name" :inputValue="props.data?.name" label="Campaign Name" @update-value="updateValue" /> -->
-        <TextInput inputName="name" v-model="formData.name" label="Campaign Name" />
+        <div class="w-full md:w-2/4">
+            <TextInput inputName="name" v-model="formData.name" label="Campaign Name" />
+        </div>
         <!-- <TextInput inputName="synopsis" :inputValue="props.data?.synopsis" label="Synopsis of campaign" @update-value="updateValue" /> -->
         <TextArea inputName="synopsis" v-model="formData.synopsis" label="Synopsis of campaign" :length="1000" />
         <!-- <div class="mt-10"> -->

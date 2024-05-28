@@ -56,5 +56,5 @@ build/private
 config/keys/*
 
 webroot/ui/dist/**
-src-js/ui/dragon-companion/node_modules/*
+src-js/ui/node_modules/*
 config/Migrations/schema-dump-test.lock
