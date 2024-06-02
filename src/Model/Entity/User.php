@@ -1,36 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\Entity;
 
 use ArrayAccess;
 use Authentication\IdentityInterface;
-use Authentication\PasswordHasher\DefaultPasswordHasher;
-use Cake\Http\Exception\BadRequestException;
-use Cake\ORM\Entity;
 use Cake\I18n\DateTime;
+use Cake\ORM\Entity;
 
 /**
  * User Entity
  *
- * @property int                    $id
- * @property string                 $username
- * @property string                 $password
- * @property string                 $email
+ * @property int $id
+ * @property string $username
+ * @property string $email
  * @property DateTime $created
  * @property DateTime $modified
- * @property int                    $status
- * @property string                 $external_user_id
+ * @property int $status
+ * @property string $external_user_id
  *
- * @property Campaign[]             $campaigns
- * @property CombatEncounter[]      $combat_encounters
- * @property Monster[]              $monsters
- * @property NonPlayableCharacter[] $non_playable_characters
- * @property PlayerCharacter[]      $player_characters
- * @property Puzzle[]               $puzzles
- * @property Tag[]                  $tags
- * @property TimelineSegment[]      $timeline_segments
+ * @property Campaign[] $campaigns
+ * @property Character[] $characters
+ * @property CombatEncounter[] $combat_encounters
+ * @property Species[] $species
+ * @property Tag[] $tags
+ * @property Timeline[] $timelines
+ * @property Role[] $roles
  */
-final class User extends Entity implements IdentityInterface
+class User extends Entity implements IdentityInterface
 {
     public const ENTITY_NAME = 'Users';
 
@@ -45,7 +43,6 @@ final class User extends Entity implements IdentityInterface
 
     public const FIELD_ID = 'id';
     public const FIELD_USERNAME = 'username';
-    public const FIELD_PASSWORD = 'password';
     public const FIELD_EMAIL = 'email';
     public const FIELD_CREATED = 'created';
     public const FIELD_MODIFIED = 'modified';
@@ -59,24 +56,22 @@ final class User extends Entity implements IdentityInterface
      * be mass assigned. For security purposes, it is advised to set '*' to false
      * (or remove it), and explicitly make individual fields accessible as needed.
      *
-     * @var array
+     * @var array<string, bool>
      */
     protected array $_accessible = [
         self::FIELD_USERNAME => true,
-        self::FIELD_PASSWORD => true,
         self::FIELD_EMAIL => true,
         self::FIELD_CREATED => true,
         self::FIELD_MODIFIED => true,
         self::FIELD_STATUS => true,
         self::FIELD_EXTERNAL_USER_ID => true,
         'campaigns' => true,
+        'characters' => true,
         'combat_encounters' => true,
-        'monsters' => true,
-        'non_playable_characters' => true,
-        'player_characters' => true,
-        'puzzles' => true,
+        'species' => true,
         'tags' => true,
-        'timeline_segments' => true,
+        'timelines' => true,
+        'roles' => true,
     ];
 
     /**
@@ -85,20 +80,8 @@ final class User extends Entity implements IdentityInterface
      * @var array
      */
     protected array $_hidden = [
-        self::FIELD_PASSWORD,
         '_matchingData',
     ];
-
-    // protected function _setPassword($value)
-    // {
-    //     if (strlen($value)) {
-    //         $hasher = new DefaultPasswordHasher();
-
-    //         return $hasher->hash($value);
-    //     }
-
-    //     throw new BadRequestException('Password is missing');
-    // }
 
     public function setUsername(string $username): self
     {

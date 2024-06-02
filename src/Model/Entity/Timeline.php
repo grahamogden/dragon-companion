@@ -8,30 +8,40 @@ use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
 /**
- * Tag Entity
+ * Timeline Entity
  *
  * @property int $id
  * @property int $campaign_id
- * @property string $tag_name
- * @property string $description
+ * @property string $title
+ * @property string $body
+ * @property int $user_id
  * @property DateTime $created
  * @property DateTime $modified
- * @property int $user_id
+ * @property int|null $parent_id
+ * @property int $lft
+ * @property int $rght
+ * @property int $level
  *
  * @property Campaign $campaign
  * @property User $user
+ * @property ParentTimeline|Timeline $parent_timeline
+ * @property ChildTimeline[]|Timeline[] $child_timelines
  * @property Role[] $roles
  */
-class Tag extends Entity
+class Timeline extends Entity
 {
-    public const ENTITY_NAME = 'Tags';
+    public const ENTITY_NAME = 'Timelines';
 
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
-    public const FIELD_TAG_NAME = 'tag_name';
-    public const FIELD_DESCRIPTION = 'description';
+    public const FIELD_TITLE = 'title';
+    public const FIELD_BODY = 'body';
+    public const FIELD_USER_ID = 'user_id';
     public const FIELD_CREATED = 'created';
     public const FIELD_MODIFIED = 'modified';
-    public const FIELD_USER_ID = 'user_id';
+    public const FIELD_PARENT_ID = 'parent_id';
+    public const FIELD_LFT = 'lft';
+    public const FIELD_RGHT = 'rght';
+    public const FIELD_LEVEL = 'level';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -44,13 +54,19 @@ class Tag extends Entity
      */
     protected array $_accessible = [
         self::FIELD_CAMPAIGN_ID => true,
-        self::FIELD_TAG_NAME => true,
-        self::FIELD_DESCRIPTION => true,
+        self::FIELD_TITLE => true,
+        self::FIELD_BODY => true,
+        self::FIELD_USER_ID => true,
         self::FIELD_CREATED => true,
         self::FIELD_MODIFIED => true,
-        self::FIELD_USER_ID => true,
+        self::FIELD_PARENT_ID => true,
+        self::FIELD_LFT => true,
+        self::FIELD_RGHT => true,
+        self::FIELD_LEVEL => true,
         'campaign' => true,
         'user' => true,
+        'parent_timeline' => true,
+        'child_timelines' => true,
         'roles' => true,
     ];
 }

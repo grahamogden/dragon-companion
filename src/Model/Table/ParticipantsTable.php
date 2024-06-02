@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
-use Cake\Datasource\EntityInterface;
+use App\Model\Entity\Participant;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Association\BelongsTo;
-use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -13,95 +15,96 @@ use Cake\Validation\Validator;
  * Participants Model
  *
  * @property CombatEncountersTable&BelongsTo $CombatEncounters
- * @property MonstersTable&BelongsTo         $Monsters
- * @property PlayerCharactersTable&BelongsTo $PlayerCharacters
- * @property ConditionsTable&BelongsToMany   $Conditions
- * @property ConditionsTable&BelongsTo       $CombatTurns
+ * @property CharactersTable&BelongsTo $Characters
  *
- * @method \App\Model\Entity\Participant get($primaryKey, $options = [])
- * @method \App\Model\Entity\Participant newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Participant[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Participant|false save(EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Participant saveOrFail(EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Participant patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Participant[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Participant findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Participant newEmptyEntity()
+ * @method \App\Model\Entity\Participant newEntity(array $data, array $options = [])
+ * @method array<\App\Model\Entity\Participant> newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Participant get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \App\Model\Entity\Participant findOrCreate($search, ?callable $callback = null, array $options = [])
+ * @method \App\Model\Entity\Participant patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method array<\App\Model\Entity\Participant> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Participant|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \App\Model\Entity\Participant saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method iterable<\App\Model\Entity\Participant>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Participant>|false saveMany(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Participant>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Participant> saveManyOrFail(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Participant>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Participant>|false deleteMany(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Participant>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Participant> deleteManyOrFail(iterable $entities, array $options = [])
  */
 class ParticipantsTable extends Table
 {
+    public const TABLE_NAME = 'participants';
     /**
      * Initialize method
      *
-     * @param array $config The configuration for the Table.
-     *
+     * @param array<string, mixed> $config The configuration for the Table.
      * @return void
      */
     public function initialize(array $config): void
     {
         parent::initialize($config);
 
-        $this->setTable('participants');
-        $this->setDisplayField('id');
+        $this->setTable(self::TABLE_NAME);
+        $this->setDisplayField(Participant::FIELD_NAME);
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('CombatEncounters')
-            ->setForeignKey('combat_encounter_id')
-            ->setJoinType('INNER');
-        $this->belongsTo('Monsters')
-            ->setForeignKey('monster_id');
-        $this->belongsTo('PlayerCharacters')
-            ->setForeignKey('player_character_id');
-        $this->hasMany('CombatTurns')
-            ->setForeignKey('source_participant_id')
-            ->setProperty('source_participant');
-        $this->hasMany('CombatTurns')
-            ->setForeignKey('target_participant_id')
-            ->setProperty('target_participant');
-        $this->belongsToMany(
-            'Conditions',
-            ['joinTable' => 'conditions_participants',]
-        )
-            ->setForeignKey('participant_id')
-            ->setTargetForeignKey('condition_id');
+        $this->belongsTo('CombatEncounters', [
+            'foreignKey' => Participant::FIELD_COMBAT_ENCOUNTER_ID,
+            'joinType' => 'INNER',
+        ]);
+        $this->belongsTo('Characters', [
+            'foreignKey' => Participant::FIELD_CHARACTER_ID,
+        ]);
     }
 
     /**
      * Default validation rules.
      *
-     * @param Validator $validator Validator instance.
-     *
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator): \Cake\Validation\Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('id')
-            ->allowEmptyString('id', null, 'create');
+            ->nonNegativeInteger(Participant::FIELD_COMBAT_ENCOUNTER_ID)
+            ->notEmptyString(Participant::FIELD_COMBAT_ENCOUNTER_ID);
 
         $validator
-            ->integer('initiative')
-            ->requirePresence('initiative', 'create')
-            ->notEmptyString('initiative');
+            ->nonNegativeInteger(Participant::FIELD_CHARACTER_ID)
+            ->allowEmptyString(Participant::FIELD_CHARACTER_ID);
 
         $validator
-            ->nonNegativeInteger('starting_hit_points')
-            ->requirePresence('starting_hit_points', 'create')
-            ->notEmptyString('starting_hit_points');
+            ->scalar(Participant::FIELD_NAME)
+            ->maxLength(Participant::FIELD_NAME, 250)
+            ->requirePresence(Participant::FIELD_NAME, 'create')
+            ->notEmptyString(Participant::FIELD_NAME);
 
         $validator
-            ->nonNegativeInteger('current_hit_points')
-            ->requirePresence('current_hit_points', 'create')
-            ->notEmptyString('current_hit_points');
+            ->integer(Participant::FIELD_INITIATIVE)
+            ->requirePresence(Participant::FIELD_INITIATIVE, 'create')
+            ->notEmptyString(Participant::FIELD_INITIATIVE);
 
         $validator
-            ->nonNegativeInteger('armour_class')
-            ->requirePresence('armour_class', 'create')
-            ->notEmptyString('armour_class');
+            ->numeric(Participant::FIELD_STARTING_HIT_POINTS)
+            ->greaterThanOrEqual(Participant::FIELD_STARTING_HIT_POINTS, 0)
+            ->requirePresence(Participant::FIELD_STARTING_HIT_POINTS, 'create')
+            ->notEmptyString(Participant::FIELD_STARTING_HIT_POINTS);
 
         $validator
-            ->nonNegativeInteger('temporary_id')
-            ->requirePresence('temporary_id', 'create')
-            ->notEmptyString('temporary_id');
+            ->numeric(Participant::FIELD_CURRENT_HIT_POINTS)
+            ->greaterThanOrEqual(Participant::FIELD_CURRENT_HIT_POINTS, 0)
+            ->requirePresence(Participant::FIELD_CURRENT_HIT_POINTS, 'create')
+            ->notEmptyString(Participant::FIELD_CURRENT_HIT_POINTS);
+
+        $validator
+            ->nonNegativeInteger(Participant::FIELD_ARMOUR_CLASS)
+            ->requirePresence(Participant::FIELD_ARMOUR_CLASS, 'create')
+            ->notEmptyString(Participant::FIELD_ARMOUR_CLASS);
+
+        $validator
+            ->nonNegativeInteger(Participant::FIELD_TEMPORARY_ID)
+            ->requirePresence(Participant::FIELD_TEMPORARY_ID, 'create')
+            ->notEmptyString(Participant::FIELD_TEMPORARY_ID);
 
         return $validator;
     }
@@ -110,15 +113,13 @@ class ParticipantsTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param RulesChecker $rules The rules object to be modified.
-     *
-     * @return RulesChecker
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['combat_encounter_id'], 'CombatEncounters'));
-        $rules->add($rules->existsIn(['monster_id'], 'Monsters'));
-        $rules->add($rules->existsIn(['player_character_id'], 'PlayerCharacters'));
+        $rules->add($rules->existsIn([Participant::FIELD_COMBAT_ENCOUNTER_ID], 'CombatEncounters'), ['errorField' => Participant::FIELD_COMBAT_ENCOUNTER_ID]);
+        $rules->add($rules->existsIn([Participant::FIELD_CHARACTER_ID], 'Characters'), ['errorField' => Participant::FIELD_CHARACTER_ID]);
 
         return $rules;
     }

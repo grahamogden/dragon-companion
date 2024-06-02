@@ -103,12 +103,7 @@ class Initial extends AbstractMigration
                 'null' => false,
                 'signed' => false,
             ])
-            ->addColumn('first_name', 'string', [
-                'default' => '',
-                'limit' => 250,
-                'null' => false,
-            ])
-            ->addColumn('last_name', 'string', [
+            ->addColumn('name', 'string', [
                 'default' => '',
                 'limit' => 250,
                 'null' => false,
@@ -124,7 +119,7 @@ class Initial extends AbstractMigration
                 'null' => false,
                 'signed' => false,
             ])
-            ->addColumn('armour_class', 'integer', [
+            ->addColumn('armour_class', 'tinyinteger', [
                 'default' => null,
                 'limit' => null,
                 'null' => false,
@@ -133,6 +128,10 @@ class Initial extends AbstractMigration
             ->addColumn('dexterity_modifier', 'tinyinteger', [
                 'default' => null,
                 'limit' => null,
+                'null' => false,
+            ])
+            ->addColumn('notes', 'text', [
+                'default' => null,
                 'null' => false,
             ])
             ->addIndex(
@@ -326,18 +325,17 @@ class Initial extends AbstractMigration
                 'signed' => false,
             ])
             ->addColumn('target_participant_id', 'integer', [
-                'comment' => 'The participant that receives the action (be that damage or healing), which can never be null as something will always happen to someone.',
+                'comment' => 'The participant that receives the action (be that damage or healing), which is unlikely to be null as something will typically always happen to someone.',
                 'default' => null,
                 'limit' => null,
                 'null' => true,
                 'signed' => false,
             ])
-            ->addColumn('combat_action_id', 'integer', [
-                'comment' => 'Foreign key to the combat_actions table and represents what action the user took for their turn - attack, heal, disengage, pass their turn, etc.',
-                'default' => null,
-                'limit' => null,
+            ->addColumn('combat_turn_action', 'tinyinteger', [
+                'comment' => '[enum] pass:0,attack:1,heal:2 - Enum that represents what action the user took for their turn - attack, heal, disengage, pass their turn, etc.',
+                'default' => 0,
+                'limit' => 2,
                 'null' => false,
-                'signed' => false,
             ])
             ->addColumn('roll_total', 'integer', [
                 'comment' => 'The total roll of the user\'s dice to initiate the action. For example, the total of rolling 4d10 + 5 = 29',
@@ -359,11 +357,6 @@ class Initial extends AbstractMigration
                 'null' => false,
                 'signed' => false,
             ])
-            ->addIndex(
-                [
-                    'combat_action_id',
-                ]
-            )
             ->addIndex(
                 [
                     'combat_encounter_id',
@@ -416,14 +409,14 @@ class Initial extends AbstractMigration
                 'default' => null,
                 'null' => false,
                 'precision' => 9,
-                'scale' => 3,
+                'scale' => 2,
                 'signed' => false,
             ])
             ->addColumn('current_hit_points', 'float', [
                 'default' => null,
                 'null' => false,
                 'precision' => 9,
-                'scale' => 3,
+                'scale' => 2,
                 'signed' => false,
             ])
             ->addColumn('armour_class', 'integer', [
@@ -818,8 +811,9 @@ class Initial extends AbstractMigration
                 'null' => false,
             ])
             ->addColumn('status', 'tinyinteger', [
-                'default' => null,
-                'limit' => null,
+                'comment' => '[enum] inactive:0,pending:5,active:10',
+                'default' => 0,
+                'limit' => 2,
                 'null' => false,
             ])
             ->addColumn('external_user_id', 'string', [

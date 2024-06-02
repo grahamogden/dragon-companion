@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
-use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
 /**
- * CombatEncounter Entity
+ * Species Entity
  *
  * @property int $id
- * @property string|null $name
- * @property int $user_id
- * @property DateTime $created
+ * @property string $species_name
  * @property int $campaign_id
+ * @property int $user_id
  *
- * @property User $user
- * @property Campaign $campaign
- * @property CombatTurn[] $combat_turns
- * @property Participant[] $participants
- * @property Role[] $roles
+ * @property \App\Model\Entity\Campaign $campaign
+ * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\Character[] $characters
+ * @property \App\Model\Entity\Role[] $roles
  */
-class CombatEncounter extends Entity
+class Species extends Entity
 {
-    public const ENTITY_NAME = 'CombatEncounters';
 
-    public const FIELD_ID = 'id';
-    public const FIELD_NAME = 'name';
-    public const FIELD_CREATED = 'created';
+    public const ENTITY_NAME = 'Species';
+
+    public const FIELD_SPECIES_NAME = 'species_name';
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
     public const FIELD_USER_ID = 'user_id';
 
@@ -42,14 +38,12 @@ class CombatEncounter extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        self::FIELD_NAME => true,
-        self::FIELD_USER_ID => true,
-        self::FIELD_CREATED => true,
+        self::FIELD_SPECIES_NAME => true,
         self::FIELD_CAMPAIGN_ID => true,
-        'user' => true,
+        self::FIELD_USER_ID => true,
         'campaign' => true,
-        'combat_turns' => true,
-        'participants' => true,
+        'user' => true,
+        'characters' => true,
         'roles' => true,
     ];
 }
