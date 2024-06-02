@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -30,6 +31,7 @@ use Cake\Validation\Validator;
  */
 class CharactersRolesTable extends Table
 {
+    public const TABLE_NAME = 'characters_roles';
     /**
      * Initialize method
      *
@@ -40,7 +42,7 @@ class CharactersRolesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('characters_roles');
+        $this->setTable(self::TABLE_NAME);
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 

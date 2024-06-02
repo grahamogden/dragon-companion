@@ -17,6 +17,7 @@
 namespace App;
 
 use App\Middleware\HttpOptionsMiddleware;
+use App\Model\Table\UsersTable;
 use App\Services\Api\Response\ApiResponseHeaderService;
 use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
 use Authentication\Middleware\AuthenticationMiddleware;
@@ -145,7 +146,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (strpos($uri, '/api') === 0) {
             $service->loadIdentifier('Authentication.JwtSubject', [
                 'tokenField' => 'external_user_id',
-                'resolver' => 'Authentication.Orm',
+                'resolver' => [
+                    'className' => 'Authentication.Orm',
+                    'userModel' => UsersTable::TABLE_NAME,
+                    'finder' => 'auth',
+                ],
             ]);
             $service->loadAuthenticator('Authentication.Jwt', [
                 'jwks' => $this->getSecretKeys(),

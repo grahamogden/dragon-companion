@@ -15,6 +15,7 @@ use Cake\ORM\Entity;
  * @property int $user_id
  *
  * @property User $user
+ * @property CampaignPermission $campaign_permissions
  * @property Character[] $characters
  * @property CombatEncounter[] $combat_encounters
  * @property Role[] $roles
@@ -33,6 +34,7 @@ class Campaign extends Entity
 
     protected array $_hidden = [
         'campaign_users',
+        'campaign_permissions',
         'combat_encounters',
         'player_characters',
         'timeline_segments',
@@ -54,6 +56,7 @@ class Campaign extends Entity
         self::FIELD_SYNOPSIS => true,
         self::FIELD_USER_ID => true,
         'user' => true,
+        'campaign_permissions' => true,
         'characters' => true,
         'combat_encounters' => true,
         'roles' => true,

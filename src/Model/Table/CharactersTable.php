@@ -1,9 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\Campaign;
+use App\Model\Entity\Character;
+use App\Model\Entity\CharactersRole;
+use App\Model\Entity\Participant;
+use App\Model\Entity\Role;
+use App\Model\Entity\Species;
+use App\Model\Entity\User;
 use Cake\ORM\Query\SelectQuery;
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Association\HasMany;
+use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -11,11 +22,11 @@ use Cake\Validation\Validator;
 /**
  * Characters Model
  *
- * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\CampaignsTable&\Cake\ORM\Association\BelongsTo $Campaigns
- * @property \App\Model\Table\ParticipantsTable&\Cake\ORM\Association\HasMany $Participants
- * @property \App\Model\Table\RolesTable&\Cake\ORM\Association\BelongsToMany $Roles
- * @property \App\Model\Table\SpeciesTable&\Cake\ORM\Association\BelongsToMany $Species
+ * @property UsersTable&BelongsTo $Users
+ * @property CampaignsTable&BelongsTo $Campaigns
+ * @property ParticipantsTable&HasMany $Participants
+ * @property RolesTable&BelongsToMany $Roles
+ * @property SpeciesTable&BelongsTo $Species
  *
  * @method \App\Model\Entity\Character newEmptyEntity()
  * @method \App\Model\Entity\Character newEntity(array $data, array $options = [])
@@ -33,6 +44,8 @@ use Cake\Validation\Validator;
  */
 class CharactersTable extends Table
 {
+    public const TABLE_NAME = 'characters';
+
     /**
      * Initialize method
      *
@@ -43,30 +56,29 @@ class CharactersTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('characters');
-        $this->setDisplayField('first_name');
+        $this->setTable(self::TABLE_NAME);
+        $this->setDisplayField(Character::FIELD_NAME);
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
+        $this->belongsTo(User::ENTITY_NAME, [
+            'foreignKey' => Character::FIELD_USER_ID,
             'joinType' => 'INNER',
         ]);
-        $this->belongsTo('Campaigns', [
-            'foreignKey' => 'campaign_id',
+        $this->belongsTo(Campaign::ENTITY_NAME, [
+            'foreignKey' => Character::FIELD_CAMPAIGN_ID,
             'joinType' => 'INNER',
         ]);
-        $this->hasMany('Participants', [
-            'foreignKey' => 'character_id',
+        $this->hasMany(Participant::ENTITY_NAME, [
+            'foreignKey' => Participant::FIELD_CHARACTER_ID,
         ]);
-        $this->belongsToMany('Roles', [
+        $this->belongsTo(Species::ENTITY_NAME, [
+            'foreignKey' => Character::FIELD_SPECIES_ID,
+            'joinType' => 'INNER',
+        ]);
+        $this->belongsToMany(Role::ENTITY_NAME, [
             'foreignKey' => 'character_id',
             'targetForeignKey' => 'role_id',
-            'joinTable' => 'characters_roles',
-        ]);
-        $this->belongsToMany('Species', [
-            'foreignKey' => 'character_id',
-            'targetForeignKey' => 'species_id',
-            'joinTable' => 'characters_species',
+            'joinTable' => CharactersRolesTable::TABLE_NAME,
         ]);
     }
 
@@ -79,40 +91,44 @@ class CharactersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('user_id')
-            ->notEmptyString('user_id');
+            ->nonNegativeInteger(Character::FIELD_USER_ID)
+            ->notEmptyString(Character::FIELD_USER_ID);
 
         $validator
-            ->nonNegativeInteger('campaign_id')
-            ->notEmptyString('campaign_id');
+            ->nonNegativeInteger(Character::FIELD_CAMPAIGN_ID)
+            ->notEmptyString(Character::FIELD_CAMPAIGN_ID);
 
         $validator
-            ->scalar('name')
-            ->maxLength('name', 250)
-            ->notEmptyString('name');
+            ->nonNegativeInteger(Character::FIELD_SPECIES_ID)
+            ->notEmptyString(Character::FIELD_SPECIES_ID);
 
         $validator
-            ->integer('age')
-            ->requirePresence('age', 'create')
-            ->notEmptyString('age');
+            ->scalar(Character::FIELD_NAME)
+            ->maxLength(Character::FIELD_NAME, 250)
+            ->notEmptyString(Character::FIELD_NAME);
 
         $validator
-            ->nonNegativeInteger('max_hit_points')
-            ->requirePresence('max_hit_points', 'create')
-            ->notEmptyString('max_hit_points');
+            ->integer(Character::FIELD_AGE)
+            ->requirePresence(Character::FIELD_AGE, 'create')
+            ->notEmptyString(Character::FIELD_AGE);
 
         $validator
-            ->requirePresence('armour_class', 'create')
-            ->notEmptyString('armour_class');
+            ->nonNegativeInteger(Character::FIELD_MAX_HIT_POINTS)
+            ->requirePresence(Character::FIELD_MAX_HIT_POINTS, 'create')
+            ->notEmptyString(Character::FIELD_MAX_HIT_POINTS);
 
         $validator
-            ->requirePresence('dexterity_modifier', 'create')
-            ->notEmptyString('dexterity_modifier');
+            ->requirePresence(Character::FIELD_ARMOUR_CLASS, 'create')
+            ->notEmptyString(Character::FIELD_ARMOUR_CLASS);
 
         $validator
-            ->scalar('notes')
-            ->requirePresence('notes', 'create')
-            ->notEmptyString('notes');
+            ->requirePresence(Character::FIELD_DEXTERITY_MODIFIER, 'create')
+            ->notEmptyString(Character::FIELD_DEXTERITY_MODIFIER);
+
+        $validator
+            ->scalar(Character::FIELD_NOTES)
+            ->requirePresence(Character::FIELD_NOTES, 'create')
+            ->notEmptyString(Character::FIELD_NOTES);
 
         return $validator;
     }
@@ -126,8 +142,9 @@ class CharactersTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
-        $rules->add($rules->existsIn(['campaign_id'], 'Campaigns'), ['errorField' => 'campaign_id']);
+        $rules->add($rules->existsIn([Character::FIELD_USER_ID], User::ENTITY_NAME), ['errorField' => Character::FIELD_USER_ID]);
+        $rules->add($rules->existsIn([Character::FIELD_CAMPAIGN_ID], Campaign::ENTITY_NAME), ['errorField' => Character::FIELD_CAMPAIGN_ID]);
+        $rules->add($rules->existsIn([Character::FIELD_SPECIES_ID], Species::ENTITY_NAME), ['errorField' => Character::FIELD_SPECIES_ID]);
 
         return $rules;
     }

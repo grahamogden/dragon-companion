@@ -7,6 +7,8 @@ namespace App\Model\Table;
 use App\Model\Entity\Campaign;
 use App\Model\Entity\Character;
 use App\Model\Entity\CombatEncounter;
+use App\Model\Entity\Role;
+use App\Model\Entity\RolesUser;
 use App\Model\Entity\Species;
 use App\Model\Entity\Tag;
 use App\Model\Entity\Timeline;
@@ -16,6 +18,7 @@ use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\Query;
 use Cake\Validation\Validator;
 
 /**
@@ -147,5 +150,10 @@ class UsersTable extends Table
             ->first();
 
         return $user;
+    }
+
+    public function findAuth(Query $query, array $options): Query
+    {
+        return $query->contain([Role::ENTITY_NAME]);
     }
 }

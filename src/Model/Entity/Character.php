@@ -37,6 +37,7 @@ class Character extends Entity
     public const FIELD_ARMOUR_CLASS = 'armour_class';
     public const FIELD_DEXTERITY_MODIFIER = 'dexterity_modifier';
     public const FIELD_NOTES = 'notes';
+    public const FIELD_SPECIES_ID = 'species_id';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -56,10 +57,10 @@ class Character extends Entity
         self::FIELD_ARMOUR_CLASS => true,
         self::FIELD_DEXTERITY_MODIFIER => true,
         self::FIELD_NOTES => true,
+        self::FIELD_SPECIES_ID => true,
         'user' => true,
         'campaign' => true,
         'participants' => true,
         'roles' => true,
-        'species' => true,
     ];
 }

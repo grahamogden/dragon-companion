@@ -95,13 +95,6 @@ class User extends Entity implements IdentityInterface
         return $this->username;
     }
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
     public function setStatus(int $status): self
     {
         // if (!in_array($status, self::USER_STATUSES)) {
@@ -127,6 +120,14 @@ class User extends Entity implements IdentityInterface
     public function getExternalUserId(): string
     {
         return $this->external_user_id;
+    }
+
+    /**
+     * @return Role[]
+     */
+    public function getRoles(): ?array
+    {
+        return $this->roles;
     }
 
     public function getIdentifier(): array | string | int | null

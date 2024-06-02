@@ -7,6 +7,7 @@ namespace App\Model\Table;
 use App\Model\Entity\Campaign;
 use App\Model\Entity\User;
 use Cake\Database\Query;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\ResultSetInterface;
 use Cake\ORM\Query\SelectQuery;
@@ -14,7 +15,6 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\HasMany;
-use Cake\ORM\Association\BelongsToMany;
 use Cake\Validation\Validator;
 use Closure;
 use Psr\SimpleCache\CacheInterface;
@@ -29,7 +29,6 @@ use Psr\SimpleCache\CacheInterface;
  * @property SpeciesTable&HasMany $Species
  * @property TagsTable&HasMany $Tags
  * @property TimelinesTable&HasMany $Timelines
- * @property RolesTable&BelongsToMany $Roles
  *
  * @method Campaign newEmptyEntity()
  * @method Campaign newEntity(array $data, array $options = [])
@@ -85,11 +84,6 @@ class CampaignsTable extends Table
         $this->hasMany('Timelines', [
             'foreignKey' => 'campaign_id',
         ]);
-        $this->belongsToMany('Roles', [
-            'foreignKey' => 'campaign_id',
-            'targetForeignKey' => 'role_id',
-            'joinTable' => 'campaigns_roles',
-        ]);
     }
 
     /**
@@ -132,10 +126,14 @@ class CampaignsTable extends Table
         return $rules;
     }
 
-    public function findByIdWithUsers(int $id): Campaign
+    public function findByIdWithUsers(int $id): ?Campaign
     {
-        /** @var Campaign $entity */
-        $entity = $this->get($id, contain: User::ENTITY_NAME);
+        try {
+            /** @var Campaign $entity */
+            $entity = $this->get($id, contain: User::ENTITY_NAME);
+        } catch (RecordNotFoundException $exception) {
+            return null;
+        }
 
         return $entity;
     }

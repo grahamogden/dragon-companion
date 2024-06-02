@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api\V1;
 
+use App\Error\Api\UnauthorizedError;
 use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManagerInterface;
@@ -88,6 +89,8 @@ class ApiAppController extends Controller
      */
     public function beforeFilter(EventInterface $event): ?Response
     {
+        $response = parent::beforeFilter($event);
+        $this->Authentication->beforeFilter();
         $authenticationResult = $this->Authentication->getResult();
 
         /** @var Identity $user */
@@ -99,7 +102,7 @@ class ApiAppController extends Controller
         ) {
             // User is authenticated and has verified their account, continue
             $this->user = $user;
-            return null;
+            return $response;
         }
 
         $this->Authorization->skipAuthorization();
@@ -135,11 +138,12 @@ class ApiAppController extends Controller
             $errors[] = $authenticationResult->getErrors();
         }
 
-        return $this->apiResponseHeaderService->returnUnauthorizedResponse(
-            $this->response->withStringBody(json_encode([
-                'errors' => $errors,
-            ]))
-        );
+        throw new UnauthorizedError(errors: $errors);
+        // return $this->apiResponseHeaderService->returnUnauthorizedResponse(
+        //     $this->response->withStringBody(json_encode([
+        //         'errors' => $errors,
+        //     ]))
+        // );
         // return $this->response->withType('application/json')
         //     ->withStringBody(json_encode($authenticationResult->getErrors(), JSON_OBJECT_AS_ARRAY));
     }

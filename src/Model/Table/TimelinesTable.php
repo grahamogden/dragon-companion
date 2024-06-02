@@ -58,7 +58,10 @@ class TimelinesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
-        $this->addBehavior('Tree');
+        $this->addBehavior('Tree', [
+            'level' => 'level',
+            'cascadeCallbacks' => true,
+        ]);
 
         $this->belongsTo('Campaigns', [
             'foreignKey' => Timeline::FIELD_CAMPAIGN_ID,

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -12,7 +13,6 @@ use Cake\Validation\Validator;
  * Roles Model
  *
  * @property \App\Model\Table\CampaignsTable&\Cake\ORM\Association\BelongsTo $Campaigns
- * @property \App\Model\Table\CampaignsTable&\Cake\ORM\Association\BelongsToMany $Campaigns
  * @property \App\Model\Table\CharactersTable&\Cake\ORM\Association\BelongsToMany $Characters
  * @property \App\Model\Table\CombatEncountersTable&\Cake\ORM\Association\BelongsToMany $CombatEncounters
  * @property \App\Model\Table\SpeciesTable&\Cake\ORM\Association\BelongsToMany $Species
@@ -53,11 +53,6 @@ class RolesTable extends Table
         $this->belongsTo('Campaigns', [
             'foreignKey' => 'campaign_id',
             'joinType' => 'INNER',
-        ]);
-        $this->belongsToMany('Campaigns', [
-            'foreignKey' => 'role_id',
-            'targetForeignKey' => 'campaign_id',
-            'joinTable' => 'campaigns_roles',
         ]);
         $this->belongsToMany('Characters', [
             'foreignKey' => 'role_id',

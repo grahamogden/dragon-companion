@@ -14,10 +14,10 @@ use Cake\ORM\Entity;
  * @property int $campaign_id
  * @property int $user_id
  *
- * @property \App\Model\Entity\Campaign $campaign
- * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\Character[] $characters
- * @property \App\Model\Entity\Role[] $roles
+ * @property Campaign $campaign
+ * @property User $user
+ * @property Character[] $characters
+ * @property Role[] $roles
  */
 class Species extends Entity
 {

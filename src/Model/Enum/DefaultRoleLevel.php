@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Enum;
@@ -13,7 +14,7 @@ enum DefaultRoleLevel: int implements EnumLabelInterface
 {
     case User = 1;
     case Admin = 10;
-    case Creater = 20;
+    case Creator = 20;
 
     /**
      * @return string

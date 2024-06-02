@@ -31,12 +31,11 @@ class UsersController extends ApiAppController
         /** @var User $user */
         $user = $this->Users->newEmptyEntity();
         $user->setUsername($data[User::FIELD_USERNAME])
-            ->setPassword('')
             ->setExternalUserId($data[User::FIELD_EXTERNAL_USER_ID])
             ->setStatus(User::STATUS_PENDING);
 
         if ($this->Users->save($user)) {
-            $this->set(compact($user));
+            $this->set(compact('user'));
             $this->response = $this->apiResponseHeaderService->returnCreatedResponse($this->response);
         } else {
             $this->response = $this->apiResponseHeaderService->returnBadRequestResponse($this->response);
@@ -45,9 +44,11 @@ class UsersController extends ApiAppController
 
     public function beforeFilter(EventInterface $event): ?Response
     {
+        // $response = parent::beforeFilter($event);
         // Configure the add action to not require authentication, otherwise it will attempt
         // to check that they exist before the user has even been added
         $this->Authentication->addUnauthenticatedActions(['add']);
-        return parent::beforeFilter($event);
+
+        return null;
     }
 }

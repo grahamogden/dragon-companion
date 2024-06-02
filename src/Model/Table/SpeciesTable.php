@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -56,8 +57,9 @@ class SpeciesTable extends Table
         ]);
         $this->belongsToMany('Characters', [
             'foreignKey' => 'species_id',
-            'targetForeignKey' => 'character_id',
-            'joinTable' => 'characters_species',
+            'joinType' => 'INNER',
+            // 'targetForeignKey' => 'character_id',
+            // 'joinTable' => 'characters_species',
         ]);
         $this->belongsToMany('Roles', [
             'foreignKey' => 'species_id',
