@@ -11,16 +11,13 @@
   console.debug(router.currentRoute.value)
   console.debug(router.currentRoute.value.params)
   const campaignId = parseInt(params.externalCampaignId as string)
-  let formData = reactive({})
+  let formData: CampaignEntityInterface | undefined = undefined
 
   console.debug(campaignId)
   const campaign = campaignStore.getCampaignById(campaignId)
   console.debug(campaign);
   if (campaign !== undefined) {
-    formData = reactive({
-      name: campaign.name,
-      synopsis: campaign.synopsis
-    })
+    formData = reactive(campaign)
   }
 
   async function editCampaign(formData: CampaignEntityInterface): Promise<void> {

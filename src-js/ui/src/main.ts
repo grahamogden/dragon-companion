@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { createApp, markRaw } from 'vue'
+import { createApp, markRaw, onBeforeMount } from 'vue'
 import { createPinia } from 'pinia'
 import { initializeApp } from 'firebase/app'
 import App from './App.vue'
@@ -58,4 +58,7 @@ app.use(pinia)
 
 app.provide(firebaseAppKey, firebaseApp)
 
-app.mount('#app')
+auth.onAuthStateChanged(() => {
+    document.getElementById('app')?.classList.remove('loading')
+    app.mount('#app')
+})

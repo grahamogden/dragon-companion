@@ -69,11 +69,41 @@ const router = createRouter({
                     beforeEnter: isLoggedIn,
                     component: () => import('../views/combat-encounters/CombatEncounterList.vue'),
                 },
+                // {
+                //     path: '/species',
+                //     name: 'species',
+                //     beforeEnter: isLoggedIn,
+                //     component: () => import('../views/species/SpeciesList.vue'),
+                // },
                 {
                     path: 'species',
-                    name: 'species',
                     beforeEnter: isLoggedIn,
-                    component: () => import('../views/species/SpeciesList.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'species.list',
+                            beforeEnter: isLoggedIn,
+                            component: () => import('../views/species/SpeciesList.vue'),
+                        },
+                        {
+                            path: 'add',
+                            name: 'species.add',
+                            beforeEnter: isLoggedIn,
+                            component: () => import('../views/species/SpeciesCreate.vue'),
+                        },
+                        {
+                            path: ':id(\\d+)/edit',
+                            name: 'species.edit',
+                            beforeEnter: isLoggedIn,
+                            component: () => import('../views/species/SpeciesEdit.vue'),
+                        },
+                        {
+                            path: ':id(\\d+)/view',
+                            name: 'species.view',
+                            beforeEnter: isLoggedIn,
+                            component: () => import('../views/species/SpeciesEdit.vue'),
+                        },
+                    ],
                 },
                 {
                     path: 'timelines',
@@ -103,19 +133,16 @@ const router = createRouter({
         },
         {
             path: '/users',
-            beforeEnter: isLoggedIn,
             children: [
-                { path: '/account', name: 'user-account', component: UserAccountView },
+                { path: 'account', name: 'user-account', component: UserAccountView },
                 {
-                    path: '/verify',
+                    path: 'verify',
                     name: 'user-verify',
-                    beforeEnter: isLoggedIn,
                     component: () => import('../views/users/verify/UserVerify.vue'),
                 },
                 {
-                    path: '/register',
+                    path: 'register',
                     name: 'user-register',
-                    beforeEnter: isLoggedIn,
                     component: () => import('../views/register/Register.vue'),
                 },
             ],

@@ -7,7 +7,9 @@
     <title>Vite App</title>
     <script type="module" src="/src/main.ts" defer></script>
   </head>
-  <body class="bg-timberwolf-200 dark:bg-woodsmoke-950 transition-colors duration-500 h-full text-base dark:text-spring-wood-50 font-sans">
-    <div id="app" class="min-h-full relative"></div>
+  <body class="transition-colors duration-500 h-full text-base dark:text-spring-wood-50 font-sans">
+    <div class="absolute h-full w-full bg-sky-light"></div>
+    <div class="absolute h-full w-full bg-sky-dark transition-opacity dark:opacity-100 opacity-0 duration-500"></div>
+    <div id="app" class="min-h-full relative loading flex flex-col"></div>
   </body>
 </html>

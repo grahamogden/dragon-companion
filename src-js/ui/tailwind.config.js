@@ -215,6 +215,8 @@ export default {
         'navigation-leather-tab': "url('/src/assets/images/leather-tab.svg')",
         'header-sky': "url('/src/assets/images/header-sky.png')",
         'theme-toggle': "url('/src/assets/images/theme-selector-icon.svg')",
+        'sky-light': "url('/src/assets/images/sky-light.png')",
+        'sky-dark': "url('/src/assets/images/sky-dark.png')",
       },
       backgroundSize: {
         'auto': 'auto',
@@ -233,6 +235,9 @@ export default {
         '45': '45deg',
       },
     },
+    // fontFamily: {
+    //   'sans': ["sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+    // }
   },
   safelist: [
     'router-link-active'

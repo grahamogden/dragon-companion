@@ -32,7 +32,7 @@
 <template>
   <div class="campaign-picker flex flex-col md:flex-row md:items-center md:gap-x-2 text-spring-wood-50 p-2 md:p-0 text-center" v-if="userAuthStore.isLoggedIn">
     <label for="selected-campaign">Selected Campaign:</label>
-    <select id="selected-campaign" v-model.number="selectedCampaignId" @change="changeCampaign" class="w-full md:w-auto md:min-w-56 border border-spring-wood-50 rounded-lg text-base">
+    <select id="selected-campaign" v-model.number="selectedCampaignId" @change="changeCampaign" class="w-full md:w-auto md:min-w-56 border border-spring-wood-50 rounded-lg text-base bg-transparent bg-none p-2">
       <option value="0">Please select</option>
       <option v-for="campaign in campaignStore.campaigns" :value="campaign.id">{{ campaign.name }}</option>
     </select>

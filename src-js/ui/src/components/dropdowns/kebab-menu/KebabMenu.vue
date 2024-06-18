@@ -26,7 +26,7 @@
             &#8942;
         </button>
         <div v-show="isMenuOpen"
-            class="kebab-menu fixed lg:absolute bottom-28 lg:bottom-full left-1/2 lg:left-auto -translate-x-1/2 lg:translate-x-0 lg:right-0 w-3/4 min-w-20 z-30 flex flex-col bg-timberwolf-150 dark:bg-woodsmoke-900 rounded-lg lg:rounded-tr-none py-2 shadow-lg lg:shadow-md shadow-timberwolf-400 dark:shadow-woodsmoke-1000 border-timberwolf-300 dark:border-woodsmoke-700 border">
+            class="kebab-menu fixed lg:absolute bottom-28 lg:bottom-auto top-auto lg:top-full left-1/2 lg:left-auto -translate-x-1/2 lg:translate-x-0 lg:right-4 w-3/4 min-w-20 z-30 flex flex-col bg-timberwolf-150 dark:bg-woodsmoke-900 rounded-lg lg:rounded-tr-none py-2 shadow-lg lg:shadow-md shadow-timberwolf-400 dark:shadow-woodsmoke-1000 border-timberwolf-300 dark:border-woodsmoke-700 border">
             <div v-for="link in props.links">
                 <router-link v-if="link instanceof DropDownItemRouter" :to="link.destination!"
                     class="py-2 px-4 block w-full text-center lg:text-right" @click="toggleKebabMenu">{{ link.label }}</router-link>

@@ -12,11 +12,11 @@
 }
 
 @layer base {
-    input,
+    /* input,
     select,
     textarea {
         @apply p-2 rounded-sm border border-dark-brown rounded bg-transparent shadow-inner;
-    }
+    } */
 
     h1 {
         @apply py-2 border-b-2 border-dark-brown dark:border-parchment-pale mb-4 text-xl font-bold;
@@ -98,11 +98,29 @@
         text-shadow: 0 1px 3px rgba(30, 30, 90, 0.7);
     }
 
+    .loading {
+        &:before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            height: 5rem;
+            width: 5rem;
+            border-width: 1rem;
+            border-color: rgb(230, 230, 230);
+            border-radius: 50%;
+            border-style: dashed;
+            transform-origin: center;
+            animation: spin 2s linear infinite;
+        }
+    }
+
     .entity-list-table {
         @apply border-0 w-full border-collapse;
 
         thead {
-            @apply bg-timberwolf-300 dark:bg-woodsmoke-800;
+            @apply bg-timberwolf-300 dark:bg-woodsmoke-800 transition duration-500;
         }
 
         /* tbody tr:nth-of-type(odd) {
@@ -110,7 +128,7 @@
         } */
 
         tbody tr:nth-of-type(even) {
-            @apply bg-timberwolf-100 dark:bg-woodsmoke-900;
+            @apply bg-timberwolf-100 dark:bg-woodsmoke-900 transition duration-500;
         }
 
         th,
@@ -129,5 +147,14 @@
         th {
             @apply font-bold;
         }
+    }
+}
+        
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
