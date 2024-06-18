@@ -19,6 +19,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Route\DashedRoute;
 
@@ -54,7 +55,10 @@ $routes->scope(
             function (RouteBuilder $routes) {
                 $routes->prefix('V1', function (RouteBuilder $routes) {
                     $routes->setExtensions(['json']);
-                    $routes->applyMiddleware('csrf');
+
+                    if (Configure::read('enableCsrf')) {
+                        $routes->applyMiddleware('csrf');
+                    }
 
                     $routes->resources(
                         'CombatEncounters',
@@ -97,6 +101,55 @@ $routes->scope(
                             // 'prefix' => 'V1'
                         ]
                     );
+
+                    $routes->get('/campaigns/{campaignId}/species', [
+                        'controller' => 'Species',
+                        'action' => 'index',
+                    ])
+                        ->setPass(['campaignId'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                        ]);
+
+                    $routes->get('/campaigns/{campaignId}/species/{id}', [
+                        'controller' => 'Species',
+                        'action' => 'view'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->post('/campaigns/{campaignId}/species', [
+                        'controller' => 'Species',
+                        'action' => 'add'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->put('/campaigns/{campaignId}/species/{id}', [
+                        'controller' => 'Species',
+                        'action' => 'edit'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->delete('/campaigns/{campaignId}/species/{id}', [
+                        'controller' => 'Species',
+                        'action' => 'delete'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
 
                     // Need to catch all of the OPTIONS calls
                     $routes->options(
@@ -364,7 +417,9 @@ $routes->scope(
         //     ->setPatterns(['id' => '\d+'])
         //     ->setPass(['id']);
 
-        $routes->applyMiddleware('csrf');
+        if (Configure::read('enableCsrf')) {
+            $routes->applyMiddleware('csrf');
+        }
         $routes->connect('*', 'Pages::display');
 
         /**

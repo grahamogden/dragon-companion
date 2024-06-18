@@ -112,7 +112,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // CakePHP doesn't seem to handle OPTIONS requests to the API very well and instead
             // returns errors, so we need to intercept them with this middleware to return back
             // 200 OK responses
-            ->add(HttpOptionsMiddleware::class)
+            // ->add(HttpOptionsMiddleware::class)
 
             // If you are using Authentication it should be *before* Authorization.
             ->add(new AuthenticationMiddleware($this))

@@ -205,9 +205,9 @@ class AppController extends Controller
         return $campaign->id;
     }
 
-    public function isAuthorized($user): bool
+    public function isAuthorized($user): void
     {
         // By default deny access.
-        return false;
+        // return false;
     }
 }

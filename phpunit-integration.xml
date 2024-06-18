@@ -3,7 +3,7 @@
          colors="true"
          processIsolation="false"
          stopOnFailure="false"
-         bootstrap="tests/bootstrap-unit.php"
+         bootstrap="tests/bootstrap-integration.php"
          cacheDirectory=".phpunit.cache"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd">
     <php>
@@ -14,7 +14,7 @@
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
         <testsuite name="app">
-            <directory>tests/UnitTest/</directory>
+            <directory>tests/TestCase/</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>

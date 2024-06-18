@@ -19,6 +19,7 @@
         "cakephp/bake": "^3.0",
         "cakephp/cakephp-codesniffer": "^5.1.0",
         "cakephp/debug_kit": "^5.0",
+        "infection/infection": "^0.27.11",
         "phpunit/phpunit": "^10.0"
     },
     "suggest": {
@@ -53,7 +54,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "cakephp/plugin-installer": true,
-            "dealerdirect/phpcodesniffer-composer-installer": false
+            "dealerdirect/phpcodesniffer-composer-installer": false,
+            "infection/extension-installer": false
         }
     }
 }

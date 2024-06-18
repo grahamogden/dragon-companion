@@ -15,7 +15,7 @@ use Cake\ORM\Entity;
  * @property int $user_id
  *
  * @property User $user
- * @property CampaignPermission $campaign_permissions
+ * @property CampaignPermission[] $campaign_permissions
  * @property Character[] $characters
  * @property CombatEncounter[] $combat_encounters
  * @property Role[] $roles
@@ -32,15 +32,7 @@ class Campaign extends Entity
     public const FIELD_SYNOPSIS = 'synopsis';
     public const FIELD_USER_ID = 'user_id';
 
-    protected array $_hidden = [
-        'campaign_users',
-        'campaign_permissions',
-        'combat_encounters',
-        'player_characters',
-        'timeline_segments',
-        'users',
-        '_matchingData',
-    ];
+    public const FUNC_GET_CAMPAIGN_PERMISSIONS = 'getCampaignPermissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -63,6 +55,17 @@ class Campaign extends Entity
         'species' => true,
         'tags' => true,
         'timelines' => true,
+    ];
+
+    protected array $_hidden = [
+        self::FIELD_USER_ID,
+        'campaign_users',
+        'campaign_permissions',
+        'combat_encounters',
+        'player_characters',
+        'timeline_segments',
+        'users',
+        '_matchingData',
     ];
 
     public function getId(): int
@@ -108,5 +111,13 @@ class Campaign extends Entity
         ];
 
         return $this;
+    }
+
+    /**
+     * @return CampaignPermission[]
+     */
+    public function getCampaignPermissions(): array
+    {
+        return $this->campaign_permissions ?? [];
     }
 }

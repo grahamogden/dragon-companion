@@ -7,14 +7,12 @@ namespace App\Model\Enum;
 use Cake\Database\Type\EnumLabelInterface;
 use Cake\Utility\Inflector;
 
-/**
- * DefaultRoleLevel Enum
- */
-enum DefaultRoleLevel: int implements EnumLabelInterface
+enum RoleLevel: int implements EnumLabelInterface
 {
-    case User = 1;
-    case Admin = 10;
-    case Creator = 20;
+    case Public = 10;
+    case Custom = 20;
+    case Admin = 40;
+    case Owner = 50;
 
     /**
      * @return string

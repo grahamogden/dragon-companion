@@ -12,7 +12,9 @@ use App\Error\Api\BadRequestError;
 use App\Error\Api\NotFoundError;
 use App\Error\Api\UnauthorizedError;
 use App\Model\Entity\Role;
-use App\Model\Enum\DefaultRoleLevel;
+use App\Model\Entity\User;
+use App\Model\Enum\RoleLevel;
+use App\Model\Enum\RolePermission;
 use App\Model\Table\CampaignPermissionsTable;
 use App\Model\Table\RolesTable;
 
@@ -33,7 +35,7 @@ class CampaignsController extends ApiAppController
 
         $this->isAuthorized(entity: $campaign);
 
-        $this->set(compact('campaign'));
+        $this->output(compact('campaign'));
     }
 
     public function index(): void
@@ -51,7 +53,14 @@ class CampaignsController extends ApiAppController
 
         $campaigns = $this->Campaigns->findAllByUserId(userId: $user['id']);
 
-        $this->set(compact('campaigns'));
+        $outputCampaigns = [];
+        foreach ($campaigns as $campaign) {
+            if ($this->isAuthorizedCheck(entity: $campaign)) {
+                $outputCampaigns[] = $campaign;
+            }
+        }
+
+        $this->output(['campaigns' => $outputCampaigns]);
     }
 
     public function add(): void
@@ -62,18 +71,18 @@ class CampaignsController extends ApiAppController
         /** @var Campaign $campaign */
         $campaign = $this->Campaigns->newEmptyEntity();
 
-        $this->isAuthorized(entity: $campaign);
-
         $campaign->setAccess(field: UsersTable::TABLE_NAME, set: true);
         $campaign = $this->Campaigns->patchEntity(
             entity: $campaign,
             data: $data
         );
 
+        $this->isAuthorized(entity: $campaign);
+
         if ($this->Campaigns->save(entity: $campaign)) {
             $this->addDefaultRolesAndPermissions(campaign: $campaign);
 
-            $this->set(compact('campaign'));
+            $this->output(compact('campaign'));
             $this->response = $this->apiResponseHeaderService->returnCreatedResponse(response: $this->response);
         } elseif ($campaign->getErrors()) {
             throw new BadRequestError(errors: $campaign->getErrors());
@@ -83,26 +92,56 @@ class CampaignsController extends ApiAppController
     private function addDefaultRolesAndPermissions(Campaign $campaign): void
     {
         $rolesTable = $this->fetchTable(RolesTable::class);
-        $creatorRole = $this->addRole(rolesTable: $rolesTable, campaign: $campaign, roleLevel: DefaultRoleLevel::Creator);
-        $this->addRole(rolesTable: $rolesTable, campaign: $campaign, roleLevel: DefaultRoleLevel::Admin);
-        $this->addRole(rolesTable: $rolesTable, campaign: $campaign, roleLevel: DefaultRoleLevel::User);
+        $creatorRole = $this->addRole(
+            rolesTable: $rolesTable,
+            campaign: $campaign,
+            roleLevel: RoleLevel::Owner,
+            roleName: RoleLevel::Owner->label(),
+            campaignDefaultPermissions: RolePermission::Read_write_delete,
+            speciesDefaultPermissions: RolePermission::Read_write_delete,
+        );
+        $this->addRole(
+            rolesTable: $rolesTable,
+            campaign: $campaign,
+            roleLevel: RoleLevel::Admin,
+            roleName: RoleLevel::Admin->label(),
+            campaignDefaultPermissions: RolePermission::Read_write_delete,
+            speciesDefaultPermissions: RolePermission::Read_write_delete,
+        );
+        $this->addRole(
+            rolesTable: $rolesTable,
+            campaign: $campaign,
+            roleLevel: RoleLevel::Custom,
+            roleName: 'Default',
+            campaignDefaultPermissions: RolePermission::Read,
+            speciesDefaultPermissions: RolePermission::Read,
+        );
 
         // Link the user to the newly created "Creator" role for this campaign
         $rolesTable->Users->link($creatorRole, [$this->user]);
 
-        $this->addCreatorCampaignPermissionForUser(campaign: $campaign, creatorRole: $creatorRole);
+        // $this->addCreatorCampaignPermissionForUser(campaign: $campaign, creatorRole: $creatorRole);
     }
 
-    private function addRole(RolesTable $rolesTable, Campaign $campaign, DefaultRoleLevel $roleLevel): Role
-    {
+    private function addRole(
+        RolesTable $rolesTable,
+        Campaign $campaign,
+        RoleLevel $roleLevel,
+        string $roleName,
+        RolePermission $campaignDefaultPermissions,
+        RolePermission $speciesDefaultPermissions,
+    ): Role {
         /** @var Role $role */
         $role = $rolesTable->newEmptyEntity();
         $role = $rolesTable->patchEntity(
             entity: $role,
             data: [
-                Role::FIELD_ROLE_NAME => $roleLevel->label(),
+                Role::FIELD_ROLE_LEVEL => $roleLevel->value,
+                Role::FIELD_ROLE_NAME => $roleName,
                 Role::FIELD_CAMPAIGN_ID => $campaign->id,
-            ]
+                Role::FIELD_CAMPAIGN_DEFAULT_PERMISSIONS => $campaignDefaultPermissions->value,
+                Role::FIELD_SPECIES_DEFAULT_PERMISSIONS => $speciesDefaultPermissions->value,
+            ],
         );
 
         if (!$rolesTable->save(entity: $role)) {
@@ -112,47 +151,53 @@ class CampaignsController extends ApiAppController
         return $role;
     }
 
-    private function addCreatorCampaignPermissionForUser(Campaign $campaign, Role $creatorRole): void
-    {
-        $campaignPermissionsTable = $this->fetchTable(CampaignPermissionsTable::class);
-        /** @var CampaignPermission $campaignPermissions */
-        $campaignPermission = $campaignPermissionsTable->newEmptyEntity();
-        $campaignPermissionsTable->patchEntity(
-            entity: $campaignPermission,
-            data: [
-                CampaignPermission::FIELD_CAMPAIGN_ID => $campaign->id,
-                CampaignPermission::FIELD_ROLE_ID => $creatorRole->getId(),
-                CampaignPermission::FIELD_CAN_READ => true,
-                CampaignPermission::FIELD_CAN_WRITE => true,
-                CampaignPermission::FIELD_CAN_DELETE => true,
-                CampaignPermission::FIELD_CAN_PERMISSION => true,
-            ],
-        );
+    // private function addCreatorCampaignPermissionForUser(Campaign $campaign, Role $creatorRole): void
+    // {
+    //     $campaignPermissionsTable = $this->fetchTable(CampaignPermissionsTable::class);
+    //     /** @var CampaignPermission $campaignPermissions */
+    //     $campaignPermission = $campaignPermissionsTable->newEmptyEntity();
+    //     $campaignPermissionsTable->patchEntity(
+    //         entity: $campaignPermission,
+    //         data: [
+    //             CampaignPermission::FIELD_CAMPAIGN_ID => $campaign->id,
+    //             CampaignPermission::FIELD_ROLE_ID => $creatorRole->getId(),
+    //             // CampaignPermission::FIELD_CAN_READ => true,
+    //             // CampaignPermission::FIELD_CAN_WRITE => true,
+    //             // CampaignPermission::FIELD_CAN_DELETE => true,
+    //             // CampaignPermission::FIELD_CAN_PERMISSION => true,
+    //             CampaignPermission::FIELD_PERMISSIONS => RolePermission::
+    //         ],
+    //     );
 
-        if (!$campaignPermissionsTable->save(entity: $campaignPermission)) {
-            throw new BadRequestError(errors: $campaignPermission->getErrors());
-        }
-    }
+    //     if (!$campaignPermissionsTable->save(entity: $campaignPermission)) {
+    //         throw new BadRequestError(errors: $campaignPermission->getErrors());
+    //     }
+    // }
 
     public function edit(int $id): void
     {
-        $campaign = $this->Campaigns->get(primaryKey: $id, contain: 'Users');
+        $campaign = $this->Campaigns->get(primaryKey: $id, contain: [User::ENTITY_NAME, CampaignPermission::ENTITY_NAME]);
         $data = $this->request->getData();
 
         $this->isAuthorized(entity: $campaign);
+
         $campaign = $this->Campaigns->patchEntity(entity: $campaign, data: $data);
 
         if ($this->Campaigns->save(entity: $campaign)) {
+            $this->output(compact('campaign'));
             $this->response = $this->apiResponseHeaderService->returnNoContentResponse(response: $this->response);
         } else {
             throw new NotFoundError(message: "Campaign $id not found");
         }
     }
 
+
     public function delete(int $id): void
     {
-        $campaign = $this->Campaigns->get(primaryKey: $id, contain: 'Users');
+        $campaign = $this->Campaigns->get(primaryKey: $id, contain: [User::ENTITY_NAME, CampaignPermission::ENTITY_NAME]);
+
         $this->isAuthorized(entity: $campaign);
+
         if ($this->Campaigns->delete(entity: $campaign)) {
             $this->response = $this->apiResponseHeaderService->returnNoContentResponse(response: $this->response);
         } else {

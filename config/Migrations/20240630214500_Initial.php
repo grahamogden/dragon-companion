@@ -70,21 +70,28 @@ class Initial extends AbstractMigration
                 'null' => false,
                 'signed' => false,
             ])
-            ->addColumn('can_read', 'boolean', [
-                'default' => true,
+            // ->addColumn('can_read', 'boolean', [
+            //     'default' => true,
+            //     'null' => false,
+            // ])
+            // ->addColumn('can_write', 'boolean', [
+            //     'default' => false,
+            //     'null' => false,
+            // ])
+            // ->addColumn('can_delete', 'boolean', [
+            //     'default' => false,
+            //     'null' => false,
+            // ])
+            // ->addColumn('can_permission', 'boolean', [
+            //     'default' => false,
+            //     'null' => false,
+            // ])
+            ->addColumn('permissions', 'tinyinteger', [
+                'comment' => '[bitwise] deny:0,inherit:1,read:2,write:4,delete:8. For example, 6 means the role has read + write permissions but not delete. 10 Would mean read + delete but not write. 14 means that the role has read + write + delete permissions. Inherit should not be used alongside other permissions, for example, there should be no 3 for inherit and read because if its inheriting then it will use the default permissions for the user\'s role.',
+                'default' => 0,
+                'limit' => 3,
                 'null' => false,
-            ])
-            ->addColumn('can_write', 'boolean', [
-                'default' => false,
-                'null' => false,
-            ])
-            ->addColumn('can_delete', 'boolean', [
-                'default' => false,
-                'null' => false,
-            ])
-            ->addColumn('can_permission', 'boolean', [
-                'default' => false,
-                'null' => false,
+                'signed' => false,
             ])
             ->addIndex(
                 [
@@ -115,6 +122,27 @@ class Initial extends AbstractMigration
             ->addColumn('campaign_id', 'integer', [
                 'default' => null,
                 'limit' => null,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('role_level', 'tinyinteger', [
+                'comment' => '[enum] public:10,custom:20,admin:40,owner:50. Defined the kind of role this is, as creators will have elevated permissions over admin roles and custom role types can be created and deleted by an admin/owner at any time.',
+                'default' => null,
+                'limit' => 3,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('campaign_default_permissions', 'tinyinteger', [
+                'comment' => '[bitwise] deny:0,inherit:1,read:2,write:4,delete:8. For example, 6 means the role has read + write permissions but not delete. 10 Would mean read + delete but not write. 14 means that the role has read + write + delete permissions. Inherit must not be used for this value at all because this is the value that will be inherited from and will therefore be ignored.',
+                'default' => 0,
+                'limit' => 3,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('species_default_permissions', 'tinyinteger', [
+                'comment' => '[bitwise] deny:0,inherit:1,read:2,write:4,delete:8. For example, 6 means the role has read + write permissions but not delete. 10 Would mean read + delete but not write. 14 means that the role has read + write + delete permissions. Inherit must not be used for this value at all because this is the value that will be inherited from and will therefore be ignored.',
+                'default' => 0,
+                'limit' => 3,
                 'null' => false,
                 'signed' => false,
             ])
@@ -167,7 +195,7 @@ class Initial extends AbstractMigration
                 'signed' => false,
             ])
             ->addPrimaryKey(['id'])
-            ->addColumn('species_name', 'string', [
+            ->addColumn('name', 'string', [
                 'default' => '',
                 'limit' => 255,
                 'null' => false,
@@ -185,7 +213,7 @@ class Initial extends AbstractMigration
                 'signed' => false,
             ])
             ->addIndex(
-                ['species_name']
+                ['name']
             )
             ->addIndex(
                 ['campaign_id']
@@ -213,6 +241,13 @@ class Initial extends AbstractMigration
             ->addColumn('species_id', 'integer', [
                 'default' => null,
                 'limit' => null,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('permissions', 'tinyinteger', [
+                'comment' => '[bitwise] deny:0,inherit:1,read:2,write:4,delete:8. For example, 6 means the role has read + write permissions but not delete. 10 Would mean read + delete but not write. 14 means that the role has read + write + delete permissions. Inherit should not be used alongside other permissions, for example, there should be no 3 for inherit and read because if its inheriting then it will use the default permissions for the user\'s role.',
+                'default' => 0,
+                'limit' => 3,
                 'null' => false,
                 'signed' => false,
             ])
@@ -267,6 +302,7 @@ class Initial extends AbstractMigration
                 'default' => 0,
                 'limit' => 2,
                 'null' => false,
+                'signed' => false,
             ])
             ->addColumn('external_user_id', 'string', [
                 'default' => null,
@@ -411,41 +447,32 @@ class Initial extends AbstractMigration
     public function down(): void
     {
         $this->table('campaigns')
-            ->dropForeignKey(
-                'user_id'
-            )->save();
+            ->dropForeignKey('user_id')
+            ->save();
 
         $this->table('campaign_permissions')
-            ->dropForeignKey(
-                'campaign_id'
-            )
-            ->dropForeignKey(
-                'role_id'
-            )->save();
+            ->dropForeignKey('campaign_id')
+            ->dropForeignKey('role_id')
+            ->save();
 
         $this->table('roles_users')
-            ->dropForeignKey(
-                'role_id'
-            )
-            ->dropForeignKey(
-                'user_id'
-            )->save();
+            ->dropForeignKey('role_id')
+            ->dropForeignKey('user_id')
+            ->save();
+
+        $this->table('roles')
+            ->dropForeignKey('campaign_id')
+            ->save();
 
         $this->table('species')
-            ->dropForeignKey(
-                'campaign_id'
-            )
-            ->dropForeignKey(
-                'user_id'
-            )->save();
+            ->dropForeignKey('campaign_id')
+            ->dropForeignKey('user_id')
+            ->save();
 
         $this->table('species_permissions')
-            ->dropForeignKey(
-                'role_id'
-            )
-            ->dropForeignKey(
-                'species_id'
-            )->save();
+            ->dropForeignKey('role_id')
+            ->dropForeignKey('species_id')
+            ->save();
 
         $this->table('campaigns')->drop()->save();
         $this->table('campaign_permissions')->drop()->save();

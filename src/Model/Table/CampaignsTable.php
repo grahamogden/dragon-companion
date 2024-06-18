@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\Campaign;
+use App\Model\Entity\CampaignPermission;
 use App\Model\Entity\User;
 use Cake\Database\Query;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -23,6 +24,7 @@ use Psr\SimpleCache\CacheInterface;
  * Campaigns Model
  *
  * @property UsersTable&BelongsTo $Users
+ * @property CampaignPermissionsTable&HasMany $CampaignPermissions
  * @property CharactersTable&HasMany $Characters
  * @property CombatEncountersTable&HasMany $CombatEncounters
  * @property RolesTable&HasMany $Roles
@@ -65,6 +67,9 @@ class CampaignsTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
+        ]);
+        $this->hasMany('CampaignPermissions', [
+            'foreignKey' => 'campaign_id',
         ]);
         $this->hasMany('Characters', [
             'foreignKey' => 'campaign_id',
@@ -130,7 +135,7 @@ class CampaignsTable extends Table
     {
         try {
             /** @var Campaign $entity */
-            $entity = $this->get($id, contain: User::ENTITY_NAME);
+            $entity = $this->get($id, contain: [User::ENTITY_NAME, CampaignPermission::ENTITY_NAME]);
         } catch (RecordNotFoundException $exception) {
             return null;
         }
@@ -145,6 +150,7 @@ class CampaignsTable extends Table
             function (Query $q) use ($userId) {
                 return $q->where([User::ENTITY_NAME . '.' . User::FIELD_ID => $userId]);
             }
-        );
+        )
+            ->contain([CampaignPermission::ENTITY_NAME]);
     }
 }

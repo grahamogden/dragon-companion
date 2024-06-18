@@ -30,6 +30,9 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 require dirname(__DIR__) . '/config/bootstrap.php';
 
+// Need to distinguish between development vs unit tests as pre-configured users cannot be authorised correctly
+$_ENV['ENV_LEVEL'] = 'development-unit-test';
+
 // $_SERVER['PHP_SELF'] = '/';
 if (empty($_SERVER['HTTP_HOST']) && !Configure::read('App.fullBaseUrl')) {
     Configure::write('App.fullBaseUrl', 'http://localhost');
@@ -64,5 +67,3 @@ session_id('cli');
 // load schema from a SQL dump file with
 // use Cake\TestSuite\Fixture\SchemaLoader;
 // (new SchemaLoader())->loadSqlFiles('./tests/schema.sql', 'test');
-
-(new Migrator())->run();

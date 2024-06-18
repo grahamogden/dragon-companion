@@ -4,35 +4,32 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use App\Model\Entity\Interface\PermissionInterface;
 use App\Model\Enum\RolePermission;
 use Cake\ORM\Entity;
 
 /**
- * CampaignPermission Entity
+ * SpeciesPermission Entity
  *
  * @property int $id
- * @property int $campaign_id
+ * @property int $species_id
  * @property int $role_id
- * @property int $permissions
-//  * @property bool $can_read
-//  * @property bool $can_write
-//  * @property bool $can_delete
-//  * @property bool $can_permission
+ * @property int $permissions - enum of RolePermission
  *
- * @property Campaign $campaign
+ * @property Species $species
  * @property Role $role
  */
-class CampaignPermission extends Entity
+class SpeciesPermission extends Entity implements PermissionInterface
 {
-    public const ENTITY_NAME = 'CampaignPermissions';
+    public const ENTITY_NAME = 'SpeciesPermissions';
 
-    public const FIELD_CAMPAIGN_ID = 'campaign_id';
+    public const FIELD_SPECIES_ID = 'species_id';
     public const FIELD_ROLE_ID = 'role_id';
     // public const FIELD_CAN_READ = 'can_read';
     // public const FIELD_CAN_WRITE = 'can_write';
     // public const FIELD_CAN_DELETE = 'can_delete';
     // public const FIELD_CAN_PERMISSION = 'can_permission';
-    public const FIELD_PERMISSIONS = 'permissions';
+    public const FILED_PERMISSIONS = 'permissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -44,24 +41,24 @@ class CampaignPermission extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        self::FIELD_CAMPAIGN_ID => true,
+        self::FIELD_SPECIES_ID => true,
         self::FIELD_ROLE_ID => true,
         // self::FIELD_CAN_READ => true,
         // self::FIELD_CAN_WRITE => true,
         // self::FIELD_CAN_DELETE => true,
         // self::FIELD_CAN_PERMISSION => true,
-        self::FIELD_PERMISSIONS => true,
-        'campaign' => true,
+        self::FILED_PERMISSIONS => true,
+        'species' => true,
         'role' => true,
     ];
 
     protected array $_hidden = [
-        self::FIELD_PERMISSIONS,
+        self::FILED_PERMISSIONS,
     ];
 
-    public function getCampaignId(): int
+    public function getSpeciesId(): int
     {
-        return $this->campaign_id;
+        return $this->species_id;
     }
 
     public function getRoleId(): int

@@ -1,0 +1,14 @@
+{
+    $schema: 'vendor/infection/infection/resources/schema.json',
+    source: {
+        directories: ['src'],
+        excludes: ['{Controller/.*.php}', '{View/.*.php}'],
+    },
+    logs: {
+        text: 'tests/infection/infection.log',
+        html: 'tests/infection/infection.html',
+    },
+    mutators: {
+        '@default': true,
+    },
+}

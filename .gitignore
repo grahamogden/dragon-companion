@@ -54,6 +54,8 @@ node_modules/*
 build/certs
 build/private
 config/keys/*
+tests/infection
+tests/coverage
 
 webroot/ui/dist/**
 src-js/ui/node_modules/*

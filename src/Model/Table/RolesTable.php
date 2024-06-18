@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\Role;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -118,5 +119,13 @@ class RolesTable extends Table
         $rules->add($rules->existsIn(['campaign_id'], 'Campaigns'), ['errorField' => 'campaign_id']);
 
         return $rules;
+    }
+
+    public function findByCampaignId(int $campaignId): array
+    {
+        $query = $this->find()
+            ->where([Role::FIELD_CAMPAIGN_ID => $campaignId]);
+
+        return $query->all()->toList();
     }
 }

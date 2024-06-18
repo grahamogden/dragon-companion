@@ -18,22 +18,25 @@ declare(strict_types=1);
 
 namespace App\Controller\Api\V1;
 
+use App\Error\Api\ForbiddenError;
 use App\Error\Api\UnauthorizedError;
-use Cake\Controller\Controller;
-use Cake\Event\EventInterface;
-use Cake\Event\EventManagerInterface;
-use Cake\Http\Response;
-use Cake\View\JsonView;
-use Exception;
-use Authentication\Controller\Component\AuthenticationComponent;
+use App\Model\Entity\User;
 use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
 use App\Services\Api\Response\ApiResponseHeaderServiceInterface;
 use Authentication\Authenticator\ResultInterface;
+use Authentication\Controller\Component\AuthenticationComponent;
 use Authorization\Controller\Component\AuthorizationComponent;
+use Authorization\Exception\ForbiddenException;
 use Authorization\Identity;
-use Cake\Http\ServerRequest;
+use Cake\Controller\Controller;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
+use Cake\Event\EventManagerInterface;
 use Cake\Log\Log;
-use App\Model\Entity\User;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
+use Cake\View\JsonView;
+use Exception;
 
 /**
  * @property AuthenticationComponent $Authentication
@@ -70,13 +73,19 @@ class ApiAppController extends Controller
     }
 
     /**
-     * @deprecated
-     * @param $data
+     * @param array $data
      */
-    public function output($data): Response
+    public function output(array $data): void
     {
-        return $this->response->withType('application/json')
-            ->withStringBody(json_encode($data));
+        // return $this->response->withType('application/json')
+        //     ->withStringBody(json_encode($data));
+
+        $this->set($data);
+        if (count($data) > 1) {
+            $this->viewBuilder()->setOption('serialize', array_keys($data));
+        } else {
+            $this->viewBuilder()->setOption('serialize', array_keys($data)[0] ?? []);
+        }
     }
 
     public function viewClasses(): array
@@ -150,12 +159,30 @@ class ApiAppController extends Controller
 
     /**
      * Determines whether the user is authorised to be able to use this action
-     *
-     * @return bool
      */
-    public function isAuthorized($entity): void
+    public function isAuthorized(EntityInterface $entity): void
     {
-        $this->Authorization->authorize($entity);
+        try {
+            $this->Authorization->authorize($entity);
+        } catch (ForbiddenException $exception) {
+            $this->log($exception->getMessage());
+            throw new ForbiddenError();
+        }
+    }
+
+    /**
+     * Checks whether the user is authorized but returns a boolean rather
+     * than throw an exception - this should be used for lists of entities
+     * to know whether the user is allowed to see that item in the list
+     */
+    public function isAuthorizedCheck(EntityInterface $entity): bool
+    {
+        try {
+            $this->Authorization->authorize(resource: $entity);
+            return true;
+        } catch (ForbiddenException $exception) {
+            return false;
+        }
     }
 
     // public function beforeRender(EventInterface $event)

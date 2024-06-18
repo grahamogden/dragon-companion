@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\Species;
+use App\Model\Entity\SpeciesPermission;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -33,6 +37,8 @@ use Cake\Validation\Validator;
  */
 class SpeciesTable extends Table
 {
+    public const TABLE_NAME = 'species';
+
     /**
      * Initialize method
      *
@@ -43,8 +49,8 @@ class SpeciesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('species');
-        $this->setDisplayField('species_name');
+        $this->setTable(self::TABLE_NAME);
+        $this->setDisplayField(Species::FIELD_NAME);
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Campaigns', [
@@ -55,17 +61,20 @@ class SpeciesTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
         ]);
-        $this->belongsToMany('Characters', [
+        // $this->belongsToMany('Characters', [
+        //     'foreignKey' => 'species_id',
+        //     'joinType' => 'INNER',
+        //     // 'targetForeignKey' => 'character_id',
+        //     // 'joinTable' => 'characters_species',
+        // ]);
+        $this->hasMany('SpeciesPermissions', [
             'foreignKey' => 'species_id',
-            'joinType' => 'INNER',
-            // 'targetForeignKey' => 'character_id',
-            // 'joinTable' => 'characters_species',
         ]);
-        $this->belongsToMany('Roles', [
-            'foreignKey' => 'species_id',
-            'targetForeignKey' => 'role_id',
-            'joinTable' => 'roles_species',
-        ]);
+        // $this->belongsToMany('Roles', [
+        //     'foreignKey' => 'species_id',
+        //     'targetForeignKey' => 'role_id',
+        //     'joinTable' => 'roles_species',
+        // ]);
     }
 
     /**
@@ -77,9 +86,11 @@ class SpeciesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('species_name')
-            ->maxLength('species_name', 255)
-            ->notEmptyString('species_name');
+            ->scalar(Species::FIELD_NAME)
+            ->minLength(Species::FIELD_NAME, 3)
+            ->maxLength(Species::FIELD_NAME, 255)
+            ->requirePresence(Species::FIELD_NAME)
+            ->notEmptyString(Species::FIELD_NAME);
 
         $validator
             ->nonNegativeInteger('campaign_id')
@@ -105,5 +116,41 @@ class SpeciesTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
 
         return $rules;
+    }
+
+    public function findByIdAndCampaignId(int $id, int $campaignId): ?Species
+    {
+        $query = $this->find()
+            ->where([
+                Species::FIELD_ID => $id,
+                Species::FIELD_CAMPAIGN_ID => $campaignId,
+            ])
+            ->contain([SpeciesPermission::ENTITY_NAME]);
+
+        return $query->first();
+
+        // $entity = $this->get($id);
+        // dd($entity);
+        // if ($entity->campaign_id === $campaignId) {
+        //     return $entity;
+        // }
+
+        // return null;
+    }
+
+    /**
+     * @return Species[]
+     */
+    public function findByCampaignId(int $campaignId): ?array
+    {
+        try {
+            $query = $this->find()
+                ->where([Species::FIELD_CAMPAIGN_ID => $campaignId])
+                ->contain([SpeciesPermission::ENTITY_NAME]);
+
+            return $query->all()->toList();
+        } catch (RecordNotFoundException $exception) {
+            return null;
+        }
     }
 }
