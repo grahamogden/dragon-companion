@@ -27,6 +27,13 @@ RUN apt install -y nano
 
 #RUN mkdir /var/www/html/dragon-companion
 
+# Install Xdebug
+RUN pecl install xdebug
+# && docker-php-ext-enable xdebug
+
+# Copy custom xdebug.ini configuration
+COPY ./build/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
 # Apache rewrite configuration
 RUN a2enmod rewrite
 RUN a2enmod headers
