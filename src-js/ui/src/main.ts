@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { createApp, markRaw, onBeforeMount } from 'vue'
+import { createApp, markRaw, onBeforeMount, onUnmounted, type App as AppType } from 'vue'
 import { createPinia } from 'pinia'
 import { initializeApp } from 'firebase/app'
 import App from './App.vue'
@@ -33,7 +33,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig)
 
-const app = createApp(App)
 const pinia = createPinia()
 
 const auth = getAuth(firebaseApp)
@@ -52,13 +51,18 @@ pinia.use(({ store }) => {
     )
 })
 
-app.use(createPinia())
-app.use(router)
-app.use(pinia)
-
-app.provide(firebaseAppKey, firebaseApp)
+let app: AppType | undefined
 
 auth.onAuthStateChanged(() => {
-    document.getElementById('app')?.classList.remove('loading')
-    app.mount('#app')
+    if (!app) {
+        app = createApp(App)
+        app.use(createPinia())
+        app.use(router)
+        app.use(pinia)
+
+        app.provide(firebaseAppKey, firebaseApp)
+
+        document.getElementById('app')?.classList.remove('loading')
+        app.mount('#app')
+    }
 })
