@@ -114,7 +114,7 @@ class SpeciesController extends ApiAppController
     //     }
     // }
 
-    public function edit(int $id): void
+    public function edit(int $campaignId, int $id): void
     {
         $species = $this->Species->get(primaryKey: $id, contain: 'Users');
         $data = $this->request->getData();
