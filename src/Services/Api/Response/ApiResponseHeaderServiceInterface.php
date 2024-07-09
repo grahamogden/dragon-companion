@@ -8,10 +8,11 @@ use Cake\Http\Response;
 
 interface ApiResponseHeaderServiceInterface
 {
-    public function returnOkResponse(Response $response): void;
-    public function returnNotFoundResponse(Response $response): void;
-    public function returnBadRequestResponse(Response $response): void;
-    public function returnCreatedResponse(Response $response): void;
-    public function returnNoContentResponse(Response $response): void;
-    public function returnUnauthorizedResponse(Response $response): void;
+    public function returnOkResponse(Response $response): Response;
+    public function returnNotFoundResponse(Response $response): Response;
+    public function returnBadRequestResponse(Response $response): Response;
+    public function returnCreatedResponse(Response $response): Response;
+    public function returnNoContentResponse(Response $response): Response;
+    public function returnUnauthorizedResponse(Response $response): Response;
+    public function returnUnknownServerErrorResponse(Response $response): Response;
 }

@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\UsersTable;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -15,24 +16,22 @@ class UsersTableTest extends TestCase
      *
      * @var \App\Model\Table\UsersTable
      */
-    public $Users;
+    protected $Users;
 
     /**
      * Fixtures
      *
-     * @var array
+     * @var list<string>
      */
-    public array $fixtures = [
+    protected array $fixtures = [
         'app.Users',
         'app.Campaigns',
-        'app.Clans',
+        'app.Characters',
         'app.CombatEncounters',
-        'app.Monsters',
-        'app.NonPlayableCharacters',
-        'app.PlayerCharacters',
-        'app.Puzzles',
+        'app.Species',
         'app.Tags',
-        'app.TimelineSegments',
+        'app.Timelines',
+        'app.Roles',
     ];
 
     /**
@@ -40,11 +39,11 @@ class UsersTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Users') ? [] : ['className' => UsersTable::class];
-        $this->Users = TableRegistry::getTableLocator()->get('Users', $config);
+        $config = $this->getTableLocator()->exists('Users') ? [] : ['className' => UsersTable::class];
+        $this->Users = $this->getTableLocator()->get('Users', $config);
     }
 
     /**
@@ -52,7 +51,7 @@ class UsersTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($this->Users);
 
@@ -60,21 +59,12 @@ class UsersTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test validationDefault method
      *
      * @return void
+     * @uses \App\Model\Table\UsersTable::validationDefault()
      */
-    public function testValidationDefault()
+    public function testValidationDefault(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -83,8 +73,9 @@ class UsersTableTest extends TestCase
      * Test buildRules method
      *
      * @return void
+     * @uses \App\Model\Table\UsersTable::buildRules()
      */
-    public function testBuildRules()
+    public function testBuildRules(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -7,23 +9,33 @@ use Cake\ORM\Entity;
 /**
  * Participant Entity
  *
- * @property int             $id
- * @property string          $name
- * @property int             $initiative
- * @property int             $combat_encounter_id
- * @property float           $starting_hit_points
- * @property float           $current_hit_points
- * @property int             $armour_class
- * @property int|null        $monster_id
- * @property int|null        $player_character_id
- * @property int             $temporary_id
+ * @property int $id
+ * @property int $combat_encounter_id
+ * @property int|null $character_id
+ * @property string $name
+ * @property int $initiative
+ * @property float $starting_hit_points
+ * @property float $current_hit_points
+ * @property int $armour_class
+ * @property int $temporary_id
+ *
  * @property CombatEncounter $combat_encounter
- * @property Monster         $monster
- * @property PlayerCharacter $player_character
-//  * @property Condition[]     $conditions
+ * @property Character $character
  */
 class Participant extends Entity
 {
+    public const ENTITY_NAME = 'Participants';
+
+    public const FIELD_COMBAT_ENCOUNTER_ID = 'combat_encounter_id';
+    public const FIELD_CHARACTER_ID = 'character_id';
+    public const FIELD_NAME = 'name';
+    public const FIELD_INITIATIVE = 'initiative';
+    public const FIELD_STARTING_HIT_POINTS = 'starting_hit_points';
+    public const FIELD_CURRENT_HIT_POINTS = 'current_hit_points';
+    public const FIELD_ARMOUR_CLASS = 'armour_class';
+    public const FIELD_TEMPORARY_ID = 'temporary_id';
+    public const FIELD_COMBAT_ENCOUNTER = 'combat_encounter';
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -31,22 +43,19 @@ class Participant extends Entity
      * be mass assigned. For security purposes, it is advised to set '*' to false
      * (or remove it), and explicitly make individual fields accessible as needed.
      *
-     * @var array
+     * @var array<string, bool>
      */
     protected array $_accessible = [
-        'name'                => true,
-        'initiative'          => true,
-        'combat_encounter_id' => true,
-        'starting_hit_points' => true,
-        'current_hit_points'  => true,
-        'armour_class'        => true,
-        'temporary_id'        => true,
-        'monster_id'          => true,
-        'player_character_id' => true,
-        'combat_encounter'    => true,
-        'monster'             => true,
-        'player_character'    => true,
-        // 'conditions'          => true,
+        self::FIELD_COMBAT_ENCOUNTER_ID => true,
+        self::FIELD_CHARACTER_ID => true,
+        self::FIELD_NAME => true,
+        self::FIELD_INITIATIVE => true,
+        self::FIELD_STARTING_HIT_POINTS => true,
+        self::FIELD_CURRENT_HIT_POINTS => true,
+        self::FIELD_ARMOUR_CLASS => true,
+        self::FIELD_TEMPORARY_ID => true,
+        self::FIELD_COMBAT_ENCOUNTER => true,
+        'character' => true,
     ];
 
     public function getName(): string
@@ -85,24 +94,24 @@ class Participant extends Entity
         return $this;
     }
 
-    public function getStartingHitPoints(): int
+    public function getStartingHitPoints(): float
     {
         return $this->starting_hit_points;
     }
 
-    public function setStartingHitPoints(int $startingHitPoints): self
+    public function setStartingHitPoints(float $startingHitPoints): self
     {
         $this->starting_hit_points = $startingHitPoints;
 
         return $this;
     }
 
-    public function getCurrentHitPoints(): int
+    public function getCurrentHitPoints(): float
     {
         return $this->current_hit_points;
     }
 
-    public function setCurrentHitPoints(int $currentHitPoints): self
+    public function setCurrentHitPoints(float $currentHitPoints): self
     {
         $this->current_hit_points = $currentHitPoints;
 
@@ -132,31 +141,6 @@ class Participant extends Entity
 
         return $this;
     }
-
-    public function getMonsterId(): int
-    {
-        return $this->monster_id;
-    }
-
-    public function setMonsterId(int $monsterId): self
-    {
-        $this->monster_id = $monsterId;
-
-        return $this;
-    }
-
-    public function getPlayerCharacterId(): int
-    {
-        return $this->player_character_id;
-    }
-
-    public function setPlayerCharacterId(int $playerCharacterId): self
-    {
-        $this->player_character_id = $playerCharacterId;
-
-        return $this;
-    }
-
     public function getCombatEncounter(): CombatEncounter
     {
         return $this->combat_encounter;
@@ -169,38 +153,62 @@ class Participant extends Entity
         return $this;
     }
 
-    public function getMonster(): Monster
+    public function getCharacter()
     {
-        return $this->monster;
+        return $this->character;
     }
 
-    public function setMonster(Monster $monster): self
+    public function setCharacter($character): self
     {
-        $this->monster = $monster;
+        $this->character = $character;
 
         return $this;
     }
 
-    public function getPlayerCharacter(): PlayerCharacter
-    {
-        return $this->player_character;
-    }
-
-    public function setPlayerCharacter(PlayerCharacter $playerCharacter): self
-    {
-        $this->player_character = $playerCharacter;
-
-        return $this;
-    }
-
-    // public function getConditions()
+    // public function getMonsterId(): int
     // {
-    //     return $this->conditions;
+    //     return $this->monster_id;
     // }
 
-    // public function setConditions($conditions): self
+    // public function setMonsterId(int $monsterId): self
     // {
-    //     $this->conditions = $conditions;
+    //     $this->monster_id = $monsterId;
+
+    //     return $this;
+    // }
+
+    // public function getPlayerCharacterId(): int
+    // {
+    //     return $this->player_character_id;
+    // }
+
+    // public function setPlayerCharacterId(int $playerCharacterId): self
+    // {
+    //     $this->player_character_id = $playerCharacterId;
+
+    //     return $this;
+    // }
+
+    // public function getMonster()
+    // {
+    //     return $this->character;
+    // }
+
+    // public function setMonster($character): self
+    // {
+    //     $this->character = $character;
+
+    //     return $this;
+    // }
+
+    // public function getPlayerCharacter()
+    // {
+    //     return $this->character;
+    // }
+
+    // public function setPlayerCharacter($character): self
+    // {
+    //     $this->character = $character;
 
     //     return $this;
     // }

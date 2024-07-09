@@ -1,0 +1,27 @@
+<script setup lang="ts">
+import { useCampaignStore } from '../../stores/campaign';
+import router from '../../router';
+import CampaignForm from './CampaignForm.vue';
+import {type CampaignEntityInterface} from '../../services/campaign/CampaignEntityInterface';
+
+const campaignStore = useCampaignStore()
+
+async function createCampaign(formData: CampaignEntityInterface): Promise<void> {
+  await campaignStore.addCampaign(
+    {
+      name: formData.name,
+      synopsis: formData.synopsis
+    }
+  )
+  router.push({name: 'campaigns.list'})
+}
+</script>
+
+<template>
+  <div class="campaign-create">
+    <div class="flex flex-row justify-between items-center mb-4">
+      <h1>Create a Campaign</h1>
+    </div>
+    <CampaignForm @save-campaign="createCampaign" />
+  </div>
+</template>

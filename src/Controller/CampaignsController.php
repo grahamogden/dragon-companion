@@ -3,12 +3,10 @@
 namespace App\Controller;
 
 use App\Application;
-use App\Model\Entity\Campaign;
 use App\Model\Entity\CampaignUser;
 use App\Model\Table\CampaignsTable;
 use App\Model\Table\UsersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Response;
 use Cake\ORM\Query;
 
@@ -16,8 +14,6 @@ use Cake\ORM\Query;
  * Campaigns Controller
  *
  * @property CampaignsTable $Campaigns
- *
- * @method Campaign[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class CampaignsController extends AppController
 {
@@ -31,10 +27,6 @@ class CampaignsController extends AppController
      */
     public function index()
     {
-//        $this->paginate = [
-//            'contain' => ['Users'],
-//        ];
-
         $user = $this->getUserOrRedirect();
 
         $campaigns = $this->Campaigns->find()->matching(
@@ -89,12 +81,12 @@ class CampaignsController extends AppController
                 ],
             ];
 
-//            $clan = $this->Clans->newEmptyEntity(
-//                $data,
-//                [
-//                    'associated' => ['Users._joinData'],
-//                ]
-//            );
+            //            $clan = $this->Clans->newEmptyEntity(
+            //                $data,
+            //                [
+            //                    'associated' => ['Users._joinData'],
+            //                ]
+            //            );
 
             $campaign = $this->Campaigns->patchEntity($campaign, $data);
             if ($this->Campaigns->save($campaign)) {
@@ -105,11 +97,11 @@ class CampaignsController extends AppController
             $this->Flash->error(__('The campaign could not be saved. Please, try again.'));
         }
 
-//        $this->loadModel('Users');
-//        $user = $this->getUserOrRedirect();
-//
-//        $users = $this->Users->find('list', ['limit' => 200])
-//            ->where(['Users.user_id =' => $user['id']]);
+        //        $this->loadModel('Users');
+        //        $user = $this->getUserOrRedirect();
+        //
+        //        $users = $this->Users->find('list', ['limit' => 200])
+        //            ->where(['Users.user_id =' => $user['id']]);
         $this->set(compact('campaign'/*, 'users'*/));
     }
 
@@ -145,7 +137,7 @@ class CampaignsController extends AppController
             $data            = $this->request->getData();
 
             $usersJson = json_decode($data['users_string'], true);
-// debug($campaignUserCreator);
+            // debug($campaignUserCreator);
             $data['users'][] = [
                 'id'        => $campaignUserCreator['id'],
                 '_joinData' => [
@@ -222,13 +214,14 @@ class CampaignsController extends AppController
 
         // The add and tags actions are always allowed to logged in users
         if (
-        in_array(
-            $action,
-            [
-                'add',
-                'index',
-            ]
-        )) {
+            in_array(
+                $action,
+                [
+                    'add',
+                    'index',
+                ]
+            )
+        ) {
             return true;
         }
 
@@ -287,5 +280,4 @@ class CampaignsController extends AppController
         }
         return $this->redirect($this->Authentication->logout());
     }
-
 }

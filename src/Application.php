@@ -16,8 +16,7 @@
 
 namespace App;
 
-use App\Controller\Api\V1\CampaignsController;
-use App\Middleware\HttpOptionsMiddleware;
+use App\Model\Table\UsersTable;
 use App\Services\Api\Response\ApiResponseHeaderService;
 use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
 use Authentication\Middleware\AuthenticationMiddleware;
@@ -25,7 +24,6 @@ use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Client;
-use Cake\Http\Exception\UnauthorizedException;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -35,18 +33,18 @@ use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
-use Authentication\Identifier\IdentifierInterface;
+use Authentication\Identifier\AbstractIdentifier;
 use Cake\Core\ContainerInterface;
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use DateTime;
 use DateTimeImmutable;
 use Firebase\JWT\JWT;
-use Cake\Event\EventManager;
+use Cake\Http\Middleware\CsrfProtectionMiddleware;
 
 /**
  * Application setup class.
@@ -68,6 +66,34 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         $this->addPlugin('Migrations');
         $this->addPlugin('Authorization');
+        /*
+         * Only try to load DebugKit in development mode
+         * Debug Kit should not be installed on a production system
+         */
+        if (Configure::read('debug')) {
+            $this->addPlugin('DebugKit', ['bootstrap' => false]);
+        }
+        $csrfDisableParam = isset($_GET['disableCsrf'])
+            && ($_GET['disableCsrf'] === '1' || $_GET['disableCsrf'] === 1 || $_GET['disableCsrf'] === 'true'  || $_GET['disableCsrf'] === true);
+
+        Configure::write(
+            'enableCsrf',
+            env('ENV_LEVEL', 'production') === 'production'
+                || !$csrfDisableParam
+        );
+    }
+
+    public function routes(RouteBuilder $routes): void
+    {
+        if (Configure::read('enableCsrf')) {
+            $routes->registerMiddleware('csrf', new CsrfProtectionMiddleware([
+                'secure' => true,
+                'samesite' => 'Strict',
+                'httponly' => true,
+            ]));
+        }
+
+        parent::routes($routes);
     }
 
     /**
@@ -76,16 +102,18 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      * @param MiddlewareQueue $middlewareQueue The middleware queue to setup.
      * @return MiddlewareQueue The updated middleware queue.
      */
-    public function middleware($middlewareQueue): MiddlewareQueue
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
             // Catch any exceptions in the lower layers,
             // and make an error page/response
-            // ->add(ErrorHandlerMiddleware::class)
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
 
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(AssetMiddleware::class)
+
+            // Handle the UI assets rather than letting them go through to the routes
+            // ->add(UiAssetLoadingMiddleware::class)
 
             // Add routing middleware.
             // Routes collection cache enabled by default, to disable route caching
@@ -97,7 +125,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // CakePHP doesn't seem to handle OPTIONS requests to the API very well and instead
             // returns errors, so we need to intercept them with this middleware to return back
             // 200 OK responses
-            ->add(new HttpOptionsMiddleware())
+            // ->add(HttpOptionsMiddleware::class)
 
             // If you are using Authentication it should be *before* Authorization.
             ->add(new AuthenticationMiddleware($this))
@@ -111,7 +139,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
     public function services(ContainerInterface $container): void
     {
-        // The factory here only exists as an exampe of how I can do this in the future
+        // The factory here only exists as an exampe of how this can be done in the future
         $container->add(ApiResponseHeaderService::class, ApiResponseHeaderServiceFactory::class);
     }
 
@@ -126,20 +154,19 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $service = new AuthenticationService();
 
-        $fields = [
-            IdentifierInterface::CREDENTIAL_USERNAME => 'username',
-            IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
-        ];
-
         $uri = $request->getUri()->getPath();
 
         if (strpos($uri, '/api') === 0) {
             $service->loadIdentifier('Authentication.JwtSubject', [
                 'tokenField' => 'external_user_id',
-                'resolver' => 'Authentication.Orm'
+                'resolver' => [
+                    'className' => 'Authentication.Orm',
+                    'userModel' => UsersTable::TABLE_NAME,
+                    'finder' => 'auth',
+                ],
             ]);
             $service->loadAuthenticator('Authentication.Jwt', [
-                'jwks' => $this->getSecretKeys($request),
+                'jwks' => $this->getSecretKeys(),
                 'algorithm' => 'RS256',
                 'returnPayload' => false,
                 'header' => 'Authorization',
@@ -155,11 +182,16 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'unauthenticatedRedirect' => Router::url([
                 'prefix'     => false,
                 'plugin'     => null,
-                'controller' => 'Users',
-                'action'     => 'login',
+                'controller' => 'Pages',
+                'action'     => 'display',
             ]),
             'queryParam'              => 'redirect',
         ]);
+
+        $fields = [
+            AbstractIdentifier::CREDENTIAL_USERNAME => 'username',
+            AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+        ];
 
         // Session should always come before the form
         $service->loadAuthenticator('Authentication.Session');
@@ -168,8 +200,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'loginUrl' => Router::url([
                 'prefix'     => false,
                 'plugin'     => null,
-                'controller' => 'Users',
-                'action'     => 'login',
+                'controller' => 'Pages',
+                'action'     => 'display',
             ]),
         ]);
 
@@ -186,8 +218,12 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         return new AuthorizationService($resolver);
     }
 
-    private function getSecretKeys(ServerRequestInterface $request): array
+    private function getSecretKeys(): array
     {
+        if (env('ENV_LEVEL', 'production') === 'development-unit-test') {
+            return json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwks-test.json'), true);
+        }
+
         $keyExpiration = json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwt-config.json'), true);
         $keyExpirationDateTime = unserialize($keyExpiration['time'] ?? '') ?: new DateTime();
         $currentDateTime = new DateTime();

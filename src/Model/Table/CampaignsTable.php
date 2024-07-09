@@ -1,116 +1,156 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use App\Model\Entity\Campaign;
-use Cake\ORM\Association\HasMany;
+use App\Model\Entity\CampaignPermission;
+use App\Model\Entity\User;
+use Cake\Database\Query;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\EntityInterface;
+use Cake\Datasource\ResultSetInterface;
+use Cake\ORM\Query\SelectQuery;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\ORM\Query;
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Association\HasMany;
 use Cake\Validation\Validator;
+use Closure;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Campaigns Model
  *
- * @property CampaignUsersTable&HasMany    $CampaignUsers
+ * @property UsersTable&BelongsTo $Users
+ * @property CampaignPermissionsTable&HasMany $CampaignPermissions
+ * @property CharactersTable&HasMany $Characters
  * @property CombatEncountersTable&HasMany $CombatEncounters
- * @property PlayerCharactersTable&HasMany $PlayerCharacters
- * @property TimelineSegmentsTable&HasMany $TimelineSegments
+ * @property RolesTable&HasMany $Roles
+ * @property SpeciesTable&HasMany $Species
+ * @property TagsTable&HasMany $Tags
+ * @property TimelinesTable&HasMany $Timelines
  *
- * @method Campaign get($primaryKey, $options = [])
- * @method Campaign newEntity($data = null, array $options = [])
- * @method Campaign[] newEntities(array $data, array $options = [])
- * @method Campaign|false save(EntityInterface $entity, $options = [])
- * @method Campaign saveOrFail(EntityInterface $entity, $options = [])
+ * @method Campaign newEmptyEntity()
+ * @method Campaign newEntity(array $data, array $options = [])
+ * @method array<Campaign> newEntities(array $data, array $options = [])
+ * @method Campaign get(mixed $primaryKey, array|string $finder = 'all', CacheInterface|string|null $cache = null, Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method Campaign findOrCreate($search, ?callable $callback = null, array $options = [])
  * @method Campaign patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method Campaign[] patchEntities($entities, array $data, array $options = [])
- * @method Campaign findOrCreate($search, callable $callback = null, $options = [])
+ * @method array<Campaign> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method Campaign|false save(EntityInterface $entity, array $options = [])
+ * @method Campaign saveOrFail(EntityInterface $entity, array $options = [])
+ * @method iterable<Campaign>|ResultSetInterface<Campaign>|false saveMany(iterable $entities, array $options = [])
+ * @method iterable<Campaign>|ResultSetInterface<Campaign> saveManyOrFail(iterable $entities, array $options = [])
+ * @method iterable<Campaign>|ResultSetInterface<Campaign>|false deleteMany(iterable $entities, array $options = [])
+ * @method iterable<Campaign>|ResultSetInterface<Campaign> deleteManyOrFail(iterable $entities, array $options = [])
  */
 class CampaignsTable extends Table
 {
+    public const TABLE_NAME = 'campaigns';
+
     /**
      * Initialize method
      *
-     * @param array $config The configuration for the Table.
-     *
+     * @param array<string, mixed> $config The configuration for the Table.
      * @return void
      */
     public function initialize(array $config): void
     {
         parent::initialize($config);
 
-        $this->setTable('campaigns');
-        $this->setDisplayField('name');
-        $this->setPrimaryKey('id');
+        $this->setTable(self::TABLE_NAME);
+        $this->setDisplayField(Campaign::FIELD_NAME);
+        $this->setPrimaryKey(Campaign::FIELD_ID);
 
-        $this->hasMany(
-            'CampaignUsers',
-            [
-                'foreignKey' => 'campaign_id',
-            ]
-        );
-        $this->hasMany(
-            'CombatEncounters',
-            [
-                'foreignKey' => 'campaign_id',
-            ]
-        );
-        $this->hasMany(
-            'PlayerCharacters',
-            [
-                'foreignKey' => 'campaign_id',
-            ]
-        );
-        $this->hasMany(
-            'TimelineSegments',
-            [
-                'foreignKey' => 'campaign_id',
-            ]
-        );
-        $this->belongsToMany('Users', [
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER',
+        ]);
+        $this->hasMany('CampaignPermissions', [
             'foreignKey' => 'campaign_id',
-            'targetForeignKey' => 'user_id',
-            'joinTable' => 'campaign_users',
+        ]);
+        $this->hasMany('Characters', [
+            'foreignKey' => 'campaign_id',
+        ]);
+        $this->hasMany('CombatEncounters', [
+            'foreignKey' => 'campaign_id',
+        ]);
+        $this->hasMany('Roles', [
+            'foreignKey' => 'campaign_id',
+        ]);
+        $this->hasMany('Species', [
+            'foreignKey' => 'campaign_id',
+        ]);
+        $this->hasMany('Tags', [
+            'foreignKey' => 'campaign_id',
+        ]);
+        $this->hasMany('Timelines', [
+            'foreignKey' => 'campaign_id',
         ]);
     }
 
     /**
      * Default validation rules.
      *
-     * @param Validator $validator Validator instance.
-     *
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
      */
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('id')
-            ->allowEmptyString('id', null, 'create');
+            ->scalar(Campaign::FIELD_NAME)
+            ->maxLength(Campaign::FIELD_NAME, 250)
+            ->requirePresence(Campaign::FIELD_NAME)
+            ->notEmptyString(Campaign::FIELD_NAME);
 
         $validator
-            ->scalar('name')
-            ->maxLength('name', 250)
-            ->notEmptyString('name');
+            ->scalar(Campaign::FIELD_SYNOPSIS)
+            ->maxLength(Campaign::FIELD_SYNOPSIS, 1000)
+            ->allowEmptyString(Campaign::FIELD_SYNOPSIS);
 
         $validator
-            ->scalar('synopsis')
-            ->maxLength('synopsis', 1000)
-            ->allowEmptyString('synopsis');
+            ->nonNegativeInteger(Campaign::FIELD_USER_ID)
+            ->notEmptyString(Campaign::FIELD_USER_ID);
 
         return $validator;
     }
 
-    public function findByIdWithUsers(int $id): Campaign
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param RulesChecker $rules The rules object to be modified.
+     * @return RulesChecker
+     */
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
-        return $this->get($id, contain: 'Users');
+        $rules->add($rules->existsIn([Campaign::FIELD_USER_ID], 'Users'), ['errorField' => Campaign::FIELD_USER_ID]);
+
+        return $rules;
     }
 
-    public function findAllByUserId($userId): Query
+    public function findByIdWithUsers(int $id): ?Campaign
+    {
+        try {
+            /** @var Campaign $entity */
+            $entity = $this->get($id, contain: [User::ENTITY_NAME, CampaignPermission::ENTITY_NAME]);
+        } catch (RecordNotFoundException $exception) {
+            return null;
+        }
+
+        return $entity;
+    }
+
+    public function findAllByUserId($userId): SelectQuery
     {
         return $this->find()->matching(
-            'Users',
+            User::ENTITY_NAME,
             function (Query $q) use ($userId) {
-                return $q->where(['Users.id =' => $userId]);
+                return $q->where([User::ENTITY_NAME . '.' . User::FIELD_ID => $userId]);
             }
-        );
+        )
+            ->contain([CampaignPermission::ENTITY_NAME]);
     }
 }

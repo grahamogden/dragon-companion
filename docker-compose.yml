@@ -6,7 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-#    command: sh -c "yarn install && yarn run dev"
     ports:
       - "80:80"
       - "443:443"
@@ -31,9 +30,25 @@ services:
       - "3306:3306"
       - "33060:33060"
 
+  mysql-test:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: "unless-stopped"
+    volumes:
+      - mysql-test-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_TEST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_TEST}
+      MYSQL_USER: ${MYSQL_USER_TEST}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD_TEST}
+      MYSQL_ROOT_HOST: 127.0.0.1
+    ports:
+      - "3307:3306"
+      - "33061:33060"
+
   adminer:
     image: adminer
-    restart: always
+    restart: "unless-stopped"
     ports:
       - "8080:8080"
     depends_on:
@@ -41,3 +56,4 @@ services:
 
 volumes:
   mysql-data:
+  mysql-test-data:

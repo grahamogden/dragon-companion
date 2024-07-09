@@ -8,45 +8,39 @@ use Cake\Http\Response;
 
 final class ApiResponseHeaderService implements ApiResponseHeaderServiceInterface
 {
-    public function returnOkResponse(Response $response): void
+    public function returnOkResponse(Response $response): Response
     {
-        $response->withStatus(200); //, 'Ok');
-        // header('HTTP/1.0 200 Ok');
-        // exit;
+        $response = $response->withStatus(200);
+        return $response;
     }
 
-    public function returnNotFoundResponse(Response $response): void
+    public function returnCreatedResponse(Response $response): Response
     {
-        $response->withStatus(404); //, 'Not found');
-        // header('HTTP/1.0 404 Not found');
-        // exit;
+        return $response->withStatus(201);
     }
 
-    public function returnBadRequestResponse(Response $response): void
+    public function returnNoContentResponse(Response $response): Response
     {
-        $response->withStatus(400); //, 'Bad request');
-        // header('HTTP/1.0 400 Bad request');
-        // exit;
+        return $response->withStatus(204);
     }
 
-    public function returnCreatedResponse(Response $response): void
+    public function returnBadRequestResponse(Response $response): Response
     {
-        $response->withStatus(201); //, 'Created');
-        // header('HTTP/1.0 201 Created');
-        // exit;
+        return $response->withStatus(400);
     }
 
-    public function returnNoContentResponse(Response $response): void
+    public function returnUnauthorizedResponse(Response $response): Response
     {
-        $response->withStatus(204); //, 'No content');
-        // header('HTTP/1.0 204 No content');
-        // exit;
+        return $response->withStatus(401);
     }
 
-    public function returnUnauthorizedResponse(Response $response): void
+    public function returnNotFoundResponse(Response $response): Response
     {
-        $response->withStatus(401); //, 'Unauthorized');
-        // header('HTTP/1.0 401 Unauthorized');
-        // exit;
+        return $response->withStatus(404);
+    }
+
+    public function returnUnknownServerErrorResponse(Response $response): Response
+    {
+        return $response->withStatus(500);
     }
 }

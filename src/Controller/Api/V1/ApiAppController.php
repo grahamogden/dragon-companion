@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -16,17 +18,25 @@
 
 namespace App\Controller\Api\V1;
 
-use Cake\Controller\Controller;
-use Cake\Event\EventInterface;
-use Cake\Http\Response;
-use Cake\View\JsonView;
-use Exception;
-use Authentication\Controller\Component\AuthenticationComponent;
+use App\Error\Api\ForbiddenError;
+use App\Error\Api\UnauthorizedError;
+use App\Model\Entity\User;
 use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
 use App\Services\Api\Response\ApiResponseHeaderServiceInterface;
+use Authentication\Authenticator\ResultInterface;
+use Authentication\Controller\Component\AuthenticationComponent;
 use Authorization\Controller\Component\AuthorizationComponent;
+use Authorization\Exception\ForbiddenException;
 use Authorization\Identity;
-use Cake\Http\Exception\NotFoundException;
+use Cake\Controller\Controller;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
+use Cake\Event\EventManagerInterface;
+use Cake\Log\Log;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
+use Cake\View\JsonView;
+use Exception;
 
 /**
  * @property AuthenticationComponent $Authentication
@@ -36,23 +46,20 @@ class ApiAppController extends Controller
 {
     protected readonly ApiResponseHeaderServiceInterface $apiResponseHeaderService;
     protected Identity $user;
+    protected Log $logger;
 
     public function __construct(
-        $request = null,
-        $response = null,
-        $name = null,
-        $eventManager = null,
-        $components = null,
+        ServerRequest $request = null,
+        ?string $name = null,
+        ?EventManagerInterface $eventManager = null,
     ) {
         parent::__construct(
             $request,
-            $response,
             $name,
             $eventManager,
-            $components
         );
         $this->apiResponseHeaderService = (new ApiResponseHeaderServiceFactory())();
-        // $this->Users = $this->fetchTable('Users');
+        $this->logger = new Log();
     }
 
     /**
@@ -61,18 +68,24 @@ class ApiAppController extends Controller
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadComponent('RequestHandler');
         $this->loadComponent('Authentication.Authentication');
         $this->loadComponent('Authorization.Authorization');
     }
 
     /**
-     * @param $data
+     * @param array $data
      */
-    public function output($data): Response
+    public function output(array $data): void
     {
-        return $this->response->withType('application/json')
-            ->withStringBody(json_encode($data));
+        // return $this->response->withType('application/json')
+        //     ->withStringBody(json_encode($data));
+
+        $this->set($data);
+        if (count($data) > 1) {
+            $this->viewBuilder()->setOption('serialize', array_keys($data));
+        } else {
+            $this->viewBuilder()->setOption('serialize', array_keys($data)[0] ?? []);
+        }
     }
 
     public function viewClasses(): array
@@ -80,30 +93,109 @@ class ApiAppController extends Controller
         return [JsonView::class,];
     }
 
-    public function beforeFilter(EventInterface $event)
+    /**
+     * @return Response
+     */
+    public function beforeFilter(EventInterface $event): ?Response
     {
+        $response = parent::beforeFilter($event);
+        $this->Authentication->beforeFilter();
         $authenticationResult = $this->Authentication->getResult();
-        if (!$authenticationResult->isValid()) {
-            $this->Authorization->skipAuthorization();
-            return $this->getResponse()->withType('application/json')
-                ->withStringBody(json_encode($authenticationResult->getErrors(), JSON_OBJECT_AS_ARRAY))
-                ->withStatus(401);
-            // $this->apiResponseHeaderService->returnUnauthorizedResponse();
+
+        /** @var Identity $user */
+        $user = $this->Authentication->getIdentity();
+
+        if (
+            $authenticationResult->isValid()
+            && $user[User::FIELD_STATUS] > User::STATUS_PENDING
+        ) {
+            // User is authenticated and has verified their account, continue
+            $this->user = $user;
+            return $response;
         }
-        $this->user = $this->Authentication->getIdentity();
+
+        $this->Authorization->skipAuthorization();
+        $this->logger->debug(
+            sprintf(
+                'Authentication Result: %s; Data: %s; Errors: %s;',
+                $authenticationResult->getStatus(),
+                $authenticationResult->getData(),
+                json_encode($authenticationResult->getErrors()),
+            )
+        );
+
+        switch ($authenticationResult->getStatus()) {
+            case ResultInterface::FAILURE_CREDENTIALS_MISSING:
+                $errors = [
+                    'Provide authentication credentials',
+                ];
+            case ResultInterface::SUCCESS:
+                if ($user[User::FIELD_STATUS] === User::STATUS_PENDING) {
+                    $errors = [
+                        'Please verify your account by email',
+                    ];
+                    break;
+                }
+            default:
+                $errors = [
+                    'Could not authenticate user',
+                ];
+        }
+
+        if (env('DEBUG', false)) {
+            $errors[] = $authenticationResult->getStatus();
+            $errors[] = $authenticationResult->getErrors();
+        }
+
+        throw new UnauthorizedError(errors: $errors);
+        // return $this->apiResponseHeaderService->returnUnauthorizedResponse(
+        //     $this->response->withStringBody(json_encode([
+        //         'errors' => $errors,
+        //     ]))
+        // );
+        // return $this->response->withType('application/json')
+        //     ->withStringBody(json_encode($authenticationResult->getErrors(), JSON_OBJECT_AS_ARRAY));
     }
 
-    public function beforeRender(EventInterface $event)
+    /**
+     * Determines whether the user is authorised to be able to use this action
+     */
+    public function isAuthorized(EntityInterface $entity): void
     {
-        $exception = $event->getData('exception');
-
-        if ($exception) {
-            switch (true) {
-                case ($exception instanceof NotFoundException):
-                    break;
-                default:
-                    break;
-            }
+        try {
+            $this->Authorization->authorize($entity);
+        } catch (ForbiddenException $exception) {
+            $this->log($exception->getMessage());
+            throw new ForbiddenError();
         }
     }
+
+    /**
+     * Checks whether the user is authorized but returns a boolean rather
+     * than throw an exception - this should be used for lists of entities
+     * to know whether the user is allowed to see that item in the list
+     */
+    public function isAuthorizedCheck(EntityInterface $entity): bool
+    {
+        try {
+            $this->Authorization->authorize(resource: $entity);
+            return true;
+        } catch (ForbiddenException $exception) {
+            return false;
+        }
+    }
+
+    // public function beforeRender(EventInterface $event)
+    // {
+    //     $exception = $event->getData('exception');
+
+    //     if ($exception) {
+    //         switch (true) {
+    //             case ($exception instanceof NotFoundException):
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    // }
 }

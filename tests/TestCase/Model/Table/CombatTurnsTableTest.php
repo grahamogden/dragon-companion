@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\CombatTurnsTable;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -15,19 +16,17 @@ class CombatTurnsTableTest extends TestCase
      *
      * @var \App\Model\Table\CombatTurnsTable
      */
-    public $CombatTurns;
+    protected $CombatTurns;
 
     /**
      * Fixtures
      *
-     * @var array
+     * @var list<string>
      */
-    public array $fixtures = [
+    protected array $fixtures = [
         'app.CombatTurns',
         'app.CombatEncounters',
-        'app.SourceParticipants',
-        'app.TargetParticipants',
-        'app.CombatActions',
+        'app.Participants',
     ];
 
     /**
@@ -35,11 +34,11 @@ class CombatTurnsTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('CombatTurns') ? [] : ['className' => CombatTurnsTable::class];
-        $this->CombatTurns = TableRegistry::getTableLocator()->get('CombatTurns', $config);
+        $config = $this->getTableLocator()->exists('CombatTurns') ? [] : ['className' => CombatTurnsTable::class];
+        $this->CombatTurns = $this->getTableLocator()->get('CombatTurns', $config);
     }
 
     /**
@@ -47,7 +46,7 @@ class CombatTurnsTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($this->CombatTurns);
 
@@ -55,21 +54,12 @@ class CombatTurnsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test validationDefault method
      *
      * @return void
+     * @uses \App\Model\Table\CombatTurnsTable::validationDefault()
      */
-    public function testValidationDefault()
+    public function testValidationDefault(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -78,8 +68,9 @@ class CombatTurnsTableTest extends TestCase
      * Test buildRules method
      *
      * @return void
+     * @uses \App\Model\Table\CombatTurnsTable::buildRules()
      */
-    public function testBuildRules()
+    public function testBuildRules(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

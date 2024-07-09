@@ -14,6 +14,7 @@ use Cake\Controller\ComponentRegistry;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\EventManager;
+use Cake\Event\EventManagerInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
@@ -59,12 +60,10 @@ class CombatEncountersController extends AppController
      */
     public function __construct(
         ServerRequest $request = null,
-        Response $response = null,
-        $name = null,
-        $eventManager = null,
-        $components = null
+        ?string $name = null,
+        ?EventManagerInterface $eventManager = null,
     ) {
-        parent::__construct($request, $response, $name, $eventManager, $components);
+        parent::__construct($request, $name, $eventManager);
 
         // Load in all necessary models
         $this->combatActionsTable = $this->fetchTable('CombatActions');

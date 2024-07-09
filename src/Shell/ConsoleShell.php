@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -12,70 +13,71 @@
  * @since     3.0.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace App\Shell;
 
-use Cake\Console\ConsoleOptionParser;
-use Cake\Console\Shell;
-use Cake\Log\Log;
-use Psy\Shell as PsyShell;
+// namespace App\Shell;
 
-/**
- * Simple console wrapper around Psy\Shell.
- */
-class ConsoleShell extends Shell
-{
+// use Cake\Console\ConsoleOptionParser;
+// use Cake\Console\Shell;
+// use Cake\Log\Log;
+// use Psy\Shell as PsyShell;
 
-    /**
-     * Start the shell and interactive console.
-     *
-     * @return int|null
-     */
-    public function main()
-    {
-        if (!class_exists('Psy\Shell')) {
-            $this->err('<error>Unable to load Psy\Shell.</error>');
-            $this->err('');
-            $this->err('Make sure you have installed psysh as a dependency,');
-            $this->err('and that Psy\Shell is registered in your autoloader.');
-            $this->err('');
-            $this->err('If you are using composer run');
-            $this->err('');
-            $this->err('<info>$ php composer.phar require --dev psy/psysh</info>');
-            $this->err('');
+// /**
+//  * Simple console wrapper around Psy\Shell.
+//  */
+// class ConsoleShell extends Shell
+// {
 
-            return self::CODE_ERROR;
-        }
+//     /**
+//      * Start the shell and interactive console.
+//      *
+//      * @return int|null
+//      */
+//     public function main()
+//     {
+//         if (!class_exists('Psy\Shell')) {
+//             $this->err('<error>Unable to load Psy\Shell.</error>');
+//             $this->err('');
+//             $this->err('Make sure you have installed psysh as a dependency,');
+//             $this->err('and that Psy\Shell is registered in your autoloader.');
+//             $this->err('');
+//             $this->err('If you are using composer run');
+//             $this->err('');
+//             $this->err('<info>$ php composer.phar require --dev psy/psysh</info>');
+//             $this->err('');
 
-        $this->out("You can exit with <info>`CTRL-C`</info> or <info>`exit`</info>");
-        $this->out('');
+//             return self::CODE_ERROR;
+//         }
 
-        Log::drop('debug');
-        Log::drop('error');
-        $this->_io->setLoggers(false);
-        restore_error_handler();
-        restore_exception_handler();
+//         $this->out("You can exit with <info>`CTRL-C`</info> or <info>`exit`</info>");
+//         $this->out('');
 
-        $psy = new PsyShell();
-        $psy->run();
-    }
+//         Log::drop('debug');
+//         Log::drop('error');
+//         $this->_io->setLoggers(false);
+//         restore_error_handler();
+//         restore_exception_handler();
 
-    /**
-     * Display help for this console.
-     *
-     * @return ConsoleOptionParser
-     */
-    public function getOptionParser(): ConsoleOptionParser
-    {
-        $parser = new ConsoleOptionParser('console');
-        $parser->setDescription(
-            'This shell provides a REPL that you can use to interact ' .
-            'with your application in an interactive fashion. You can use ' .
-            'it to run adhoc queries with your models, or experiment ' .
-            'and explore the features of CakePHP and your application.' .
-            "\n\n" .
-            'You will need to have psysh installed for this Shell to work.'
-        );
+//         $psy = new PsyShell();
+//         $psy->run();
+//     }
 
-        return $parser;
-    }
-}
+//     /**
+//      * Display help for this console.
+//      *
+//      * @return ConsoleOptionParser
+//      */
+//     public function getOptionParser(): ConsoleOptionParser
+//     {
+//         $parser = new ConsoleOptionParser('console');
+//         $parser->setDescription(
+//             'This shell provides a REPL that you can use to interact ' .
+//                 'with your application in an interactive fashion. You can use ' .
+//                 'it to run adhoc queries with your models, or experiment ' .
+//                 'and explore the features of CakePHP and your application.' .
+//                 "\n\n" .
+//                 'You will need to have psysh installed for this Shell to work.'
+//         );
+
+//         return $parser;
+//     }
+// }

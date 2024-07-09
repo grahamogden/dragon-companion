@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\CombatEncountersTable;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -15,19 +16,20 @@ class CombatEncountersTableTest extends TestCase
      *
      * @var \App\Model\Table\CombatEncountersTable
      */
-    public $CombatEncounters;
+    protected $CombatEncounters;
 
     /**
      * Fixtures
      *
-     * @var array
+     * @var list<string>
      */
-    public array $fixtures = [
+    protected array $fixtures = [
         'app.CombatEncounters',
         'app.Users',
         'app.Campaigns',
-        'app.Participants',
         'app.CombatTurns',
+        'app.Participants',
+        'app.Roles',
     ];
 
     /**
@@ -35,11 +37,11 @@ class CombatEncountersTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('CombatEncounters') ? [] : ['className' => CombatEncountersTable::class];
-        $this->CombatEncounters = TableRegistry::getTableLocator()->get('CombatEncounters', $config);
+        $config = $this->getTableLocator()->exists('CombatEncounters') ? [] : ['className' => CombatEncountersTable::class];
+        $this->CombatEncounters = $this->getTableLocator()->get('CombatEncounters', $config);
     }
 
     /**
@@ -47,7 +49,7 @@ class CombatEncountersTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($this->CombatEncounters);
 
@@ -55,21 +57,12 @@ class CombatEncountersTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test validationDefault method
      *
      * @return void
+     * @uses \App\Model\Table\CombatEncountersTable::validationDefault()
      */
-    public function testValidationDefault()
+    public function testValidationDefault(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -78,8 +71,9 @@ class CombatEncountersTableTest extends TestCase
      * Test buildRules method
      *
      * @return void
+     * @uses \App\Model\Table\CombatEncountersTable::buildRules()
      */
-    public function testBuildRules()
+    public function testBuildRules(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

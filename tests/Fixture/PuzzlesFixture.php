@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
@@ -15,7 +16,6 @@ class PuzzlesFixture extends TestFixture
      *
      * @var array
      */
-    // @codingStandardsIgnoreStart
     public $fields = [
         'id' => [
             'type' => 'integer',
@@ -105,14 +105,13 @@ class PuzzlesFixture extends TestFixture
             'collation' => 'utf8_general_ci',
         ],
     ];
-    // @codingStandardsIgnoreEnd
 
     /**
      * Init method
      *
      * @return void
      */
-    public function init()
+    public function init(): void
     {
         $this->records = [
             [

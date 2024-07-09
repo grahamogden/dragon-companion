@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\ParticipantsTable;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -15,20 +16,17 @@ class ParticipantsTableTest extends TestCase
      *
      * @var \App\Model\Table\ParticipantsTable
      */
-    public $Participants;
+    protected $Participants;
 
     /**
      * Fixtures
      *
-     * @var array
+     * @var list<string>
      */
-    public array $fixtures = [
+    protected array $fixtures = [
         'app.Participants',
         'app.CombatEncounters',
-        'app.Monsters',
-        'app.PlayerCharacters',
-        'app.CombatTurns',
-        'app.Conditions',
+        'app.Characters',
     ];
 
     /**
@@ -36,11 +34,11 @@ class ParticipantsTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Participants') ? [] : ['className' => ParticipantsTable::class];
-        $this->Participants = TableRegistry::getTableLocator()->get('Participants', $config);
+        $config = $this->getTableLocator()->exists('Participants') ? [] : ['className' => ParticipantsTable::class];
+        $this->Participants = $this->getTableLocator()->get('Participants', $config);
     }
 
     /**
@@ -48,7 +46,7 @@ class ParticipantsTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($this->Participants);
 
@@ -56,21 +54,12 @@ class ParticipantsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test validationDefault method
      *
      * @return void
+     * @uses \App\Model\Table\ParticipantsTable::validationDefault()
      */
-    public function testValidationDefault()
+    public function testValidationDefault(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -79,8 +68,9 @@ class ParticipantsTableTest extends TestCase
      * Test buildRules method
      *
      * @return void
+     * @uses \App\Model\Table\ParticipantsTable::buildRules()
      */
-    public function testBuildRules()
+    public function testBuildRules(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

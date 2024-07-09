@@ -1,9 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
+use App\Model\Entity\Campaign;
 use App\Model\Table\CampaignsTable;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Validation\Validator;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * App\Model\Table\CampaignsTable Test Case
@@ -13,41 +18,33 @@ class CampaignsTableTest extends TestCase
     /**
      * Test subject
      *
-     * @var \App\Model\Table\CampaignsTable
+     * @var CampaignsTable
      */
-    public $Campaigns;
+    protected $Campaigns;
 
     /**
      * Fixtures
      *
-     * @var array
+     * @var list<string>
      */
-    public array $fixtures = [
+    protected array $fixtures = [
+        'app.Alignments',
         'app.Campaigns',
         'app.CampaignUsers',
         'app.CombatEncounters',
         'app.PlayerCharacters',
         'app.TimelineSegments',
+        'app.Users',
     ];
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Campaigns') ? [] : ['className' => CampaignsTable::class];
-        $this->Campaigns = TableRegistry::getTableLocator()->get('Campaigns', $config);
+        $config = $this->getTableLocator()->exists('Campaigns') ? [] : ['className' => CampaignsTable::class];
+        $this->Campaigns = $this->getTableLocator()->get('Campaigns', $config);
     }
 
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($this->Campaigns);
 
@@ -55,22 +52,89 @@ class CampaignsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test validationDefault method
      *
-     * @return void
+     * @uses CampaignsTable::validationDefault()
      */
-    public function testInitialize()
+    public function testValidationDefault(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
+        $validator = $this->mockValidator();
+
+        $validator->expects(self::exactly(1))
+            ->method('nonNegativeInteger')
+            ->with('id');
+        $validator->expects(self::exactly(1))
+            ->method('allowEmptyString')
+            ->with(['id', null, 'create'], ['synopsis']);
+
+        $this->Campaigns->validationDefault($validator);
     }
 
     /**
-     * Test validationDefault method
+     * Test findByIdWithUsers method
      *
-     * @return void
+     * @uses CampaignsTable::findByIdWithUsers()
      */
-    public function testValidationDefault()
+    public function testFindByIdWithUsersReturnsCampaignEntityResult(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $expected = [
+            'id' => 1,
+            'name' => 'Lorem ipsum dolor sit amet',
+            'synopsis' => 'Lorem ipsum dolor sit amet',
+        ];
+
+        $result = $this->Campaigns->findByIdWithUsers(1);
+
+        $this->assertInstanceOf(
+            expected: Campaign::class,
+            actual: $result
+        );
+        $this->assertSame(
+            expected: $expected,
+            actual: $result->toArray(),
+        );
+    }
+
+    /**
+     * Test findAllByUserId method
+     *
+     * @uses CampaignsTable::findAllByUserId()
+     */
+    public function testFindAllByUserIdReturnsCampaignEntityResult(): void
+    {
+        $expected = [
+            'id' => 1,
+            'name' => 'Lorem ipsum dolor sit amet',
+            'synopsis' => 'Lorem ipsum dolor sit amet',
+        ];
+
+        $result = $this->Campaigns->findAllByUserId(1)->toArray();
+
+        $this->assertInstanceOf(
+            expected: Campaign::class,
+            actual: $result[0],
+        );
+        $this->assertSame(
+            expected: $expected,
+            actual: $result[0]->toArray(),
+        );
+    }
+
+    private function mockValidator(): Validator&MockObject
+    {
+        $mock = $this->createMock(Validator::class);
+        $mock->method('nonNegativeInteger')
+            ->willReturnSelf();
+        $mock->method('allowEmptyString')
+            ->willReturnSelf();
+        $mock->method('scalar')
+            ->willReturnSelf();
+        $mock->method('maxLength')
+            ->willReturnSelf();
+        $mock->method('notEmptyString')
+            ->willReturnSelf();
+
+        return $mock;
     }
 }

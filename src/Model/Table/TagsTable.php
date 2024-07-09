@@ -1,111 +1,103 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
-use \App\Model\Entity\Tag;
-use \App\Model\Table\UsersTable;
-use \App\Model\Table\TimelineSegmentsTable;
-use Cake\Datasource\EntityInterface;
-use Cake\Event\EventInterface;
+use App\Model\Entity\Tag;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\BelongsToMany;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Cake\Utility\Text;
 
 /**
  * Tags Model
  *
+ * @property CampaignsTable&BelongsTo $Campaigns
  * @property UsersTable&BelongsTo $Users
- * @property TimelineSegmentsTable&BelongsToMany $TimelineSegments
+ * @property RolesTable&BelongsToMany $Roles
  *
- * @method Tag get($primaryKey, $options = [])
- * @method Tag newEntity($data = null, array $options = [])
- * @method Tag[] newEntities(array $data, array $options = [])
- * @method Tag|false save(EntityInterface $entity, $options = [])
- * @method Tag saveOrFail(EntityInterface $entity, $options = [])
- * @method Tag patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method Tag[] patchEntities($entities, array $data, array $options = [])
- * @method Tag findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Tag newEmptyEntity()
+ * @method \App\Model\Entity\Tag newEntity(array $data, array $options = [])
+ * @method array<\App\Model\Entity\Tag> newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Tag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \App\Model\Entity\Tag findOrCreate($search, ?callable $callback = null, array $options = [])
+ * @method \App\Model\Entity\Tag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method array<\App\Model\Entity\Tag> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Tag|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \App\Model\Entity\Tag saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method iterable<\App\Model\Entity\Tag>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Tag>|false saveMany(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Tag>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Tag> saveManyOrFail(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Tag>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Tag>|false deleteMany(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Tag>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Tag> deleteManyOrFail(iterable $entities, array $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class TagsTable extends Table
 {
+    public const TABLE_NAME = 'tags';
+
+
 
     /**
      * Initialize method
      *
-     * @param array $config The configuration for the Table.
+     * @param array<string, mixed> $config The configuration for the Table.
      * @return void
      */
     public function initialize(array $config): void
     {
         parent::initialize($config);
 
-        $this->setTable('tags');
-        $this->setDisplayField('title');
+        $this->setTable(self::TABLE_NAME);
+        $this->setDisplayField(Tag::FIELD_TAG_NAME);
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('Campaigns', [
+            'foreignKey' => Tag::FIELD_CAMPAIGN_ID,
+            'joinType' => 'INNER',
+        ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-            'joinType'   => 'INNER',
+            'foreignKey' => Tag::FIELD_USER_ID,
+            'joinType' => 'INNER',
         ]);
-
-        $this->belongsToMany('TimelineSegments', [
-            'foreignKey'       => 'tag_id',
-            'targetForeignKey' => 'timeline_segment_id',
-            'joinTable'        => 'tags_timeline_segments',
+        $this->belongsToMany('Roles', [
+            'foreignKey' => 'tag_id',
+            'targetForeignKey' => 'role_id',
+            'joinTable' => 'roles_tags',
         ]);
-    }
-
-    /**
-     * Before saving
-     *
-     * @param type $event
-     * @param type $entity
-     * @param type $options
-     * @return type
-     */
-    public function beforeSave(EventInterface $event, $entity, $options)
-    {
-        $sluggedTitle = Text::slug(strtolower($entity->title));
-        // trim slug to maximum length defined in schema
-        $entity->slug = substr($sluggedTitle, 0, 250);
     }
 
     /**
      * Default validation rules.
      *
-     * @param Validator $validator Validator instance.
-     *
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
      */
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('id')
-            ->allowEmptyString('id', null, 'create');
+            ->nonNegativeInteger(Tag::FIELD_CAMPAIGN_ID)
+            ->notEmptyString(Tag::FIELD_CAMPAIGN_ID);
 
         $validator
-            ->scalar('title')
-            ->minLength('title', 3)
-            ->maxLength('title', 255)
-            ->notEmptyString('title')
-            ->add('title', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->scalar(Tag::FIELD_TAG_NAME)
+            ->minLength(Tag::FIELD_TAG_NAME, 3)
+            ->maxLength(Tag::FIELD_TAG_NAME, 255)
+            ->notEmptyString(Tag::FIELD_TAG_NAME);
 
         $validator
-            ->scalar('description')
-            ->requirePresence('description', 'create')
-            ->notEmptyString('description');
+            ->scalar(Tag::FIELD_DESCRIPTION)
+            ->requirePresence(Tag::FIELD_DESCRIPTION, 'create')
+            ->notEmptyString(Tag::FIELD_DESCRIPTION);
 
         $validator
-            ->scalar('slug')
-            ->maxLength('slug', 250)
-            ->notEmptyString('slug');
+            ->nonNegativeInteger(Tag::FIELD_USER_ID)
+            ->notEmptyString(Tag::FIELD_USER_ID);
 
         return $validator;
     }
@@ -114,14 +106,13 @@ class TagsTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param RulesChecker $rules The rules object to be modified.
-     *
-     * @return RulesChecker
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['title']));
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn([Tag::FIELD_CAMPAIGN_ID], 'Campaigns'), ['errorField' => Tag::FIELD_CAMPAIGN_ID]);
+        $rules->add($rules->existsIn([Tag::FIELD_USER_ID], 'Users'), ['errorField' => Tag::FIELD_USER_ID]);
 
         return $rules;
     }

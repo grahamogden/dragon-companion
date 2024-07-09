@@ -43,6 +43,17 @@ define('APP_DIR', 'src');
 define('APP', ROOT . DS . APP_DIR . DS);
 
 /**
+ * The actual directory name for the application UI directory. Normally
+ * named 'src'.
+ */
+define('APP_UI_DIR', 'webroot' . DS . 'ui');
+
+/**
+ * Path to the application's UI directory.
+ */
+define('APP_UI', ROOT . DS . APP_UI_DIR . DS . 'dist' . DS);
+
+/**
  * Path to the config directory.
  */
 define('CONFIG', ROOT . DS . 'config' . DS);
