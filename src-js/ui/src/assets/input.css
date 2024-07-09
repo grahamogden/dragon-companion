@@ -19,7 +19,7 @@
     } */
 
     h1 {
-        @apply py-2 border-b-2 border-dark-brown dark:border-parchment-pale mb-4 text-xl font-bold;
+        @apply pb-1 border-b-2 border-shark-950 dark:border-white-lilac-50 text-xl font-bold;
     }
 
     a,
@@ -37,8 +37,13 @@
         @apply cursor-pointer;
     }
 
-    a {
-        @apply text-biscay-800 underline dark:text-biscay-300;
+    a,
+    .button {
+        @apply text-white-lilac-800 dark:text-white-lilac-200 underline hover:no-underline;
+    }
+
+    .button {
+        @apply py-1 px-4 no-underline border border-white-lilac-800 dark:border-white-lilac-200 rounded-xl;
     }
 
     pre {
@@ -50,10 +55,38 @@
     .header-transition {
         transition-property: background-position;
         /* transition-duration: 350ms; */
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        ;
     }
 
-    .stitching {
+    .breadcrumb {
+        & + &:before {
+            content: '>';
+            @apply px-1
+        }
+    }
+
+    .campaign-picker {
+        &:hover {
+            a {
+                @apply opacity-100;
+            }
+        }
+    }
+
+    nav .router-link-active {
+        @apply bg-saffron-mango-300 text-shark-950;
+    }
+
+    /* .glassmorphism {
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    } */
+
+    /* .stitching {
         position: relative;
 
         &:before {
@@ -88,31 +121,39 @@
             top: 0.2rem;
             left: 0;
         }
-    }
+    } */
 
-    .destructive-button {
+    /* .destructive-button {
         @apply py-2 px-4 border-2 border-red-600 rounded-md text-center;
-    }
+    } */
 
-    .app-name {
+    /* .app-name {
         text-shadow: 0 1px 3px rgba(30, 30, 90, 0.7);
-    }
+    } */
 
-    .loading {
+    /* .loading {
         &:before {
             content: '';
             position: absolute;
             left: 50%;
             top: 50%;
-            transform: translate(-50%, -50%);
             height: 5rem;
             width: 5rem;
             border-width: 1rem;
-            border-color: rgb(230, 230, 230);
             border-radius: 50%;
             border-style: dashed;
             transform-origin: center;
             animation: spin 2s linear infinite;
+            @apply border-woodsmoke-950 dark:border-timberwolf-50;
+        }
+    } */
+
+    .loading {
+        transform: translate(-50%, -50%);
+    
+        .spinner {
+            transform-origin: center;
+            animation: spin 3s linear infinite;
         }
     }
 
@@ -120,25 +161,51 @@
         @apply border-0 w-full border-collapse;
 
         thead {
-            @apply bg-timberwolf-300 dark:bg-woodsmoke-800 transition duration-500;
+            th {
+                @apply bg-woodsmoke-800 text-white-lilac-50 transition duration-500;
+
+                &:first-of-type {
+                    @apply rounded-tl-2xl;
+                }
+
+                &:last-of-type {
+                    @apply rounded-tr-2xl;
+                }
+            }
         }
 
         /* tbody tr:nth-of-type(odd) {
-            @apply bg-timberwolf-200 dark:bg-woodsmoke-950;
+            @apply bg-shark-100 dark:bg-woodsmoke-950;
         } */
 
-        tbody tr:nth-of-type(even) {
-            @apply bg-timberwolf-100 dark:bg-woodsmoke-900 transition duration-500;
+        tbody tr {
+            &:nth-of-type(even) {
+                td {
+                    @apply bg-shark-500/10 dark:bg-woodsmoke-800/30 transition duration-500;
+                }
+            }
+
+            &:last-of-type {
+                td {
+                    &:first-of-type {
+                        @apply rounded-bl-2xl;
+                    }
+
+                    &:last-of-type {
+                        @apply rounded-br-2xl;
+                    }
+                }
+            }
         }
 
         th,
         td {
-            @apply border-0 px-2 py-2 align-top text-left;
+            @apply border-0 px-3 py-4 align-top text-left;
 
             &.action-cell {
                 @apply text-right;
 
-                > .kebab-menu-container {
+                >.kebab-menu-container {
                     @apply inline-block;
                 }
             }
@@ -149,12 +216,13 @@
         }
     }
 }
-        
+
 @keyframes spin {
     0% {
-        transform: rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
     }
+
     100% {
-        transform: rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }

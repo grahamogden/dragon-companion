@@ -25,13 +25,13 @@ class RestClientService {
         if (!this.auth.currentUser) {
             throw new Error()
         }
-        const url = this.baseUrl + path
+        const url = this.baseUrl + path + '?disableCsrf=1'
 
         const res = await getIdToken(this.auth.currentUser)
             .then(async (authToken: string) => {
                 const res = await fetch(url, {
                     method: 'GET',
-                    credentials: 'include',
+                    credentials: 'omit', //'include',
                     mode: 'cors',
                     headers: {
                         ...this.getDefaultHeaders(),
@@ -55,13 +55,13 @@ class RestClientService {
         if (!this.auth.currentUser) {
             throw new Error()
         }
-        const url = this.baseUrl + path
+        const url = this.baseUrl + path + '?disableCsrf=1'
 
         const res = await getIdToken(this.auth.currentUser)
             .then(async (authToken: string) => {
                 const res = await fetch(url, {
                     method: 'POST',
-                    credentials: 'include',
+                    credentials: 'omit', //'include',
                     mode: 'cors',
                     headers: {
                         ...this.getDefaultHeaders(),
@@ -85,13 +85,13 @@ class RestClientService {
         if (!this.auth.currentUser) {
             throw new Error()
         }
-        const url = this.baseUrl + path
+        const url = this.baseUrl + path + '?disableCsrf=1'
 
         const res = await getIdToken(this.auth.currentUser)
             .then(async (authToken: string) => {
                 const res = await fetch(url, {
                     method: 'PUT',
-                    credentials: 'include',
+                    credentials: 'omit', //'include',
                     mode: 'cors',
                     headers: {
                         ...this.getDefaultHeaders(),
@@ -115,13 +115,13 @@ class RestClientService {
         if (!this.auth.currentUser) {
             throw new Error()
         }
-        const url = this.baseUrl + path
+        const url = this.baseUrl + path + '?disableCsrf=1'
 
         const res = await getIdToken(this.auth.currentUser)
             .then(async (authToken: string) => {
                 const res = await fetch(url, {
                     method: 'DELETE',
-                    credentials: 'include',
+                    credentials: 'omit', //'include',
                     mode: 'cors',
                     headers: {
                         ...this.getDefaultHeaders(),

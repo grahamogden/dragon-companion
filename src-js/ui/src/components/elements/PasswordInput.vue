@@ -12,6 +12,6 @@ const model = defineModel()
 <template>
     <div class="flex flex-col mb-4">
         <label :for="props.inputName">{{ label }}:</label>
-        <input type="password" :name="props.inputName" :placeholder="props.placeholder" v-model="model" class="p-2 rounded-sm border border-dark-brown dark:border-parchment-pale rounded bg-transparent shadow-inner" />
+        <input type="password" :name="props.inputName" :placeholder="props.placeholder" v-model="model" class="p-2 border border-woodsmoke-950 dark:border-timberwolf-50 rounded-xl bg-timberwolf-50 dark:bg-shark-950 shadow-inner" />
     </div>
 </template>

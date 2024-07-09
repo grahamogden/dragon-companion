@@ -19,7 +19,9 @@ async function createCampaign(formData: CampaignEntityInterface): Promise<void> 
 
 <template>
   <div class="campaign-create">
-    <h1>Create a Campaign</h1>
+    <div class="flex flex-row justify-between items-center mb-4">
+      <h1>Create a Campaign</h1>
+    </div>
     <CampaignForm @save-campaign="createCampaign" />
   </div>
 </template>

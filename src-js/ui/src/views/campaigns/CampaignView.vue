@@ -1,47 +1,42 @@
 <script setup lang="ts">
-  import { ref, reactive } from 'vue';
+  import { reactive, ref } from 'vue';
   import { useCampaignStore } from '../../stores/campaign';
   import router from '../../router';
-  import CampaignForm from './CampaignForm.vue'
-  import { type CampaignEntityInterface } from '../../services/campaign/CampaignEntityInterface';
+  import EntityPage from '../../components/entity-page/EntityPage.vue';
+  import PageHeader from '../../components/page-header/PageHeader.vue';
+import { storeToRefs } from 'pinia';
 
   const isLoading = ref(true)
   const campaignStore = useCampaignStore()
   const params = router.currentRoute.value.params
-  console.debug(router.currentRoute.value)
-  console.debug(router.currentRoute.value.params)
+  // console.debug(router.currentRoute.value)
+  // console.debug(router.currentRoute.value.params)
   const campaignId = parseInt(params.externalCampaignId as string)
-  let formData = reactive({})
+  let formData = ref({})
 
-  console.debug(campaignId)
-  const campaign = campaignStore.getCampaignById(campaignId)
-  console.debug(campaign);
+  const { getCampaignById } = storeToRefs(campaignStore)
+  const campaign = getCampaignById.value(campaignId)
+  // console.dir(campaignId)
+  // console.dir(campaign)
   if (campaign !== undefined) {
-    formData = reactive({
+    formData = ref({
       name: campaign.name,
       synopsis: campaign.synopsis
     })
-  }
-
-  async function editCampaign(formData: CampaignEntityInterface): Promise<void> {
-    await campaignStore.updateCampaign(
-      {
-        id: campaignId,
-        name: formData.name,
-        synopsis: formData.synopsis
-      }
-    )
-    console.debug('Editing campaign')
-    router.push({ name: 'campaigns.list' })
+    isLoading.value = false
   }
 </script>
 
 <template>
-  <div class="campaign-edit" v-if="isLoading">
-    <h1>{{ campaign?.name ?? 'Unknown' }}</h1>
-    <router-link :to="{ name: 'campaigns.edit', params: {externalCampaignId: campaignId} }" class="mb-4">Edit</router-link>
-    <div>
-      {{ campaign?.synopsis }}
-    </div>
+  <div class="campaign-view">
+    <page-header link-text="Edit" :link-destination="{ name: 'campaigns.edit', params: {externalCampaignId: campaignId} }">{{ campaign?.name ?? 'Unknown' }}</page-header>
+    <entity-page v-model="isLoading">
+      <template #content>
+        <div>
+          {{ campaign?.synopsis }}
+        </div>
+      </template>
+      <template #loading-text>campaign</template>
+    </entity-page>
   </div>
 </template>

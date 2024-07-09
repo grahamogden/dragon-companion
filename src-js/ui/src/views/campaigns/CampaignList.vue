@@ -2,6 +2,8 @@
   import { RouterLink } from 'vue-router'
   import { useCampaignStore } from '../../stores/campaign'
   import KebabMenu from '../../components/dropdowns/kebab-menu/KebabMenu.vue'
+  import PageHeader from '../../components/page-header/PageHeader.vue';
+  import EntityPage from '../../components/entity-page/EntityPage.vue';
   import { DropDownItemRouter, DropDownItemButton } from '../../components/interfaces/drop-down.item.interface';
   import type { CampaignEntityInterface } from '../../services/campaign';
 
@@ -33,35 +35,35 @@
 </script>
 
 <template>
-  <h1>Campaigns</h1>
-  <div class="mb-4">
-    <router-link :to="{ name: 'campaigns.add' }" class="primary-button">Add campaign</router-link>
-  </div>
-  <div>
-    <table class="entity-list-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Synopsis</th>
-          <th aria-label="Actions"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="campaign in campaignStore.campaigns">
-          <td><router-link :to="{ name: 'campaigns.view', params: { externalCampaignId: campaign.id } }">{{ campaign.name
-              }}</router-link></td>
-          <td>{{ campaign.synopsis }}</td>
-          <td class="action-cell w-fit">
-            <KebabMenu :links="getLinks(campaign)" :button-aria-context-name="'Campaign ' + campaign.name" />
-            <!-- <div> -->
-            <!-- <router-link :to="{ name: 'campaigns.edit', params: { externalCampaignId: campaign.id }}">Edit</router-link> -->
-            <!-- </div> -->
-            <!-- <div> -->
-            <!-- <button class="destructive-button" @click="confirmDelete(campaign.id!)">Delete</button> -->
-            <!-- </div> -->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <page-header link-text="Add campaign" :link-destination="{ name: 'campaigns.add' }" >Campaigns</page-header>
+  <entity-page>
+    <template #content>
+      <table class="entity-list-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Synopsis</th>
+            <th aria-label="Actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="campaign in campaignStore.campaigns">
+            <td><router-link :to="{ name: 'campaigns.view', params: { externalCampaignId: campaign.id } }">{{ campaign.name
+                }}</router-link></td>
+            <td>{{ campaign.synopsis }}</td>
+            <td class="action-cell w-fit">
+              <KebabMenu :links="getLinks(campaign)" :button-aria-context-name="'Campaign ' + campaign.name" />
+              <!-- <div> -->
+              <!-- <router-link :to="{ name: 'campaigns.edit', params: { externalCampaignId: campaign.id }}">Edit</router-link> -->
+              <!-- </div> -->
+              <!-- <div> -->
+              <!-- <button class="destructive-button" @click="confirmDelete(campaign.id!)">Delete</button> -->
+              <!-- </div> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <template #loading-text>campaigns</template>
+  </entity-page>
 </template>

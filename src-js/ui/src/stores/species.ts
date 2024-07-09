@@ -40,7 +40,7 @@ export const useSpeciesStore = defineStore('species', {
             })
             return species
         },
-        async fetchOneSpecies(
+        async getOneSpecies(
             campaignId: number,
             id: number,
         ): Promise<SpeciesEntityInterface | null> {

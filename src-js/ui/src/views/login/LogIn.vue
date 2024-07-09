@@ -18,7 +18,7 @@
       .then(() => {
         signInWithEmailAndPassword(auth, email.value, password.value)
           .then((data: UserCredential) => {
-            router.push('account')
+            router.push('campaigns')
           })
           .catch((error) => {
             console.error(error)

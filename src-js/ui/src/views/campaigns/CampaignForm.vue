@@ -23,10 +23,6 @@ if (props.data) {
 function submitForm() {
     emit('saveCampaign', formData)
 }
-
-// function updateValue(property: string, value: string) {
-//     formData[property] = value
-// }
 </script>
 
 <template>

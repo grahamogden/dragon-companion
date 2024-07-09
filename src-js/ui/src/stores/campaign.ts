@@ -46,7 +46,7 @@ export const useCampaignStore = defineStore('campaign', {
             })
             return this.campaignId
         },
-        async fetchCampaigns(): Promise<CampaignEntityInterface[]> {
+        async getCampaigns(): Promise<CampaignEntityInterface[]> {
             this.campaigns = []
 
             console.debug('Fetching campaigns in store')
