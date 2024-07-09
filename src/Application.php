@@ -16,7 +16,6 @@
 
 namespace App;
 
-use App\Middleware\HttpOptionsMiddleware;
 use App\Model\Table\UsersTable;
 use App\Services\Api\Response\ApiResponseHeaderService;
 use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
@@ -74,15 +73,26 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (Configure::read('debug')) {
             $this->addPlugin('DebugKit', ['bootstrap' => false]);
         }
+        $csrfDisableParam = isset($_GET['disableCsrf'])
+            && ($_GET['disableCsrf'] === '1' || $_GET['disableCsrf'] === 1 || $_GET['disableCsrf'] === 'true'  || $_GET['disableCsrf'] === true);
+
+        Configure::write(
+            'enableCsrf',
+            env('ENV_LEVEL', 'production') === 'production'
+                || !$csrfDisableParam
+        );
     }
 
     public function routes(RouteBuilder $routes): void
     {
-        $routes->registerMiddleware('csrf', new CsrfProtectionMiddleware([
-            'secure' => true,
-            'samesite' => 'Strict',
-            'httponly' => true,
-        ]));
+        if (Configure::read('enableCsrf')) {
+            $routes->registerMiddleware('csrf', new CsrfProtectionMiddleware([
+                'secure' => true,
+                'samesite' => 'Strict',
+                'httponly' => true,
+            ]));
+        }
+
         parent::routes($routes);
     }
 
@@ -101,6 +111,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(AssetMiddleware::class)
+
+            // Handle the UI assets rather than letting them go through to the routes
+            // ->add(UiAssetLoadingMiddleware::class)
 
             // Add routing middleware.
             // Routes collection cache enabled by default, to disable route caching
@@ -126,7 +139,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
     public function services(ContainerInterface $container): void
     {
-        // The factory here only exists as an exampe of how I can do this in the future
+        // The factory here only exists as an exampe of how this can be done in the future
         $container->add(ApiResponseHeaderService::class, ApiResponseHeaderServiceFactory::class);
     }
 
@@ -207,7 +220,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
     private function getSecretKeys(): array
     {
-        if (env('ENV_LEVEL', 'production') === 'development') {
+        if (env('ENV_LEVEL', 'production') === 'development-unit-test') {
             return json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwks-test.json'), true);
         }
 

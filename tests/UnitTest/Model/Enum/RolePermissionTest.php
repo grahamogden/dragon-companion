@@ -10,6 +10,41 @@ use PHPUnit\Framework\TestCase;
 class RolePermissionTest extends TestCase
 {
     /*
+     * label tests
+     */
+
+    public static function dataProviderForLabelWillReturnCorrectValuesTests(): array
+    {
+        return [
+            'Read only' => [
+                'permissions' => RolePermission::Read,
+                'label' => 'Read',
+            ],
+            'Read + write' => [
+                'permissions' => RolePermission::Read_write,
+                'label' => 'Read Write',
+            ],
+            'Read + delete' => [
+                'permissions' => RolePermission::Read_delete,
+                'label' => 'Read Delete',
+            ],
+            'Read + write + delete' => [
+                'permissions' => RolePermission::Read_write_delete,
+                'label' => 'Read Write Delete',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderForLabelWillReturnCorrectValuesTests
+     */
+
+    public function testLabelWillReturnCorrectValues(RolePermission $permission, string $label): void
+    {
+        $this->assertSame(expected: $label, actual: $permission->label());
+    }
+
+    /*
      * hasReadPermission tests
      */
 

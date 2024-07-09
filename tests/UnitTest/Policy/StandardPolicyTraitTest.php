@@ -126,9 +126,9 @@ class StandardPolicyTraitTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    /********************************************
+    /************************************************
      * getOverrideEntityRolePermissionForUser tests *
-     ********************************************/
+     ************************************************/
 
     public static function dataProviderForGetOverrideEntityRolePermissionForUserReturnsInheritIfNoEntityPermissionsAvailable(): array
     {
@@ -1225,7 +1225,7 @@ class DummyStandardPolicyTrait
         return $this->isCampaignOwner(identity: $identity, campaignId: $campaignId);
     }
 
-    public function getOverrideEntityRolePermissionForUserWrapper($role, $entity)
+    public function getOverrideEntityRolePermissionForUserWrapper($role, $entity): RolePermission
     {
         return $this->getOverrideEntityRolePermissionForUser(userRole: $role, entity: $entity);
     }

@@ -7,7 +7,6 @@ namespace App\Policy;
 use App\Model\Entity\Campaign;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Model\Table\CampaignPermissionsTable;
 use Authorization\IdentityInterface;
 
 class CampaignPolicy
@@ -23,6 +22,9 @@ class CampaignPolicy
         return !!$identity->getIdentifier();
     }
 
+    /**
+     * @codeCoverageIgnore - is covered by StandardPolicyTraitTest
+     */
     public function canEdit(IdentityInterface|User $identity, Campaign $campaign): bool
     {
         // if ($this->isCreator(identity: $identity, campaign: $campaign)) {
@@ -49,6 +51,9 @@ class CampaignPolicy
         );
     }
 
+    /**
+     * @codeCoverageIgnore - is covered by StandardPolicyTraitTest
+     */
     public function canDelete(IdentityInterface|User $identity, Campaign $campaign): bool
     {
         // if ($this->isCreator(identity: $identity, campaign: $campaign)) {
@@ -75,6 +80,9 @@ class CampaignPolicy
         );
     }
 
+    /**
+     * @codeCoverageIgnore - is covered by StandardPolicyTraitTest
+     */
     public function canView(IdentityInterface|User $identity, Campaign $campaign): bool
     {
         // if ($this->isCreator(identity: $identity, campaign: $campaign)) {
@@ -101,6 +109,9 @@ class CampaignPolicy
         );
     }
 
+    /**
+     * @codeCoverageIgnore - is covered by StandardPolicyTraitTest
+     */
     public function canIndex(IdentityInterface|User $identity, Campaign $campaign): bool
     {
         return $this->canReadForCampaignId(
@@ -121,6 +132,9 @@ class CampaignPolicy
     //     return null;
     // }
 
+    /**
+     * @codeCoverageIgnore - is covered by StandardPolicyTraitTest
+     */
     private function isCreator(IdentityInterface|User $identity, Campaign $campaign): bool
     {
         return $campaign->user_id === $identity->getIdentifier();

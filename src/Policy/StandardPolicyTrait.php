@@ -16,8 +16,6 @@ use RuntimeException;
 
 trait StandardPolicyTrait
 {
-    private $userRole;
-
     private function getOverridePermissionsTableName(): string
     {
         if (isset($this->overridePermissionsTableName)) {
@@ -38,10 +36,6 @@ trait StandardPolicyTrait
 
     private function getUserRoleForCampaign(IdentityInterface|User $identity, int $campaignId): ?Role
     {
-        if (isset($this->userRole)) {
-            return $this->userRole;
-        }
-
         foreach ($identity->getRoles() as $role) {
             if ($role->getCampaignId() === $campaignId) {
                 return $role;
@@ -64,7 +58,7 @@ trait StandardPolicyTrait
         return $userRole->{$this->getDefaultPermissionsFieldName()}();
     }
 
-    private function getOverrideEntityRolePermissionForUser(Role $userRole, EntityInterface $entity)
+    private function getOverrideEntityRolePermissionForUser(Role $userRole, EntityInterface $entity): RolePermission
     {
         $entityPermissions = $entity->{$this->getOverridePermissionsTableName()}();
 

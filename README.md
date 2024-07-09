@@ -18,3 +18,25 @@ This is a roll-playing game companion application that can be used offline along
 5. Run `npm run watch:dev` to watch .ts files and generate the appropriate .js files
 
 For issues for around importing when using Microsoft VSCode in Vue files, follow instructions on: [Volar takeover mode](https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode)
+
+## Testings
+
+### Unit Tests
+
+To run the PHPUnit tests, exec onto the container and then run the command:
+
+```
+$ docker exec -it [container id] bash
+
+$ vendor/bin/phpunit
+```
+
+### Mutation Testing
+
+To run the mutation tests, provided by Infection, exec onto the container and then run the command:
+
+```
+$ docker exec -it [container id] bash
+
+$ vendor/bin/infection --threads=10
+```
