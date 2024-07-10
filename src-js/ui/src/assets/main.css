@@ -805,13 +805,7 @@ nav .router-link-active {
   }
   th,
         td {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-  th,
-        td {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding: 0.75rem;
   }
   th,
         td {
@@ -824,7 +818,14 @@ nav .router-link-active {
   th,
         td {
     &.action-cell {
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+    }
+    &.action-cell {
       text-align: right;
+    }
+    &.action-cell {
+      vertical-align: middle;
     }
     &.action-cell {
       >.kebab-menu-container {

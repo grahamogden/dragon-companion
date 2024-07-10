@@ -1,5 +1,6 @@
-export interface CampaignEntityInterface {
-    id: number | null
+import type { EntityInterface } from '../entity/EntityInterface'
+
+export interface CampaignEntityInterface extends EntityInterface {
     name: string
     synopsis: string
 }

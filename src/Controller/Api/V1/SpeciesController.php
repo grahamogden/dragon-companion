@@ -81,39 +81,6 @@ class SpeciesController extends ApiAppController
         }
     }
 
-    // private function addDefaultRolesAndPermissions(Species $species): void
-    // {
-    //     $rolesTable = $this->fetchTable(RolesTable::class);
-    //     $creatorRole = $rolesTable->findByCampaignId($species->campaign_id);
-
-    //     // Link the user to the newly created "Creator" role for this species
-    //     $rolesTable->Users->link($creatorRole, [$this->user]);
-
-    //     $this->addCreatorSpeciesPermissionForUser(species: $species, creatorRole: $creatorRole);
-    // }
-
-    // private function addCreatorSpeciesPermissionForUser(Species $species, Role $creatorRole): void
-    // {
-    //     $speciesPermissionsTable = $this->fetchTable(SpeciesPermissionsTable::class);
-    //     /** @var SpeciesPermission $speciesPermissions */
-    //     $speciesPermission = $speciesPermissionsTable->newEmptyEntity();
-    //     $speciesPermissionsTable->patchEntity(
-    //         entity: $speciesPermission,
-    //         data: [
-    //             SpeciesPermission::FIELD_SPECIES_ID => $species->id,
-    //             SpeciesPermission::FIELD_ROLE_ID => $creatorRole->getId(),
-    //             SpeciesPermission::FIELD_CAN_READ => true,
-    //             SpeciesPermission::FIELD_CAN_WRITE => true,
-    //             SpeciesPermission::FIELD_CAN_DELETE => true,
-    //             SpeciesPermission::FIELD_CAN_PERMISSION => true,
-    //         ],
-    //     );
-
-    //     if (!$speciesPermissionsTable->save(entity: $speciesPermission)) {
-    //         throw new BadRequestError(errors: $speciesPermission->getErrors());
-    //     }
-    // }
-
     public function edit(int $campaignId, int $id): void
     {
         $species = $this->Species->get(primaryKey: $id, contain: 'Users');

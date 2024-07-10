@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { RouterLink } from 'vue-router'
   import { useSpeciesStore, useCampaignStore } from '../../stores'
-  import KebabMenu from '../../components/dropdowns/kebab-menu/KebabMenu.vue'
-  import { DropDownItemRouter, DropDownItemButton } from '../../components/interfaces/drop-down.item.interface';
-  import type { SpeciesEntityInterface } from '../../services/species';
-  import PageHeader from '../../components/page-header/PageHeader.vue';
-  import EntityPage from '../../components/entity-page/EntityPage.vue';
+  import { DropDownItemRouter, DropDownItemButton } from '../../components/interfaces/drop-down.item.interface'
+  import type { SpeciesEntityInterface } from '../../services/species'
+  import PageHeader from '../../components/page-header/PageHeader.vue'
+  import EntityPage from '../../components/entity-page/EntityPage.vue'
+  import EntityTable from '../../components/entity-table/EntityTable.vue'
 
   const speciesStore = useSpeciesStore()
   const campaignStore = useCampaignStore()
@@ -27,13 +26,12 @@
     });
   }
 
-  async function confirmDelete(campaignId: number, id: number): Promise<void> {
-    console.debug('Confirming delete for ' + id)
+  function confirmDelete(campaignId: number, id: number): void {
     if (window.confirm('Are you sure you want to delete ' + id)) {
-      console.debug('Confirmed - attempting delete')
-      await speciesStore.deleteSpecies(campaignId, id)
-      // allSpecies.value = await speciesStore.fetchSpecies(campaignId)
-      fetchSpecies(campaignId)
+      speciesStore.deleteSpecies(campaignId, id).then(() => {
+        // allSpecies.value = await speciesStore.fetchSpecies(campaignId)
+        fetchSpecies(campaignId)
+      })
     }
   }
 
@@ -59,7 +57,7 @@
     <page-header link-text="Add species" :link-destination="{ name: 'species.add' }" >Species</page-header>
     <entity-page v-if="campaignStore.selectedCampaignId" v-model="isLoading">
       <template #content>
-        <table class="entity-list-table">
+        <!-- <table class="entity-list-table">
           <thead>
             <tr>
               <th>Name</th>
@@ -76,7 +74,8 @@
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
+        <entity-table :headings="['name']" :entities="allSpecies" :link="{name: 'species.view', idName: 'speciesId' }" :delete-confirmation-function="confirmDelete" aria-context="Species"></entity-table>
       </template>
       <template #loading-text>species</template>
     </entity-page>

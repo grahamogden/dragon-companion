@@ -17,7 +17,7 @@
           name: formData.name,
         }
       )
-      router.push({ name: 'species.list' })
+      router.push({ name: 'species.list', params: { externalCampaignId: campaignStore.selectedCampaignId } })
     } else {
       alert('Please select a campaign to save a new species')
     }

@@ -200,10 +200,10 @@
 
         th,
         td {
-            @apply border-0 px-3 py-4 align-top text-left;
+            @apply border-0 p-3 align-top text-left;
 
             &.action-cell {
-                @apply text-right;
+                @apply text-right py-1 align-middle;
 
                 >.kebab-menu-container {
                     @apply inline-block;

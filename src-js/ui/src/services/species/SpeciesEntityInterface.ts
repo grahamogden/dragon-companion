@@ -1,5 +1,6 @@
-export interface SpeciesEntityInterface {
-    id: number | null
+import type { EntityInterface } from '../entity/EntityInterface'
+
+export interface SpeciesEntityInterface extends EntityInterface {
     name: string
 }
 
