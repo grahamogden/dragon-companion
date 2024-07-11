@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\Timeline;
+use App\Model\Entity\TimelinePermission;
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\HasMany;
@@ -12,6 +16,7 @@ use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 /**
  * Timelines Model
@@ -79,11 +84,14 @@ class TimelinesTable extends Table
             'className' => 'Timelines',
             'foreignKey' => Timeline::FIELD_PARENT_ID,
         ]);
-        $this->belongsToMany('Roles', [
+        $this->hasMany('TimelinePermissions', [
             'foreignKey' => 'timeline_id',
-            'targetForeignKey' => 'role_id',
-            'joinTable' => 'roles_timelines',
         ]);
+        // $this->belongsToMany('Roles', [
+        //     'foreignKey' => 'timeline_id',
+        //     'targetForeignKey' => 'role_id',
+        //     'joinTable' => 'roles_timelines',
+        // ]);
     }
 
     /**
@@ -106,21 +114,22 @@ class TimelinesTable extends Table
 
         $validator
             ->scalar(Timeline::FIELD_BODY)
-            ->requirePresence(Timeline::FIELD_BODY, 'create')
+            ->requirePresence(Timeline::FIELD_BODY)
             ->notEmptyString(Timeline::FIELD_BODY);
 
         $validator
             ->nonNegativeInteger(Timeline::FIELD_USER_ID)
+            ->requirePresence(Timeline::FIELD_USER_ID, 'create')
             ->notEmptyString(Timeline::FIELD_USER_ID);
 
         $validator
             ->integer(Timeline::FIELD_PARENT_ID)
             ->allowEmptyString(Timeline::FIELD_PARENT_ID);
 
-        $validator
-            ->integer(Timeline::FIELD_LEVEL)
-            ->requirePresence(Timeline::FIELD_LEVEL, 'create')
-            ->notEmptyString(Timeline::FIELD_LEVEL);
+        // $validator
+        //     ->integer(Timeline::FIELD_LEVEL)
+        //     ->requirePresence(Timeline::FIELD_LEVEL, 'create')
+        //     ->notEmptyString(Timeline::FIELD_LEVEL);
 
         return $validator;
     }
@@ -140,6 +149,52 @@ class TimelinesTable extends Table
 
         return $rules;
     }
+
+    public function findByIdAndCampaignId(int $id, int $campaignId): ?Timeline
+    {
+        $query = $this->find()
+            ->where([
+                Timeline::FIELD_ID => $id,
+                Timeline::FIELD_CAMPAIGN_ID => $campaignId,
+            ])
+            ->contain([TimelinePermission::ENTITY_NAME]);
+
+        return $query->first();
+
+        // $entity = $this->get($id);
+        // dd($entity);
+        // if ($entity->campaign_id === $campaignId) {
+        //     return $entity;
+        // }
+
+        // return null;
+    }
+
+    /**
+     * @return Timeline[]
+     */
+    public function findByCampaignId(int $campaignId): ?array
+    {
+        try {
+            $query = $this->find()
+                ->where([Timeline::FIELD_CAMPAIGN_ID => $campaignId])
+                ->contain([TimelinePermission::ENTITY_NAME]);
+
+            return $query->all()->toList();
+        } catch (RecordNotFoundException $exception) {
+            return null;
+        }
+    }
+
+    // public function beforeSave(EventInterface $event, EntityInterface & Timeline $entity, ArrayObject $options): void
+    // {
+    //     // $config = $this->getConfig();
+    //     // $value = $entity->get($config['field']);
+    //     // $entity->set($config['slug'], Text::slug($value, $config['replacement']));
+    //     if (!$entity->level) {
+    //         $entity->level = ($entity->getParentTimeline()?->level ?? 0) + 1;
+    //     }
+    // }
 
     // The $query argument is a query builder instance.
     // The $options array will contain the 'tags' option we passed

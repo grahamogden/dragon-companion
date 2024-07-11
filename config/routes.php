@@ -102,6 +102,11 @@ $routes->scope(
                         ]
                     );
 
+
+                    /***********
+                     * SPECIES *
+                     ***********/
+
                     $routes->get('/campaigns/{campaignId}/species', [
                         'controller' => 'Species',
                         'action' => 'index',
@@ -143,6 +148,60 @@ $routes->scope(
 
                     $routes->delete('/campaigns/{campaignId}/species/{id}', [
                         'controller' => 'Species',
+                        'action' => 'delete'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+
+                    /*************
+                     * TIMELINES *
+                     *************/
+
+                    $routes->get('/campaigns/{campaignId}/timelines', [
+                        'controller' => 'Timelines',
+                        'action' => 'index',
+                    ])
+                        ->setPass(['campaignId'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                        ]);
+
+                    $routes->get('/campaigns/{campaignId}/timelines/{id}', [
+                        'controller' => 'Timelines',
+                        'action' => 'view'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->post('/campaigns/{campaignId}/timelines', [
+                        'controller' => 'Timelines',
+                        'action' => 'add'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->put('/campaigns/{campaignId}/timelines/{id}', [
+                        'controller' => 'Timelines',
+                        'action' => 'edit'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->delete('/campaigns/{campaignId}/timelines/{id}', [
+                        'controller' => 'Timelines',
                         'action' => 'delete'
                     ])
                         ->setPass(['campaignId', 'id'])

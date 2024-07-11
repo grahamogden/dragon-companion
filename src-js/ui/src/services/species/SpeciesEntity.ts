@@ -1,4 +1,4 @@
-import type { SpeciesEntityInterface } from '.'
+import type { SpeciesEntityInterface } from './SpeciesEntityInterface'
 
 export class SpeciesEntity implements SpeciesEntityInterface {
     id: number | null

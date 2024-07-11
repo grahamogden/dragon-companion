@@ -77,13 +77,18 @@ class SpeciesController extends ApiAppController
             $this->output(compact('species'));
             $this->response = $this->apiResponseHeaderService->returnCreatedResponse(response: $this->response);
         } elseif ($species->getErrors()) {
-            throw new BadRequestError(errors: $species->getErrors());
+            throw new BadRequestError(message: "Error adding Species", errors: $species->getErrors());
         }
     }
 
     public function edit(int $campaignId, int $id): void
     {
         $species = $this->Species->get(primaryKey: $id, contain: 'Users');
+
+        if ($species === null) {
+            throw new NotFoundError(message: "Species $id not found");
+        }
+
         $data = $this->request->getData();
 
         $this->isAuthorized(entity: $species);
@@ -94,7 +99,7 @@ class SpeciesController extends ApiAppController
             $this->output(compact('species'));
             $this->response = $this->apiResponseHeaderService->returnNoContentResponse(response: $this->response);
         } else {
-            throw new NotFoundError(message: "Species $id not found");
+            throw new BadRequestError(message: "Error saving Species: $id", errors: $species->getErrors());
         }
     }
 
@@ -104,7 +109,7 @@ class SpeciesController extends ApiAppController
 
         $this->isAuthorized(entity: $species);
 
-        if ($species->campaign_id !== $campaignId) {
+        if ($species === null || $species->campaign_id !== $campaignId) {
             throw new NotFoundError(message: "Species $id not found");
         }
 
@@ -112,7 +117,7 @@ class SpeciesController extends ApiAppController
             $this->output([]);
             $this->response = $this->apiResponseHeaderService->returnNoContentResponse(response: $this->response);
         } else {
-            throw new NotFoundError(message: "Specie $id not found");
+            throw new BadRequestError(message: "Error deleting Species: $id", errors: $species->getErrors());
         }
     }
 }

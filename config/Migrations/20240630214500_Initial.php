@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Migrations\AbstractMigration;
 
+/**
+ * 20240630214500_Initial
+ */
 class Initial extends AbstractMigration
 {
     public bool $autoId = false;
@@ -213,13 +216,13 @@ class Initial extends AbstractMigration
                 'signed' => false,
             ])
             ->addIndex(
-                ['name']
-            )
-            ->addIndex(
                 ['campaign_id']
             )
             ->addIndex(
                 ['user_id']
+            )
+            ->addIndex(
+                ['name']
             )
             ->create();
 

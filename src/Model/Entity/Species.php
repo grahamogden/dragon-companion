@@ -66,6 +66,9 @@ class Species extends Entity implements CampaignChildEntityInterface
         return $this->campaign_id;
     }
 
+    /**
+     * @return SpeciesPermission[]
+     */
     public function getSpeciesPermissions(): array
     {
         return $this->species_permissions ?? [];

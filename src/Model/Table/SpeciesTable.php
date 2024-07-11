@@ -20,6 +20,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\CharactersTable&\Cake\ORM\Association\BelongsToMany $Characters
  * @property \App\Model\Table\RolesTable&\Cake\ORM\Association\BelongsToMany $Roles
+ * @property \App\Model\Table\SpeciesPermissionsTable&\Cake\ORM\Association\BelongsTo $SpeciesPermissions
  *
  * @method \App\Model\Entity\Species newEmptyEntity()
  * @method \App\Model\Entity\Species newEntity(array $data, array $options = [])
@@ -98,6 +99,7 @@ class SpeciesTable extends Table
 
         $validator
             ->nonNegativeInteger('user_id')
+            ->requirePresence('user_id', 'create')
             ->notEmptyString('user_id');
 
         return $validator;

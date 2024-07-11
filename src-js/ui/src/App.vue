@@ -229,7 +229,7 @@
             <nav-link :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">Characters</nav-link>
             <nav-link :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">Combat Encounters</nav-link>
             <nav-link :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">Species</nav-link>
-            <nav-link :destination="{ name: 'timelines', params: { externalCampaignId: campaignStore.campaignId } }">Tags</nav-link>
+            <nav-link :destination="{ name: 'tags', params: { externalCampaignId: campaignStore.campaignId } }">Tags</nav-link>
             <nav-link :destination="{ name: 'timelines', params: { externalCampaignId: campaignStore.campaignId } }">Timelines</nav-link>
           </nav>
           <div v-if="!(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)"

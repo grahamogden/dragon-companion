@@ -34,6 +34,9 @@ class SpeciesPermissionsTable extends Table
 {
     public const TABLE_NAME = 'species_permissions';
 
+    public const FIELD_SPECIES_ID = 'species_id';
+    public const FIELD_ROLE_ID = 'role_id';
+
     /**
      * Initialize method
      *
@@ -67,12 +70,12 @@ class SpeciesPermissionsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('species_id')
-            ->notEmptyString('species_id');
+            ->nonNegativeInteger(self::FIELD_SPECIES_ID)
+            ->notEmptyString(self::FIELD_SPECIES_ID);
 
         $validator
-            ->nonNegativeInteger('role_id')
-            ->notEmptyString('role_id');
+            ->nonNegativeInteger(self::FIELD_ROLE_ID)
+            ->notEmptyString(self::FIELD_ROLE_ID);
 
         // $validator
         //     ->boolean(SpeciesPermission::FIELD_CAN_READ);
@@ -100,8 +103,8 @@ class SpeciesPermissionsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['species_id'], 'Species'), ['errorField' => 'species_id']);
-        $rules->add($rules->existsIn(['role_id'], 'Roles'), ['errorField' => 'role_id']);
+        $rules->add($rules->existsIn([self::FIELD_SPECIES_ID], 'Species'), ['errorField' => self::FIELD_SPECIES_ID]);
+        $rules->add($rules->existsIn([self::FIELD_ROLE_ID], 'Roles'), ['errorField' => self::FIELD_ROLE_ID]);
 
         return $rules;
     }

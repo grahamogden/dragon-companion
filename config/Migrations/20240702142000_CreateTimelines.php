@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Migrations\AbstractMigration;
 
+/**
+ * 20240702142000_CreateTimelines
+ */
 class CreateTimelines extends AbstractMigration
 {
     public bool $autoId = false;
@@ -17,7 +20,7 @@ class CreateTimelines extends AbstractMigration
      */
     public function up(): void
     {
-        $this->table('roles_timelines')
+        $this->table('timeline_permissions')
             ->addColumn('id', 'integer', [
                 'autoIncrement' => true,
                 'default' => null,
@@ -26,26 +29,33 @@ class CreateTimelines extends AbstractMigration
                 'signed' => false,
             ])
             ->addPrimaryKey(['id'])
-            ->addColumn('role_id', 'integer', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-                'signed' => false,
-            ])
             ->addColumn('timeline_id', 'integer', [
                 'default' => null,
                 'limit' => null,
                 'null' => false,
                 'signed' => false,
             ])
+            ->addColumn('role_id', 'integer', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+                'signed' => false,
+            ])
+            ->addColumn('permissions', 'tinyinteger', [
+                'comment' => '[bitwise] deny:0,inherit:1,read:2,write:4,delete:8. For example, 6 means the role has read + write permissions but not delete. 10 Would mean read + delete but not write. 14 means that the role has read + write + delete permissions. Inherit should not be used alongside other permissions, for example, there should be no 3 for inherit and read because if its inheriting then it will use the default permissions for the user\'s role.',
+                'default' => 0,
+                'limit' => 3,
+                'null' => false,
+                'signed' => false,
+            ])
             ->addIndex(
                 [
-                    'role_id',
+                    'timeline_id',
                 ]
             )
             ->addIndex(
                 [
-                    'timeline_id',
+                    'role_id',
                 ]
             )
             ->create();
@@ -137,7 +147,7 @@ class CreateTimelines extends AbstractMigration
          *************************/
 
 
-        $this->table('roles_timelines')
+        $this->table('timeline_permissions')
             ->addForeignKey(
                 'timeline_id',
                 'timelines',
@@ -189,7 +199,7 @@ class CreateTimelines extends AbstractMigration
      */
     public function down(): void
     {
-        $this->table('roles_timelines')
+        $this->table('timeline_permissions')
             ->dropForeignKey(
                 'role_id'
             )
@@ -205,7 +215,7 @@ class CreateTimelines extends AbstractMigration
                 'user_id'
             )->save();
 
-        $this->table('roles_timelines')->drop()->save();
+        $this->table('timeline_permissions')->drop()->save();
         $this->table('timelines')->drop()->save();
     }
 }

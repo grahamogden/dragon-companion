@@ -69,6 +69,12 @@ const router = createRouter({
                     beforeEnter: isLoggedIn,
                     component: () => import('../views/combat-encounters/CombatEncounterList.vue'),
                 },
+                {
+                    path: 'tags',
+                    name: 'tags',
+                    beforeEnter: isLoggedIn,
+                    component: () => import('../views/timelines/TimelineList.vue'),
+                },
                 // {
                 //     path: '/species',
                 //     name: 'species',
@@ -77,30 +83,30 @@ const router = createRouter({
                 // },
                 {
                     path: 'species',
-                    // beforeEnter: isLoggedIn,
+                    beforeEnter: isLoggedIn,
                     children: [
                         {
                             path: '',
                             name: 'species.list',
-                            // beforeEnter: isLoggedIn,
+                            beforeEnter: isLoggedIn,
                             component: () => import('../views/species/SpeciesList.vue'),
                         },
                         {
                             path: 'add',
                             name: 'species.add',
-                            // beforeEnter: isLoggedIn,
+                            beforeEnter: isLoggedIn,
                             component: () => import('../views/species/SpeciesCreate.vue'),
                         },
                         {
                             path: ':speciesId(\\d+)/edit',
                             name: 'species.edit',
-                            // beforeEnter: isLoggedIn,
+                            beforeEnter: isLoggedIn,
                             component: () => import('../views/species/SpeciesEdit.vue'),
                         },
                         {
                             path: ':speciesId(\\d+)/view',
                             name: 'species.view',
-                            // beforeEnter: isLoggedIn,
+                            beforeEnter: isLoggedIn,
                             component: () => import('../views/species/SpeciesView.vue'),
                         },
                     ],
@@ -109,7 +115,33 @@ const router = createRouter({
                     path: 'timelines',
                     name: 'timelines',
                     beforeEnter: isLoggedIn,
-                    component: () => import('../views/timelines/TimelineList.vue'),
+                    // component: () => import('../views/timelines/TimelineList.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'timelines.list',
+                            // beforeEnter: isLoggedIn,
+                            component: () => import('../views/timelines/TimelineList.vue'),
+                        },
+                        {
+                            path: 'add',
+                            name: 'timelines.add',
+                            // beforeEnter: isLoggedIn,
+                            component: () => import('../views/timelines/TimelineCreate.vue'),
+                        },
+                        {
+                            path: ':timelinesId(\\d+)/edit',
+                            name: 'timelines.edit',
+                            // beforeEnter: isLoggedIn,
+                            component: () => import('../views/timelines/TimelineEdit.vue'),
+                        },
+                        {
+                            path: ':timelinesId(\\d+)/view',
+                            name: 'timelines.view',
+                            // beforeEnter: isLoggedIn,
+                            component: () => import('../views/timelines/TimelineView.vue'),
+                        },
+                    ],
                 },
             ],
         },

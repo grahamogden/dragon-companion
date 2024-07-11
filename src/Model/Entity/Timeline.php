@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use App\Model\Entity\Interface\CampaignChildEntityInterface;
 use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
@@ -24,14 +25,16 @@ use Cake\ORM\Entity;
  *
  * @property Campaign $campaign
  * @property User $user
- * @property ParentTimeline|Timeline $parent_timeline
+ * @property ParentTimeline|Timeline|null $parent_timeline
  * @property ChildTimeline[]|Timeline[] $child_timelines
  * @property Role[] $roles
+ * @property TimelinePermission[] $timeline_permissions
  */
-class Timeline extends Entity
+class Timeline extends Entity implements CampaignChildEntityInterface
 {
     public const ENTITY_NAME = 'Timelines';
 
+    public const FIELD_ID = 'id';
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
     public const FIELD_TITLE = 'title';
     public const FIELD_BODY = 'body';
@@ -42,6 +45,8 @@ class Timeline extends Entity
     public const FIELD_LFT = 'lft';
     public const FIELD_RGHT = 'rght';
     public const FIELD_LEVEL = 'level';
+
+    public const FUNC_GET_TIMELINE_PERMISSIONS = 'getTimelinePermissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -69,4 +74,22 @@ class Timeline extends Entity
         'child_timelines' => true,
         'roles' => true,
     ];
+
+    public function getCampaignId(): int
+    {
+        return $this->campaign_id;
+    }
+
+    /**
+     * @return TimelinePermission[]
+     */
+    public function getTimelinePermissions(): array
+    {
+        return $this->timeline_permissions ?? [];
+    }
+
+    public function getParentTimeline(): ?self
+    {
+        return $this->parent_timeline ?? null;
+    }
 }
