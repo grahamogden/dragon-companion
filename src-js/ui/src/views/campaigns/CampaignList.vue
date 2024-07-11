@@ -3,7 +3,7 @@
   import { useCampaignStore } from '../../stores/campaign'
   import KebabMenu from '../../components/dropdowns/kebab-menu/KebabMenu.vue'
   import PageHeader from '../../components/page-header/PageHeader.vue';
-  import EntityPage from '../../components/entity-page/EntityPage.vue';
+  import LoadingPage from '../../components/loading-page/LoadingPage.vue';
   import { DropDownItemRouter, DropDownItemButton } from '../../components/interfaces/drop-down.item.interface';
   import type { CampaignEntityInterface } from '../../services/campaign';
 
@@ -36,7 +36,7 @@
 
 <template>
   <page-header link-text="Add campaign" :link-destination="{ name: 'campaigns.add' }" >Campaigns</page-header>
-  <entity-page>
+  <loading-page>
     <template #content>
       <table class="entity-list-table">
         <thead>
@@ -53,17 +53,11 @@
             <td>{{ campaign.synopsis }}</td>
             <td class="action-cell w-fit">
               <KebabMenu :links="getLinks(campaign)" :button-aria-context-name="'Campaign ' + campaign.name" />
-              <!-- <div> -->
-              <!-- <router-link :to="{ name: 'campaigns.edit', params: { externalCampaignId: campaign.id }}">Edit</router-link> -->
-              <!-- </div> -->
-              <!-- <div> -->
-              <!-- <button class="destructive-button" @click="confirmDelete(campaign.id!)">Delete</button> -->
-              <!-- </div> -->
             </td>
           </tr>
         </tbody>
       </table>
     </template>
     <template #loading-text>campaigns</template>
-  </entity-page>
+  </loading-page>
 </template>

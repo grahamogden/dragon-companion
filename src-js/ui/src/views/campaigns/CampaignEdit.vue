@@ -5,7 +5,7 @@
   import CampaignForm from './CampaignForm.vue'
   import { type CampaignEntityInterface } from '../../services/campaign/CampaignEntityInterface';
   import PageHeader from '../../components/page-header/PageHeader.vue';
-  import EntityPage from '../../components/entity-page/EntityPage.vue';
+  import LoadingPage from '../../components/loading-page/LoadingPage.vue';
 
   const isLoading = ref(true)
   const campaignStore = useCampaignStore()
@@ -42,11 +42,11 @@
       <h1>Editing - {{ campaign?.name ?? 'Unknown' }}</h1>
     </div> -->
     <page-header>{{ campaign?.name ?? 'Unknown' }}</page-header>
-    <entity-page v-model="isLoading">
+    <loading-page v-model="isLoading">
       <template #content>
         <CampaignForm :data="formData" @save-campaign="editCampaign" />
       </template>
       <template #loading-text>campaign</template>
-    </entity-page>
+    </loading-page>
   </div>
 </template>

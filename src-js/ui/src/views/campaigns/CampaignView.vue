@@ -2,7 +2,7 @@
   import { reactive, ref } from 'vue';
   import { useCampaignStore } from '../../stores/campaign';
   import router from '../../router';
-  import EntityPage from '../../components/entity-page/EntityPage.vue';
+  import LoadingPage from '../../components/loading-page/LoadingPage.vue';
   import PageHeader from '../../components/page-header/PageHeader.vue';
 import { storeToRefs } from 'pinia';
 
@@ -30,13 +30,13 @@ import { storeToRefs } from 'pinia';
 <template>
   <div class="campaign-view">
     <page-header link-text="Edit" :link-destination="{ name: 'campaigns.edit', params: {externalCampaignId: campaignId} }">{{ campaign?.name ?? 'Unknown' }}</page-header>
-    <entity-page v-model="isLoading">
+    <loading-page v-model="isLoading">
       <template #content>
         <div>
           {{ campaign?.synopsis }}
         </div>
       </template>
       <template #loading-text>campaign</template>
-    </entity-page>
+    </loading-page>
   </div>
 </template>

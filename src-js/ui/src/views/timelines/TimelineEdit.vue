@@ -5,7 +5,7 @@
   import TimelineForm from './TimelineForm.vue'
   import { type TimelineEntityInterface } from '../../services/timeline/TimelineEntityInterface';
   import PageHeader from '../../components/page-header/PageHeader.vue';
-  import EntityPage from '../../components/entity-page/EntityPage.vue';
+  import LoadingPage from '../../components/loading-page/LoadingPage.vue';
 import { TimelineEntity } from '../../services/timeline';
 
   const isLoading = ref(true)
@@ -56,11 +56,11 @@ import { TimelineEntity } from '../../services/timeline';
 <template>
   <div class="timeline-edit">
     <page-header>Edit "{{ formData.title ? formData.title : 'Unknown' }}" Timeline</page-header>
-    <entity-page v-model="isLoading">
+    <loading-page v-model="isLoading">
       <template #content>
         <timeline-form :data="formData" @save-Timeline="editTimeline" />
       </template>
       <template #loading-text>timeline</template>
-    </entity-page>
+    </loading-page>
   </div>
 </template>

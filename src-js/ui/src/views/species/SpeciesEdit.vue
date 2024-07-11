@@ -5,7 +5,7 @@
   import SpeciesForm from './SpeciesForm.vue'
   import { type SpeciesEntityInterface } from '../../services/species/SpeciesEntityInterface';
   import PageHeader from '../../components/page-header/PageHeader.vue';
-  import EntityPage from '../../components/entity-page/EntityPage.vue';
+  import LoadingPage from '../../components/loading-page/LoadingPage.vue';
 import { SpeciesEntity } from '../../services/species';
 
   const isLoading = ref(true)
@@ -52,11 +52,11 @@ import { SpeciesEntity } from '../../services/species';
 <template>
   <div class="species-edit">
     <page-header>Edit "{{ formData.name ? formData.name : 'Unknown' }}" Species</page-header>
-    <entity-page v-model="isLoading">
+    <loading-page v-model="isLoading">
       <template #content>
         <species-form :data="formData" @save-Species="editSpecies" />
       </template>
       <template #loading-text>species</template>
-    </entity-page>
+    </loading-page>
   </div>
 </template>

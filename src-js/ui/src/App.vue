@@ -1,13 +1,11 @@
 <script setup lang="ts">
-  import { inject, onBeforeMount, ref, watch } from 'vue'
+  import { inject, ref, watch } from 'vue'
   import { RouterLink, RouterView, useRouter, useRoute } from 'vue-router'
   import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
   import { firebaseAppKey } from './keys'
   import type { FirebaseApp } from 'firebase/app'
   import { useCampaignStore, useUserAuthStore } from './stores'
   import CampaignPicker from './components/campaign-picker/CampaignPicker.vue'
-  import { type DropDownItemButtonInterface, DropDownItemButton } from './components/interfaces/drop-down.item.interface'
-  import DropDownMenu from './components/dropdowns/DropDownMenu.vue'
   import LoadingSpinner from './components/loading-spinner/LoadingSpinner.vue'
   import NavLink from './components/nav-link/NavLink.vue'
   import Breadcrumbs from './components/breadcrumbs/Breadcrumbs.vue'
@@ -16,7 +14,6 @@
   const auth = getAuth(firebaseApp);
   const campaignStore = useCampaignStore()
   const userAuthStore = useUserAuthStore()
-  // const isLoggedIn = ref(userStore.isLoggedIn)
 
   onAuthStateChanged(
     auth,
@@ -127,32 +124,6 @@
 
   synchroniseThemeWithLocalStorage()
 
-  // toggleDarkModeClass()
-
-  // const darkModeToggleButtons: DropDownItemButtonInterface[] = [
-  //   new DropDownItemButton(
-  //     'Light',
-  //     {
-  //       func: toggleDarkModeSetLight,
-  //       args: [],
-  //     }
-  //   ),
-  //   new DropDownItemButton(
-  //     'Dark',
-  //     {
-  //       func: toggleDarkModeSetDark,
-  //       args: [],
-  //     }
-  //   ),
-  //   new DropDownItemButton(
-  //     'Auto',
-  //     {
-  //       func: toggleDarkModeSetAuto,
-  //       args: [],
-  //     }
-  //   ),
-  // ];
-
   // Use a link with tabindex=-1 to reset the tabindex on page changes so that pressing tab once will go to the skipLink again
   const route = useRoute()
   const skipLinkReset = ref()
@@ -170,7 +141,7 @@
     class="absolute z-30 focus:p-4 focus:underline max-h-0 focus:max-h-none bg-white-lilac-50 overflow-hidden"
     ref="skipLink">Skip to main content</a>
 
-  <header class="w-full bg-shark-950/85 backdrop-blur shadow-lg">
+  <header class="w-full bg-shark-950/75 backdrop-blur shadow-lg">
     <div class="flex flex-row justify-between items-center max-w-page mx-auto py-2 lg:py-4 px-4 lg:px-6 relative">
       <div class="flex flex-row items-center">
         <div class="z-10">
@@ -220,7 +191,7 @@
 
   <div class="max-w-page w-full m-0 lg:mx-auto lg:my-6 lg:px-6">
     <div class="flex flex-row rounded-3xl shadow-lg">
-      <div class="fixed lg:relative bottom-24 lg:bottom-auto lg:flex flex-col w-full lg:max-w-64 z-10 bg-shark-950/85 backdrop-blur mx-auto rounded-t-3xl lg:rounded-tr-none lg:rounded-l-3xl overflow-hidden text-center lg:text-left" :class="{ hidden: !isNavMenuOpen }">
+      <div class="fixed lg:relative bottom-24 lg:bottom-auto lg:flex flex-col w-full lg:max-w-64 z-10 bg-shark-950/75 backdrop-blur mx-auto rounded-t-3xl lg:rounded-tr-none lg:rounded-l-3xl overflow-hidden text-center lg:text-left" :class="{ hidden: !isNavMenuOpen }">
         <CampaignPicker />
 
         <div class="flex flex-col w-full">
@@ -230,7 +201,7 @@
             <nav-link :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">Combat Encounters</nav-link>
             <nav-link :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">Species</nav-link>
             <nav-link :destination="{ name: 'tags', params: { externalCampaignId: campaignStore.campaignId } }">Tags</nav-link>
-            <nav-link :destination="{ name: 'timelines', params: { externalCampaignId: campaignStore.campaignId } }">Timelines</nav-link>
+            <nav-link :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">Timelines</nav-link>
           </nav>
           <div v-if="!(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)"
             class="w-full max-w-page text-timberwolf-100 py-3 px-4 mx-auto">Please select a campaign above to start

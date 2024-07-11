@@ -4,7 +4,7 @@
   import router from '../../router';
   import { TimelineEntity, type TimelineEntityInterface } from '../../services/timeline';
   import PageHeader from '../../components/page-header/PageHeader.vue';
-  import EntityPage from '../../components/entity-page/EntityPage.vue'
+  import LoadingPage from '../../components/loading-page/LoadingPage.vue'
 
   const timelineStore = useTimelineStore()
   const params = router.currentRoute.value.params
@@ -30,13 +30,13 @@
 <template>
   <div class="timeline-view">
     <page-header link-text="Edit" :link-destination="{ name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }">{{ formData.title ? formData.title : 'Timeline' }}</page-header>
-    <entity-page v-model="isLoading">
+    <loading-page v-model="isLoading">
       <template #content>
         <div>{{ formData.title }}</div>
         <div>{{ formData.body }}</div>
         <div>{{ formData.parent_id }}</div>
       </template>
       <template #loading-text>timeline</template>
-    </entity-page>
+    </loading-page>
   </div>
 </template>

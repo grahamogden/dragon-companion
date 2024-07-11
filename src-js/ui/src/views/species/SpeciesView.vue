@@ -4,7 +4,7 @@
   import router from '../../router';
   import { SpeciesEntity, type SpeciesEntityInterface } from '../../services/species';
   import PageHeader from '../../components/page-header/PageHeader.vue';
-  import EntityPage from '../../components/entity-page/EntityPage.vue'
+  import LoadingPage from '../../components/loading-page/LoadingPage.vue'
 
   const speciesStore = useSpeciesStore()
   const params = router.currentRoute.value.params
@@ -28,11 +28,11 @@
 <template>
   <div class="species-view">
     <page-header link-text="Edit" :link-destination="{ name: 'species.edit', params: { externalCampaignId: campaignId, speciesId: speciesId } }">{{ formData.name ? formData.name : 'Species' }}</page-header>
-    <entity-page v-model="isLoading">
+    <loading-page v-model="isLoading">
       <template #content>
         <div>{{ formData.name }}</div>
       </template>
       <template #loading-text>species</template>
-    </entity-page>
+    </loading-page>
   </div>
 </template>
