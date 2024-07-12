@@ -157,7 +157,7 @@ class TimelinesTable extends Table
                 Timeline::FIELD_ID => $id,
                 Timeline::FIELD_CAMPAIGN_ID => $campaignId,
             ])
-            ->contain([TimelinePermission::ENTITY_NAME]);
+            ->contain([TimelinePermission::ENTITY_NAME, Timeline::ASSOC_CHILD_TIMELINES]);
 
         return $query->first();
 
@@ -179,6 +179,28 @@ class TimelinesTable extends Table
             $query = $this->find()
                 ->where([Timeline::FIELD_CAMPAIGN_ID => $campaignId])
                 ->contain([TimelinePermission::ENTITY_NAME]);
+
+            return $query->all()->toList();
+        } catch (RecordNotFoundException $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * @return Timeline[]
+     */
+    public function findByCampaignIdForLevel(int $campaignId, int $level = 0, bool $includeChildren = false): ?array
+    {
+        $contains = [TimelinePermission::ENTITY_NAME];
+
+        if ($includeChildren) {
+            $contains[] = Timeline::ASSOC_CHILD_TIMELINES;
+        }
+
+        try {
+            $query = $this->find()
+                ->where([Timeline::FIELD_CAMPAIGN_ID => $campaignId, Timeline::FIELD_LEVEL => $level])
+                ->contain($contains);
 
             return $query->all()->toList();
         } catch (RecordNotFoundException $exception) {

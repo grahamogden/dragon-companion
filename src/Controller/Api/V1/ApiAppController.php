@@ -44,12 +44,12 @@ use Exception;
  */
 class ApiAppController extends Controller
 {
-    protected readonly ApiResponseHeaderServiceInterface $apiResponseHeaderService;
     protected Identity $user;
     protected Log $logger;
 
     public function __construct(
         ServerRequest $request = null,
+        protected readonly ApiResponseHeaderServiceInterface $apiResponseHeaderService,
         ?string $name = null,
         ?EventManagerInterface $eventManager = null,
     ) {
@@ -58,7 +58,6 @@ class ApiAppController extends Controller
             $name,
             $eventManager,
         );
-        $this->apiResponseHeaderService = (new ApiResponseHeaderServiceFactory())();
         $this->logger = new Log();
     }
 

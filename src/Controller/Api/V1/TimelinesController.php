@@ -10,6 +10,10 @@ use App\Model\Table\UsersTable;
 use App\Error\Api\BadRequestError;
 use App\Error\Api\NotFoundError;
 use App\Error\Api\UnauthorizedError;
+use App\Services\Api\Response\ApiResponseHeaderService;
+use Cake\Event\EventManagerInterface;
+use Cake\Http\ServerRequest;
+use App\InputFilter\Api\V1\Timelines\IndexQueryParameterInputFilter;
 
 /**
  * Timelines Controller
@@ -18,6 +22,23 @@ use App\Error\Api\UnauthorizedError;
  */
 class TimelinesController extends ApiAppController
 {
+    private IndexQueryParameterInputFilter $indexQueryParameterInputFilter;
+    public function __construct(
+        ServerRequest $request = null,
+        IndexQueryParameterInputFilter $indexQueryParameterInputFilter,
+        ApiResponseHeaderService $apiResponseHeaderService,
+        ?string $name = null,
+        ?EventManagerInterface $eventManager = null,
+    ) {
+        parent::__construct(
+            request: $request,
+            apiResponseHeaderService: $apiResponseHeaderService,
+            name: $name,
+            eventManager: $eventManager,
+        );
+        $this->indexQueryParameterInputFilter = $indexQueryParameterInputFilter;
+    }
+
     public function view(int $campaignId, int $id): void
     {
         $timeline = $this->Timelines->findByIdAndCampaignId(campaignId: $campaignId, id: $id);
@@ -33,16 +54,22 @@ class TimelinesController extends ApiAppController
 
     public function index(int $campaignId): void
     {
+        $params = $this->request->getQueryParams();
+        $this->indexQueryParameterInputFilter->validate($params);
+        $filteredParams = $this->indexQueryParameterInputFilter->filter($params);
+
         $user = $this->user;
 
         if ($user === null) {
             throw new UnauthorizedError();
         }
 
-        $timelines = $this->Timelines->findByCampaignId(campaignId: $campaignId);
+        $level = $filteredParams[IndexQueryParameterInputFilter::PARAM_LEVEL] ?? null;
+        // Needs to return levels - all if not set and default to level 0
+        $timelines = $this->Timelines->findByCampaignIdForLevel(campaignId: $campaignId, level: $level ?? 0, includeChildren: $level === null);
 
         if (count($timelines) === 0) {
-            // If there are no species, then we can't authorize for anything
+            // If there are no timelines, then we can't authorize for anything
             $this->Authorization->skipAuthorization();
         }
 

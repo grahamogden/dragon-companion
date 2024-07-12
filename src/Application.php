@@ -17,8 +17,6 @@
 namespace App;
 
 use App\Model\Table\UsersTable;
-use App\Services\Api\Response\ApiResponseHeaderService;
-use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -33,11 +31,13 @@ use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
+use League\Container\ReflectionContainer;
 use Psr\Http\Message\ServerRequestInterface;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Identifier\AbstractIdentifier;
+use Cake\Controller\ComponentRegistry;
 use Cake\Core\ContainerInterface;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
@@ -139,8 +139,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
     public function services(ContainerInterface $container): void
     {
-        // The factory here only exists as an exampe of how this can be done in the future
-        $container->add(ApiResponseHeaderService::class, ApiResponseHeaderServiceFactory::class);
+        $container->add(ComponentRegistry::class);
+        $container->delegate(new ReflectionContainer(cacheResolutions: true));
     }
 
     /**

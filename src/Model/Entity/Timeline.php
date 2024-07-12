@@ -45,6 +45,11 @@ class Timeline extends Entity implements CampaignChildEntityInterface
     public const FIELD_LFT = 'lft';
     public const FIELD_RGHT = 'rght';
     public const FIELD_LEVEL = 'level';
+    public const FIELD_TIMELINE_PERMISSIONS = 'timeline_permissions';
+    public const FIELD_CHILD_TIMELINES = 'child_timelines';
+
+    public const ASSOC_CHILD_TIMELINES = 'ChildTimelines';
+    public const ASSOC_PARENT_TIMELINES = 'ParentTimelines';
 
     public const FUNC_GET_TIMELINE_PERMISSIONS = 'getTimelinePermissions';
 
@@ -71,8 +76,14 @@ class Timeline extends Entity implements CampaignChildEntityInterface
         'campaign' => true,
         'user' => true,
         'parent_timeline' => true,
-        'child_timelines' => true,
+        self::FIELD_CHILD_TIMELINES => true,
         'roles' => true,
+    ];
+
+    protected array $_hidden = [
+        self::FIELD_CAMPAIGN_ID,
+        self::FIELD_USER_ID,
+        self::FIELD_TIMELINE_PERMISSIONS,
     ];
 
     public function getCampaignId(): int
