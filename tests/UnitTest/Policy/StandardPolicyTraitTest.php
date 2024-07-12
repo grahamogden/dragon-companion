@@ -489,7 +489,7 @@ class StandardPolicyTraitTest extends TestCase
      * This test checks that we will always use whatever the override permission is, even if
      * the default says that the role does have read permission (so long as it isn't inherit)
      */
-    public function testCanViewReturnsFalseIfUserRoleHasOverridePermissionExcludingRead(array $overrideRolePermissions): void
+    public function testCanViewReturnsFalseIfUserRoleHasOverridePermissionExcludingRead(array $overrideRolePermission): void
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canView(
@@ -500,7 +500,7 @@ class StandardPolicyTraitTest extends TestCase
                 )
             ]),
             $this->mockEntity(
-                entityPermissions: $overrideRolePermissions,
+                entityPermissions: $overrideRolePermission,
             ),
         );
 
@@ -698,7 +698,7 @@ class StandardPolicyTraitTest extends TestCase
      * This test checks that we will always use whatever the override permission is, even if
      * the default says that the role does have read permission (so long as it isn't inherit)
      */
-    public function testCanIndexReturnsFalseIfUserRoleHasOverridePermissionExcludingRead(array $overrideRolePermissions): void
+    public function testCanIndexReturnsFalseIfUserRoleHasOverridePermissionExcludingRead(array $overrideRolePermission): void
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canIndex(
@@ -709,7 +709,7 @@ class StandardPolicyTraitTest extends TestCase
                 )
             ]),
             $this->mockEntity(
-                entityPermissions: $overrideRolePermissions,
+                entityPermissions: $overrideRolePermission,
             ),
         );
 
@@ -907,7 +907,7 @@ class StandardPolicyTraitTest extends TestCase
      * This test checks that we will always use whatever the override permission is, even if
      * the default says that the role does have write permission (so long as it isn't inherit)
      */
-    public function testCanEditReturnsFalseIfUserRoleHasOverridePermissionExcludingWrite(array $overrideRolePermissions): void
+    public function testCanEditReturnsFalseIfUserRoleHasOverridePermissionExcludingWrite(array $overrideRolePermission): void
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canEdit(
@@ -918,7 +918,7 @@ class StandardPolicyTraitTest extends TestCase
                 )
             ]),
             $this->mockEntity(
-                entityPermissions: $overrideRolePermissions,
+                entityPermissions: $overrideRolePermission,
             ),
         );
 
@@ -1116,7 +1116,7 @@ class StandardPolicyTraitTest extends TestCase
      * This test checks that we will always use whatever the override permission is, even if
      * the default says that the role does have delete permission (so long as it isn't inherit)
      */
-    public function testCanDeleteReturnsFalseIfUserRoleHasOverridePermissionExcludingDelete(array $overrideRolePermissions): void
+    public function testCanDeleteReturnsFalseIfUserRoleHasOverridePermissionExcludingDelete(array $overrideRolePermission): void
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canDelete(
@@ -1127,7 +1127,7 @@ class StandardPolicyTraitTest extends TestCase
                 )
             ]),
             $this->mockEntity(
-                entityPermissions: $overrideRolePermissions,
+                entityPermissions: $overrideRolePermission,
             ),
         );
 

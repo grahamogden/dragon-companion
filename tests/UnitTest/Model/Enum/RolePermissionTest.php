@@ -17,19 +17,19 @@ class RolePermissionTest extends TestCase
     {
         return [
             'Read only' => [
-                'permissions' => RolePermission::Read,
+                'permission' => RolePermission::Read,
                 'label' => 'Read',
             ],
             'Read + write' => [
-                'permissions' => RolePermission::Read_write,
+                'permission' => RolePermission::Read_write,
                 'label' => 'Read Write',
             ],
             'Read + delete' => [
-                'permissions' => RolePermission::Read_delete,
+                'permission' => RolePermission::Read_delete,
                 'label' => 'Read Delete',
             ],
             'Read + write + delete' => [
-                'permissions' => RolePermission::Read_write_delete,
+                'permission' => RolePermission::Read_write_delete,
                 'label' => 'Read Write Delete',
             ],
         ];
@@ -52,20 +52,20 @@ class RolePermissionTest extends TestCase
     {
         return [
             'Read only' => [
-                'permissions' => RolePermission::Read,
-                'permissionsValue' => 2,
+                'permission' => RolePermission::Read,
+                'permissionValue' => 2,
             ],
             'Read + write' => [
-                'permissions' => RolePermission::Read_write,
-                'permissionsValue' => 6,
+                'permission' => RolePermission::Read_write,
+                'permissionValue' => 6,
             ],
             'Read + delete' => [
-                'permissions' => RolePermission::Read_delete,
-                'permissionsValue' => 10,
+                'permission' => RolePermission::Read_delete,
+                'permissionValue' => 10,
             ],
             'Read + write + delete' => [
-                'permissions' => RolePermission::Read_write_delete,
-                'permissionsValue' => 14,
+                'permission' => RolePermission::Read_write_delete,
+                'permissionValue' => 14,
             ],
         ];
     }
@@ -73,10 +73,10 @@ class RolePermissionTest extends TestCase
     /**
      * @dataProvider dataProviderForHasReadPermissionTrueTests
      */
-    public function testHasReadPermissionWillReturnTrueForCorrectValues(RolePermission $permissions, int $permissionsValue): void
+    public function testHasReadPermissionWillReturnTrueForCorrectValues(RolePermission $permission, int $permissionValue): void
     {
-        $resultForPermission = RolePermission::hasReadPermission($permissions);
-        $resultForPermissionValue = RolePermission::hasReadPermissionForValue($permissionsValue);
+        $resultForPermission = RolePermission::hasReadPermission($permission);
+        $resultForPermissionValue = RolePermission::hasReadPermissionForValue($permissionValue);
 
         $this->assertTrue($resultForPermission);
         $this->assertTrue($resultForPermissionValue);
@@ -86,20 +86,20 @@ class RolePermissionTest extends TestCase
     {
         return [
             'Inherit' => [
-                'permissions' => RolePermission::Inherit,
-                'permissionsValue' => 1,
+                'permission' => RolePermission::Inherit,
+                'permissionValue' => 1,
             ],
             'Write only' => [
-                'permissions' => RolePermission::Write,
-                'permissionsValue' => 4,
+                'permission' => RolePermission::Write,
+                'permissionValue' => 4,
             ],
             'Delete only' => [
-                'permissions' => RolePermission::Delete,
-                'permissionsValue' => 8,
+                'permission' => RolePermission::Delete,
+                'permissionValue' => 8,
             ],
             'Write + delete' => [
-                'permissions' => RolePermission::Write_delete,
-                'permissionsValue' => 12,
+                'permission' => RolePermission::Write_delete,
+                'permissionValue' => 12,
             ],
         ];
     }
@@ -107,10 +107,10 @@ class RolePermissionTest extends TestCase
     /**
      * @dataProvider dataProviderForHasReadPermissionFalseTests
      */
-    public function testHasReadPermissionWillReturnFalseForCorrectValues(RolePermission $permissions, int $permissionsValue): void
+    public function testHasReadPermissionWillReturnFalseForCorrectValues(RolePermission $permission, int $permissionValue): void
     {
-        $resultForPermission = RolePermission::hasReadPermission($permissions);
-        $resultForPermissionValue = RolePermission::hasReadPermissionForValue($permissionsValue);
+        $resultForPermission = RolePermission::hasReadPermission($permission);
+        $resultForPermissionValue = RolePermission::hasReadPermissionForValue($permissionValue);
 
         $this->assertFalse($resultForPermission);
         $this->assertFalse($resultForPermissionValue);
@@ -124,20 +124,20 @@ class RolePermissionTest extends TestCase
     {
         return [
             'Write only' => [
-                'permissions' => RolePermission::Write,
-                'permissionsValue' => 4,
+                'permission' => RolePermission::Write,
+                'permissionValue' => 4,
             ],
             'Read + write' => [
-                'permissions' => RolePermission::Read_write,
-                'permissionsValue' => 6,
+                'permission' => RolePermission::Read_write,
+                'permissionValue' => 6,
             ],
             'Write + delete' => [
-                'permissions' => RolePermission::Write_delete,
-                'permissionsValue' => 12,
+                'permission' => RolePermission::Write_delete,
+                'permissionValue' => 12,
             ],
             'Read + write + delete' => [
-                'permissions' => RolePermission::Read_write_delete,
-                'permissionsValue' => 14,
+                'permission' => RolePermission::Read_write_delete,
+                'permissionValue' => 14,
             ],
         ];
     }
@@ -145,10 +145,10 @@ class RolePermissionTest extends TestCase
     /**
      * @dataProvider dataProviderForHasWritePermissionTrueTests
      */
-    public function testHasWritePermissionWillReturnTrueForCorrectValues(RolePermission $permissions, int $permissionsValue): void
+    public function testHasWritePermissionWillReturnTrueForCorrectValues(RolePermission $permission, int $permissionValue): void
     {
-        $resultForPermission = RolePermission::hasWritePermission($permissions);
-        $resultForPermissionValue = RolePermission::hasWritePermissionForValue($permissionsValue);
+        $resultForPermission = RolePermission::hasWritePermission($permission);
+        $resultForPermissionValue = RolePermission::hasWritePermissionForValue($permissionValue);
 
         $this->assertTrue($resultForPermission);
         $this->assertTrue($resultForPermissionValue);
@@ -158,16 +158,16 @@ class RolePermissionTest extends TestCase
     {
         return [
             'Read only' => [
-                'permissions' => RolePermission::Read,
-                'permissionsValue' => 2,
+                'permission' => RolePermission::Read,
+                'permissionValue' => 2,
             ],
             'Delete only' => [
-                'permissions' => RolePermission::Delete,
-                'permissionsValue' => 8,
+                'permission' => RolePermission::Delete,
+                'permissionValue' => 8,
             ],
             'Read + delete' => [
-                'permissions' => RolePermission::Read_delete,
-                'permissionsValue' => 10,
+                'permission' => RolePermission::Read_delete,
+                'permissionValue' => 10,
             ],
         ];
     }
@@ -175,10 +175,10 @@ class RolePermissionTest extends TestCase
     /**
      * @dataProvider dataProviderForHasWritePermissionFalseTests
      */
-    public function testHasWritePermissionWillReturnFalseForCorrectValues(RolePermission $permissions, int $permissionsValue): void
+    public function testHasWritePermissionWillReturnFalseForCorrectValues(RolePermission $permission, int $permissionValue): void
     {
-        $resultForPermission = RolePermission::hasWritePermission($permissions);
-        $resultForPermissionValue = RolePermission::hasWritePermissionForValue($permissionsValue);
+        $resultForPermission = RolePermission::hasWritePermission($permission);
+        $resultForPermissionValue = RolePermission::hasWritePermissionForValue($permissionValue);
 
         $this->assertFalse($resultForPermission);
         $this->assertFalse($resultForPermissionValue);
@@ -192,20 +192,20 @@ class RolePermissionTest extends TestCase
     {
         return [
             'Delete only' => [
-                'permissions' => RolePermission::Delete,
-                'permissionsValue' => 8,
+                'permission' => RolePermission::Delete,
+                'permissionValue' => 8,
             ],
             'Read + delete' => [
-                'permissions' => RolePermission::Read_delete,
-                'permissionsValue' => 10,
+                'permission' => RolePermission::Read_delete,
+                'permissionValue' => 10,
             ],
             'Write + delete' => [
-                'permissions' => RolePermission::Write_delete,
-                'permissionsValue' => 12,
+                'permission' => RolePermission::Write_delete,
+                'permissionValue' => 12,
             ],
             'Read + write + delete' => [
-                'permissions' => RolePermission::Read_write_delete,
-                'permissionsValue' => 14,
+                'permission' => RolePermission::Read_write_delete,
+                'permissionValue' => 14,
             ],
         ];
     }
@@ -213,10 +213,10 @@ class RolePermissionTest extends TestCase
     /**
      * @dataProvider dataProviderForHasDeletePermissionTrueTests
      */
-    public function testHasDeletePermissionWillReturnTrueForCorrectValues(RolePermission $permissions, int $permissionsValue): void
+    public function testHasDeletePermissionWillReturnTrueForCorrectValues(RolePermission $permission, int $permissionValue): void
     {
-        $resultForPermission = RolePermission::hasDeletePermission($permissions);
-        $resultForPermissionValue = RolePermission::hasDeletePermissionForValue($permissionsValue);
+        $resultForPermission = RolePermission::hasDeletePermission($permission);
+        $resultForPermissionValue = RolePermission::hasDeletePermissionForValue($permissionValue);
 
         $this->assertTrue($resultForPermission);
         $this->assertTrue($resultForPermissionValue);
@@ -226,16 +226,16 @@ class RolePermissionTest extends TestCase
     {
         return [
             'Read only' => [
-                'permissions' => RolePermission::Read,
-                'permissionsValue' => 2,
+                'permission' => RolePermission::Read,
+                'permissionValue' => 2,
             ],
             'Write only' => [
-                'permissions' => RolePermission::Write,
-                'permissionsValue' => 4,
+                'permission' => RolePermission::Write,
+                'permissionValue' => 4,
             ],
             'Read + Write' => [
-                'permissions' => RolePermission::Read_write,
-                'permissionsValue' => 6,
+                'permission' => RolePermission::Read_write,
+                'permissionValue' => 6,
             ],
         ];
     }
@@ -243,10 +243,10 @@ class RolePermissionTest extends TestCase
     /**
      * @dataProvider dataProviderForHasDeletePermissionFalseTests
      */
-    public function testHasDeletePermissionWillReturnFalseForCorrectValues(RolePermission $permissions, int $permissionsValue): void
+    public function testHasDeletePermissionWillReturnFalseForCorrectValues(RolePermission $permission, int $permissionValue): void
     {
-        $resultForPermission = RolePermission::hasDeletePermission($permissions);
-        $resultForPermissionValue = RolePermission::hasDeletePermissionForValue($permissionsValue);
+        $resultForPermission = RolePermission::hasDeletePermission($permission);
+        $resultForPermissionValue = RolePermission::hasDeletePermissionForValue($permissionValue);
 
         $this->assertFalse($resultForPermission);
         $this->assertFalse($resultForPermissionValue);

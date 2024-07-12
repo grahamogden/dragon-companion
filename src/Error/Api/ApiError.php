@@ -10,7 +10,7 @@ use Throwable;
 
 class ApiError extends HttpException
 {
-    protected array $errors = [];
+    protected ?array $errors = [];
 
     public function __construct(?string $message = null, ?int $code = null, ?Throwable $previous = null, ?array $errors = null)
     {
@@ -29,7 +29,7 @@ class ApiError extends HttpException
         $output = ['message' => $this->getMessage()];
 
         if ($this->errors) {
-            $output += ['errors' => $this->errors];
+            $output['errors'] = $this->errors;
         }
 
         if (Configure::read('debug')) {
