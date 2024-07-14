@@ -57,18 +57,6 @@ class SpeciesPolicy
         );
     }
 
-    /**
-     * @codeCoverageIgnore - is covered by StandardPolicyTraitTest
-     */
-    public function canIndex(IdentityInterface|User $identity, Species $species): bool
-    {
-        return $this->canReadForCampaignId(
-            identity: $identity,
-            campaignId: $species->getCampaignId(),
-            entity: $species,
-        );
-    }
-
     // public function canEdit(IdentityInterface|User $identity, Species $species): bool
     // {
     //     if ($this->isCreator(identity: $identity, species: $species)) {

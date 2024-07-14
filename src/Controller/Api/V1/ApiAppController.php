@@ -21,8 +21,7 @@ namespace App\Controller\Api\V1;
 use App\Error\Api\ForbiddenError;
 use App\Error\Api\UnauthorizedError;
 use App\Model\Entity\User;
-use App\Services\Api\Response\ApiResponseHeaderServiceFactory;
-use App\Services\Api\Response\ApiResponseHeaderServiceInterface;
+use App\Services\Api\Response\ApiResponseHeaderService;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Controller\Component\AuthenticationComponent;
 use Authorization\Controller\Component\AuthorizationComponent;
@@ -48,8 +47,8 @@ class ApiAppController extends Controller
     protected Log $logger;
 
     public function __construct(
+        protected readonly ApiResponseHeaderService $apiResponseHeaderService,
         ServerRequest $request = null,
-        protected readonly ApiResponseHeaderServiceInterface $apiResponseHeaderService,
         ?string $name = null,
         ?EventManagerInterface $eventManager = null,
     ) {
@@ -106,6 +105,7 @@ class ApiAppController extends Controller
 
         if (
             $authenticationResult->isValid()
+            && null !== $user
             && $user[User::FIELD_STATUS] > User::STATUS_PENDING
         ) {
             // User is authenticated and has verified their account, continue
@@ -174,7 +174,7 @@ class ApiAppController extends Controller
      * than throw an exception - this should be used for lists of entities
      * to know whether the user is allowed to see that item in the list
      */
-    public function isAuthorizedCheck(EntityInterface $entity): bool
+    private function isAuthorizedCheck(EntityInterface $entity): bool
     {
         try {
             $this->Authorization->authorize(resource: $entity);
@@ -182,6 +182,38 @@ class ApiAppController extends Controller
         } catch (ForbiddenException $exception) {
             return false;
         }
+    }
+
+    /**
+     * @deprecated This is no longer how we authorize multipe entities, instead
+     * it should be done through the database to be more consistent with
+     * results for pagination, etc.
+     * 
+     * Accepts an array of entities and returns any/all of the entities that
+     * the user is authorized to perform the action on or skips authorization
+     * entirely if there are no entities to check
+     *
+     * @param array $entities
+     * @return array
+     */
+    public function getAuthorizedEntities(array $entities): array
+    {
+        if (count($entities) === 0) {
+            // If there are no timelines, then we can't authorize for anything
+            $this->Authorization->skipAuthorization();
+
+            return [];
+        }
+
+        $authorizedEntities = [];
+
+        foreach ($entities as $entity) {
+            if ($this->isAuthorizedCheck(entity: $entity)) {
+                $authorizedEntities[] = $entity;
+            }
+        }
+
+        return $authorizedEntities;
     }
 
     // public function beforeRender(EventInterface $event)

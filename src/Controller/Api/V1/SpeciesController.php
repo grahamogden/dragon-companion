@@ -33,27 +33,15 @@ class SpeciesController extends ApiAppController
 
     public function index(int $campaignId): void
     {
-        $user = $this->user;
+        $species = $this->Species->findByCampaignIdWithPermissionsCheck(
+            identity: $this->user,
+            campaignId: $campaignId
+        )->all()->toList();
 
-        if ($user === null) {
-            throw new UnauthorizedError();
-        }
+        // Skip the authorization because it happens when we get the entities from the DB
+        $this->Authorization->skipAuthorization();
 
-        $species = $this->Species->findByCampaignId(campaignId: $campaignId);
-
-        if (count($species) === 0) {
-            // If there are no species, then we can't authorize for anything
-            $this->Authorization->skipAuthorization();
-        }
-
-        $outputSpecies = [];
-        foreach ($species as $specum) {
-            if ($this->isAuthorizedCheck(entity: $specum)) {
-                $outputSpecies[] = $specum;
-            }
-        }
-
-        $this->output(['species' => $outputSpecies]);
+        $this->output(['species' => $species]);
     }
 
     public function add(int $campaignId): void

@@ -49,6 +49,8 @@ class User extends Entity implements IdentityInterface
     public const FIELD_STATUS = 'status';
     public const FIELD_EXTERNAL_USER_ID = 'external_user_id';
 
+    public const FIELD_ROLES = 'roles';
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

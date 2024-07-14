@@ -31,6 +31,8 @@ $ docker exec -it [container id] bash
 $ vendor/bin/phpunit
 ```
 
+Unit tests are written to mock everything - expect for very specific scenarios, such as for input filters where it is using the Validator::validate() method because we want to make sure that the input filter is actually going to do what we expect rather than just mocking the response.
+
 ### Mutation Testing
 
 To run the mutation tests, provided by Infection, exec onto the container and then run the command:

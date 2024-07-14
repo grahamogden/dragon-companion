@@ -4,9 +4,16 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Error\Api\UnauthorizedError;
+use App\Model\Entity\Role;
 use App\Model\Entity\Timeline;
 use App\Model\Entity\TimelinePermission;
+use App\Model\Entity\User;
+use App\Model\Enum\RolePermission;
+use App\Services\TablePermissionsHelper\TablePermissionsHelper;
 use ArrayObject;
+use Authorization\Identity;
+use Cake\Datasource\QueryInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Query\SelectQuery;
@@ -47,6 +54,14 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 class TimelinesTable extends Table
 {
     public const TABLE_NAME = 'timelines';
+
+    private readonly TablePermissionsHelper $tablePermissionsHelper;
+
+    public function __construct(array $config)
+    {
+        parent::__construct(config: $config);
+        $this->tablePermissionsHelper = new TablePermissionsHelper();
+    }
 
     /**
      * Initialize method
@@ -150,14 +165,20 @@ class TimelinesTable extends Table
         return $rules;
     }
 
-    public function findByIdAndCampaignId(int $id, int $campaignId): ?Timeline
+    public function findOneByIdAndCampaignId(int $id, int $campaignId, bool $includeChildren = false): ?Timeline
     {
+        $contains = [TimelinePermission::ENTITY_NAME];
+
+        if ($includeChildren) {
+            $contains[] = Timeline::ASSOC_CHILD_TIMELINES;
+        }
+
         $query = $this->find()
             ->where([
                 Timeline::FIELD_ID => $id,
                 Timeline::FIELD_CAMPAIGN_ID => $campaignId,
             ])
-            ->contain([TimelinePermission::ENTITY_NAME, Timeline::ASSOC_CHILD_TIMELINES]);
+            ->contain($contains);
 
         return $query->first();
 
@@ -171,7 +192,7 @@ class TimelinesTable extends Table
     }
 
     /**
-     * @return Timeline[]
+     * @return Timeline
      */
     public function findByCampaignId(int $campaignId): ?array
     {
@@ -180,17 +201,19 @@ class TimelinesTable extends Table
                 ->where([Timeline::FIELD_CAMPAIGN_ID => $campaignId])
                 ->contain([TimelinePermission::ENTITY_NAME]);
 
-            return $query->all()->toList();
+            return $query->first();
         } catch (RecordNotFoundException $exception) {
             return null;
         }
     }
 
-    /**
-     * @return Timeline[]
-     */
-    public function findByCampaignIdForLevel(int $campaignId, int $level = 0, bool $includeChildren = false): ?array
+    public function findByCampaignIdForLevelWithPermissionsCheck(int $campaignId, Identity $identity, int $level = 0, bool $includeChildren = false): ?QueryInterface
     {
+        $role = $this->tablePermissionsHelper->getUserRoleForCampaignOrThrowUnauthorizedError(
+            identity: $identity,
+            campaignId: $campaignId
+        );
+
         $contains = [TimelinePermission::ENTITY_NAME];
 
         if ($includeChildren) {
@@ -198,11 +221,18 @@ class TimelinesTable extends Table
         }
 
         try {
-            $query = $this->find()
-                ->where([Timeline::FIELD_CAMPAIGN_ID => $campaignId, Timeline::FIELD_LEVEL => $level])
-                ->contain($contains);
+            $query = $this->tablePermissionsHelper->addReadPermissionsChecksToQuery(
+                query: $this->find()
+                    ->where([
+                        Timeline::ENTITY_NAME . '.' . Timeline::FIELD_CAMPAIGN_ID => $campaignId,
+                        Timeline::ENTITY_NAME . '.' . Timeline::FIELD_LEVEL => $level,
+                    ])
+                    ->contain($contains),
+                permissionEntityName: TimelinePermission::ENTITY_NAME,
+                role: $role
+            );
 
-            return $query->all()->toList();
+            return $query;
         } catch (RecordNotFoundException $exception) {
             return null;
         }

@@ -37,6 +37,8 @@ use Cake\Validation\Validator;
  */
 class RolesTable extends Table
 {
+    public const TABLE_NAME = 'roles';
+
     /**
      * Initialize method
      *

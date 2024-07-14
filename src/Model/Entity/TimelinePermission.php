@@ -25,7 +25,7 @@ class TimelinePermission extends Entity implements PermissionInterface
 
     public const FIELD_TIMELINE_ID = 'timeline_id';
     public const FIELD_ROLE_ID = 'role_id';
-    public const FILED_PERMISSIONS = 'permissions';
+    public const FIELD_PERMISSIONS = 'permissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -39,13 +39,13 @@ class TimelinePermission extends Entity implements PermissionInterface
     protected array $_accessible = [
         self::FIELD_TIMELINE_ID => true,
         self::FIELD_ROLE_ID => true,
-        self::FILED_PERMISSIONS => true,
+        self::FIELD_PERMISSIONS => true,
         'timeline' => true,
         'role' => true,
     ];
 
     protected array $_hidden = [
-        self::FILED_PERMISSIONS,
+        self::FIELD_PERMISSIONS,
     ];
 
     public function getTimelineId(): int

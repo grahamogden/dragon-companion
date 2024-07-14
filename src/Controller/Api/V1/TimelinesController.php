@@ -14,6 +14,8 @@ use App\Services\Api\Response\ApiResponseHeaderService;
 use Cake\Event\EventManagerInterface;
 use Cake\Http\ServerRequest;
 use App\InputFilter\Api\V1\Timelines\IndexQueryParameterInputFilter;
+use App\InputFilter\Api\V1\Timelines\ViewQueryParameterInputFilter;
+use App\Model\Entity\User;
 
 /**
  * Timelines Controller
@@ -22,10 +24,15 @@ use App\InputFilter\Api\V1\Timelines\IndexQueryParameterInputFilter;
  */
 class TimelinesController extends ApiAppController
 {
-    private IndexQueryParameterInputFilter $indexQueryParameterInputFilter;
+    protected array $paginate = [
+        'limit' => 1,
+        'order' => [],
+    ];
+
     public function __construct(
+        private readonly IndexQueryParameterInputFilter $indexQueryParameterInputFilter,
+        private readonly ViewQueryParameterInputFilter $viewQueryParameterInputFilter,
         ServerRequest $request = null,
-        IndexQueryParameterInputFilter $indexQueryParameterInputFilter,
         ApiResponseHeaderService $apiResponseHeaderService,
         ?string $name = null,
         ?EventManagerInterface $eventManager = null,
@@ -36,12 +43,17 @@ class TimelinesController extends ApiAppController
             name: $name,
             eventManager: $eventManager,
         );
-        $this->indexQueryParameterInputFilter = $indexQueryParameterInputFilter;
     }
 
     public function view(int $campaignId, int $id): void
     {
-        $timeline = $this->Timelines->findByIdAndCampaignId(campaignId: $campaignId, id: $id);
+        $params = $this->viewQueryParameterInputFilter->validateAndFilter($this->request->getQueryParams());
+
+        $timeline = $this->Timelines->findOneByIdAndCampaignId(
+            campaignId: $campaignId,
+            id: $id,
+            includeChildren: $params[ViewQueryParameterInputFilter::PARAM_INCLUDE_CHILDREN] ?? false
+        );
 
         if ($timeline === null) {
             throw new NotFoundError(message: "Timeline $id not found");
@@ -54,33 +66,20 @@ class TimelinesController extends ApiAppController
 
     public function index(int $campaignId): void
     {
-        $params = $this->request->getQueryParams();
-        $this->indexQueryParameterInputFilter->validate($params);
-        $filteredParams = $this->indexQueryParameterInputFilter->filter($params);
+        $params = $this->indexQueryParameterInputFilter->validateAndFilter($this->request->getQueryParams());
+        $level = $params[IndexQueryParameterInputFilter::PARAM_LEVEL] ?? 0;
 
-        $user = $this->user;
+        $timelines = $this->Timelines->findByCampaignIdForLevelWithPermissionsCheck(
+            campaignId: $campaignId,
+            level: $level,
+            includeChildren: $params[IndexQueryParameterInputFilter::PARAM_INCLUDE_CHILDREN] ?? false,
+            identity: $this->user
+        )->all()->toList();
 
-        if ($user === null) {
-            throw new UnauthorizedError();
-        }
+        // Skip the authorization because it happens when we get the entities from the DB
+        $this->Authorization->skipAuthorization();
 
-        $level = $filteredParams[IndexQueryParameterInputFilter::PARAM_LEVEL] ?? null;
-        // Needs to return levels - all if not set and default to level 0
-        $timelines = $this->Timelines->findByCampaignIdForLevel(campaignId: $campaignId, level: $level ?? 0, includeChildren: $level === null);
-
-        if (count($timelines) === 0) {
-            // If there are no timelines, then we can't authorize for anything
-            $this->Authorization->skipAuthorization();
-        }
-
-        $outputTimelines = [];
-        foreach ($timelines as $specum) {
-            if ($this->isAuthorizedCheck(entity: $specum)) {
-                $outputTimelines[] = $specum;
-            }
-        }
-
-        $this->output(['timelines' => $outputTimelines]);
+        $this->output(['timelines' => $timelines]);
     }
 
     public function add(int $campaignId): void

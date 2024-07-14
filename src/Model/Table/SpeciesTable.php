@@ -6,7 +6,10 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Species;
 use App\Model\Entity\SpeciesPermission;
+use App\Services\TablePermissionsHelper\TablePermissionsHelper;
+use Authorization\Identity;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\QueryInterface;
 use Cake\Datasource\ResultSetInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
@@ -39,6 +42,14 @@ use Cake\Validation\Validator;
 class SpeciesTable extends Table
 {
     public const TABLE_NAME = 'species';
+
+    private readonly TablePermissionsHelper $tablePermissionsHelper;
+
+    public function __construct(array $config)
+    {
+        parent::__construct(config: $config);
+        $this->tablePermissionsHelper = new TablePermissionsHelper();
+    }
 
     /**
      * Initialize method
@@ -130,29 +141,23 @@ class SpeciesTable extends Table
             ->contain([SpeciesPermission::ENTITY_NAME]);
 
         return $query->first();
-
-        // $entity = $this->get($id);
-        // dd($entity);
-        // if ($entity->campaign_id === $campaignId) {
-        //     return $entity;
-        // }
-
-        // return null;
     }
 
-    /**
-     * @return Species[]
-     */
-    public function findByCampaignId(int $campaignId): ?array
+    public function findByCampaignIdWithPermissionsCheck(Identity $identity, int $campaignId): QueryInterface
     {
-        try {
-            $query = $this->find()
-                ->where([Species::FIELD_CAMPAIGN_ID => $campaignId])
-                ->contain([SpeciesPermission::ENTITY_NAME]);
+        $role = $this->tablePermissionsHelper->getUserRoleForCampaignOrThrowUnauthorizedError(
+            identity: $identity,
+            campaignId: $campaignId
+        );
 
-            return $query->all()->toList();
-        } catch (RecordNotFoundException $exception) {
-            return null;
-        }
+        $query = $this->tablePermissionsHelper->addReadPermissionsChecksToQuery(
+            query: $this->find()
+                ->where([Species::ENTITY_NAME . '.' . Species::FIELD_CAMPAIGN_ID => $campaignId])
+                ->contain([SpeciesPermission::ENTITY_NAME]),
+            permissionEntityName: SpeciesPermission::ENTITY_NAME,
+            role: $role,
+        );
+
+        return $query;
     }
 }

@@ -60,7 +60,7 @@ class Campaign extends Entity
     protected array $_hidden = [
         self::FIELD_USER_ID,
         'campaign_users',
-        'campaign_permissions',
+        // 'campaign_permissions',
         'combat_encounters',
         'player_characters',
         'timeline_segments',

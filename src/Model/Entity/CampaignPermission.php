@@ -14,10 +14,6 @@ use Cake\ORM\Entity;
  * @property int $campaign_id
  * @property int $role_id
  * @property int $permissions
-//  * @property bool $can_read
-//  * @property bool $can_write
-//  * @property bool $can_delete
-//  * @property bool $can_permission
  *
  * @property Campaign $campaign
  * @property Role $role
@@ -28,10 +24,6 @@ class CampaignPermission extends Entity
 
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
     public const FIELD_ROLE_ID = 'role_id';
-    // public const FIELD_CAN_READ = 'can_read';
-    // public const FIELD_CAN_WRITE = 'can_write';
-    // public const FIELD_CAN_DELETE = 'can_delete';
-    // public const FIELD_CAN_PERMISSION = 'can_permission';
     public const FIELD_PERMISSIONS = 'permissions';
 
     /**
@@ -46,10 +38,6 @@ class CampaignPermission extends Entity
     protected array $_accessible = [
         self::FIELD_CAMPAIGN_ID => true,
         self::FIELD_ROLE_ID => true,
-        // self::FIELD_CAN_READ => true,
-        // self::FIELD_CAN_WRITE => true,
-        // self::FIELD_CAN_DELETE => true,
-        // self::FIELD_CAN_PERMISSION => true,
         self::FIELD_PERMISSIONS => true,
         'campaign' => true,
         'role' => true,
@@ -68,26 +56,6 @@ class CampaignPermission extends Entity
     {
         return $this->role_id;
     }
-
-    // public function canRead(): bool
-    // {
-    //     return $this->can_read;
-    // }
-
-    // public function canWrite(): bool
-    // {
-    //     return $this->can_write;
-    // }
-
-    // public function canDelete(): bool
-    // {
-    //     return $this->can_delete;
-    // }
-
-    // public function canPermission(): bool
-    // {
-    //     return $this->can_permission;
-    // }
 
     public function getPermissions(): RolePermission
     {

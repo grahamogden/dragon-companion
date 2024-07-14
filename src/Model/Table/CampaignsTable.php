@@ -6,10 +6,15 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Campaign;
 use App\Model\Entity\CampaignPermission;
+use App\Model\Entity\Role;
+use App\Model\Entity\RolesUser;
 use App\Model\Entity\User;
+use App\Services\TablePermissionsHelper\TablePermissionsHelper;
+use Authorization\Identity;
 use Cake\Database\Query;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\QueryInterface;
 use Cake\Datasource\ResultSetInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
@@ -49,6 +54,14 @@ use Psr\SimpleCache\CacheInterface;
 class CampaignsTable extends Table
 {
     public const TABLE_NAME = 'campaigns';
+
+    private readonly TablePermissionsHelper $tablePermissionsHelper;
+
+    public function __construct(array $config)
+    {
+        parent::__construct(config: $config);
+        $this->tablePermissionsHelper = new TablePermissionsHelper();
+    }
 
     /**
      * Initialize method
@@ -131,7 +144,7 @@ class CampaignsTable extends Table
         return $rules;
     }
 
-    public function findByIdWithUsers(int $id): ?Campaign
+    public function findOneByIdWithUsers(int $id): ?Campaign
     {
         try {
             /** @var Campaign $entity */
@@ -143,14 +156,26 @@ class CampaignsTable extends Table
         return $entity;
     }
 
-    public function findAllByUserId($userId): SelectQuery
+    public function findByUserIdWithPermissionsCheck(Identity $identity): QueryInterface
     {
-        return $this->find()->matching(
-            User::ENTITY_NAME,
-            function (Query $q) use ($userId) {
-                return $q->where([User::ENTITY_NAME . '.' . User::FIELD_ID => $userId]);
-            }
-        )
-            ->contain([CampaignPermission::ENTITY_NAME]);
+        $query = $this->find()
+            ->leftJoinWith(Role::ENTITY_NAME, function ($q) {
+                return $q->where([Role::ENTITY_NAME . '.' . Role::FIELD_CAMPAIGN_ID . ' = ' . Campaign::ENTITY_NAME . '.' . Campaign::FIELD_ID]);
+            })
+            ->leftJoinWith(Role::ENTITY_NAME . '.' . RolesUser::ENTITY_NAME, function ($q) use ($identity) {
+                return $q->where([RolesUser::ENTITY_NAME . '.' . RolesUser::FIELD_USER_ID . ' = ' . $identity->getIdentifier()]);
+            })
+            ->where([
+                'OR' => [
+                    Campaign::ENTITY_NAME . '.' . Campaign::FIELD_USER_ID => $identity->getIdentifier(),
+                    RolesUser::ENTITY_NAME . '.' . RolesUser::FIELD_USER_ID => $identity->getIdentifier(),
+                ]
+            ])
+            ->contain(
+                [CampaignPermission::ENTITY_NAME]
+            )
+            ->distinct([Campaign::ENTITY_NAME . '.' . Campaign::FIELD_ID]);
+
+        return $query;
     }
 }

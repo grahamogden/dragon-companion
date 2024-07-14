@@ -74,7 +74,7 @@ class CampaignsTableTest extends TestCase
     /**
      * Test findByIdWithUsers method
      *
-     * @uses CampaignsTable::findByIdWithUsers()
+     * @uses CampaignsTable::findOneByIdWithUsers()
      */
     public function testFindByIdWithUsersReturnsCampaignEntityResult(): void
     {
@@ -84,7 +84,7 @@ class CampaignsTableTest extends TestCase
             'synopsis' => 'Lorem ipsum dolor sit amet',
         ];
 
-        $result = $this->Campaigns->findByIdWithUsers(1);
+        $result = $this->Campaigns->findOneByIdWithUsers(1);
 
         $this->assertInstanceOf(
             expected: Campaign::class,
@@ -99,7 +99,7 @@ class CampaignsTableTest extends TestCase
     /**
      * Test findAllByUserId method
      *
-     * @uses CampaignsTable::findAllByUserId()
+     * @uses CampaignsTable::findByUserIdWithPermissionsCheck()
      */
     public function testFindAllByUserIdReturnsCampaignEntityResult(): void
     {
@@ -109,7 +109,7 @@ class CampaignsTableTest extends TestCase
             'synopsis' => 'Lorem ipsum dolor sit amet',
         ];
 
-        $result = $this->Campaigns->findAllByUserId(1)->toArray();
+        $result = $this->Campaigns->findByUserIdWithPermissionsCheck(1)->toArray();
 
         $this->assertInstanceOf(
             expected: Campaign::class,

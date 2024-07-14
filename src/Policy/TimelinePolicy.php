@@ -56,16 +56,4 @@ class TimelinePolicy
             entity: $timeline,
         );
     }
-
-    /**
-     * @codeCoverageIgnore - is covered by StandardPolicyTraitTest
-     */
-    public function canIndex(IdentityInterface|User $identity, Timeline $timeline): bool
-    {
-        return $this->canReadForCampaignId(
-            identity: $identity,
-            campaignId: $timeline->getCampaignId(),
-            entity: $timeline,
-        );
-    }
 }

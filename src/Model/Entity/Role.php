@@ -32,6 +32,7 @@ class Role extends Entity
 {
     public const ENTITY_NAME = 'Roles';
 
+    public const FIELD_ID = 'id';
     public const FIELD_ROLE_NAME = 'role_name';
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
     public const FIELD_ROLE_LEVEL = 'role_level';
@@ -57,6 +58,7 @@ class Role extends Entity
         self::FIELD_ROLE_LEVEL => true,
         self::FIELD_CAMPAIGN_DEFAULT_PERMISSIONS => true,
         self::FIELD_SPECIES_DEFAULT_PERMISSIONS => true,
+        self::FIELD_TIMELINE_DEFAULT_PERMISSIONS => true,
         'campaigns' => true,
         'campaign_permissions' => true,
         'characters' => true,

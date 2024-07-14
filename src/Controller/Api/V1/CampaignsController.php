@@ -27,7 +27,7 @@ class CampaignsController extends ApiAppController
 {
     public function view(int $id): void
     {
-        $campaign = $this->Campaigns->findByIdWithUsers(id: $id);
+        $campaign = $this->Campaigns->findOneByIdWithUsers(id: $id);
 
         if ($campaign === null) {
             throw new NotFoundError(message: "Campaign $id not found");
@@ -51,16 +51,9 @@ class CampaignsController extends ApiAppController
             throw new UnauthorizedError();
         }
 
-        $campaigns = $this->Campaigns->findAllByUserId(userId: $user['id']);
+        $campaigns = $this->Campaigns->findByUserIdWithPermissionsCheck(identity: $this->user, userId: $user['id']);
 
-        $outputCampaigns = [];
-        foreach ($campaigns as $campaign) {
-            if ($this->isAuthorizedCheck(entity: $campaign)) {
-                $outputCampaigns[] = $campaign;
-            }
-        }
-
-        $this->output(['campaigns' => $outputCampaigns]);
+        $this->output(['campaigns' => $campaigns]);
     }
 
     public function add(): void
