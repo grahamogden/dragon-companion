@@ -2,7 +2,7 @@
     import { ref, watch } from 'vue';
     import { useRoute, RouterLink } from 'vue-router'
     const route = useRoute()
-    const path = route.fullPath
+    const path = route.path
 
     const breadcrumbs = ref<{ text: string, destination: string }[]>([]);
 

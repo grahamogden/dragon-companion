@@ -2,6 +2,8 @@ import RestClientService from '../../repository/rest/RestClientService'
 import type { NewTimelineEntityInterface } from '../TimelineEntityInterface'
 import { type TimelineEntityInterface } from '../TimelineEntityInterface'
 import type TimelineRepositoryInterface from '../TimelineRepositoryInterface'
+import type FindOneQueryParameterInterface from './FindOneQueryParameterInterface'
+import type FindQueryParameterInterface from './FindQueryParameterInterface'
 
 export default class TimelineRestRepository implements TimelineRepositoryInterface {
     private restClient: RestClientService
@@ -14,14 +16,40 @@ export default class TimelineRestRepository implements TimelineRepositoryInterfa
     public async findByIdAndCampaignId(
         campaignId: number,
         id: number,
+        includeChildren?: boolean,
+        level?: number,
     ): Promise<TimelineEntityInterface | null> {
-        const res = await this.restClient.get(this.getRoute(campaignId) + '/' + id)
+        let params: FindOneQueryParameterInterface & Record<string, string> = {}
+
+        if (undefined !== includeChildren) {
+            params.includeChildren = includeChildren ? '1' : '0'
+        }
+
+        if (undefined !== level) {
+            params.level = '' + level
+        }
+
+        const res = await this.restClient.get(this.getRoute(campaignId) + '/' + id, params)
         let timelineResponse: TimelineEntityInterface = await res.json()
         return timelineResponse
     }
 
-    public async findAll(campaignId: number): Promise<TimelineEntityInterface[]> {
-        const res = await this.restClient.get(this.getRoute(campaignId))
+    public async findAll(
+        campaignId: number,
+        includeChildren?: boolean,
+        level?: number,
+    ): Promise<TimelineEntityInterface[]> {
+        let params: FindQueryParameterInterface & Record<string, string> = {}
+
+        if (undefined !== includeChildren) {
+            params.includeChildren = includeChildren ? '1' : '0'
+        }
+
+        if (undefined !== level) {
+            params.level = '' + level
+        }
+
+        const res = await this.restClient.get(this.getRoute(campaignId), params)
         return await res.json()
     }
 

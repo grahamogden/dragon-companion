@@ -129,13 +129,13 @@ const router = createRouter({
                             component: () => import('../views/timelines/TimelineCreate.vue'),
                         },
                         {
-                            path: ':timelinesId(\\d+)/edit',
+                            path: ':timelineId(\\d+)/edit',
                             name: 'timelines.edit',
                             beforeEnter: isLoggedIn,
                             component: () => import('../views/timelines/TimelineEdit.vue'),
                         },
                         {
-                            path: ':timelinesId(\\d+)/view',
+                            path: ':timelineId(\\d+)/view',
                             name: 'timelines.view',
                             beforeEnter: isLoggedIn,
                             component: () => import('../views/timelines/TimelineView.vue'),

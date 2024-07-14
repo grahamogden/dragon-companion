@@ -9,13 +9,11 @@ use App\Model\Entity\Timeline;
 use App\Model\Table\UsersTable;
 use App\Error\Api\BadRequestError;
 use App\Error\Api\NotFoundError;
-use App\Error\Api\UnauthorizedError;
 use App\Services\Api\Response\ApiResponseHeaderService;
 use Cake\Event\EventManagerInterface;
 use Cake\Http\ServerRequest;
 use App\InputFilter\Api\V1\Timelines\IndexQueryParameterInputFilter;
 use App\InputFilter\Api\V1\Timelines\ViewQueryParameterInputFilter;
-use App\Model\Entity\User;
 
 /**
  * Timelines Controller
@@ -67,14 +65,23 @@ class TimelinesController extends ApiAppController
     public function index(int $campaignId): void
     {
         $params = $this->indexQueryParameterInputFilter->validateAndFilter($this->request->getQueryParams());
-        $level = $params[IndexQueryParameterInputFilter::PARAM_LEVEL] ?? 0;
+        $level = $params[IndexQueryParameterInputFilter::PARAM_LEVEL] ?? null;
+        $includeChildren = $params[IndexQueryParameterInputFilter::PARAM_INCLUDE_CHILDREN] ?? false;
 
-        $timelines = $this->Timelines->findByCampaignIdForLevelWithPermissionsCheck(
-            campaignId: $campaignId,
-            level: $level,
-            includeChildren: $params[IndexQueryParameterInputFilter::PARAM_INCLUDE_CHILDREN] ?? false,
-            identity: $this->user
-        )->all()->toList();
+        if (null === $level) {
+            $timelines = $this->Timelines->findByCampaignIdWithPermissionsCheck(
+                campaignId: $campaignId,
+                includeChildren: $includeChildren,
+                identity: $this->user,
+            )->all()->toList();
+        } else {
+            $timelines = $this->Timelines->findByCampaignIdForLevelWithPermissionsCheck(
+                campaignId: $campaignId,
+                level: $level,
+                includeChildren: $includeChildren,
+                identity: $this->user
+            )->all()->toList();
+        }
 
         // Skip the authorization because it happens when we get the entities from the DB
         $this->Authorization->skipAuthorization();

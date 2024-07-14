@@ -238,6 +238,36 @@ class TimelinesTable extends Table
         }
     }
 
+    public function findByCampaignIdWithPermissionsCheck(int $campaignId, Identity $identity, bool $includeChildren = false): ?QueryInterface
+    {
+        $role = $this->tablePermissionsHelper->getUserRoleForCampaignOrThrowUnauthorizedError(
+            identity: $identity,
+            campaignId: $campaignId
+        );
+
+        $contains = [TimelinePermission::ENTITY_NAME];
+
+        if ($includeChildren) {
+            $contains[] = Timeline::ASSOC_CHILD_TIMELINES;
+        }
+
+        try {
+            $query = $this->tablePermissionsHelper->addReadPermissionsChecksToQuery(
+                query: $this->find()
+                    ->where([
+                        Timeline::ENTITY_NAME . '.' . Timeline::FIELD_CAMPAIGN_ID => $campaignId,
+                    ])
+                    ->contain($contains),
+                permissionEntityName: TimelinePermission::ENTITY_NAME,
+                role: $role
+            );
+
+            return $query;
+        } catch (RecordNotFoundException $exception) {
+            return null;
+        }
+    }
+
     // public function beforeSave(EventInterface $event, EntityInterface & Timeline $entity, ArrayObject $options): void
     // {
     //     // $config = $this->getConfig();

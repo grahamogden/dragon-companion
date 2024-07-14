@@ -1,20 +1,23 @@
 import type { TimelineEntityInterface } from './TimelineEntityInterface'
 
-export class TimelineEntity implements TimelineEntityInterface {
-    id: number | null
+export default class TimelineEntity implements TimelineEntityInterface {
+    id?: number
     title: string
     body: string
     parent_id: number | null
+    child_timelines?: TimelineEntity[] | null
 
     constructor(
-        id: number | null = null,
+        id?: number,
         title: string = '',
         body: string = '',
         parent_id: number | null = null,
+        child_timelines?: TimelineEntity[] | null,
     ) {
         this.id = id
         this.title = title
         this.body = body
         this.parent_id = parent_id
+        this.child_timelines = child_timelines
     }
 }

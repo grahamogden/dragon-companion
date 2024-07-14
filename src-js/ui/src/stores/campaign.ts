@@ -19,7 +19,7 @@ export const useCampaignStore = defineStore('campaign', {
     }),
     getters: {
         isCampaignSelected: (state) => state.campaignId !== null,
-        selectedCampaignId: (state) => state.campaignId,
+        selectedCampaignId: (state) => parseInt(state.campaignId),
         selectedCampaignName: (state) => state.campaignName,
         getCampaignById: (state) => {
             return (campaignId: number) =>
@@ -39,7 +39,7 @@ export const useCampaignStore = defineStore('campaign', {
 
             this.campaigns.forEach((campaign) => {
                 if (campaign.id === campaignId) {
-                    this.campaignId = campaign.id
+                    this.campaignId = parseInt(campaign.id)
                     this.campaignName = campaign.name
                     return
                 }

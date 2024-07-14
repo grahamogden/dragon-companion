@@ -45,13 +45,7 @@ class CampaignsController extends ApiAppController
         // get someone else's
         $this->Authorization->skipAuthorization();
 
-        $user = $this->user;
-
-        if ($user === null) {
-            throw new UnauthorizedError();
-        }
-
-        $campaigns = $this->Campaigns->findByUserIdWithPermissionsCheck(identity: $this->user, userId: $user['id']);
+        $campaigns = $this->Campaigns->findByUserIdWithPermissionsCheck(identity: $this->user);
 
         $this->output(['campaigns' => $campaigns]);
     }

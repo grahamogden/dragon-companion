@@ -60,7 +60,7 @@
     }
 
     .breadcrumb {
-        & + &:before {
+        &+&:before {
             content: '>';
             @apply px-1
         }
@@ -150,10 +150,47 @@
 
     .loading {
         transform: translate(-50%, -50%);
-    
+
         .spinner {
             transform-origin: center;
             animation: spin 3s linear infinite;
+        }
+    }
+
+    .table-rounded {
+        @apply border-0 w-full border-collapse;
+
+        tbody tr:last-of-type td {
+            &:first-of-type {
+                @apply rounded-bl-2xl;
+            }
+
+            &:last-of-type {
+                @apply rounded-br-2xl;
+            }
+        }
+    }
+
+    th,
+    td {
+        @apply border-0 p-3 align-top;
+    }
+
+    th {
+        @apply text-left;
+    }
+
+    thead.table-heading-dark {
+        th {
+            @apply bg-woodsmoke-800 text-white-lilac-50 font-bold transition duration-500;
+
+            &:first-of-type {
+                @apply rounded-tl-2xl;
+            }
+
+            &:last-of-type {
+                @apply rounded-tr-2xl;
+            }
         }
     }
 

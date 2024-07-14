@@ -141,7 +141,7 @@
     class="absolute z-30 focus:p-4 focus:underline max-h-0 focus:max-h-none bg-white-lilac-50 overflow-hidden"
     ref="skipLink">Skip to main content</a>
 
-  <header class="w-full bg-shark-950/75 backdrop-blur shadow-lg">
+  <header class="w-full bg-shark-950/50 backdrop-blur-lg shadow-lg">
     <div class="flex flex-row justify-between items-center max-w-page mx-auto py-2 lg:py-4 px-4 lg:px-6 relative">
       <div class="flex flex-row items-center">
         <div class="z-10">
@@ -191,7 +191,7 @@
 
   <div class="max-w-page w-full m-0 lg:mx-auto lg:my-6 lg:px-6">
     <div class="flex flex-row rounded-3xl shadow-lg">
-      <div class="fixed lg:relative bottom-24 lg:bottom-auto lg:flex flex-col w-full lg:max-w-64 z-10 bg-shark-950/75 backdrop-blur mx-auto rounded-t-3xl lg:rounded-tr-none lg:rounded-l-3xl overflow-hidden text-center lg:text-left" :class="{ hidden: !isNavMenuOpen }">
+      <div class="fixed lg:relative bottom-24 lg:bottom-auto lg:flex flex-col w-full lg:max-w-64 z-10 bg-shark-950/50 backdrop-blur-lg mx-auto rounded-t-3xl lg:rounded-tr-none lg:rounded-l-3xl overflow-hidden text-center lg:text-left" :class="{ hidden: !isNavMenuOpen }">
         <CampaignPicker />
 
         <div class="flex flex-col w-full">
@@ -211,7 +211,7 @@
 
       <main id="main-content w-full h-full"
         class="relative w-full">
-        <div class="absolute top-0 left-0 w-full h-full bg-timberwolf-50/90 dark:bg-woodsmoke-950/90 backdrop-blur-sm lg:rounded-r-3xl duration-500"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-timberwolf-50/80 dark:bg-woodsmoke-950/80 backdrop-blur-xl lg:rounded-r-3xl duration-500"></div>
         <!-- <div class="absolute top-0 left-0 w-full h-full px-2 pt-4 pb-8 lg:p-4"> -->
         <div class="relative w-full h-full p-4 pb-8">
           <breadcrumbs></breadcrumbs>

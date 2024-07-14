@@ -3,12 +3,12 @@ import UnauthorizedError from '../errors/UnauthorizedError'
 import BadRequestError from '../errors/BadRequestError'
 
 class RestClientService {
-    private baseUrl: string
+    private baseUrl: URL
     private auth: Auth
     private csrfToken: string
 
     public constructor(baseUrl: string, auth: Auth, csrfToken: string) {
-        this.baseUrl = baseUrl
+        this.baseUrl = new URL(baseUrl)
         this.auth = auth
         this.csrfToken = csrfToken
     }
@@ -21,11 +21,16 @@ class RestClientService {
         }
     }
 
-    public async get(path: string): Promise<Response> {
+    private transformSearchParams(params: Record<string, string> = {}): URLSearchParams {
+        params.disableCsrf = '1'
+        return new URLSearchParams(params)
+    }
+
+    public async get(path: string, params: Record<string, string> = {}): Promise<Response> {
         if (!this.auth.currentUser) {
             throw new Error()
         }
-        const url = this.baseUrl + path + '?disableCsrf=1'
+        const url = new URL(`${path}?${this.transformSearchParams(params)}`, this.baseUrl)
 
         const res = await getIdToken(this.auth.currentUser)
             .then(async (authToken: string) => {
@@ -55,7 +60,7 @@ class RestClientService {
         if (!this.auth.currentUser) {
             throw new Error()
         }
-        const url = this.baseUrl + path + '?disableCsrf=1'
+        const url = new URL(`${path}?${this.transformSearchParams({})}`, this.baseUrl)
 
         const res = await getIdToken(this.auth.currentUser)
             .then(async (authToken: string) => {
@@ -85,7 +90,7 @@ class RestClientService {
         if (!this.auth.currentUser) {
             throw new Error()
         }
-        const url = this.baseUrl + path + '?disableCsrf=1'
+        const url = new URL(`${path}?${this.transformSearchParams({})}`, this.baseUrl)
 
         const res = await getIdToken(this.auth.currentUser)
             .then(async (authToken: string) => {
@@ -115,7 +120,7 @@ class RestClientService {
         if (!this.auth.currentUser) {
             throw new Error()
         }
-        const url = this.baseUrl + path + '?disableCsrf=1'
+        const url = new URL(`${path}?${this.transformSearchParams({})}`, this.baseUrl)
 
         const res = await getIdToken(this.auth.currentUser)
             .then(async (authToken: string) => {
@@ -140,8 +145,8 @@ class RestClientService {
         this.handleError(url, 'DELETE', res)
     }
 
-    private handleError(url: string, method: string, res: Response): never {
-        console.error('(' + res.status + ') ' + method + ':' + url)
+    private handleError(url: URL, method: string, res: Response): never {
+        console.error('(' + res.status + ') ' + method + ':' + url.toString())
         switch (res.status) {
             case 401:
                 throw new UnauthorizedError()
