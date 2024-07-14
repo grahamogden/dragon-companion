@@ -7,15 +7,14 @@ namespace App\Test\UnitTest\Policy;
 use App\Error\Api\BadRequestError;
 use App\InputFilter\Api\V1\PaginationQueryParameterInputFilter;
 use App\InputFilter\Api\V1\Timelines\IndexQueryParameterInputFilter;
-use Cake\Validation\Validator;
+use App\Validation\CustomValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-
-use function PHPUnit\Framework\exactly;
 
 class IndexQueryParameterInputFilterTest extends TestCase
 {
     public const PARAM_LEVEL = 'level';
+    public const PARAM_INCLUDE_CHILDREN = 'includeChildren';
 
 
     /*********************
@@ -64,6 +63,27 @@ class IndexQueryParameterInputFilterTest extends TestCase
         );
     }
 
+    public function testConstructorCallsValidatorExtendedBooleanForParams(): void
+    {
+        $validator = $this->mockValidator();
+
+        $matcher = $this->exactly(1);
+        $expected1 = self::PARAM_INCLUDE_CHILDREN;
+
+        $validator->expects($matcher)
+            ->method('extendedBoolean')
+            ->willReturnCallback(function (string $value) use ($matcher, $expected1) {
+                match ($matcher->numberOfInvocations()) {
+                    1 =>  $this->assertEquals(expected: $expected1, actual: $value),
+                };
+            });
+
+        new IndexQueryParameterInputFilter(
+            validator: $validator,
+            paginationQueryParameterInputFilter: $this->mockPaginationQueryParameterInputFilter()
+        );
+    }
+
 
     /*********************
      * validate tests *
@@ -90,6 +110,7 @@ class IndexQueryParameterInputFilterTest extends TestCase
     {
         $default = [
             self::PARAM_LEVEL => 1,
+            self::PARAM_INCLUDE_CHILDREN => true,
         ];
 
         return [
@@ -99,6 +120,24 @@ class IndexQueryParameterInputFilterTest extends TestCase
             'Large level' => [
                 'params' => [...$default, self::PARAM_LEVEL => 20000000],
             ],
+            'includeChildren = true' => [
+                'params' => [...$default, self::PARAM_INCLUDE_CHILDREN => true],
+            ],
+            'includeChildren = false' => [
+                'params' => [...$default, self::PARAM_INCLUDE_CHILDREN => false],
+            ],
+            'includeChildren = "true"' => [
+                'params' => [...$default, self::PARAM_INCLUDE_CHILDREN => 'true'],
+            ],
+            'includeChildren = "false"' => [
+                'params' => [...$default, self::PARAM_INCLUDE_CHILDREN => 'false'],
+            ],
+            'includeChildren = 1' => [
+                'params' => [...$default, self::PARAM_INCLUDE_CHILDREN => 1],
+            ],
+            'includeChildren = 0' => [
+                'params' => [...$default, self::PARAM_INCLUDE_CHILDREN => 0],
+            ],
         ];
     }
 
@@ -107,7 +146,7 @@ class IndexQueryParameterInputFilterTest extends TestCase
      */
     public function testValidateValidParams(array $params): void
     {
-        $validator = new Validator();
+        $validator = new CustomValidator();
 
         $objectUnderTest = new IndexQueryParameterInputFilter(
             validator: $validator,
@@ -121,6 +160,7 @@ class IndexQueryParameterInputFilterTest extends TestCase
     {
         $default = [
             self::PARAM_LEVEL => 1,
+            self::PARAM_INCLUDE_CHILDREN => true,
         ];
 
         return [
@@ -141,6 +181,18 @@ class IndexQueryParameterInputFilterTest extends TestCase
                     ],
                 ],
             ],
+            'Alphabetic includeChildren = "A"' => [
+                'params' => [...$default, self::PARAM_INCLUDE_CHILDREN => 'A'],
+                'expected' => [
+                    self::PARAM_INCLUDE_CHILDREN => ['extendedBoolean' => 'The provided value must be a boolean (true, "true", 1, "1", false, "false", 0, "0")',]
+                ],
+            ],
+            'Numeric non-boolean includeChildren = 5' => [
+                'params' => [...$default, self::PARAM_INCLUDE_CHILDREN => 5],
+                'expected' => [
+                    self::PARAM_INCLUDE_CHILDREN => ['extendedBoolean' => 'The provided value must be a boolean (true, "true", 1, "1", false, "false", 0, "0")',]
+                ],
+            ],
         ];
     }
 
@@ -149,7 +201,7 @@ class IndexQueryParameterInputFilterTest extends TestCase
      */
     public function testValidateThrowsBadRequestIfInvalidParams(array $params, array $expected): void
     {
-        $validator = new Validator();
+        $validator = new CustomValidator();
 
         $objectUnderTest = new IndexQueryParameterInputFilter(
             validator: $validator,
@@ -201,6 +253,51 @@ class IndexQueryParameterInputFilterTest extends TestCase
         $this->assertSame(expected: $params, actual: $objectUnderTest->filter([]));
     }
 
+    public function testFilterCallsvalidatorFilterExtendedBoolean(): void
+    {
+        $validator = $this->mockValidator();
+        $params = ['a' => true, 2 => 2, self::PARAM_INCLUDE_CHILDREN => true];
+
+        $objectUnderTest = new IndexQueryParameterInputFilter(
+            validator: $validator,
+            paginationQueryParameterInputFilter: $this->mockPaginationQueryParameterInputFilter()
+        );
+
+        $validator->expects($this->exactly(1))
+            ->method('filterExtendedBoolean')
+            ->with($params[self::PARAM_INCLUDE_CHILDREN]);
+
+        $objectUnderTest->filter($params);
+    }
+
+
+    public static function dataProviderFilterReturnsValidatorFilterExtendedBooleanResult(): array
+    {
+        return [
+            'false' => [
+                'expected' => [self::PARAM_INCLUDE_CHILDREN => false],
+            ],
+            'true' => [
+                'expected' => [self::PARAM_INCLUDE_CHILDREN => true],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderFilterReturnsValidatorFilterExtendedBooleanResult
+     */
+    public function testFilterReturnsValidatorFilterExtendedBooleanResult(array $expected): void
+    {
+        $params = [self::PARAM_INCLUDE_CHILDREN => 'Hello there'];
+
+        $objectUnderTest = new IndexQueryParameterInputFilter(
+            validator: $this->mockValidator($expected[self::PARAM_INCLUDE_CHILDREN]),
+            paginationQueryParameterInputFilter: $this->mockPaginationQueryParameterInputFilter(),
+        );
+
+        $this->assertSame(expected: $expected, actual: $objectUnderTest->filter($params));
+    }
+
     public static function dataProviderForFilterReturnsIntegerPage(): array
     {
         return [
@@ -214,6 +311,10 @@ class IndexQueryParameterInputFilterTest extends TestCase
             ],
             'Not set level' => [
                 'params' => [],
+                'expected' => [],
+            ],
+            'Removed unknown params' => [
+                'params' => ['a' => true, 2 => 2],
                 'expected' => [],
             ],
         ];
@@ -233,28 +334,21 @@ class IndexQueryParameterInputFilterTest extends TestCase
         $this->assertSame(expected: $expected, actual: $objectUnderTest->filter($params));
     }
 
-    public function testFilterDoesNotReturnUnknownParams(): void
-    {
-
-        $objectUnderTest = new IndexQueryParameterInputFilter(
-            validator: $this->mockValidator(),
-            paginationQueryParameterInputFilter: $this->mockPaginationQueryParameterInputFilter()
-        );
-
-        $this->assertSame(expected: [], actual: $objectUnderTest->filter(['a' => true, 2 => 2]));
-    }
-
     /************************
      ***** CREATE MOCKS *****
      ************************/
 
-    public function mockValidator(): Validator|MockObject
+    public function mockValidator(bool $filterExtendedBooleanResponse = true): CustomValidator|MockObject
     {
-        $mock = $this->createMock(Validator::class);
+        $mock = $this->createMock(CustomValidator::class);
         $mock->method('integer')
             ->willReturnSelf();
         $mock->method('nonNegativeInteger')
             ->willReturnSelf();
+        $mock->method('extendedBoolean')
+            ->willReturnSelf();
+        $mock->method('filterExtendedBoolean')
+            ->willReturn($filterExtendedBooleanResponse);
 
         return $mock;
     }
