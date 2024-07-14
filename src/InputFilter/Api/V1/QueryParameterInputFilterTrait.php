@@ -10,6 +10,6 @@ trait QueryParameterInputFilterTrait
     {
         $this->validate(params: $params);
 
-        return $this->filter(input: $params);
+        return $this->filter(params: $params);
     }
 }

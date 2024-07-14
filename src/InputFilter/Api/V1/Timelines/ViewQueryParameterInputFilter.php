@@ -36,12 +36,12 @@ class ViewQueryParameterInputFilter implements QueryParameterInputFilterInterfac
         }
     }
 
-    public function filter(array $input): array
+    public function filter(array $params): array
     {
         $output = [];
 
-        if (isset($input[self::PARAM_INCLUDE_CHILDREN])) {
-            $output[self::PARAM_INCLUDE_CHILDREN] = $this->validator->filterExtendedBoolean($input[self::PARAM_INCLUDE_CHILDREN]);
+        if (isset($params[self::PARAM_INCLUDE_CHILDREN])) {
+            $output[self::PARAM_INCLUDE_CHILDREN] = $this->validator->filterExtendedBoolean($params[self::PARAM_INCLUDE_CHILDREN]);
         }
 
         return $output;

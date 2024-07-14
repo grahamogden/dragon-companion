@@ -9,9 +9,6 @@ use App\InputFilter\Api\V1\PaginationQueryParameterInputFilter;
 use Cake\Validation\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Throwable;
-
-use function PHPUnit\Framework\exactly;
 
 class PaginationQueryParameterInputFilterTest extends TestCase
 {

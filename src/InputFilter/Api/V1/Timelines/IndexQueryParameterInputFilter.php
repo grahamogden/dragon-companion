@@ -46,16 +46,16 @@ class IndexQueryParameterInputFilter implements QueryParameterInputFilterInterfa
         }
     }
 
-    public function filter(array $input): array
+    public function filter(array $params): array
     {
-        $output = $this->paginationQueryParameterInputFilter->filter($input);
+        $output = $this->paginationQueryParameterInputFilter->filter($params);
 
-        if (isset($input[self::PARAM_LEVEL])) {
-            $output[self::PARAM_LEVEL] = (int) $input[self::PARAM_LEVEL];
+        if (isset($params[self::PARAM_LEVEL])) {
+            $output[self::PARAM_LEVEL] = (int) $params[self::PARAM_LEVEL];
         }
 
-        if (isset($input[self::PARAM_INCLUDE_CHILDREN])) {
-            $output[self::PARAM_INCLUDE_CHILDREN] = $this->validator->filterExtendedBoolean($input[self::PARAM_INCLUDE_CHILDREN]);
+        if (isset($params[self::PARAM_INCLUDE_CHILDREN])) {
+            $output[self::PARAM_INCLUDE_CHILDREN] = $this->validator->filterExtendedBoolean($params[self::PARAM_INCLUDE_CHILDREN]);
         }
 
         return $output;
