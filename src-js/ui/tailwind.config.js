@@ -289,9 +289,10 @@ export default {
         '45': '45deg',
       },
     },
-    // fontFamily: {
-    //   'sans': ["sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
-    // }
+    fontFamily: {
+      'sans': ["Open Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+      // 'sans': ["Nunito", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+    }
   },
   safelist: [
     'router-link-active'

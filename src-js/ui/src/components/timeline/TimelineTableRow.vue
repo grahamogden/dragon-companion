@@ -51,7 +51,7 @@
                 :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + entity.name" />
         </td>
     </tr>
-    <tr v-for="childTimelines in props.entity.child_timelines" class="bg-woodsmoke-200/50">
+    <tr v-for="childTimelines in props.entity.child_timelines" class="bg-woodsmoke-200/50 dark:bg-woodsmoke-700/25">
         <td v-for="field in props.headings">
             <router-link
                 v-if="field.isLink && props.viewLink"
@@ -66,5 +66,5 @@
         </td>
         <td></td>
     </tr>
-    <tr><td class="bg-woodsmoke-200/50 text-center" colspan="99"><router-link :to="{ name: 'timelines.add', params: { externalCampaignId: props.campaignId }, query: { parentId: props.entity.id } }">Add a children timeline record</router-link></td></tr>
+    <tr><td class="bg-woodsmoke-200/50 dark:bg-woodsmoke-700/25 text-center" colspan="99"><router-link :to="{ name: 'timelines.add', params: { externalCampaignId: props.campaignId }, query: { parentId: props.entity.id } }">Add a new children timeline record</router-link></td></tr>
 </template>

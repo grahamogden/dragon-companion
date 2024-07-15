@@ -29,13 +29,13 @@
 
     updateBreadcrumbs(path.split('/'))
 
-    watch(() => route.fullPath, (newRoute, oldRoute) => {
+    watch(() => route.path, (newRoute, oldRoute) => {
         updateBreadcrumbs(newRoute.split('/'))
     })
 </script>
 
 <template>
-    <div class="breadcrumb-container mb-4">
+    <div class="breadcrumb-container mb-4 text-sm">
         <div class="breadcrumb inline-block" v-for="breadcrumb in breadcrumbs">
             <router-link v-if="breadcrumb.destination" :to="breadcrumb.destination" class="capitalize">{{ breadcrumb.text }}</router-link>
             <span v-else class="capitalize">{{ breadcrumb.text }}</span>
