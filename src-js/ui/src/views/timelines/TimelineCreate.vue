@@ -20,12 +20,7 @@
   function createTimeline(): void {
     timelineStore.addTimeline(
       campaignId,
-      new TimelineEntity(
-        undefined,
-        timeline.value.title,
-        timeline.value.body,
-        timeline.value.parent_id,
-      )
+      timeline.value
     ).then(() => {
       router.push({ name: 'timelines.list', params: { externalCampaignId: campaignId } })
     })

@@ -8,12 +8,11 @@
   import EntityTableHeading from '../../components/entity-table/interface/entity-table-heading'
   import EntityTableLink from '../../components/entity-table/interface/entity-table-link'
 
-  const timelineStore = useTimelineStore()
   const campaignStore = useCampaignStore()
   const campaignId = campaignStore.selectedCampaignId!
+  const timelineStore = useTimelineStore()
   const isLoading = ref(true)
 
-  // let allTimelines = ref<TimelineEntityInterface[]>([])
   let allTimelines: TimelineEntityInterface[] = []
   fetchTimelines(campaignId)
 
@@ -22,7 +21,6 @@
     timelineStore.findTimelines(campaignId, true, 0).then((timelines: TimelineEntityInterface[]) => {
       if (timelines !== null) {
         allTimelines = timelines
-        // console.debug(timelines)
       }
       isLoading.value = false
     });

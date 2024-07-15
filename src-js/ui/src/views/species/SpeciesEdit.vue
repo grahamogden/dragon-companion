@@ -1,62 +1,43 @@
 <script setup lang="ts">
-  import { ref, reactive } from 'vue';
+  import { ref } from 'vue';
   import { useSpeciesStore, useCampaignStore } from '../../stores';
   import router from '../../router';
   import SpeciesForm from './SpeciesForm.vue'
   import { type SpeciesEntityInterface } from '../../services/species/SpeciesEntityInterface';
   import PageHeader from '../../components/page-header/PageHeader.vue';
-  import LoadingPage from '../../components/loading-page/LoadingPage.vue';
-import { SpeciesEntity } from '../../services/species';
+  import { SpeciesEntity } from '../../services/species';
+  import { useRoute } from 'vue-router';
 
   const isLoading = ref(true)
-  const speciesStore = useSpeciesStore()
   const campaignStore = useCampaignStore()
+  const campaignId = campaignStore.selectedCampaignId!
+  const speciesStore = useSpeciesStore()
 
-  const params = router.currentRoute.value.params
-  const campaignId = parseInt(params.externalCampaignId as string)
-  const speciesId = parseInt(params.speciesId as string)
-  console.debug(campaignId)
-  console.debug(speciesId)
-  let formData = ref<SpeciesEntityInterface>(new SpeciesEntity())
+  const route = useRoute()
+  const speciesId = parseInt(route.params.speciesId as string)
+  const species = ref<SpeciesEntityInterface>(new SpeciesEntity())
 
-  if (campaignStore.selectedCampaignId) {
-    speciesStore.getOneSpecies(campaignId, speciesId)
-    .then((species) => {
-      if (species !== null) {
-        formData.value.id = species.id
-        formData.value.name = species.name
+  speciesStore.getOneSpecies(campaignId, speciesId)
+    .then((speciesRes) => {
+      if (speciesRes !== null) {
+        species.value = speciesRes
       }
       isLoading.value = false
     })
-  }
-  // if (species !== undefined && species !== null) {
-  //   formData = reactive(species)
-  // }
 
-  async function editSpecies(formData: SpeciesEntityInterface): Promise<void> {
-    if (campaignStore.selectedCampaignId) {
-      await speciesStore.updateSpecies(
-        campaignId,
-        {
-          id: speciesId,
-          name: formData.name,
-        }
-      )
-      // console.debug('Editing Species')
-      router.push({ name: 'species.list' })
-    }
-    // alert('Please select a campaign before editing a species!')
+  function editSpecies(): void {
+    speciesStore.updateSpecies(
+      campaignId,
+      species.value
+    ).then(() => {
+      router.push({ name: 'species.list', params: { externalCampaignId: campaignId } })
+    })
   }
 </script>
 
 <template>
   <div class="species-edit">
-    <page-header>Edit "{{ formData.name ? formData.name : 'Unknown' }}" Species</page-header>
-    <loading-page v-model="isLoading">
-      <template #content>
-        <species-form :data="formData" @save-Species="editSpecies" />
-      </template>
-      <template #loading-text>species</template>
-    </loading-page>
+    <page-header>Edit "{{ species.name ? species.name : 'Unknown' }}" Species</page-header>
+    <species-form :species="species" :is-parent-loading="isLoading" @save-Species="editSpecies" />
   </div>
 </template>

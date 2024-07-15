@@ -16,39 +16,6 @@
         deleteConfirmationFunction: Function,
         kebabMenuButtonAriaContext: string,
     }>()
-    console.debug(props.entities)
-    // function confirmDelete(campaignId: number) {
-    //   console.debug('Confirming delete for ' + campaignId)
-    //   if (window.confirm('Are you sure you want to delete ' + campaignId + ': "' + campaignStore.getCampaignById(campaignId)?.name + '"')) {
-    //     console.debug('Confirmed - attempting delete')
-    //     campaignStore.deleteCampaign(campaignId)
-    //   }
-    // }
-
-    // function getLinks(campaign: CampaignEntityInterface): LinkInterface[] {
-    //   return [
-    //     {
-    //       label: 'Edit',
-    //       type: LinkInterfaceTypeEnum.ROUTER,
-    //       destination: {name: 'campaigns.edit', params: { externalCampaignId: campaign.id }},
-    //     },
-    //     {
-    //       label: 'Delete',
-    //       type: LinkInterfaceTypeEnum.BUTTON,
-    // //       function: ((campaign.id!) => {
-    // //   console.debug('Confirming delete for ' + campaignId)
-    // //   if (window.confirm('Are you sure you want to delete ' + campaignId)) {
-    // //     console.debug('Confirmed - attempting delete')
-    // //     campaignStore.deleteCampaign(campaignId)
-    // //   }
-    // // })
-    //       function: {
-    //         func: confirmDelete,
-    //         args: [campaign.id],
-    //       }
-    //     }
-    //   ]
-    // }
 
     function getActionLinks(campaignId: number, id: number): (DropDownItemRouter | DropDownItemButton)[] {
         return [
@@ -65,7 +32,6 @@
             )
         ]
     }
-
 </script>
 
 <template>
@@ -78,12 +44,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="!campaignStore.selectedCampaignId" v-for="entity in props.entities">
-                    <td colspan="99">
-                        <p class="text-center">Please select a campaign to get started!</p>
-                    </td>
-                </tr>
-                <tr v-else-if="props.entities.length === 0">
+                <tr v-if="props.entities.length === 0">
                     <td colspan="99">
                         <p class="text-center">No records found. Why not add some now!</p>
                     </td>

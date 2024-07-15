@@ -5,28 +5,27 @@
   import { type SpeciesEntityInterface } from '../../services/species/SpeciesEntityInterface';
   import { useCampaignStore } from '../../stores';
   import PageHeader from '../../components/page-header/PageHeader.vue';
+  import { ref } from 'vue';
+  import { SpeciesEntity } from '../../services/species';
 
   const speciesStore = useSpeciesStore()
   const campaignStore = useCampaignStore()
+  const campaignId = campaignStore.selectedCampaignId!
+  const species = ref<SpeciesEntityInterface>(new SpeciesEntity())
 
-  async function createSpecies(formData: SpeciesEntityInterface): Promise<void> {
-    if (campaignStore.selectedCampaignId) {
-      await speciesStore.addSpecies(
-        campaignStore.selectedCampaignId,
-        {
-          name: formData.name,
-        }
-      )
-      router.push({ name: 'species.list', params: { externalCampaignId: campaignStore.selectedCampaignId } })
-    } else {
-      alert('Please select a campaign to save a new species')
-    }
+  function createSpecies(): void {
+    speciesStore.addSpecies(
+      campaignId,
+      species.value
+    ).then(() => {
+      router.push({ name: 'species.list', params: { externalCampaignId: campaignId } })
+    })
   }
 </script>
 
 <template>
   <div class="species-create">
     <page-header>Create a Species</page-header>
-    <SpeciesForm @save-Species="createSpecies" />
+    <species-form :species="species" :is-parent-loading="false" @save-Species="createSpecies" />
   </div>
 </template>

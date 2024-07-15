@@ -32,7 +32,7 @@ export const useSpeciesStore = defineStore('species', {
         async fetchSpecies(campaignId: number): Promise<SpeciesEntityInterface[]> {
             let species: SpeciesEntity[] = []
 
-            console.debug('Fetching species in store')
+            // console.debug('Fetching species in store')
 
             const speciesResponse = await this._getSpeciesRespository().findAll(campaignId)
             speciesResponse?.forEach((speciesResponse: SpeciesEntity) => {
@@ -48,7 +48,7 @@ export const useSpeciesStore = defineStore('species', {
         },
         async addSpecies(campaignId: number, species: NewSpeciesEntityInterface) {
             const speciesId = await this._getSpeciesRespository().add(campaignId, species)
-            const newSpecies: SpeciesEntityInterface = new SpeciesEntity(speciesId, species.name)
+            // const newSpecies: SpeciesEntityInterface = new SpeciesEntity(speciesId, species.name)
             // species.push(newSpecies)
         },
         async updateSpecies(campaignId: number, species: SpeciesEntityInterface) {

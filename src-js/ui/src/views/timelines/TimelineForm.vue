@@ -9,7 +9,6 @@
     import { ref, watch } from 'vue';
     import LoadingPage from '../../components/loading-page/LoadingPage.vue';
 
-    // const isLoading = defineModel('isLoading', { default: true })
     const isLoading = ref<boolean>(true)
     const timeline = defineModel<TimelineEntityInterface>('timeline', { required: true })
     const props = defineProps<{
@@ -37,15 +36,18 @@
         emit('saveTimeline')
     }
 
-    if (!props.isParentLoading) {
+    if (props.isParentLoading) {
+        // Watch for when the parent stops loading
+        watch(() => props.isParentLoading, (isLoading) => {
+            if (!isLoading) {
+                fetchTimelineOptions()
+            }
+        })
+    } else {
+        // Has the parent already finished loading or
+        // not needed to load anything to begin with
         fetchTimelineOptions()
     }
-
-    watch(() => props.isParentLoading, (isLoading) => {
-        if (!isLoading) {
-            fetchTimelineOptions()
-        }
-    })
 </script>
 
 <template>
@@ -56,10 +58,6 @@
                     <TextInput inputName="name" v-model="timeline.title" label="Title" />
                 </div>
                 <div class="w-full md:w-2/4">
-                    <!-- <select inputName="name" v-model="timeline.parent_id" label="Parent timeline">
-                    <option value=""> - </option>
-                    <option v-for="timelineOption in timelineOptions" :value="timelineOption.value">{{ timelineOption.text }}</option>
-                </select> -->
                     <select-input v-model="timeline.parent_id" label="Parent timeline" input-name="parent_id"
                         :options="timelineOptions" />
                 </div>

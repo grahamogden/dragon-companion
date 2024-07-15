@@ -9,31 +9,27 @@
   import EntityTableLink from '../../components/entity-table/interface/entity-table-link'
   import ContentGroup from '../../components/elements/ContentGroup.vue'
   import { useRoute } from 'vue-router'
-import router from '../../router';
 
   const route = useRoute()
-
   const timelineStore = useTimelineStore()
-  // const params = router.currentRoute.value.params
   const params = route.params
-  // console.debug(params)
   const campaign = useCampaignStore()
-  // const campaignId = parseInt(params.externalCampaignId as string)
   const campaignId = campaign.selectedCampaignId!
 
   let timelineId = parseInt(params.timelineId as string)
   let isLoading = ref(true)
-  let formData = ref<TimelineEntityInterface>(new TimelineEntity())
+  let timeline = ref<TimelineEntityInterface>(new TimelineEntity())
 
   function fetchTimeline(campaignId: number, timelineId: number) {
-    timelineStore.findOneTimeline(campaignId, timelineId, true).then((timeline) => {
+    isLoading.value = true
+    timelineStore.findOneTimeline(campaignId, timelineId, true).then((timelineRes) => {
       // console.debug(timeline)
-      if (timeline !== null) {
-        formData.value.id = timeline.id
-        formData.value.title = timeline.title
-        formData.value.body = timeline.body
-        formData.value.parent_id = timeline.parent_id
-        formData.value.child_timelines = timeline.child_timelines
+      if (timelineRes !== null) {
+        timeline.value.id = timelineRes.id
+        timeline.value.title = timelineRes.title
+        timeline.value.body = timelineRes.body
+        timeline.value.parent_id = timelineRes.parent_id
+        timeline.value.child_timelines = timelineRes.child_timelines
       }
       isLoading.value = false
     })
@@ -60,11 +56,11 @@ import router from '../../router';
 
 <template>
   <div class="timeline-view">
-    <page-header link-text="Edit" :link-destination="{ name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }">{{ formData.title ? formData.title : 'Timeline' }}</page-header>
+    <page-header link-text="Edit" :link-destination="{ name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }">{{ timeline.title ? timeline.title : 'Timeline' }}</page-header>
     <loading-page v-model="isLoading">
       <template #content>
-        <content-group><template #content>{{ formData.body }}</template></content-group>
-        <content-group v-if="formData.parent_id"><template #heading>Parent timeline</template><template #content><router-link :to="{ name: 'timelines.view', params: { externalCampaignId: campaignId, timelineId: formData.parent_id } }">{{ formData.parent_id }}</router-link></template></content-group>
+        <content-group><template #content>{{ timeline.body }}</template></content-group>
+        <content-group v-if="timeline.parent_id"><template #heading>Parent timeline</template><template #content><router-link :to="{ name: 'timelines.view', params: { externalCampaignId: campaignId, timelineId: timeline.parent_id } }">{{ timeline.parent_id }}</router-link></template></content-group>
         <content-group>
           <template #heading>Child timelines</template>
           <template #content>
@@ -72,7 +68,7 @@ import router from '../../router';
             :campaign-id="campaignId"
             :timeline-id="timelineId"
             :headings="[new EntityTableHeading('title', true), new EntityTableHeading('body')]"
-            :entities="formData.child_timelines"
+            :entities="timeline.child_timelines"
             :view-link="new EntityTableLink('timelines.view', 'timelineId')"
             :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
             :delete-confirmation-function="confirmDelete"
