@@ -9,6 +9,7 @@
   import EntityTableLink from '../../components/entity-table/interface/entity-table-link'
   import ContentGroup from '../../components/elements/ContentGroup.vue'
   import { useRoute } from 'vue-router'
+import router from '../../router';
 
   const route = useRoute()
 
@@ -18,7 +19,8 @@
   // console.debug(params)
   const campaign = useCampaignStore()
   // const campaignId = parseInt(params.externalCampaignId as string)
-  const campaignId = campaign.selectedCampaignId
+  const campaignId = campaign.selectedCampaignId!
+
   let timelineId = parseInt(params.timelineId as string)
   let isLoading = ref(true)
   let formData = ref<TimelineEntityInterface>(new TimelineEntity())

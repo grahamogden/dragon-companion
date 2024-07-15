@@ -1,16 +1,16 @@
 import { inject } from 'vue'
-import { createRouter, createWebHistory, type RouteLocationPathRaw } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import UserAccountView from '../views/users/account/UserAccount.vue'
 import LogInView from '../views/login/LogIn.vue'
 import LogOutView from '../views/logout/LogOut.vue'
-import { useUserAuthStore } from '../stores'
+import { useCampaignStore, useUserAuthStore } from '../stores'
 import { getAuth } from 'firebase/auth'
 import { firebaseAppKey } from '../keys'
 import type { FirebaseApp } from 'firebase/app'
 import { useAuth } from '@vueuse/firebase'
 
-function isLoggedIn(to: RouteLocationPathRaw, from: RouteLocationPathRaw) {
+function isLoggedIn(to: RouteLocationNormalized, from: RouteLocationNormalized) {
     const userAuthStore = useUserAuthStore()
     // const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
     // const auth = getAuth(firebaseApp)
@@ -22,6 +22,28 @@ function isLoggedIn(to: RouteLocationPathRaw, from: RouteLocationPathRaw) {
         console.debug('User is not logged in, redirecting to login')
         return { name: 'login' }
     }
+}
+
+function hasCampaignSelected(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+    const campaignStore = useCampaignStore()
+    // console.debug(campaignStore)
+    const storeCampaignId = campaignStore.selectedCampaignId
+    // console.debug(storeCampaignId)
+    const paramCampaignId = to.params.externalCampaignId
+        ? parseInt(to.params.externalCampaignId as string)
+        : null
+    // console.debug(paramCampaignId)
+
+    if (storeCampaignId === paramCampaignId) {
+        return
+    }
+
+    if (!paramCampaignId) {
+        console.debug('User has not selected a campaign, redirecting to campaigns.list')
+        return { name: 'campaigns.list' }
+    }
+
+    campaignStore.selectCampaign(paramCampaignId)
 }
 
 const router = createRouter({
@@ -51,7 +73,7 @@ const router = createRouter({
                 {
                     path: 'characters',
                     name: 'characters',
-                    beforeEnter: isLoggedIn,
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
                     // route level code-splitting
                     // this generates a separate chunk (About.[hash].js) for this route
                     // which is lazy-loaded when the route is visited.
@@ -60,19 +82,19 @@ const router = createRouter({
                 {
                     path: 'classes',
                     name: 'classes',
-                    beforeEnter: isLoggedIn,
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
                     component: () => import('../views/classes/ClassList.vue'),
                 },
                 {
                     path: 'combat-encounters',
                     name: 'combat-encounters',
-                    beforeEnter: isLoggedIn,
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
                     component: () => import('../views/combat-encounters/CombatEncounterList.vue'),
                 },
                 {
                     path: 'tags',
                     name: 'tags',
-                    beforeEnter: isLoggedIn,
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
                     component: () => import('../views/timelines/TimelineList.vue'),
                 },
                 // {
@@ -83,30 +105,30 @@ const router = createRouter({
                 // },
                 {
                     path: 'species',
-                    beforeEnter: isLoggedIn,
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
                     children: [
                         {
                             path: '',
                             name: 'species.list',
-                            beforeEnter: isLoggedIn,
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/species/SpeciesList.vue'),
                         },
                         {
                             path: 'add',
                             name: 'species.add',
-                            beforeEnter: isLoggedIn,
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/species/SpeciesCreate.vue'),
                         },
                         {
                             path: ':speciesId(\\d+)/edit',
                             name: 'species.edit',
-                            beforeEnter: isLoggedIn,
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/species/SpeciesEdit.vue'),
                         },
                         {
                             path: ':speciesId(\\d+)/view',
                             name: 'species.view',
-                            beforeEnter: isLoggedIn,
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/species/SpeciesView.vue'),
                         },
                     ],
@@ -114,30 +136,30 @@ const router = createRouter({
                 {
                     path: 'timelines',
                     name: 'timelines',
-                    beforeEnter: isLoggedIn,
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
                     children: [
                         {
                             path: '',
                             name: 'timelines.list',
-                            beforeEnter: isLoggedIn,
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/timelines/TimelineList.vue'),
                         },
                         {
                             path: 'add',
                             name: 'timelines.add',
-                            beforeEnter: isLoggedIn,
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/timelines/TimelineCreate.vue'),
                         },
                         {
                             path: ':timelineId(\\d+)/edit',
                             name: 'timelines.edit',
-                            beforeEnter: isLoggedIn,
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/timelines/TimelineEdit.vue'),
                         },
                         {
                             path: ':timelineId(\\d+)/view',
                             name: 'timelines.view',
-                            beforeEnter: isLoggedIn,
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/timelines/TimelineView.vue'),
                         },
                     ],

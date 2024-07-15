@@ -6,8 +6,14 @@
   import LoadingPage from '../../components/loading-page/LoadingPage.vue';
   import { DropDownItemRouter, DropDownItemButton } from '../../components/interfaces/drop-down.item.interface';
   import type { CampaignEntityInterface } from '../../services/campaign';
+  // import router from '../../router'
 
   const campaignStore = useCampaignStore()
+  campaignStore.getCampaigns()
+
+  function changeCampaign(value: number) {
+    campaignStore.selectCampaign(value)
+  }
 
   function confirmDelete(campaignId: number) {
     console.debug('Confirming delete for ' + campaignId)
@@ -19,6 +25,13 @@
 
   function getLinks(campaign: CampaignEntityInterface): (DropDownItemRouter | DropDownItemButton)[] {
     return [
+      new DropDownItemButton(
+        'Select',
+        {
+          func: changeCampaign,
+          args: [campaign.id],
+        }
+      ),
       new DropDownItemRouter(
         'Edit',
         { name: 'campaigns.edit', params: { externalCampaignId: campaign.id } },
@@ -29,7 +42,7 @@
           func: confirmDelete,
           args: [campaign.id],
         }
-      )
+      ),
     ]
   }
 </script>

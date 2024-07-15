@@ -10,18 +10,18 @@
 
   const timelineStore = useTimelineStore()
   const campaignStore = useCampaignStore()
+  const campaignId = campaignStore.selectedCampaignId!
   const isLoading = ref(true)
 
-  let allTimelines = ref<TimelineEntityInterface[]>([])
-  if (campaignStore.selectedCampaignId) {
-    fetchTimelines(campaignStore.selectedCampaignId)
-  }
+  // let allTimelines = ref<TimelineEntityInterface[]>([])
+  let allTimelines: TimelineEntityInterface[] = []
+  fetchTimelines(campaignId)
 
   function fetchTimelines(campaignId: number): void {
     isLoading.value = true
     timelineStore.findTimelines(campaignId, true, 0).then((timelines: TimelineEntityInterface[]) => {
       if (timelines !== null) {
-        allTimelines.value = timelines
+        allTimelines = timelines
         // console.debug(timelines)
       }
       isLoading.value = false
@@ -40,9 +40,10 @@
 <template>
   <div class="timeline-list">
     <page-header link-text="Add timeline" :link-destination="{ name: 'timelines.add' }" >Timelines</page-header>
-    <loading-page v-if="campaignStore.selectedCampaignId" v-model="isLoading">
+    <loading-page v-model="isLoading">
       <template #content>
         <index-list-table
+          :campaign-id="campaignId"
           :headings="[new EntityTableHeading('title', true), new EntityTableHeading('body')]"
           :entities="allTimelines"
           :view-link="new EntityTableLink('timelines.view', 'timelineId')"

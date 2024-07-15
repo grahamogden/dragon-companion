@@ -2,14 +2,15 @@
     import { useCampaignStore } from '../../../stores/campaign'
     import type EntityTableHeadingInterface from '../../entity-table/interface/entity-table-heading.interface';
     import type EntityTableLinkInterface from '../../entity-table/interface/entity-table-link.interface';
-    import TimelineEntity from '../../../services/timeline/TimelineEntity'
     import TimelineTableRow from '../TimelineTableRow.vue'
+    import type { TimelineEntityInterface } from '../../../services/timeline';
 
     const campaignStore = useCampaignStore()
 
     const props = defineProps<{
+        campaignId: number,
         headings: EntityTableHeadingInterface[],
-        entities: TimelineEntity[] & Record<string, string>[],
+        entities: TimelineEntityInterface[] & Record<string, string>[],
         editLink: EntityTableLinkInterface,
         viewLink?: EntityTableLinkInterface,
         deleteConfirmationFunction: Function,
@@ -27,22 +28,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="!campaignStore.selectedCampaignId">
-                    <td colspan="99">
-                        <p class="text-center">Please select a campaign to get started!</p>
-                    </td>
-                </tr>
-                <tr v-else-if="props.entities.length === 0">
+                <tr v-if="props.entities.length === 0">
                     <td colspan="99">
                         <p class="text-center">No records found. Why not add some now!</p>
                     </td>
                 </tr>
-                <timeline-table-row v-for="entity in props.entities"
-                    :entity="entity"
-                    :campaign-id="campaignStore.selectedCampaignId"
-                    :headings="props.headings"
-                    :view-link="props.viewLink"
-                    :edit-link="props.editLink"
+                <timeline-table-row v-for="entity in props.entities" :entity="entity"
+                    :campaign-id="props.campaignId" :headings="props.headings"
+                    :view-link="props.viewLink" :edit-link="props.editLink"
                     :delete-confirmation-function="props.deleteConfirmationFunction"
                     :kebab-menu-button-aria-context="props.kebabMenuButtonAriaContext"></timeline-table-row>
                 <!-- <tr v-else v-for="entity in props.entities">

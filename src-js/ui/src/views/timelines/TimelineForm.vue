@@ -3,48 +3,72 @@
     import TextArea from '../../components/elements/TextArea.vue'
     import EntityButtonWrapper from '../../components/entity-button-wrapper/EntityButtonWrapper.vue'
     import type { TimelineEntityInterface, NewTimelineEntityInterface } from '../../services/timeline'
-    import TimelineEntity from '../../services/timeline/TimelineEntity';
     import type SelectInputOptionInterface from '../../components/elements/interface/select-input-option.interface'
     import SelectInput from '../../components/elements/SelectInput.vue'
+    import { useTimelineStore } from '../../stores';
+    import { ref, watch } from 'vue';
+    import LoadingPage from '../../components/loading-page/LoadingPage.vue';
 
-    const emit = defineEmits(['saveTimeline'])
+    // const isLoading = defineModel('isLoading', { default: true })
+    const isLoading = ref<boolean>(true)
+    const timeline = defineModel<TimelineEntityInterface>('timeline', { required: true })
     const props = defineProps<{
-        data?: TimelineEntityInterface,
-        parentIdOptions: SelectInputOptionInterface[],
+        campaignId: number,
+        isParentLoading: boolean,
     }>()
 
-    let formData: NewTimelineEntityInterface = new TimelineEntity(
-        props.data?.id,
-        props.data?.title,
-        props.data?.body,
-        props.data?.parent_id,
-    );
+    const timelineStore = useTimelineStore()
+    const timelineOptions: SelectInputOptionInterface[] = [];
 
-    if (props.data) {
-        formData = props.data
+    function fetchTimelineOptions() {
+        timelineStore.findTimelines(props.campaignId)
+            .then((timelines) => {
+                timelines.forEach((timelineRes) => {
+                    if (timelineRes.id && timelineRes.id !== timeline.value.id) {
+                        timelineOptions.push({ value: timelineRes.id, text: timelineRes.title })
+                    }
+                })
+                isLoading.value = false
+            })
     }
 
+    const emit = defineEmits(['saveTimeline'])
     function submitForm() {
-        emit('saveTimeline', formData)
+        emit('saveTimeline')
     }
+
+    if (!props.isParentLoading) {
+        fetchTimelineOptions()
+    }
+
+    watch(() => props.isParentLoading, (isLoading) => {
+        if (!isLoading) {
+            fetchTimelineOptions()
+        }
+    })
 </script>
 
 <template>
-    <form @submit.prevent="submitForm">
-        <div class="w-full md:w-2/4">
-            <TextInput inputName="name" v-model="formData.title" label="Title" />
-        </div>
-        <div class="w-full md:w-2/4">
-            <!-- <select inputName="name" v-model="formData.parent_id" label="Parent timeline">
-                <option value=""> - </option>
-                <option v-for="timelineOption in timelineOptions" :value="timelineOption.value">{{ timelineOption.text }}</option>
-            </select> -->
-            <SelectInput v-model="formData.parent_id" label="Parent timeline" input-name="parent_id"
-                :options="props.parentIdOptions" />
-        </div>
-        <div class="w-full">
-            <TextArea input-name="name" v-model="formData.body" label="Body" />
-        </div>
-        <EntityButtonWrapper :cancelDestination="{ name: 'timelines.list' }" />
-    </form>
+    <loading-page v-model="isLoading">
+        <template #content>
+            <form @submit.prevent="submitForm">
+                <div class="w-full md:w-2/4">
+                    <TextInput inputName="name" v-model="timeline.title" label="Title" />
+                </div>
+                <div class="w-full md:w-2/4">
+                    <!-- <select inputName="name" v-model="timeline.parent_id" label="Parent timeline">
+                    <option value=""> - </option>
+                    <option v-for="timelineOption in timelineOptions" :value="timelineOption.value">{{ timelineOption.text }}</option>
+                </select> -->
+                    <select-input v-model="timeline.parent_id" label="Parent timeline" input-name="parent_id"
+                        :options="timelineOptions" />
+                </div>
+                <div class="w-full">
+                    <text-area input-name="name" v-model="timeline.body" label="Body" />
+                </div>
+                <EntityButtonWrapper :cancelDestination="{ name: 'timelines.list' }" />
+            </form>
+        </template>
+        <template #loading-text>timeline</template>
+    </loading-page>
 </template>

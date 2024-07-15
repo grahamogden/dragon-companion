@@ -6,7 +6,7 @@ import type CampaignRepositoryInterface from '../services/campaign/CampaignRepos
 import { CampaignEntity } from '../services/campaign'
 
 interface CampaignStoreInterface {
-    campaignId: RemovableRef<number | null>
+    campaignId: RemovableRef<string | number | null>
     campaignName: RemovableRef<string | null>
     campaigns: RemovableRef<CampaignEntityInterface[]>
 }
@@ -19,7 +19,8 @@ export const useCampaignStore = defineStore('campaign', {
     }),
     getters: {
         isCampaignSelected: (state) => state.campaignId !== null,
-        selectedCampaignId: (state) => parseInt(state.campaignId),
+        selectedCampaignId: (state) =>
+            state.campaignId !== null ? parseInt(state.campaignId as string) : null,
         selectedCampaignName: (state) => state.campaignName,
         getCampaignById: (state) => {
             return (campaignId: number) =>
@@ -39,12 +40,13 @@ export const useCampaignStore = defineStore('campaign', {
 
             this.campaigns.forEach((campaign) => {
                 if (campaign.id === campaignId) {
-                    this.campaignId = parseInt(campaign.id)
+                    this.campaignId = campaign.id
                     this.campaignName = campaign.name
                     return
                 }
             })
-            return this.campaignId
+
+            return parseInt(this.campaignId as string)
         },
         async getCampaigns(): Promise<CampaignEntityInterface[]> {
             this.campaigns = []

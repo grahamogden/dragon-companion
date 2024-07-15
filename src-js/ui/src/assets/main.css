@@ -651,7 +651,7 @@ pre{
   }
 }
 
-nav .router-link-active{
+nav.side-nav .router-link-active{
   --tw-bg-opacity: 1;
   background-color: rgb(246 193 81 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
@@ -1235,6 +1235,10 @@ thead.table-heading-dark {
   border-width: 1rem;
 }
 
+.border-b{
+  border-bottom-width: 1px;
+}
+
 .border-dashed{
   border-style: dashed;
 }
@@ -1262,6 +1266,10 @@ thead.table-heading-dark {
 .border-timberwolf-50{
   --tw-border-opacity: 1;
   border-color: rgb(248 247 244 / var(--tw-border-opacity));
+}
+
+.border-timberwolf-50\/25{
+  border-color: rgb(248 247 244 / 0.25);
 }
 
 .border-white-lilac-800{
@@ -1449,6 +1457,10 @@ thead.table-heading-dark {
 .py-4{
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.pb-2{
+  padding-bottom: 0.5rem;
 }
 
 .pb-8{

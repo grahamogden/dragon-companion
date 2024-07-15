@@ -196,7 +196,7 @@
 
         <div class="flex flex-col w-full">
           <nav v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected"
-            class="flex flex-col">
+            class="side-nav flex flex-col">
             <nav-link :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">Characters</nav-link>
             <nav-link :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">Combat Encounters</nav-link>
             <nav-link :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">Species</nav-link>
@@ -204,8 +204,7 @@
             <nav-link :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">Timelines</nav-link>
           </nav>
           <div v-if="!(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)"
-            class="w-full max-w-page text-timberwolf-100 py-3 px-4 mx-auto">Please select a campaign above to start
-            crafting your world and story!</div>
+            class="w-full max-w-page text-timberwolf-100 py-3 px-4 mx-auto">Please select a campaign to start crafting!</div>
         </div>
       </div>
 
@@ -214,6 +213,7 @@
         <div class="absolute top-0 left-0 w-full h-full bg-timberwolf-50/80 dark:bg-woodsmoke-950/80 backdrop-blur-xl lg:rounded-r-3xl duration-500"></div>
         <!-- <div class="absolute top-0 left-0 w-full h-full px-2 pt-4 pb-8 lg:p-4"> -->
         <div class="relative w-full h-full p-4 pb-8">
+          <div v-if="campaignStore.isCampaignSelected" class="relative lg:hidden pb-2 mb-2 border-b border-timberwolf-50/25">Selected campaign: {{ campaignStore.campaignName }}</div>
           <breadcrumbs></breadcrumbs>
           <Suspense>
             <RouterView />

@@ -76,7 +76,7 @@
         }
     }
 
-    nav .router-link-active {
+    nav.side-nav .router-link-active {
         @apply bg-saffron-mango-300 text-shark-950;
     }
 

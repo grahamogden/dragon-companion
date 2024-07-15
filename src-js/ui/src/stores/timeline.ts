@@ -20,8 +20,6 @@ export const useTimelineStore = defineStore('timeline', {
         ): Promise<TimelineEntityInterface[]> {
             let timeline: TimelineEntity[] = []
 
-            console.debug('Fetching timeline in store')
-
             const timelineResponse = await this._getTimelineRespository().findAll(
                 campaignId,
                 includeChildren,
@@ -45,12 +43,12 @@ export const useTimelineStore = defineStore('timeline', {
         },
         async addTimeline(campaignId: number, timeline: NewTimelineEntityInterface) {
             const timelineId = await this._getTimelineRespository().add(campaignId, timeline)
-            const newTimeline: TimelineEntityInterface = new TimelineEntity(
-                timelineId,
-                timeline.title,
-                timeline.body,
-                timeline.parent_id,
-            )
+            // const newTimeline: TimelineEntityInterface = new TimelineEntity(
+            //     timelineId,
+            //     timeline.title,
+            //     timeline.body,
+            //     timeline.parent_id,
+            // )
         },
         async updateTimeline(campaignId: number, timeline: TimelineEntityInterface) {
             await this._getTimelineRespository().update(campaignId, timeline)

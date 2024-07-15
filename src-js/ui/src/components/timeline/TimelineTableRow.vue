@@ -64,7 +64,10 @@
                 }">{{ childTimelines[field.title] }}</router-link>
             <p v-else>{{ childTimelines[field.title] }}</p>
         </td>
-        <td></td>
+        <td class="action-cell text-right py-1 align-middle">
+            <kebab-menu :links="getActionLinks(props.campaignId, childTimelines.id!)"
+                :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + childTimelines.title" />
+        </td>
     </tr>
     <tr><td class="bg-woodsmoke-200/50 dark:bg-woodsmoke-700/25 text-center" colspan="99"><router-link :to="{ name: 'timelines.add', params: { externalCampaignId: props.campaignId }, query: { parentId: props.entity.id } }">Add a new children timeline record</router-link></td></tr>
 </template>
