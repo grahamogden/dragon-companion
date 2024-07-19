@@ -1,57 +1,53 @@
 <script setup lang="ts">
-  import { RouterLink } from 'vue-router'
   import { useCampaignStore } from '../../stores/campaign'
-  import KebabMenu from '../../components/dropdowns/kebab-menu/KebabMenu.vue'
   import PageHeader from '../../components/page-header/PageHeader.vue';
   import LoadingPage from '../../components/loading-page/LoadingPage.vue';
-  import { DropDownItemRouter, DropDownItemButton } from '../../components/interfaces/drop-down.item.interface';
-  import type { CampaignEntityInterface } from '../../services/campaign';
-  // import router from '../../router'
+  import CampaignListCard from '../../components/campaigns/cards/CampaignListCard.vue';
 
   const campaignStore = useCampaignStore()
   campaignStore.getCampaigns()
 
-  function changeCampaign(value: number) {
-    campaignStore.selectCampaign(value)
-  }
+  // function changeCampaign(value: number) {
+  //   campaignStore.selectCampaign(value)
+  // }
 
-  function confirmDelete(campaignId: number) {
-    console.debug('Confirming delete for ' + campaignId)
-    if (window.confirm('Are you sure you want to delete ' + campaignId + ': "' + campaignStore.getCampaignById(campaignId)?.name + '"')) {
-      console.debug('Confirmed - attempting delete')
-      campaignStore.deleteCampaign(campaignId)
-    }
-  }
+  // function confirmDelete(campaignId: number) {
+  //   console.debug('Confirming delete for ' + campaignId)
+  //   if (window.confirm('Are you sure you want to delete ' + campaignId + ': "' + campaignStore.getCampaignById(campaignId)?.name + '"')) {
+  //     console.debug('Confirmed - attempting delete')
+  //     campaignStore.deleteCampaign(campaignId)
+  //   }
+  // }
 
-  function getLinks(campaign: CampaignEntityInterface): (DropDownItemRouter | DropDownItemButton)[] {
-    return [
-      new DropDownItemButton(
-        'Select',
-        {
-          func: changeCampaign,
-          args: [campaign.id],
-        }
-      ),
-      new DropDownItemRouter(
-        'Edit',
-        { name: 'campaigns.edit', params: { externalCampaignId: campaign.id } },
-      ),
-      new DropDownItemButton(
-        'Delete',
-        {
-          func: confirmDelete,
-          args: [campaign.id],
-        }
-      ),
-    ]
-  }
+  // function getLinks(campaign: CampaignEntityInterface): (DropDownItemRouter | DropDownItemButton)[] {
+  //   return [
+  //     new DropDownItemButton(
+  //       'Select',
+  //       {
+  //         func: changeCampaign,
+  //         args: [campaign.id],
+  //       }
+  //     ),
+  //     new DropDownItemRouter(
+  //       'Edit',
+  //       { name: 'campaigns.edit', params: { externalCampaignId: campaign.id } },
+  //     ),
+  //     new DropDownItemButton(
+  //       'Delete',
+  //       {
+  //         func: confirmDelete,
+  //         args: [campaign.id],
+  //       }
+  //     ),
+  //   ]
+  // }
 </script>
 
 <template>
   <page-header link-text="Add campaign" :link-destination="{ name: 'campaigns.add' }" >Campaigns</page-header>
   <loading-page>
     <template #content>
-      <table class="entity-list-table">
+      <!-- <table class="entity-list-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -69,7 +65,13 @@
             </td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
+      <div class="grid gap-4 grid-cols-3 grid-flow-row justify-between">
+        <!-- <image-card v-for="campaign in campaignStore.campaigns" :text="campaign.name">
+          <p class="flex flex-col justify-center">{{ campaign.name }}</p><kebab-menu :links="getLinks(campaign)" :button-aria-context-name="'Campaign ' + campaign.name" />
+        </image-card> -->
+        <campaign-list-card v-for="campaign in campaignStore.campaigns" :campaign="campaign"></campaign-list-card>
+      </div>
     </template>
     <template #loading-text>campaigns</template>
   </loading-page>

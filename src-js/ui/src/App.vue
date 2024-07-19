@@ -9,6 +9,7 @@
   import LoadingSpinner from './components/loading-spinner/LoadingSpinner.vue'
   import NavLink from './components/nav-link/NavLink.vue'
   import Breadcrumbs from './components/breadcrumbs/Breadcrumbs.vue'
+  import BannerContainer from './components/alert-banner/BannerContainer.vue'
 
   const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
   const auth = getAuth(firebaseApp);
@@ -214,6 +215,7 @@
         <!-- <div class="absolute top-0 left-0 w-full h-full px-2 pt-4 pb-8 lg:p-4"> -->
         <div class="relative w-full h-full p-4 pb-8">
           <div v-if="campaignStore.isCampaignSelected" class="relative lg:hidden pb-2 mb-2 border-b border-timberwolf-50/25">Selected campaign: {{ campaignStore.campaignName }}</div>
+          <banner-container />
           <breadcrumbs></breadcrumbs>
           <Suspense>
             <RouterView />

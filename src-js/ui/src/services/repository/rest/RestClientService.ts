@@ -1,11 +1,13 @@
 import { getIdToken, type Auth } from 'firebase/auth'
 import UnauthorizedError from '../errors/UnauthorizedError'
 import BadRequestError from '../errors/BadRequestError'
+import NotFoundError from '../errors/NotFoundError'
+// import RestErrorResponseHandler from './RestErrorResponseHandler'
 
 class RestClientService {
-    private baseUrl: URL
-    private auth: Auth
-    private csrfToken: string
+    private readonly baseUrl: URL
+    private readonly auth: Auth
+    private readonly csrfToken: string
 
     public constructor(baseUrl: string, auth: Auth, csrfToken: string) {
         this.baseUrl = new URL(baseUrl)
@@ -50,10 +52,11 @@ class RestClientService {
                 throw error
             })
 
-        if (res.ok) {
-            return res
+        if (!res.ok) {
+            await this.handleError(url, 'GET', res)
         }
-        this.handleError(url, 'GET', res)
+
+        return res
     }
 
     public async post(path: string, data: object): Promise<Response> {
@@ -80,10 +83,12 @@ class RestClientService {
                 throw new Error(error)
             })
 
-        if (res.ok) {
-            return res
+        if (!res.ok) {
+            // this.restErrorResponseHandler.handle(res)
+            await this.handleError(url, 'POST', res)
         }
-        this.handleError(url, 'POST', res)
+
+        return res
     }
 
     public async put(path: string, data: object): Promise<Response> {
@@ -110,10 +115,11 @@ class RestClientService {
                 throw new Error(error)
             })
 
-        if (res.ok) {
-            return res
+        if (!res.ok) {
+            await this.handleError(url, 'PUT', res)
         }
-        this.handleError(url, 'PUT', res)
+
+        return res
     }
 
     public async delete(path: string): Promise<Response> {
@@ -139,19 +145,30 @@ class RestClientService {
                 throw new Error(error)
             })
 
-        if (res.ok) {
-            return res
+        if (!res.ok) {
+            await this.handleError(url, 'DELETE', res)
         }
-        this.handleError(url, 'DELETE', res)
+        return res
     }
 
-    private handleError(url: URL, method: string, res: Response): never {
+    private async handleError(url: URL, method: string, res: Response): Promise<never> {
         console.error('(' + res.status + ') ' + method + ':' + url.toString())
         switch (res.status) {
             case 401:
                 throw new UnauthorizedError()
             case 400:
-                throw new BadRequestError()
+                let errors: Record<string, Record<string, string>> = {}
+                const responseBody = (await res.json()) as RestErrorResponseInterface
+                let message: string | undefined
+
+                if (responseBody) {
+                    errors = responseBody.errors
+                    message = responseBody.message
+                }
+
+                throw new BadRequestError(errors, message)
+            case 404:
+                throw new NotFoundError()
             default:
                 throw new Error('Response not okay')
         }
@@ -159,3 +176,8 @@ class RestClientService {
 }
 
 export default RestClientService
+
+interface RestErrorResponseInterface {
+    message: string
+    errors: Record<string, Record<string, string>>
+}

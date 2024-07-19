@@ -9,6 +9,7 @@ import { getAuth } from 'firebase/auth'
 import { firebaseAppKey } from '../keys'
 import type { FirebaseApp } from 'firebase/app'
 import { useAuth } from '@vueuse/firebase'
+import { useNotificationStore } from '../stores/notifications/notification-store'
 
 function isLoggedIn(to: RouteLocationNormalized, from: RouteLocationNormalized) {
     const userAuthStore = useUserAuthStore()
@@ -211,6 +212,11 @@ const router = createRouter({
             component: LogOutView,
         },
     ],
+})
+
+router.afterEach(() => {
+    const notificationStore = useNotificationStore()
+    notificationStore.$reset()
 })
 
 export default router

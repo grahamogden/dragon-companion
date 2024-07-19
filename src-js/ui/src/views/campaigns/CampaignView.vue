@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import { useCampaignStore } from '../../stores/campaign';
   import router from '../../router';
   import LoadingPage from '../../components/loading-page/LoadingPage.vue';
   import PageHeader from '../../components/page-header/PageHeader.vue';
-import { storeToRefs } from 'pinia';
+  import { storeToRefs } from 'pinia';
 
   const isLoading = ref(true)
   const campaignStore = useCampaignStore()
@@ -29,7 +29,9 @@ import { storeToRefs } from 'pinia';
 
 <template>
   <div class="campaign-view">
-    <page-header link-text="Edit" :link-destination="{ name: 'campaigns.edit', params: {externalCampaignId: campaignId} }">{{ campaign?.name ?? 'Unknown' }}</page-header>
+    <page-header link-text="Edit"
+      :link-destination="{ name: 'campaigns.edit', params: { externalCampaignId: campaignId } }">{{ campaign?.name ??
+        'Unknown' }}</page-header>
     <loading-page v-model="isLoading">
       <template #content>
         <div>
