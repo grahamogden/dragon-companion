@@ -209,8 +209,8 @@
       </div>
 
       <main id="main-content w-full h-full"
-        class="relative w-full">
-        <div class="absolute top-0 left-0 w-full h-full bg-timberwolf-50/80 dark:bg-woodsmoke-950/80 backdrop-blur-xl lg:rounded-r-3xl duration-500"></div>
+        class="relative w-full before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:lg:rounded-r-3xl before:duration-500">
+        <!-- <div class="absolute top-0 left-0 w-full h-full bg-timberwolf-50/80 dark:bg-woodsmoke-950/80 backdrop-blur-xl lg:rounded-r-3xl duration-500"></div> -->
         <!-- <div class="absolute top-0 left-0 w-full h-full px-2 pt-4 pb-8 lg:p-4"> -->
         <div class="relative w-full h-full p-4 pb-8">
           <div v-if="campaignStore.isCampaignSelected" class="relative lg:hidden pb-2 mb-2 border-b border-timberwolf-50/25">Selected campaign: {{ campaignStore.campaignName }}</div>

@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { createApp, markRaw, onBeforeMount, onUnmounted, type App as AppType } from 'vue'
+import { createApp, markRaw, type App as AppType } from 'vue'
 import { createPinia } from 'pinia'
 import { initializeApp } from 'firebase/app'
 import App from './App.vue'

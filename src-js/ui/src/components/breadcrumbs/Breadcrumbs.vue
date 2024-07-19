@@ -10,21 +10,23 @@
         // Reset array and add home
         breadcrumbs.value = []
         let breadcrumbBasePath = ''
-        breadcrumbs.value[0] = { text: 'home', destination: '/' }
+        // breadcrumbs.value[0] = { text: 'home', destination: '/' }
 
         // Add breadcrumb objects to array
         breadcrumbPaths
         .filter(Boolean)
-        .forEach((breadcrumbPath) => {
+        .forEach((breadcrumbPath, index) => {
             breadcrumbBasePath = breadcrumbBasePath.concat('/' + breadcrumbPath)
             if (isNaN(parseFloat(breadcrumbPath))) {
                 breadcrumbs.value.push({
                     text: breadcrumbPath,
-                    destination: breadcrumbBasePath
+                    destination: index !== breadcrumbPaths.length - 1 ? breadcrumbBasePath : ''
                 })
             }
         })
-        breadcrumbs.value[breadcrumbs.value.length - 1].destination = ''
+        if (breadcrumbs.value.length > 0) {
+            breadcrumbs.value[breadcrumbs.value.length - 1].destination = ''
+        }
     }
 
     updateBreadcrumbs(path.split('/'))

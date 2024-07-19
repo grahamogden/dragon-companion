@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { getAuth, signInWithEmailAndPassword, setPersistence, type UserCredential, browserSessionPersistence } from 'firebase/auth'
+  import { getAuth, signInWithEmailAndPassword, setPersistence, type UserCredential, browserLocalPersistence } from 'firebase/auth'
   import { inject, ref } from 'vue'
   import { useRouter, RouterLink } from 'vue-router'
   import { firebaseAppKey } from '../../keys'
@@ -14,7 +14,7 @@
   const logIn = () => {
     const auth = getAuth(inject(firebaseAppKey))
 
-    setPersistence(auth, browserSessionPersistence)
+    setPersistence(auth, browserLocalPersistence)
       .then(() => {
         signInWithEmailAndPassword(auth, email.value, password.value)
           .then((data: UserCredential) => {
