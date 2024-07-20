@@ -53,5 +53,8 @@ export const useNotificationStore = defineStore('notification', {
         removeNotification(key: string) {
             delete this.notifications[key]
         },
+        removeAllNotifications() {
+            this.$reset()
+        },
     },
 })

@@ -1239,6 +1239,11 @@ thead.table-heading-dark {
   border-top-right-radius: 1.5rem;
 }
 
+.rounded-t-sm{
+  border-top-left-radius: 0.125rem;
+  border-top-right-radius: 0.125rem;
+}
+
 .rounded-t-xl{
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
@@ -1256,6 +1261,10 @@ thead.table-heading-dark {
   border-width: 2px;
 }
 
+.border-8{
+  border-width: 8px;
+}
+
 .border-\[1rem\]{
   border-width: 1rem;
 }
@@ -1266,6 +1275,11 @@ thead.table-heading-dark {
 
 .border-dashed{
   border-style: dashed;
+}
+
+.border-saffron-mango-300{
+  --tw-border-opacity: 1;
+  border-color: rgb(246 193 81 / var(--tw-border-opacity));
 }
 
 .border-saffron-mango-700{
@@ -1398,11 +1412,6 @@ thead.table-heading-dark {
 
 .bg-woodsmoke-200\/50{
   background-color: rgb(210 207 207 / 0.5);
-}
-
-.bg-woodsmoke-900{
-  --tw-bg-opacity: 1;
-  background-color: rgb(61 60 60 / var(--tw-bg-opacity));
 }
 
 .bg-horizon-dark{
@@ -1641,6 +1650,11 @@ thead.table-heading-dark {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.shadow-shark-300{
+  --tw-shadow-color: #B5B6C4;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
 .shadow-shark-900{
   --tw-shadow-color: #373743;
   --tw-shadow: var(--tw-shadow-colored);
@@ -1697,6 +1711,16 @@ thead.table-heading-dark {
   transition-property: opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+
+.transition-shadow{
+  transition-property: box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.duration-0{
+  transition-duration: 0s;
 }
 
 .duration-200{
@@ -1763,18 +1787,6 @@ thead.table-heading-dark {
   margin: 0;
   font-weight: normal;
 }
-
-/* @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap'); */
-
-/* @font-face {
-    font-family: "Open Sans";
-    src: url("webroot/font/Open_Sans/OpenSans-VariableFont_wdth\,wght.ttf");
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
-    font-variation-settings: 
-        "wdth" 100;
-} */
 
 @keyframes spin {
   0% {
@@ -2171,6 +2183,11 @@ thead.table-heading-dark {
 
 .dark\:opacity-100:where(.dark, .dark *){
   opacity: 1;
+}
+
+.dark\:shadow-stone-950:where(.dark, .dark *){
+  --tw-shadow-color: #0c0a09;
+  --tw-shadow: var(--tw-shadow-colored);
 }
 
 .dark\:shadow-woodsmoke-1000:where(.dark, .dark *){

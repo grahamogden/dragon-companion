@@ -22,6 +22,7 @@
   timeline.value.parent_id = parseInt(route.query.parentId as string)
 
   function createTimeline(): void {
+    notificationStore.removeAllNotifications()
     timelineStore.addTimeline(
       campaignId,
       timeline.value

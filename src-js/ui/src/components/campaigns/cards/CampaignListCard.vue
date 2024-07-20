@@ -16,6 +16,7 @@
   // campaignStore.getCampaigns()
 
   function changeCampaign(value: number) {
+    notificationStore.removeAllNotifications()
     campaignStore.selectCampaign(value)
     notificationStore.addSuccess('Campaign ' + campaignStore.campaignName + ' successfully selected')
   }
@@ -52,8 +53,8 @@
   }
 </script>
 <template>
-  <image-card :text="props.campaign.name">
-    <p class="flex flex-col justify-center">{{ props.campaign.name }}</p><kebab-menu :links="getLinks(props.campaign)"
-      :button-aria-context-name="'Campaign ' + props.campaign.name" />
+  <image-card :text="props.campaign.name" :is-selected="props.campaign.id === campaignStore.selectedCampaignId">
+    <p class="flex flex-col justify-center">{{ props.campaign.name }}</p>
+    <kebab-menu :links="getLinks(props.campaign)" :button-aria-context-name="'Campaign ' + props.campaign.name" />
   </image-card>
 </template>
