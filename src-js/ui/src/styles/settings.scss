@@ -1,0 +1,40 @@
+$roundedSm: '0.125rem'; /* 2px */
+$rounded: '0.25rem'; /* 4px */
+$roundedMd: '0.375rem'; /* 6px */
+$roundedLg: '0.5rem'; /* 8px */
+$roundedXl: '0.75rem'; /* 12px */
+$rounded2Xl: '1rem'; /* 16px */
+$rounded3Xl: '1.5rem'; /* 24px */
+
+$woodsmoke50: '#F6F5F5';
+$woodsmoke100: '#E7E6E6';
+$woodsmoke200: '#D2CFCF';
+$woodsmoke300: '#B2AEAE';
+$woodsmoke400: '#8B8586';
+$woodsmoke500: '#706A6B';
+$woodsmoke600: '#5F5B5B';
+$woodsmoke700: '#514D4D';
+$woodsmoke800: '#464445';
+$woodsmoke900: '#3D3C3C';
+$woodsmoke950: '#1A1919';
+$woodsmoke1000: '#100F0F';
+
+$timberwolf50: '#F8F7F4';
+$timberwolf100: '#EEEDE6';
+$timberwolf150: '#E1DFD8';
+$timberwolf200: '#D9D5CA';
+$timberwolf300: '#C4BEAD';
+$timberwolf400: '#ACA18B';
+$timberwolf500: '#9B8C74';
+$timberwolf600: '#8E7D68';
+$timberwolf700: '#766758';
+$timberwolf800: '#61544B';
+$timberwolf900: '#50473E';
+$timberwolf950: '#2A2420';
+
+@use 'vuetify/settings' with (
+  $color-pack: false,
+  $utilities: false,
+  // $border-radius-root: '50px',
+  $text-field-border-radius: 20px,
+);

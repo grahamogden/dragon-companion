@@ -1,0 +1,12 @@
+// @import './variables/variables';
+
+@use './settings';
+
+@use 'vuetify';
+
+// Import Vuetify styles after your custom variables
+// @import '~vuetify/src/styles/settings/_index.scss';
+// @import '~vuetify/src/styles/variables/_index.scss';
+// @import '~vuetify/src/styles/mixins/_index.scss';
+// @import '~vuetify/src/styles/functions/_index.scss';
+// @import '~vuetify/src/styles/styles.sass'; // For Vuetify 3

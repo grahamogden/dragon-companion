@@ -10,11 +10,13 @@
   import NavLink from './components/nav-link/NavLink.vue'
   import Breadcrumbs from './components/breadcrumbs/Breadcrumbs.vue'
   import BannerContainer from './components/alert-banner/BannerContainer.vue'
+  import { useTheme } from 'vuetify'
 
   const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
   const auth = getAuth(firebaseApp);
   const campaignStore = useCampaignStore()
   const userAuthStore = useUserAuthStore()
+  const vuetifyTheme = useTheme()
 
   onAuthStateChanged(
     auth,
@@ -70,8 +72,10 @@
         && window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
       document.documentElement.classList.add('dark')
+      vuetifyTheme.global.name.value = 'customDark'
     } else {
       document.documentElement.classList.remove('dark')
+      vuetifyTheme.global.name.value = 'customLight'
     }
   }
 
