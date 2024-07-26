@@ -139,10 +139,10 @@
 <template>
   <a tabindex="-1" ref="skipLinkReset" class="absolute"></a>
   <a href="#main-content"
-    class="absolute z-30 focus:p-4 focus:underline max-h-0 focus:max-h-none bg-white-lilac-50 overflow-hidden"
+    class="absolute z-30 focus:p-4 focus:underline max-h-0 focus:max-h-none bg-white-lilac-50 dark:bg-shark-950 overflow-hidden"
     ref="skipLink">Skip to main content</a>
 
-  <header class="w-full bg-shark-950/60 backdrop-blur-lg shadow-lg">
+  <header class="w-full bg-shark-950/70 backdrop-blur-lg shadow-lg">
     <div class="flex flex-row justify-between items-center max-w-page mx-auto py-2 lg:py-4 px-4 lg:px-6 relative">
       <div class="flex flex-row items-center">
         <div class="z-10">
@@ -151,14 +151,13 @@
             <img class="logo w-full h-full inline-block" src="@/assets/images/logo-8.svg" alt="Dragon Companion logo" />
           </router-link>
         </div>
-        <div class="hidden lg:block ml-2 text-3xl app-name text-timberwolf-50">
+        <div class="hidden lg:block ml-2 text-3xl app-name text-timberwolf-50 tracking-wide">
           Dragon Companion
         </div>
       </div>
 
       <div class="flex flex-row">
-        <nav
-          class="h-full flex flex-row gap-x-8 justify-between items-center">
+        <nav class="h-full flex flex-row gap-x-8 justify-between items-center">
           <!-- <div class="bg-biscay-800 skew-x-45 h-8 lg:h-12 w-8 lg:w-16 -left-4 lg:-left-10 absolute"></div> -->
           <!-- <div class="text-timberwolf-50">
             <DropDownMenu button-label="Theme" :links="darkModeToggleButtons" button-aria-context-name="Dark mode" />
@@ -180,8 +179,7 @@
             v-if="userAuthStore.isLoggedIn" @click="toggleNavMenu(false); toggleAccountMenu(false); logOut();"
             type="button">Log Out</button>
 
-          <button
-            class="w-12 h-12 rounded-full overflow-hidden border-2 border-timberwolf-50 bg-stone-800 p-0"
+          <button class="w-12 h-12 rounded-full overflow-hidden border-2 border-timberwolf-50 bg-stone-800 p-0"
             @click="toggleNavMenu(false); toggleAccountMenu()" type="button" aria-label="Account menu toggle">
             <img class="logo w-full h-full" src="@/assets/logo.svg" alt="User account picture" />
           </button>
@@ -192,20 +190,28 @@
 
   <div class="max-w-page w-full m-0 lg:mx-auto lg:my-6 lg:px-6">
     <div class="flex flex-row rounded-3xl shadow-lg">
-      <div class="fixed lg:relative bottom-24 lg:bottom-auto lg:flex flex-col w-full lg:max-w-64 z-10 bg-shark-950/60 backdrop-blur-lg mx-auto rounded-t-3xl lg:rounded-tr-none lg:rounded-l-3xl overflow-hidden text-center lg:text-left" :class="{ hidden: !isNavMenuOpen }">
+      <div
+        class="fixed lg:relative bottom-24 lg:bottom-auto lg:flex flex-col w-full lg:max-w-64 z-10 bg-shark-950/70 backdrop-blur-lg mx-auto rounded-t-3xl lg:rounded-tr-none lg:rounded-l-3xl overflow-hidden text-center lg:text-left"
+        :class="{ hidden: !isNavMenuOpen }">
         <CampaignPicker />
 
         <div class="flex flex-col w-full">
-          <nav v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected"
-            class="side-nav flex flex-col">
-            <nav-link :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">Characters</nav-link>
-            <nav-link :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">Combat Encounters</nav-link>
-            <nav-link :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">Species</nav-link>
-            <nav-link :destination="{ name: 'tags', params: { externalCampaignId: campaignStore.campaignId } }">Tags</nav-link>
-            <nav-link :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">Timelines</nav-link>
+          <nav v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected" class="side-nav flex flex-col">
+            <nav-link
+              :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">Characters</nav-link>
+            <nav-link
+              :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">Combat
+              Encounters</nav-link>
+            <nav-link
+              :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">Species</nav-link>
+            <nav-link
+              :destination="{ name: 'tags', params: { externalCampaignId: campaignStore.campaignId } }">Tags</nav-link>
+            <nav-link
+              :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">Timelines</nav-link>
           </nav>
           <div v-if="!(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)"
-            class="w-full max-w-page text-timberwolf-100 py-3 px-4 mx-auto">Please select a campaign to start crafting!</div>
+            class="w-full max-w-page text-timberwolf-100 py-3 px-4 mx-auto">Please select a campaign to start crafting!
+          </div>
         </div>
       </div>
 
@@ -213,8 +219,10 @@
         class="relative w-full before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:lg:rounded-r-3xl before:duration-500">
         <!-- <div class="absolute top-0 left-0 w-full h-full bg-timberwolf-50/80 dark:bg-woodsmoke-950/80 backdrop-blur-xl lg:rounded-r-3xl duration-500"></div> -->
         <!-- <div class="absolute top-0 left-0 w-full h-full px-2 pt-4 pb-8 lg:p-4"> -->
-        <div class="relative w-full h-full p-4 pb-8">
-          <div v-if="campaignStore.isCampaignSelected" class="relative lg:hidden pb-2 mb-2 border-b border-timberwolf-50/25">Selected campaign: {{ campaignStore.campaignName }}</div>
+        <div class="relative w-full h-full py-4 pb-8">
+          <div v-if="campaignStore.isCampaignSelected"
+            class="relative lg:hidden pb-2 mb-2 border-b border-timberwolf-50/25">Selected campaign: {{
+              campaignStore.campaignName }}</div>
           <banner-container />
           <breadcrumbs></breadcrumbs>
           <Suspense>
@@ -228,14 +236,13 @@
     </div>
   </div>
 
-  <nav
-    class="fixed lg:hidden bottom-0 w-full toolbar grid grid-cols-5 bg-shark-950/85 backdrop-blur"
+  <nav class="fixed lg:hidden bottom-0 w-full toolbar grid grid-cols-5 bg-shark-950/85 backdrop-blur"
     v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected">
     <router-link class="text-white-lilac-50 py-3 text-center"
       :to="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><img
-        src="@/assets/images/dice-icon.svg"
-        class="w-12 h-12 block rounded inline-block" />Characters</router-link>
-    <button type="button" class="text-white-lilac-50 py-3 underline text-center" @click="toggleNavMenu(); toggleAccountMenu(false)"><img
-        src="@/assets/images/dice-icon.svg" class="w-12 h-12 block rounded inline-block" />More</button>
+        src="@/assets/images/dice-icon.svg" class="w-12 h-12 block rounded inline-block" />Characters</router-link>
+    <button type="button" class="text-white-lilac-50 py-3 underline text-center"
+      @click="toggleNavMenu(); toggleAccountMenu(false)"><img src="@/assets/images/dice-icon.svg"
+        class="w-12 h-12 block rounded inline-block" />More</button>
   </nav>
 </template>

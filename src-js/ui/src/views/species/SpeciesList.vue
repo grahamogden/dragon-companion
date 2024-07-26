@@ -38,14 +38,11 @@
 <template>
   <div class="species-list">
     <page-header link-text="Add species" :link-destination="{ name: 'species.add' }">Species</page-header>
-    <loading-page v-model="isLoading">
+    <loading-page :is-loading="isLoading">
       <template #content>
-        <entity-table
-          :headings="[new EntityTableHeading('name', true)]"
-          :entities="allSpecies"
+        <entity-table :headings="[new EntityTableHeading('name', true)]" :entities="allSpecies"
           :view-link="new EntityTableLink('species.view', 'speciesId')"
-          :edit-link="new EntityTableLink('species.edit', 'speciesId')"
-          :delete-confirmation-function="confirmDelete"
+          :edit-link="new EntityTableLink('species.edit', 'speciesId')" :delete-confirmation-function="confirmDelete"
           kebab-menu-button-aria-context="Species"></entity-table>
       </template>
       <template #loading-text>species</template>

@@ -41,7 +41,7 @@
 
     a,
     .button {
-        @apply text-white-lilac-800 dark:text-white-lilac-200 underline hover:no-underline;
+        @apply /* text-white-lilac-800 dark:text-white-lilac-200 */ text-biscay-600 dark:text-biscay-200 underline hover:no-underline;
     }
 
     .button {
@@ -69,10 +69,9 @@
     }
 
     .campaign-picker {
-        &:hover {
-            a {
-                @apply opacity-100;
-            }
+        &:hover a,
+        a:focus {
+            @apply opacity-100;
         }
     }
 
@@ -220,7 +219,7 @@
         tbody tr {
             &:nth-of-type(even) {
                 td {
-                    @apply bg-shark-500/10 dark:bg-woodsmoke-800/30 transition duration-500;
+                    @apply bg-shark-200/30 dark:bg-woodsmoke-800/30 transition duration-500;
                 }
             }
 
@@ -243,10 +242,6 @@
 
             &.action-cell {
                 @apply text-right py-1 align-middle;
-
-                >.kebab-menu-container {
-                    @apply inline-block;
-                }
             }
         }
 

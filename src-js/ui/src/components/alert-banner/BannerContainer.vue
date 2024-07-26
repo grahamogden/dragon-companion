@@ -10,7 +10,7 @@
 
 </script>
 <template>
-  <div v-for="(notification, index) in notificationStore.notifications">
+  <div v-for="(notification, index) in notificationStore.notifications" class="px-4">
     <success-banner v-if="notification.type === NotificationEnum.success" :notification="notification"
       :index="index"></success-banner>
     <warning-banner v-else-if="notification.type === NotificationEnum.warning" :notification="notification"

@@ -12,6 +12,20 @@
     }
   ],
   "compilerOptions": {
-    "module": "NodeNext"
-  }
+    "baseUrl": ".",
+    "module": "NodeNext",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  "exclude": ["dist", "node_modules", "cypress"],
 }

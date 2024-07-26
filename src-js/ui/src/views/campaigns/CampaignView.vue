@@ -9,15 +9,11 @@
   const isLoading = ref(true)
   const campaignStore = useCampaignStore()
   const params = router.currentRoute.value.params
-  // console.debug(router.currentRoute.value)
-  // console.debug(router.currentRoute.value.params)
   const campaignId = parseInt(params.externalCampaignId as string)
   let formData = ref({})
 
   const { getCampaignById } = storeToRefs(campaignStore)
   const campaign = getCampaignById.value(campaignId)
-  // console.dir(campaignId)
-  // console.dir(campaign)
   if (campaign !== undefined) {
     formData = ref({
       name: campaign.name,
@@ -32,7 +28,7 @@
     <page-header link-text="Edit"
       :link-destination="{ name: 'campaigns.edit', params: { externalCampaignId: campaignId } }">{{ campaign?.name ??
         'Unknown' }}</page-header>
-    <loading-page v-model="isLoading">
+    <loading-page :is-loading="isLoading">
       <template #content>
         <div>
           {{ campaign?.synopsis }}

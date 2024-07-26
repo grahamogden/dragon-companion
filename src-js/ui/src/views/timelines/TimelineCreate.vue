@@ -8,8 +8,10 @@
   import { ref } from 'vue';
   import { useRoute } from 'vue-router';
   import { useNotificationStore } from '../../stores/notifications/notification-store';
-  import { NotificationEnum } from '../../stores/notifications';
   import type ApplicationErrorInterface from '../../services/repository/errors/ApplicationErrorInterface'
+  import type ValidationError from '../../services/repository/errors/ValidationError';
+  import { provide } from 'vue';
+  import { errorMessagesKey } from '../../keys'
 
   const timelineStore = useTimelineStore()
   const campaignStore = useCampaignStore()
@@ -18,11 +20,14 @@
   const notificationStore = useNotificationStore()
 
   const timeline = ref<TimelineEntityInterface>(new TimelineEntity())
+  const errorMessages = ref<Record<string, ValidationError>>({})
+  provide(errorMessagesKey, errorMessages)
 
   timeline.value.parent_id = parseInt(route.query.parentId as string)
 
   function createTimeline(): void {
     notificationStore.removeAllNotifications()
+    errorMessages.value = {}
     timelineStore.addTimeline(
       campaignId,
       timeline.value
@@ -31,7 +36,9 @@
       notificationStore.addSuccess('Successfully created timeline')
     })
       .catch((error: ApplicationErrorInterface) => {
+        console.debug(error)
         notificationStore.addError(error.message)
+        errorMessages.value = error.errors || {}
       })
   }
 </script>

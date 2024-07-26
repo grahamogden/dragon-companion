@@ -1,6 +1,10 @@
 <script setup lang="ts">
     import LoadingSpinner from '../loading-spinner/LoadingSpinner.vue'
-    const isLoading = defineModel()
+    // const isLoading = defineModel('isLoading', { required: false, default: false })
+    const props = defineProps<{
+        isLoading?: boolean
+    }>()
+    console.debug(props.isLoading)
 </script>
 
 <template>

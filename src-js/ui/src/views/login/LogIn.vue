@@ -3,9 +3,9 @@
   import { inject, ref } from 'vue'
   import { useRouter, RouterLink } from 'vue-router'
   import { firebaseAppKey } from '../../keys'
-  import TextInput from '../../components/elements/TextInput.vue'
-  import PasswordInput from '../../components/elements/PasswordInput.vue'
-  import PrimaryButton from '../../components/elements/PrimaryButton.vue'
+  import TextInput from '../../components/fields/TextInput.vue'
+  import PasswordInput from '../../components/fields/PasswordInput.vue'
+  import PrimaryButton from '../../components/buttons/PrimaryButton.vue'
 
   const email = ref('dragon.companion.app@gmail.com')
   const password = ref('password123')

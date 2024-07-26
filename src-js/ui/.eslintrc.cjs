@@ -8,6 +8,7 @@ module.exports = {
     'eslint:recommended',
     '@vue/eslint-config-typescript',
     '@vue/eslint-config-prettier/skip-formatting',
+    './.eslintrc-auto-import.json',
   ],
   overrides: [
     {
@@ -17,5 +18,8 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest',
+  },
+  rules: {
+    'vue/multi-word-component-names': 'off',
   },
 }

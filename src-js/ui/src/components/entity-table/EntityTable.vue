@@ -35,7 +35,7 @@
 </script>
 
 <template>
-    <div>
+    <div class="px-4">
         <table class="entity-list-table">
             <thead>
                 <tr>

@@ -42,7 +42,7 @@
       <h1>Editing - {{ campaign?.name ?? 'Unknown' }}</h1>
     </div> -->
     <page-header>{{ campaign?.name ?? 'Unknown' }}</page-header>
-    <loading-page v-model="isLoading">
+    <loading-page :is-loading="isLoading">
       <template #content>
         <CampaignForm :data="formData" @save-campaign="editCampaign" />
       </template>

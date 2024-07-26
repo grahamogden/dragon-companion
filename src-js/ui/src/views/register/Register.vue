@@ -3,9 +3,9 @@
   import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, setPersistence, browserLocalPersistence, type UserCredential, signOut, AuthErrorCodes, signInWithEmailAndPassword } from 'firebase/auth'
   import { firebaseAppKey } from '../../keys';
   import { useUserAuthStore } from '../../stores'
-  import TextInput from '../../components/elements/TextInput.vue'
-  import PasswordInput from '../../components/elements/PasswordInput.vue'
-  import PrimaryButton from '../../components/elements/PrimaryButton.vue'
+  import TextInput from '../../components/fields/TextInput.vue'
+  import PasswordInput from '../../components/fields/PasswordInput.vue'
+  import PrimaryButton from '../../components/buttons/PrimaryButton.vue'
   import { useRouter } from 'vue-router';
   import { FirebaseError } from 'firebase/app';
 

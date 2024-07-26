@@ -19,7 +19,7 @@
 </script>
 
 <template>
-    <div>
+    <div class="px-4">
         <table class="table-rounded">
             <thead class="table-heading-dark">
                 <tr>
@@ -33,9 +33,8 @@
                         <p class="text-center">No records found. Why not add some now!</p>
                     </td>
                 </tr>
-                <timeline-table-row v-for="entity in props.entities" :entity="entity"
-                    :campaign-id="props.campaignId" :headings="props.headings"
-                    :view-link="props.viewLink" :edit-link="props.editLink"
+                <timeline-table-row v-for="entity in props.entities" :entity="entity" :campaign-id="props.campaignId"
+                    :headings="props.headings" :view-link="props.viewLink" :edit-link="props.editLink"
                     :delete-confirmation-function="props.deleteConfirmationFunction"
                     :kebab-menu-button-aria-context="props.kebabMenuButtonAriaContext"></timeline-table-row>
                 <!-- <tr v-else v-for="entity in props.entities">

@@ -46,33 +46,34 @@
   }
 
   watch(
-  () => route.params.timelineId,
-  (newId, oldId) => {
-    isLoading.value = true
-    timelineId = parseInt(newId as string)
-    fetchTimeline(campaignId, timelineId)
-  })
+    () => route.params.timelineId,
+    (newId, oldId) => {
+      isLoading.value = true
+      timelineId = parseInt(newId as string)
+      fetchTimeline(campaignId, timelineId)
+    })
 </script>
 
 <template>
   <div class="timeline-view">
-    <page-header link-text="Edit" :link-destination="{ name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }">{{ timeline.title ? timeline.title : 'Timeline' }}</page-header>
-    <loading-page v-model="isLoading">
+    <page-header link-text="Edit"
+      :link-destination="{ name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }">{{
+        timeline.title ? timeline.title : 'Timeline' }}</page-header>
+    <loading-page :is-loading="isLoading">
       <template #content>
         <content-group><template #content>{{ timeline.body }}</template></content-group>
-        <content-group v-if="timeline.parent_id"><template #heading>Parent timeline</template><template #content><router-link :to="{ name: 'timelines.view', params: { externalCampaignId: campaignId, timelineId: timeline.parent_id } }">{{ timeline.parent_id }}</router-link></template></content-group>
+        <content-group v-if="timeline.parent_id"><template #heading>Parent timeline</template><template
+            #content><router-link
+              :to="{ name: 'timelines.view', params: { externalCampaignId: campaignId, timelineId: timeline.parent_id } }">{{
+        timeline.parent_id }}</router-link></template></content-group>
         <content-group>
           <template #heading>Child timelines</template>
           <template #content>
-            <view-list-table
-            :campaign-id="campaignId"
-            :timeline-id="timelineId"
-            :headings="[new EntityTableHeading('title', true), new EntityTableHeading('body')]"
-            :entities="timeline.child_timelines"
-            :view-link="new EntityTableLink('timelines.view', 'timelineId')"
-            :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
-            :delete-confirmation-function="confirmDelete"
-            kebab-menu-button-aria-context="Timeline"></view-list-table>
+            <view-list-table :campaign-id="campaignId" :timeline-id="timelineId"
+              :headings="[new EntityTableHeading('title', true), new EntityTableHeading('body')]"
+              :entities="timeline.child_timelines" :view-link="new EntityTableLink('timelines.view', 'timelineId')"
+              :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
+              :delete-confirmation-function="confirmDelete" kebab-menu-button-aria-context="Timeline"></view-list-table>
           </template>
         </content-group>
       </template>

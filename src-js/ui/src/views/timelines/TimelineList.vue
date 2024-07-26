@@ -37,16 +37,13 @@
 
 <template>
   <div class="timeline-list">
-    <page-header link-text="Add timeline" :link-destination="{ name: 'timelines.add' }" >Timelines</page-header>
-    <loading-page v-model="isLoading">
+    <page-header link-text="Add timeline" :link-destination="{ name: 'timelines.add' }">Timelines</page-header>
+    <loading-page :is-loading="isLoading">
       <template #content>
-        <index-list-table
-          :campaign-id="campaignId"
-          :headings="[new EntityTableHeading('title', true), new EntityTableHeading('body')]"
-          :entities="allTimelines"
+        <index-list-table :campaign-id="campaignId"
+          :headings="[new EntityTableHeading('title', true), new EntityTableHeading('body')]" :entities="allTimelines"
           :view-link="new EntityTableLink('timelines.view', 'timelineId')"
-          :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
-          :delete-confirmation-function="confirmDelete"
+          :edit-link="new EntityTableLink('timelines.edit', 'timelineId')" :delete-confirmation-function="confirmDelete"
           kebab-menu-button-aria-context="Timeline"></index-list-table>
       </template>
       <template #loading-text>timeline</template>

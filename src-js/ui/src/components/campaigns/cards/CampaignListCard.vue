@@ -5,7 +5,6 @@
   import ImageCard from '../../cards/ImageCard.vue'
   import { DropDownItemButton, DropDownItemRouter } from '../../interfaces/drop-down.item.interface';
   import KebabMenu from '../../dropdowns/kebab-menu/KebabMenu.vue';
-  import { NotificationEnum } from '../../../stores/notifications'
 
   const props = defineProps<{
     campaign: CampaignEntityInterface,
@@ -13,12 +12,13 @@
 
   const campaignStore = useCampaignStore()
   const notificationStore = useNotificationStore()
-  // campaignStore.getCampaigns()
 
   function changeCampaign(value: number) {
     notificationStore.removeAllNotifications()
-    campaignStore.selectCampaign(value)
-    notificationStore.addSuccess('Campaign ' + campaignStore.campaignName + ' successfully selected')
+    setTimeout(() => {
+      campaignStore.selectCampaign(value)
+      notificationStore.addSuccess('Campaign ' + campaignStore.campaignName + ' successfully selected')
+    }, 250)
   }
 
   function confirmDelete(campaignId: number) {
@@ -30,14 +30,19 @@
   }
 
   function getLinks(campaign: CampaignEntityInterface): (DropDownItemRouter | DropDownItemButton)[] {
-    return [
-      new DropDownItemButton(
+    const links = [];
+    if (props.campaign.id !== campaignStore.selectedCampaignId) {
+      links.push(new DropDownItemButton(
         'Select',
         {
           func: changeCampaign,
           args: [campaign.id],
         }
-      ),
+      ))
+    }
+
+    return [
+      ...links,
       new DropDownItemRouter(
         'Edit',
         { name: 'campaigns.edit', params: { externalCampaignId: campaign.id } },
@@ -55,6 +60,7 @@
 <template>
   <image-card :text="props.campaign.name" :is-selected="props.campaign.id === campaignStore.selectedCampaignId">
     <p class="flex flex-col justify-center">{{ props.campaign.name }}</p>
-    <kebab-menu :links="getLinks(props.campaign)" :button-aria-context-name="'Campaign ' + props.campaign.name" />
+    <div><kebab-menu :links="getLinks(props.campaign)" :button-aria-context-name="'Campaign ' + props.campaign.name" />
+    </div>
   </image-card>
 </template>

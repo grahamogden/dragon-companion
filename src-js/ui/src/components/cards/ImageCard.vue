@@ -9,7 +9,7 @@
 </script>
 
 <template>
-    <div class="w-full min-w-28 border-saffron-mango-300 rounded-xl shadow-md shadow-shark-300 dark:shadow-stone-950 transition-colors transition-shadow duration-500"
+    <div class="w-full min-w-72 border-saffron-mango-300 rounded-xl shadow-md shadow-shark-300 dark:shadow-stone-950 transition-colors transition-shadow duration-500"
         :class="props.isSelected ? 'border-8' : ''">
         <img :class="props.isSelected ? 'rounded-t-sm' : 'rounded-t-xl'"
             src="../../assets/images/background/light/full.svg">

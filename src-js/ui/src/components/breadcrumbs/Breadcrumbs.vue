@@ -14,16 +14,16 @@
 
         // Add breadcrumb objects to array
         breadcrumbPaths
-        .filter(Boolean)
-        .forEach((breadcrumbPath, index) => {
-            breadcrumbBasePath = breadcrumbBasePath.concat('/' + breadcrumbPath)
-            if (isNaN(parseFloat(breadcrumbPath))) {
-                breadcrumbs.value.push({
-                    text: breadcrumbPath,
-                    destination: index !== breadcrumbPaths.length - 1 ? breadcrumbBasePath : ''
-                })
-            }
-        })
+            .filter(Boolean)
+            .forEach((breadcrumbPath, index) => {
+                breadcrumbBasePath = breadcrumbBasePath.concat('/' + breadcrumbPath)
+                if (isNaN(parseFloat(breadcrumbPath))) {
+                    breadcrumbs.value.push({
+                        text: breadcrumbPath,
+                        destination: index !== breadcrumbPaths.length - 1 ? breadcrumbBasePath : ''
+                    })
+                }
+            })
         if (breadcrumbs.value.length > 0) {
             breadcrumbs.value[breadcrumbs.value.length - 1].destination = ''
         }
@@ -37,9 +37,10 @@
 </script>
 
 <template>
-    <div class="breadcrumb-container mb-4 text-sm">
+    <div class="breadcrumb-container mb-4 px-4 text-sm">
         <div class="breadcrumb inline-block" v-for="breadcrumb in breadcrumbs">
-            <router-link v-if="breadcrumb.destination" :to="breadcrumb.destination" class="capitalize">{{ breadcrumb.text }}</router-link>
+            <router-link v-if="breadcrumb.destination" :to="breadcrumb.destination" class="capitalize">{{
+            breadcrumb.text }}</router-link>
             <span v-else class="capitalize">{{ breadcrumb.text }}</span>
         </div>
     </div>

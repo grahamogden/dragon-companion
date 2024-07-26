@@ -29,7 +29,7 @@
     <page-header link-text="Edit"
       :link-destination="{ name: 'species.edit', params: { externalCampaignId: campaignId, speciesId: speciesId } }">{{
         species.name ? species.name : 'Species' }}</page-header>
-    <loading-page v-model="isLoading">
+    <loading-page :is-loading="isLoading">
       <template #content>
         <!-- <content-group><template #content>{{ species.name }}</template></content-group> -->
       </template>
