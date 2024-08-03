@@ -22,7 +22,7 @@
 
   function fetchTimelines(campaignId: number): void {
     isLoading.value = true
-    timelineStore.findTimelines(campaignId, true, 0).then((timelines: TimelineEntityInterface[]) => {
+    timelineStore.findTimelines(campaignId, false, 0).then((timelines: TimelineEntityInterface[]) => {
       if (timelines !== null) {
         allTimelines = timelines
       }

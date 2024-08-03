@@ -18,7 +18,7 @@
   <loading-page :is-loading="isLoading">
     <template #content>
       <div
-        class="grid gap-4 grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 grid-flow-row justify-between justify-items-stretch">
+        class="grid gap-6 grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 grid-flow-row justify-between justify-items-stretch">
         <campaign-list-card v-for="campaign in campaignStore.campaigns" :campaign="campaign"></campaign-list-card>
       </div>
     </template>

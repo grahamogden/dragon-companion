@@ -18,7 +18,7 @@
 
     const timelineStore = useTimelineStore()
     const timelineOptions: SelectInputOptionInterface[] = [
-        { value: '', text: 'No parent' }
+        { value: null, text: '-- No parent --' }
     ];
 
     function fetchTimelineOptions() {

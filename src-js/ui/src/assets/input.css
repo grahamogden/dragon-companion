@@ -33,10 +33,6 @@
         min-height: 100vh;
     }
 
-    h1 {
-        @apply pb-1 border-b-2 border-shark-950 dark:border-white-lilac-50 text-xl font-bold;
-    }
-
     a,
     button,
     input,

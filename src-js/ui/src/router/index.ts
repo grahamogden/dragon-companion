@@ -64,12 +64,18 @@ const router = createRouter({
                     name: 'campaigns.edit',
                     beforeEnter: isLoggedIn,
                     component: () => import('../views/campaigns/CampaignEdit.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
                 {
                     path: 'view',
                     name: 'campaigns.view',
                     beforeEnter: isLoggedIn,
                     component: () => import('../views/campaigns/CampaignView.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
                 {
                     path: 'characters',
@@ -79,24 +85,36 @@ const router = createRouter({
                     // this generates a separate chunk (About.[hash].js) for this route
                     // which is lazy-loaded when the route is visited.
                     component: () => import('../views/characters/CharacterList.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
                 {
                     path: 'classes',
                     name: 'classes',
                     beforeEnter: [isLoggedIn, hasCampaignSelected],
                     component: () => import('../views/classes/ClassList.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
                 {
                     path: 'combat-encounters',
                     name: 'combat-encounters',
                     beforeEnter: [isLoggedIn, hasCampaignSelected],
                     component: () => import('../views/combat-encounters/CombatEncounterList.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
                 {
                     path: 'tags',
                     name: 'tags',
                     beforeEnter: [isLoggedIn, hasCampaignSelected],
                     component: () => import('../views/timelines/TimelineList.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
                 // {
                 //     path: '/species',
@@ -113,24 +131,36 @@ const router = createRouter({
                             name: 'species.list',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/species/SpeciesList.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
                         },
                         {
                             path: 'add',
                             name: 'species.add',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/species/SpeciesCreate.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
                         },
                         {
                             path: ':speciesId(\\d+)/edit',
                             name: 'species.edit',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/species/SpeciesEdit.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
                         },
                         {
                             path: ':speciesId(\\d+)/view',
                             name: 'species.view',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/species/SpeciesView.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
                         },
                     ],
                 },
@@ -144,24 +174,36 @@ const router = createRouter({
                             name: 'timelines.list',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/timelines/TimelineList.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
                         },
                         {
                             path: 'add',
                             name: 'timelines.add',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/timelines/TimelineCreate.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
                         },
                         {
                             path: ':timelineId(\\d+)/edit',
                             name: 'timelines.edit',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/timelines/TimelineEdit.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
                         },
                         {
                             path: ':timelineId(\\d+)/view',
                             name: 'timelines.view',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/timelines/TimelineView.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
                         },
                     ],
                 },
@@ -176,28 +218,47 @@ const router = createRouter({
                     name: 'campaigns.list',
                     beforeEnter: isLoggedIn,
                     component: () => import('../views/campaigns/CampaignList.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
                 {
                     path: 'add',
                     name: 'campaigns.add',
                     beforeEnter: isLoggedIn,
                     component: () => import('../views/campaigns/CampaignCreate.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
             ],
         },
         {
             path: '/users',
             children: [
-                { path: 'account', name: 'user-account', component: UserAccountView },
+                {
+                    path: 'account',
+                    name: 'user-account',
+                    component: UserAccountView,
+                    meta: {
+                        layout: 'Dashboard',
+                    },
+                },
                 {
                     path: 'verify',
                     name: 'user-verify',
                     component: () => import('../views/users/verify/UserVerify.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
                 {
                     path: 'register',
                     name: 'user-register',
                     component: () => import('../views/register/Register.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
                 },
             ],
         },
