@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { ref, provide } from 'vue';
   import { useSpeciesStore, useCampaignStore } from '../../stores';
   import router from '../../router';
   import SpeciesForm from './SpeciesForm.vue'
@@ -7,11 +7,16 @@
   import PageHeader from '../../components/page-header/PageHeader.vue';
   import { SpeciesEntity } from '../../services/species';
   import { useRoute } from 'vue-router';
+  import { useNotificationStore } from '../../stores/notifications/notification-store';
+  import { useValidationStore } from '../../stores/validation';
+  import type ApplicationErrorInterface from '../../services/repository/errors/ApplicationErrorInterface';
 
   const isLoading = ref(true)
   const campaignStore = useCampaignStore()
   const campaignId = campaignStore.selectedCampaignId!
   const speciesStore = useSpeciesStore()
+  const notificationStore = useNotificationStore()
+  const validationStore = useValidationStore()
 
   const route = useRoute()
   const speciesId = parseInt(route.params.speciesId as string)
@@ -26,12 +31,24 @@
     })
 
   function editSpecies(): void {
+    notificationStore.removeAllNotifications()
+    validationStore.removeAllErrors()
     speciesStore.updateSpecies(
       campaignId,
       species.value
     ).then(() => {
       router.push({ name: 'species.list', params: { externalCampaignId: campaignId } })
+        .then(() => {
+          notificationStore.addSuccess('Successfully updated species')
+        })
     })
+      .catch((error: ApplicationErrorInterface) => {
+        console.debug(error)
+        notificationStore.addError(error.message)
+        if (error.errors) {
+          validationStore.addErrors(error.errors)
+        }
+      })
   }
 </script>
 

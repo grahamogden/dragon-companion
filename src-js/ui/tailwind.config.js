@@ -22,8 +22,10 @@ export default {
           200: '#18181A',
         },
         page: {
-          light: '#D9D5CA',
-          dark: '#1B1B1A',
+          // light: '#D9D5CA',
+          // dark: '#1B1B1A',
+          light: '#aec064',
+          dark: '#242911',
         },
         customisation: {
           sage: '#415033',
@@ -259,6 +261,50 @@ export default {
           '950': '#431605',
         },
 
+        'supernova': {
+          '50': '#FEFCE8',
+          '100': '#FEF8C3',
+          '200': '#FEEE8A',
+          '300': '#FDDD47',
+          '400': '#FAC60D',
+          '500': '#EAAF08',
+          '600': '#CA8604',
+          '700': '#A15F07',
+          '800': '#854B0E',
+          '900': '#713D12',
+          '950': '#421F06',
+        },
+
+        'sun': {
+          '50': '#fffceb',
+          '100': '#fff6c6',
+          '200': '#ffeb88',
+          '300': '#ffda49',
+          '400': '#ffc820',
+          '500': '#faa90d',
+          '600': '#dd7e02',
+          '700': '#b85805',
+          '800': '#95430b',
+          '900': '#7a370d',
+          '950': '#461c02',
+        },
+
+        'selective-yellow': {
+          '50': '#FFFDEA',
+          '100': '#FFF9C5',
+          '200': '#FFF486',
+          '300': '#FFE846',
+          '400': '#FFD81C',
+          '500': '#FEBB0D',
+          '600': '#E18D00',
+          '700': '#BB6302',
+          '800': '#974C09',
+          '900': '#7C3F0B',
+          '950': '#482000',
+        },
+    
+    
+
         'fern': {
           '50': '#F3FAF3',
           '100': '#E5F4E4',
@@ -301,6 +347,21 @@ export default {
           '900': '#83191E',
           '950': '#48070A',
         },
+
+        'chestnut': {
+          '50': '#FDF4F3',
+          '100': '#FAECE9',
+          '200': '#F5D9D6',
+          '300': '#EDBAB4',
+          '400': '#E39089',
+          '500': '#D4655F',
+          '600': '#BF4040',
+          '700': '#A03033',
+          '800': '#862B30',
+          '900': '#73282F',
+          '950': '#3F1214',
+        },
+    
     
         'cornflower-blue': {
           '50': '#F0F6FE',
@@ -316,6 +377,13 @@ export default {
           '950': '#1D284E',
         },
     
+      },
+      screens: {
+        'xs': '400px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        '3xl': '2561px',
       },
       backgroundImage: {
         'content-texture': "url('/src/assets/images/content-texture.png')",
@@ -334,10 +402,14 @@ export default {
         'auto': 'auto',
         'cover': 'cover',
         'contain': 'contain',
-        '2560': 'auto 160rem',
-        '1440': 'auto 90rem',
-        '800': 'auto 50rem',
-        '440': 'auto 27.5rem',
+        '2561': 'auto 160rem',
+        '2560': 'auto 140rem', // 160rem',
+        '1440': 'auto 90rem', // 90rem',
+        '1280': 'auto 64rem', // 80rem',
+        '1024': 'auto 50rem', // 64rem',
+        '800': 'auto 35rem', // 50rem',
+        '440': 'auto 27.5rem', // 27.5rem',
+        '360': 'auto 22.5rem', // 22.5rem',
         '100': '10rem',
         '50': '50rem',
       },

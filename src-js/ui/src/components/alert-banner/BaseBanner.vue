@@ -12,7 +12,7 @@
 </script>
 <template>
     <Transition>
-        <div class="flex flex-row justify-between gap-3 mb-4 dark:text-timberwolf-50 rounded-xl duration-500"
+        <div class="flex flex-row justify-between gap-3 mb-4 dark:text-timberwolf-50 rounded-xl duration-theme-change"
             :class="props.colourClasses">
             <div class="flex flex-col justify-center pl-3 py-1">
                 <i class="fa text-2xl" :class="props.iconClass" aria-hidden="true"></i>

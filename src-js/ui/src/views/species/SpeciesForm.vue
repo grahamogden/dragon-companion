@@ -19,9 +19,9 @@
 <template>
     <loading-page :is-loading="props.isParentLoading">
         <template #content>
-            <form @submit.prevent="submitForm">
+            <form @submit.prevent="submitForm" class="flex flex-row flex-wrap gap-6">
                 <div class="w-full md:w-2/4">
-                    <TextInput inputName="name" v-model:model="species.name" label="Species Name" />
+                    <TextInput inputName="name" v-model:model="species.name" label="Species Name" :require="true" />
                 </div>
                 <EntityButtonWrapper :cancelDestination="{ name: 'species.list' }" />
             </form>

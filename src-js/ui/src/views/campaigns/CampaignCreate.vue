@@ -4,17 +4,36 @@
   import CampaignForm from './CampaignForm.vue';
   import { type CampaignEntityInterface } from '../../services/campaign/CampaignEntityInterface';
   import PageHeader from '../../components/page-header/PageHeader.vue';
+  import { useNotificationStore } from '../../stores/notifications';
+  import { useValidationStore } from '../../stores/validation';
+  import type ApplicationErrorInterface from '../../services/repository/errors/ApplicationErrorInterface'
 
   const campaignStore = useCampaignStore()
+  const notificationStore = useNotificationStore()
+  const validationStore = useValidationStore()
 
-  async function createCampaign(formData: CampaignEntityInterface): Promise<void> {
-    await campaignStore.addCampaign(
+  function createCampaign(formData: CampaignEntityInterface): void {
+    notificationStore.removeAllNotifications()
+    validationStore.removeAllErrors()
+
+    campaignStore.addCampaign(
       {
         name: formData.name,
         synopsis: formData.synopsis
       }
-    )
-    router.push({ name: 'campaigns.list' })
+    ).then(() => {
+      router.push({ name: 'campaigns.list' })
+        .then(() => {
+          notificationStore.addSuccess('Successfully created campaign')
+        })
+    })
+      .catch((error: ApplicationErrorInterface) => {
+        console.debug(error)
+        notificationStore.addError(error.message)
+        if (error.errors) {
+          validationStore.addErrors(error.errors)
+        }
+      })
   }
 </script>
 

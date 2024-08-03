@@ -1,7 +1,10 @@
 <template>
-    <!-- <div :class="'w-full mb-4 inline-block md:w-auto ' + orderClass">  mb-4 md:mb-0-->
+    <div
+        class="inline-block w-full md:w-auto bg-saffron-mango-300 dark:bg-saffron-mango-800 border border-saffron-mango-600 dark:border-saffron-mango-300 rounded-lg overflow-hidden">
         <button
-            class="py-2 px-4 w-full min-w-48 md:w-auto text-woodsmoke-950 hover:text-timberwolf-50 bg-saffron-mango-300 hover:bg-saffron-mango-700 rounded-xl border border-saffron-mango-700 dark:border-saffron-mango-300 relative text-center no-underline"
-            type="submit"><slot>Submit</slot></button>
-    <!-- </div> -->
+            class="relative w-full min-w-48 md:w-auto py-2 px-4 text-woodsmoke-950 dark:text-timberwolf-50 hover:text-timberwolf-50 dark:hover:text-woodsmoke-950 hover:bg-saffron-mango-600 dark:hover:bg-saffron-mango-300 text-center no-underline"
+            type="submit">
+            <slot>Submit</slot>
+        </button>
+    </div>
 </template>

@@ -15,7 +15,7 @@
             <primary-button>Save</primary-button>
         </div>
         <div class="w-full md:w-auto text-center">
-            <link-button :destination="props.cancelDestination">Cancel</link-button>
+            <!-- <link-button :destination="props.cancelDestination">Cancel</link-button> -->
             <secondary-button :destination="props.cancelDestination">Cancel</secondary-button>
             <!-- <router-link :to="props.cancelDestination" class="my-2 lg:my-0">Cancel</router-link> -->
         </div>

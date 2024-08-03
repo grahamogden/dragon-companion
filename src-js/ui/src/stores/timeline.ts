@@ -41,7 +41,7 @@ export const useTimelineStore = defineStore('timeline', {
                 includeChildren,
             )
         },
-        async addTimeline(campaignId: number, timeline: NewTimelineEntityInterface) {
+        async addTimeline(campaignId: number, timeline: NewTimelineEntityInterface): Promise<void> {
             const timelineId = await this._getTimelineRespository().add(campaignId, timeline)
             // const newTimeline: TimelineEntityInterface = new TimelineEntity(
             //     timelineId,
@@ -50,10 +50,10 @@ export const useTimelineStore = defineStore('timeline', {
             //     timeline.parent_id,
             // )
         },
-        async updateTimeline(campaignId: number, timeline: TimelineEntityInterface) {
+        async updateTimeline(campaignId: number, timeline: TimelineEntityInterface): Promise<void> {
             await this._getTimelineRespository().update(campaignId, timeline)
         },
-        async deleteTimeline(campaignId: number, timelineId: number) {
+        async deleteTimeline(campaignId: number, timelineId: number): Promise<void> {
             await this._getTimelineRespository().delete(campaignId, timelineId)
         },
     },

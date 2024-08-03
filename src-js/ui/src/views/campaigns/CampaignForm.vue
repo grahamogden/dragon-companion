@@ -30,13 +30,14 @@
 <template>
     <loading-page :is-loading="props.isLoading">
         <template #content>
-            <form @submit.prevent="submitForm">
+            <form @submit.prevent="submitForm" class="flex flex-row flex-wrap gap-6">
                 <div class="w-full md:w-2/4">
-                    <text-input inputName="name" v-model:model="campaign.name" label="Campaign Name"></text-input>
+                    <text-input inputName="name" v-model:model="campaign.name" label="Campaign Name"
+                        :require="true"></text-input>
                 </div>
                 <div class="w-full">
                     <text-area inputName="synopsis" v-model:model="campaign.synopsis" label="Synopsis of campaign"
-                        :length="1000"></text-area>
+                        :length="1000" :require="true"></text-area>
                 </div>
                 <EntityButtonWrapper :cancelDestination="{ name: 'campaigns.list' }" />
             </form>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { useSpeciesStore, useCampaignStore } from '../../stores'
+  import { useSpeciesStore, useCampaignStore, useNotificationStore } from '../../stores'
   import type { SpeciesEntityInterface } from '../../services/species'
   import PageHeader from '../../components/page-header/PageHeader.vue'
   import LoadingPage from '../../components/loading-page/LoadingPage.vue'
@@ -8,6 +8,7 @@
   import EntityTableLink from '../../components/entity-table/interface/entity-table-link';
   import EntityTableHeading from '../../components/entity-table/interface/entity-table-heading';
 
+  const notificationStore = useNotificationStore()
   const campaignStore = useCampaignStore()
   const campaignId = campaignStore.selectedCampaignId!
   const speciesStore = useSpeciesStore()
@@ -28,7 +29,9 @@
 
   function confirmDelete(campaignId: number, id: number): void {
     if (window.confirm('Are you sure you want to delete ' + id)) {
+      notificationStore.removeAllNotifications()
       speciesStore.deleteSpecies(campaignId, id).then(() => {
+        notificationStore.addSuccess('Successfully created timeline')
         fetchSpecies(campaignId)
       })
     }

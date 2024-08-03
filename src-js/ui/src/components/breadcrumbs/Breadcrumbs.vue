@@ -37,7 +37,7 @@
 </script>
 
 <template>
-    <div class="breadcrumb-container mb-4 px-4 text-sm">
+    <div class="breadcrumb-container mb-4 text-sm">
         <div class="breadcrumb inline-block" v-for="breadcrumb in breadcrumbs">
             <router-link v-if="breadcrumb.destination" :to="breadcrumb.destination" class="capitalize">{{
             breadcrumb.text }}</router-link>

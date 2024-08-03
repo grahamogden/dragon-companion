@@ -9,6 +9,9 @@
   import EntityTableLink from '../../components/entity-table/interface/entity-table-link'
   import ContentGroup from '../../components/elements/ContentGroup.vue'
   import { useRoute } from 'vue-router'
+  import TimelineLinear from '../../components/timeline/linear/TimelineLinear.vue'
+  import TimelineLinearItemCard from '../../components/timeline/linear/items/TimelineLinearItemCard.vue'
+  import { NodePositionEnum } from '../../components/timeline/linear/interface/timeline.linear.item.node-position.interface';
 
   const route = useRoute()
   const timelineStore = useTimelineStore()
@@ -69,11 +72,22 @@
         <content-group>
           <template #heading>Child timelines</template>
           <template #content>
-            <view-list-table :campaign-id="campaignId" :timeline-id="timelineId"
+            <!-- <view-list-table :campaign-id="campaignId" :timeline-id="timelineId"
               :headings="[new EntityTableHeading('title', true), new EntityTableHeading('body')]"
               :entities="timeline.child_timelines" :view-link="new EntityTableLink('timelines.view', 'timelineId')"
               :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
-              :delete-confirmation-function="confirmDelete" kebab-menu-button-aria-context="Timeline"></view-list-table>
+              :delete-confirmation-function="confirmDelete" kebab-menu-button-aria-context="Timeline"></view-list-table> -->
+            <div class="mt-4 px-6">
+              <timeline-linear v-if="timeline.child_timelines">
+                <timeline-linear-item-card v-for="(timelineItem, key) in timeline.child_timelines"
+                  :campaignId="campaignId"
+                  :node-position="key === 0 ? NodePositionEnum.start : (key + 1) === timeline.child_timelines.length ? NodePositionEnum.end : NodePositionEnum.both"
+                  :entity="timelineItem" :view-link="new EntityTableLink('timelines.view', 'timelineId')"
+                  :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
+                  :delete-confirmation-function="confirmDelete"
+                  kebab-menu-button-aria-context="Timeline"></timeline-linear-item-card>
+              </timeline-linear>
+            </div>
           </template>
         </content-group>
       </template>

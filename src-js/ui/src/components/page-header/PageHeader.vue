@@ -8,7 +8,7 @@
     }>()
 </script>
 <template>
-    <div class="flex flex-row justify-between items-center mb-4 px-4">
+    <div class="flex flex-row justify-between items-center mb-6">
         <h1 class="duration-500">
             <slot></slot>
         </h1>

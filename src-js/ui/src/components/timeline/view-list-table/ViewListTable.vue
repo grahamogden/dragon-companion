@@ -27,7 +27,8 @@
                 {
                     func: props.deleteConfirmationFunction,
                     args: [campaignId, id],
-                }
+                },
+                true
             )
         ]
     }
@@ -60,7 +61,12 @@
                             :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + entity.name" />
                     </td>
                 </tr>
-                <tr><td class="bg-woodsmoke-200/50 dark:bg-woodsmoke-700/50 text-center duration-500" colspan="99"><router-link :to="{ name: 'timelines.add', params: { externalCampaignId: props.campaignId }, query: { parentId: timelineId } }">Add a children timeline record</router-link></td></tr>
+                <tr>
+                    <td class="bg-woodsmoke-200/50 dark:bg-woodsmoke-700/50 text-center duration-500" colspan="99">
+                        <router-link
+                            :to="{ name: 'timelines.add', params: { externalCampaignId: props.campaignId }, query: { parentId: timelineId } }">Add
+                            a children timeline record</router-link></td>
+                </tr>
             </tbody>
         </table>
     </div>

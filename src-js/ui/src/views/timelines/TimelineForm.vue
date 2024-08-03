@@ -17,7 +17,9 @@
     }>()
 
     const timelineStore = useTimelineStore()
-    const timelineOptions: SelectInputOptionInterface[] = [];
+    const timelineOptions: SelectInputOptionInterface[] = [
+        { value: '', text: 'No parent' }
+    ];
 
     function fetchTimelineOptions() {
         timelineStore.findTimelines(props.campaignId)
@@ -53,16 +55,16 @@
 <template>
     <loading-page :is-loading="isLoading">
         <template #content>
-            <form @submit.prevent="submitForm" class="flex flex-row flex-wrap">
-                <div class="w-full md:w-2/4">
+            <form @submit.prevent="submitForm" class="flex flex-row flex-wrap gap-6">
+                <div class="w-full md:w-auto grow">
                     <text-input inputName="title" v-model:model="timeline.title" label="Title" :require="true" />
                 </div>
-                <div class="w-full md:w-2/4">
+                <div class="w-full md:w-auto grow">
                     <select-input v-model:model="timeline.parent_id" label="Parent timeline" input-name="parent_id"
                         :options="timelineOptions" />
                 </div>
                 <div class="w-full">
-                    <text-area input-name="body" v-model:model="timeline.body" label="Body" />
+                    <text-area input-name="body" v-model:model="timeline.body" label="Body" :require="true" />
                 </div>
                 <EntityButtonWrapper :cancelDestination="{ name: 'timelines.list' }" />
             </form>

@@ -216,7 +216,7 @@ const router = createRouter({
 
 router.afterEach(() => {
     const notificationStore = useNotificationStore()
-    notificationStore.$reset()
+    notificationStore.removeAllNotifications()
 })
 
 export default router

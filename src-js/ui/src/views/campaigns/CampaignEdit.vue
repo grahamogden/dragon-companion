@@ -6,14 +6,17 @@
   import { type CampaignEntityInterface } from '../../services/campaign/CampaignEntityInterface';
   import PageHeader from '../../components/page-header/PageHeader.vue';
   import LoadingPage from '../../components/loading-page/LoadingPage.vue';
+  import { useNotificationStore } from '../../stores/notifications/notification-store';
+  import { useValidationStore } from '../../stores/validation';
+  import type ApplicationErrorInterface from '../../services/repository/errors/ApplicationErrorInterface';
 
   const isLoading = ref(true)
   const campaignStore = useCampaignStore()
   const params = router.currentRoute.value.params
-  // console.debug(router.currentRoute.value)
-  // console.debug(router.currentRoute.value.params)
   const campaignId = parseInt(params.externalCampaignId as string)
   let formData: CampaignEntityInterface | undefined = undefined
+  const notificationStore = useNotificationStore()
+  const validationStore = useValidationStore()
 
   // console.debug(campaignId)
   const campaign = campaignStore.getCampaignById(campaignId)
@@ -23,16 +26,28 @@
     isLoading.value = false
   }
 
-  async function editCampaign(formData: CampaignEntityInterface): Promise<void> {
-    await campaignStore.updateCampaign(
+  function editCampaign(formData: CampaignEntityInterface): void {
+    notificationStore.removeAllNotifications()
+    validationStore.removeAllErrors()
+    campaignStore.updateCampaign(
       {
         id: campaignId,
         name: formData.name,
         synopsis: formData.synopsis
       }
-    )
-    // console.debug('Editing campaign')
-    router.push({ name: 'campaigns.list' })
+    ).then(() => {
+      router.push({ name: 'campaigns.list' })
+        .then(() => {
+          notificationStore.addSuccess('Successfully updated campaign')
+        })
+    })
+      .catch((error: ApplicationErrorInterface) => {
+        console.debug(error)
+        notificationStore.addError(error.message)
+        if (error.errors) {
+          validationStore.addErrors(error.errors)
+        }
+      })
   }
 </script>
 

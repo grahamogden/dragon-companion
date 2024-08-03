@@ -5,40 +5,41 @@
   import { TimelineEntity, type TimelineEntityInterface } from '../../services/timeline';
   import { useCampaignStore } from '../../stores';
   import PageHeader from '../../components/page-header/PageHeader.vue';
-  import { ref } from 'vue';
+  import { ref, provide } from 'vue';
   import { useRoute } from 'vue-router';
   import { useNotificationStore } from '../../stores/notifications/notification-store';
-  import type ApplicationErrorInterface from '../../services/repository/errors/ApplicationErrorInterface'
-  import type ValidationError from '../../services/repository/errors/ValidationError';
-  import { provide } from 'vue';
-  import { errorMessagesKey } from '../../keys'
+  import { useValidationStore } from '../../stores/validation';
+  import type ApplicationErrorInterface from '../../services/repository/errors/ApplicationErrorInterface';
 
   const timelineStore = useTimelineStore()
   const campaignStore = useCampaignStore()
   const campaignId = campaignStore.selectedCampaignId!
   const route = useRoute();
   const notificationStore = useNotificationStore()
+  const validationStore = useValidationStore()
 
   const timeline = ref<TimelineEntityInterface>(new TimelineEntity())
-  const errorMessages = ref<Record<string, ValidationError>>({})
-  provide(errorMessagesKey, errorMessages)
 
   timeline.value.parent_id = parseInt(route.query.parentId as string)
 
   function createTimeline(): void {
     notificationStore.removeAllNotifications()
-    errorMessages.value = {}
+    validationStore.removeAllErrors()
     timelineStore.addTimeline(
       campaignId,
       timeline.value
     ).then(() => {
       router.push({ name: 'timelines.list', params: { externalCampaignId: campaignId } })
-      notificationStore.addSuccess('Successfully created timeline')
+        .then(() => {
+          notificationStore.addSuccess('Successfully created timeline')
+        })
     })
       .catch((error: ApplicationErrorInterface) => {
         console.debug(error)
         notificationStore.addError(error.message)
-        errorMessages.value = error.errors || {}
+        if (error.errors) {
+          validationStore.addErrors(error.errors)
+        }
       })
   }
 </script>

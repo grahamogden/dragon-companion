@@ -32,6 +32,7 @@ export interface DropDownItemButtonInterface {
         func: Function
         args: any[]
     }
+    isDestructive: boolean
 }
 
 export interface DropDownItemButtonFunctionInterface {
@@ -45,5 +46,6 @@ export class DropDownItemButton implements DropDownItemButtonInterface {
     constructor(
         public label: string,
         public onClickFunc: DropDownItemButtonFunctionInterface,
+        public isDestructive: boolean = false,
     ) {}
 }

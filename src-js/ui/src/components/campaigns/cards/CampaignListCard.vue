@@ -24,8 +24,12 @@
   function confirmDelete(campaignId: number) {
     console.debug('Confirming delete for ' + campaignId)
     if (window.confirm('Are you sure you want to delete ' + campaignId + ': "' + campaignStore.getCampaignById(campaignId)?.name + '"')) {
+      notificationStore.removeAllNotifications()
       console.debug('Confirmed - attempting delete')
       campaignStore.deleteCampaign(campaignId)
+        .then(() => {
+          notificationStore.addSuccess('Successfully deleted campaign')
+        })
     }
   }
 
@@ -52,15 +56,19 @@
         {
           func: confirmDelete,
           args: [campaign.id],
-        }
+        },
+        true
       ),
     ]
   }
 </script>
 <template>
   <image-card :text="props.campaign.name" :is-selected="props.campaign.id === campaignStore.selectedCampaignId">
-    <p class="flex flex-col justify-center">{{ props.campaign.name }}</p>
-    <div><kebab-menu :links="getLinks(props.campaign)" :button-aria-context-name="'Campaign ' + props.campaign.name" />
+    <div class="flex items-center w-full justify-between">
+      <p class="truncate text-ellipsis overflow-hidden">{{ props.campaign.name }}</p>
+      <div><kebab-menu :links="getLinks(props.campaign)"
+          :button-aria-context-name="'Campaign ' + props.campaign.name" />
+      </div>
     </div>
   </image-card>
 </template>

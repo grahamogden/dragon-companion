@@ -19,7 +19,7 @@
 </script>
 
 <template>
-    <div class="px-4">
+    <div>
         <table class="table-rounded">
             <thead class="table-heading-dark">
                 <tr>

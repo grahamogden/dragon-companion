@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import BaseBanner from './BaseBanner.vue';
-    import { NotificationInterface } from '../../stores/notifications';
+    import type { NotificationInterface } from '../../stores/notifications';
 
     const props = defineProps<{
         notification: NotificationInterface,

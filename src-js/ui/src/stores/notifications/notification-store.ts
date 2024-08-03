@@ -50,6 +50,9 @@ export const useNotificationStore = defineStore('notification', {
                 type: NotificationEnum.success,
             })
         },
+        cleanUp() {
+            this.$reset()
+        },
         removeNotification(key: string) {
             delete this.notifications[key]
         },
