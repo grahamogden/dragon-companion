@@ -1,7 +1,4 @@
 <script setup lang="ts">
-    import type KebabMenu from '../dropdowns/kebab-menu/KebabMenu.vue';
-
-
     const props = defineProps<{
         text: string,
         isSelected?: boolean,
@@ -18,9 +15,8 @@
                 :class="props.isSelected ? 'block' : 'hidden'">
             </div>
         </div>
-        <div class="p-2 flex flex-row grow justify-between rounded-b-xl border-0 border-t-0">
-            <!-- {{ props.text }}
-            <kebab-menu :links="getLinks(campaign)" :button-aria-context-name="'Campaign ' + text" /> -->
+        <div
+            class="p-2 flex flex-row grow justify-between bg-timberwolf-50 dark:bg-woodsmoke-900 rounded-b-xl border-0 border-t-0">
             <slot></slot>
         </div>
     </div>

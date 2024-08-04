@@ -28,7 +28,7 @@
                     :aria-label="props.buttonAriaContextName + ' menu toggle'"
                     class="block w-full px-2 py-1 hover:bg-biscay-600 focus:bg-biscay-600 text-biscay-800 dark:text-timberwolf-50 hover:text-timberwolf-50 focus:text-timberwolf-50 text-right no-underline transition-colors duration-0"
                     type="button"><span class="hidden md:inline">More </span>&#8942;</button>
-                <transition>
+                <transition name="kebab-slide-out">
                     <div class="kebab-menu fixed md:relative bottom-28 md:bottom-auto left-1/2 md:left-auto -translate-x-1/2 md:translate-x-0 md:right-0 w-3/4 md:w-auto bg-timberwolf-50 dark:bg-woodsmoke-950 border md:border-0 md:border-t border-biscay-600 rounded-xl md:rounded-none overflow-hidden z-40"
                         v-show="isMenuOpen">
                         <div v-for="link in props.links">
@@ -52,33 +52,33 @@
 
 <style>
 
-    .v-enter-from,
-    .v-leave-to {
+    .kebab-slide-out-enter-from,
+    .kebab-slide-out-leave-to {
         line-height: 0;
         font-size: 0;
     }
 
-    .v-enter-from a,
-    .v-leave-to a,
-    .v-enter-from button,
-    .v-leave-to button {
+    .kebab-slide-out-enter-from a,
+    .kebab-slide-out-leave-to a,
+    .kebab-slide-out-enter-from button,
+    .kebab-slide-out-leave-to button {
         padding: 0;
     }
 
-    .v-enter-active,
-    .v-leave-active,
-    .v-enter-active a,
-    .v-leave-active a,
-    .v-enter-active button,
-    .v-leave-active button {
+    .kebab-slide-out-enter-active,
+    .kebab-slide-out-leave-active,
+    .kebab-slide-out-enter-active a,
+    .kebab-slide-out-leave-active a,
+    .kebab-slide-out-enter-active button,
+    .kebab-slide-out-leave-active button {
         transition-property: padding, line-height, font-size;
         transition-duration: 0.1s;
         transition-timing-function: ease;
         transition-delay: 0ms;
     }
 
-    .v-enter-to,
-    .v-leave-from {
+    .kebab-slide-out-enter-to,
+    .kebab-slide-out-leave-from {
         line-height: normal;
         font-size: normal;
     }

@@ -6,7 +6,8 @@
   import type { FirebaseApp } from 'firebase/app'
   import { useCampaignStore, useUserAuthStore } from './stores'
   import LoadingSpinner from './components/loading-spinner/LoadingSpinner.vue'
-  import Navigation from './components/navigation/Navigation.vue'
+  import SideNavigation from './components/navigation/SideNavigation.vue'
+  import ToolbarNavigation from './components/navigation/ToolbarNavigation.vue'
   import Default from './layouts/Default.vue'
   import Dashboard from './layouts/Dashboard.vue'
 
@@ -41,27 +42,6 @@
       console.error(error)
     });
   }
-
-  // Menu toggling
-
-  function toggleNavMenu(open: boolean | undefined = undefined) {
-    if (open === undefined) {
-      isNavMenuOpen.value = !isNavMenuOpen.value
-    } else {
-      isNavMenuOpen.value = open
-    }
-  }
-
-  function toggleAccountMenu(open: boolean | undefined = undefined) {
-    if (open === undefined) {
-      isAccountMenuOpen.value = !isAccountMenuOpen.value
-    } else {
-      isAccountMenuOpen.value = open
-    }
-  }
-
-  const isNavMenuOpen = ref(false)
-  const isAccountMenuOpen = ref(false)
 
   // Theme toggling
 
@@ -179,28 +159,23 @@
             :class="{ 'bg-[center_top_0.4rem]': themeSetting === 'light', 'bg-[center_top_-0.7rem]': themeSetting === 'dark', 'bg-[center_top_-1.8rem]': themeSetting === 'auto' }"
             @click="toggleDarkMode" aria-label="Toggle theme - light, dark and auto"></button>
 
-          <router-link class="text-timberwolf-50 hidden md:inline-block no-underline hover:underline"
-            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'user-register' }"
-            @click="toggleNavMenu(false); toggleAccountMenu(false)">Register</router-link>
+          <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
+            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'user-register' }">Register</router-link>
 
-          <router-link class="text-timberwolf-50 hidden md:inline-block no-underline hover:underline"
-            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'login' }"
-            @click="toggleNavMenu(false); toggleAccountMenu(false)">Log In</router-link>
+          <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
+            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'login' }">Log In</router-link>
 
-          <router-link class="text-timberwolf-50 hidden md:inline-block no-underline hover:underline"
-            v-if="userAuthStore.isLoggedIn" :to="{ name: 'campaigns.list' }"
-            @click="toggleNavMenu(false); toggleAccountMenu(false)">Campaigns</router-link>
+          <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
+            v-if="userAuthStore.isLoggedIn" :to="{ name: 'campaigns.list' }">Campaigns</router-link>
 
-          <router-link class="text-timberwolf-50 hidden md:inline-block no-underline hover:underline"
-            v-if="userAuthStore.isLoggedIn" :to="{ name: 'user-account' }"
-            @click="toggleNavMenu(false); toggleAccountMenu(false)">Account</router-link>
+          <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
+            v-if="userAuthStore.isLoggedIn" :to="{ name: 'user-account' }">Account</router-link>
 
-          <button class="text-timberwolf-50 hidden md:inline-block no-underline hover:underline border-0"
-            v-if="userAuthStore.isLoggedIn" @click="toggleNavMenu(false); toggleAccountMenu(false); logOut();"
-            type="button">Log Out</button>
+          <button class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline border-0"
+            v-if="userAuthStore.isLoggedIn" @click="logOut();" type="button">Log Out</button>
 
           <button class="w-12 h-12 rounded-full overflow-hidden border-2 border-timberwolf-50 bg-stone-800 p-0"
-            @click="toggleNavMenu(false); toggleAccountMenu()" type="button" aria-label="Account menu toggle">
+            type="button" aria-label="Account menu toggle">
             <img class="logo w-full h-full" src="@/assets/logo.svg" alt="User account picture" />
           </button>
         </nav>
@@ -217,88 +192,5 @@
     </Suspense>
   </component>
 
-  <Transition name="scale">
-    <div v-show="isNavMenuOpen"
-      class="fixed bottom-24 md:hidden flex-col w-full z-10 bg-shark-950/70 backdrop-blur-lg mx-auto rounded-t-3xl overflow-hidden text-center">
-      <navigation></navigation>
-    </div>
-  </Transition>
-  <nav class="fixed md:hidden bottom-0 w-full toolbar grid grid-cols-4 gap-4 bg-shark-950/85 backdrop-blur z-10"
-    v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected">
-    <router-link class="text-white-lilac-50 py-3 text-center"
-      :to="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><img
-        src="@/assets/images/dice-icon.svg" class="w-12 h-12 block rounded inline-block" /><span
-        class="inline-block w-full truncate text-ellipsis overflow-hidden">Characters</span></router-link>
-    <button type="button" class="text-white-lilac-50 py-3 underline text-center"
-      @click="toggleNavMenu(); toggleAccountMenu(false)"><img src="@/assets/images/dice-icon.svg"
-        class="w-12 h-12 block rounded inline-block" /><span
-        class="inline-block w-full truncate text-ellipsis overflow-hidden">More</span></button>
-  </nav>
-  <div v-if="isNavMenuOpen" @click="toggleNavMenu(false)"
-    class="fixed top-0 left-0 w-full h-full bg-stone-950 opacity-50 md:hidden"></div>
+  <ToolbarNavigation></ToolbarNavigation>
 </template>
-
-<style>
-
-  /* .v-enter-from,
-  .v-leave-to,
-  .v-enter-from div,
-  .v-leave-to div {
-    line-height: 0;
-    font-size: 0;
-  }
-
-  .v-enter-from a,
-  .v-leave-to a,
-  .v-enter-from div,
-  .v-leave-to div {
-    padding: 0;
-  }
-
-  .v-enter-from .campaign-picker,
-  .v-leave-to .campaign-picker {
-    height: 0;
-  }
-
-  .v-enter-active,
-  .v-leave-active,
-  .v-enter-active a,
-  .v-leave-active a,
-  .v-enter-active div,
-  .v-leave-active div,
-  .v-enter-active .campaign-picker,
-  .v-leave-active .campaign-picker {
-    transition-property: padding, line-height, font-size, height;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
-    transition-delay: 0ms;
-  }
-
-  .v-enter-to,
-  .v-leave-from,
-  .v-enter-to div,
-  .v-leave-from div {
-    line-height: normal;
-    font-size: normal;
-  } */
-
-  .scale-enter-from,
-  .scale-leave-to {
-    bottom: 0rem;
-    transform: scale(1, 0);
-  }
-
-  .scale-enter-active,
-  .scale-leave-active {
-    transition-property: transform, bottom;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
-    transition-delay: 0ms;
-    transform-origin: center bottom;
-  }
-
-  .scale-enter-to,
-  .scale-leave-from {
-    transform: scale(1, 1);
-  }
-</style>
