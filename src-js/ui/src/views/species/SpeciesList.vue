@@ -31,7 +31,7 @@
     if (window.confirm('Are you sure you want to delete ' + id)) {
       notificationStore.removeAllNotifications()
       speciesStore.deleteSpecies(campaignId, id).then(() => {
-        notificationStore.addSuccess('Successfully created timeline')
+        notificationStore.addSuccess('Successfully created species')
         fetchSpecies(campaignId)
       })
     }
