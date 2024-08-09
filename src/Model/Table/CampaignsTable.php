@@ -163,7 +163,7 @@ class CampaignsTable extends Table
                 return $q->where([Role::ENTITY_NAME . '.' . Role::FIELD_CAMPAIGN_ID . ' = ' . Campaign::ENTITY_NAME . '.' . Campaign::FIELD_ID]);
             })
             ->leftJoinWith(Role::ENTITY_NAME . '.' . RolesUser::ENTITY_NAME, function ($q) use ($identity) {
-                return $q->where([RolesUser::ENTITY_NAME . '.' . RolesUser::FIELD_USER_ID . ' = ' . $identity->getIdentifier()]);
+                return $q->where([RolesUser::ENTITY_NAME . '.' . RolesUser::FIELD_USER_ID => $identity->getIdentifier()]);
             })
             ->where([
                 'OR' => [

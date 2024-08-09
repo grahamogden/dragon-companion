@@ -47,8 +47,8 @@ class TablePermissionsHelper
             )
             ->andWhere([
                 'OR' => [
-                    "{$permissionEntityName}.permissions & " . RolePermission::Read->value . ' = ' . RolePermission::Read->value,
-                    Role::ENTITY_NAME . '.' . Role::FIELD_TIMELINE_DEFAULT_PERMISSIONS . ' & ' . RolePermission::Read->value . ' = ' . RolePermission::Read->value
+                    "{$permissionEntityName}.permissions & " . RolePermission::Read->value => RolePermission::Read->value,
+                    Role::ENTITY_NAME . '.' . Role::FIELD_TIMELINE_DEFAULT_PERMISSIONS . ' & ' . RolePermission::Read->value => RolePermission::Read->value
                 ]
             ]);
     }
