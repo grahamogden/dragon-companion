@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Test\UnitTest\Policy;
 
 use App\Model\Entity\Interface\CampaignChildEntityInterface;
+use App\Model\Entity\Interface\EntityInterfaceWithUserIdInterface;
 use App\Model\Entity\Interface\PermissionInterface;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Enum\RoleLevel;
 use App\Model\Enum\RolePermission;
 use App\Policy\StandardPolicyTrait;
+use Authentication\IdentityInterface;
 use Cake\ORM\Entity;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -19,10 +21,12 @@ use RuntimeException;
 class StandardPolicyTraitTest extends TestCase
 {
     public const TEST_CAMPAIGN_ID = 7;
+    public const TEST_USER_ID_OWNER = 49;
+    public const TEST_USER_ID = 1;
 
-    /*********************************
+    /*****************************************
      * getOverridePermissionsTableName tests *
-     *********************************/
+     *****************************************/
 
     public function testGetOverridePermissionsTableNameWillThrowRuntimeExceptionIfPermissionsTableNameIsNotSet(): void
     {
@@ -70,7 +74,7 @@ class StandardPolicyTraitTest extends TestCase
 
     public static function dataProviderForIsCampaignOwnerWillThrowRuntimeExceptionIfDefaultPermissionsFieldNameIsNotSet(): array
     {
-        $self = (new self(''));
+        $self = new self('');
         $roleWrongCampaignMock = $self->mockRole(
             campaignId: 100,
             roleLevel: RoleLevel::Owner,
@@ -119,7 +123,7 @@ class StandardPolicyTraitTest extends TestCase
         $objectUnderTest = new DummyStandardPolicyTrait();
 
         $result = $objectUnderTest->isCampaignOwnerWrapper(
-            $this->mockIdentityInterfaceUser($roles),
+            $this->mockIdentityInterfaceUser(roles: $roles),
             self::TEST_CAMPAIGN_ID,
         );
 
@@ -239,7 +243,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canAdd(
-            $this->mockIdentityInterfaceUser($roles),
+            $this->mockIdentityInterfaceUser(roles: $roles),
             $this->mockEntity(),
         );
 
@@ -252,7 +256,7 @@ class StandardPolicyTraitTest extends TestCase
         $objectUnderTest->defaultPermissionsFieldName = 'doesNotExist';
 
         $result = $objectUnderTest->canAdd(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole()
             ]),
             $this->mockEntity(),
@@ -287,7 +291,7 @@ class StandardPolicyTraitTest extends TestCase
         $objectUnderTest = new DummyStandardPolicyTrait();
 
         $result = $objectUnderTest->canAdd(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     speciesPermissionRolePermission: $rolePermission,
                 )
@@ -301,6 +305,31 @@ class StandardPolicyTraitTest extends TestCase
     /*****************
      * canView tests *
      *****************/
+
+    public function testCanViewReturnsTrueIfUserIdIsEqualToEntityUserIdWithoutPerformingOtherChecks(): void
+    {
+        $identifier = 14;
+        $identity = $this->mockIdentityInterfaceUser(identifier: $identifier);
+        $entity = $this->mockEntity(userId: $identifier);
+
+        $objectUnderTest = new DummyStandardPolicyTrait();
+        $identity->expects($this->exactly(1))
+            ->method('getIdentifier');
+        $identity->expects($this->exactly(0))
+            ->method('getRoles');
+
+        $entity->expects($this->exactly(1))
+            ->method('getUserId');
+        $entity->expects($this->exactly(1))
+            ->method('getCampaignId');
+
+        $result = $objectUnderTest->canView(
+            identity: $identity,
+            entity: $entity,
+        );
+
+        $this->assertTrue($result);
+    }
 
     public static function dataProviderForCanViewReturnsFalseIfUserRoleNotFoundForCampaign(): array
     {
@@ -327,7 +356,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canView(
-            $this->mockIdentityInterfaceUser($roles),
+            $this->mockIdentityInterfaceUser(roles: $roles),
             $this->mockEntity(),
         );
 
@@ -340,7 +369,7 @@ class StandardPolicyTraitTest extends TestCase
         $objectUnderTest->defaultPermissionsFieldName = 'doesNotExist';
 
         $result = $objectUnderTest->canView(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole()
             ]),
             $this->mockEntity(),
@@ -395,7 +424,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canView(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     speciesPermissionRolePermission: $defaultPermission,
                 )
@@ -410,7 +439,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canView(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -437,7 +466,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canView(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -493,7 +522,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canView(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -536,7 +565,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canIndex(
-            $this->mockIdentityInterfaceUser($roles),
+            $this->mockIdentityInterfaceUser(roles: $roles),
             $this->mockEntity(),
         );
 
@@ -549,7 +578,7 @@ class StandardPolicyTraitTest extends TestCase
         $objectUnderTest->defaultPermissionsFieldName = 'doesNotExist';
 
         $result = $objectUnderTest->canIndex(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole()
             ]),
             $this->mockEntity(),
@@ -604,7 +633,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canIndex(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     speciesPermissionRolePermission: $defaultPermission,
                 )
@@ -619,7 +648,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canIndex(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -646,7 +675,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canIndex(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -702,7 +731,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canIndex(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -745,7 +774,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canEdit(
-            $this->mockIdentityInterfaceUser($roles),
+            $this->mockIdentityInterfaceUser(roles: $roles),
             $this->mockEntity(),
         );
 
@@ -758,7 +787,7 @@ class StandardPolicyTraitTest extends TestCase
         $objectUnderTest->defaultPermissionsFieldName = 'doesNotExist';
 
         $result = $objectUnderTest->canEdit(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole()
             ]),
             $this->mockEntity(),
@@ -813,7 +842,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canEdit(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     speciesPermissionRolePermission: $defaultPermission,
                 )
@@ -828,7 +857,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canEdit(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -855,7 +884,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canEdit(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -877,7 +906,7 @@ class StandardPolicyTraitTest extends TestCase
 
     public static function dataProviderForCanEditReturnsFalseIfUserRoleHasOverridePermissionExcludingWrite(): array
     {
-        $self = (new self(''));
+        $self = new self('');
 
         return [
             'Deny' => [
@@ -911,7 +940,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canEdit(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -954,7 +983,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canDelete(
-            $this->mockIdentityInterfaceUser($roles),
+            $this->mockIdentityInterfaceUser(roles: $roles),
             $this->mockEntity(),
         );
 
@@ -967,7 +996,7 @@ class StandardPolicyTraitTest extends TestCase
         $objectUnderTest->defaultPermissionsFieldName = 'doesNotExist';
 
         $result = $objectUnderTest->canDelete(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole()
             ]),
             $this->mockEntity(),
@@ -978,7 +1007,7 @@ class StandardPolicyTraitTest extends TestCase
 
     public static function dataProviderForCanDeleteReturnsWhetherUserHasDeletePermissionForDefaultPermissionField(): array
     {
-        $self = (new self(''));
+        $self = new self('');
 
         return [
             'No entity permissions found + default is "Deny"' => [
@@ -1022,7 +1051,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canDelete(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     speciesPermissionRolePermission: $defaultPermission,
                 )
@@ -1037,7 +1066,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canDelete(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -1064,7 +1093,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canDelete(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -1086,7 +1115,7 @@ class StandardPolicyTraitTest extends TestCase
 
     public static function dataProviderForCanDeleteReturnsFalseIfUserRoleHasOverridePermissionExcludingDelete(): array
     {
-        $self = (new self(''));
+        $self = new self('');
 
         return [
             'Deny' => [
@@ -1120,7 +1149,7 @@ class StandardPolicyTraitTest extends TestCase
     {
         $objectUnderTest = new DummyStandardPolicyTrait();
         $result = $objectUnderTest->canDelete(
-            $this->mockIdentityInterfaceUser([
+            $this->mockIdentityInterfaceUser(roles: [
                 $this->mockRole(
                     roleId: 1,
                     speciesPermissionRolePermission: RolePermission::Deny,
@@ -1138,14 +1167,13 @@ class StandardPolicyTraitTest extends TestCase
      ***** CREATE MOCKS *****
      ************************/
 
-    /**
-     * @param Role[] $roles
-     */
-    public function mockIdentityInterfaceUser(array $roles = []): User|MockObject
+    public function mockIdentityInterfaceUser(int $identifier = StandardPolicyTraitTest::TEST_USER_ID, array $roles = []): User&IdentityInterface&MockObject
     {
         $mock = $this->createMock(User::class);
         $mock->method('getRoles')
             ->willReturn($roles);
+        $mock->method('getIdentifier')
+            ->willReturn($identifier);
 
         return $mock;
     }
@@ -1174,11 +1202,14 @@ class StandardPolicyTraitTest extends TestCase
 
     public function mockEntity(
         int $campaignId = StandardPolicyTraitTest::TEST_CAMPAIGN_ID,
+        int $userId = StandardPolicyTraitTest::TEST_USER_ID_OWNER,
         array $entityPermissions = [],
-    ): CampaignChildEntityInterface|MockObject {
+    ): CampaignChildEntityInterface&EntityInterfaceWithUserIdInterface&MockObject {
         $mock = $this->createMock(DummyCampaignChildEntity::class);
         $mock->method('getCampaignId')
             ->willReturn($campaignId);
+        $mock->method('getUserId')
+            ->willReturn($userId);
         $mock->method('overridePermissionsTableName')
             ->willReturn($entityPermissions);
 
@@ -1247,13 +1278,19 @@ class DummyStandardPolicyTraitWithoutPermissions
     use StandardPolicyTrait;
 }
 
-class DummyCampaignChildEntity extends Entity implements CampaignChildEntityInterface
+class DummyCampaignChildEntity extends Entity implements CampaignChildEntityInterface, EntityInterfaceWithUserIdInterface
 {
     public $campaign_id = StandardPolicyTraitTest::TEST_CAMPAIGN_ID;
+    public $user_id = StandardPolicyTraitTest::TEST_USER_ID_OWNER;
 
     public function getCampaignId(): int
     {
         return $this->campaign_id;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
     }
 
     public function overridePermissionsTableName(): array

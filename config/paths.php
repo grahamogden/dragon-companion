@@ -59,6 +59,11 @@ define('APP_UI', ROOT . DS . APP_UI_DIR . DS . 'dist' . DS);
 define('CONFIG', ROOT . DS . 'config' . DS);
 
 /**
+ * Path to the env config directory.
+ */
+define('ENV_CONFIG', ROOT . DS . 'config' . DS . 'env' . DS);
+
+/**
  * Path to the keys directory.
  */
 define('CONFIG_KEYS', ROOT . DS . 'config' . DS . 'keys' . DS);

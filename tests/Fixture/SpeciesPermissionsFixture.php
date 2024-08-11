@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Test\Fixture;
@@ -6,9 +7,9 @@ namespace App\Test\Fixture;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
- * CharactersRolesFixture
+ * SpeciesPermissionsFixture
  */
-class CharactersRolesFixture extends TestFixture
+class SpeciesPermissionsFixture extends TestFixture
 {
     /**
      * Init method
@@ -20,8 +21,9 @@ class CharactersRolesFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'character_id' => 1,
+                'species_id' => 1,
                 'role_id' => 1,
+                'permissions' => 14,
             ],
         ];
         parent::init();

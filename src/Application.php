@@ -221,8 +221,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
     private function getSecretKeys(): array
     {
-        if (env('ENV_LEVEL', 'production') === 'development-unit-test') {
-            return json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwks-test.json'), true);
+        if (env('ENV_LEVEL', 'production') === 'development-integration-test') {
+            $publicKey = file_get_contents(CONFIG_KEYS . 'firebase/jwt.public.test.pem');
+
+            return $this->createJwks(publicKeys: [env('TEST_AUTH_KID', '') => $publicKey]);
         }
 
         $keyExpiration = json_decode(file_get_contents(CONFIG_KEYS . 'firebase/jwt-config.json'), true);
@@ -258,13 +260,20 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         );
         $googleKeys = $response->getJson();
         preg_match(
-            '/max-age\=(\d+)/',
-            ($response->getHeaderLine('Cache-Control') ?: ''),
-            $cacheControlHeader
+            pattern: '/max-age\=(\d+)/',
+            subject: $response->getHeaderLine('Cache-Control') ?: '',
+            matches: $cacheControlHeader
         );
         $maxAgeInSeconds = (int) $cacheControlHeader[1];
         $expiryTime = (new DateTimeImmutable())->modify('+' . ($maxAgeInSeconds - 30) . ' seconds');
 
+        $keys = $this->createJwks(publicKeys: $googleKeys);
+
+        return ['keys' => $keys, 'expiry' => $expiryTime];
+    }
+
+    private function createJwks(array $publicKeys): array
+    {
         $defaultConfig = [
             'use' => 'sig',
             'kty' => 'RSA',
@@ -272,7 +281,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         ];
 
         $keys = ['keys' => []];
-        foreach ($googleKeys as $kid => $key) {
+        foreach ($publicKeys as $kid => $key) {
             $res = openssl_pkey_get_public($key);
             $detail = openssl_pkey_get_details($res);
             $keys['keys'][] = [
@@ -283,6 +292,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ];
         }
 
-        return ['keys' => $keys, 'expiry' => $expiryTime];
+        return $keys;
     }
 }

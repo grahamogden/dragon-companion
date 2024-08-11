@@ -7,9 +7,9 @@ namespace App\Test\Fixture;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
- * AlignmentsFixture
+ * CampaignPermissionsFixture
  */
-class AlignmentsFixture extends TestFixture
+class CampaignPermissionsFixture extends TestFixture
 {
     /**
      * Init method
@@ -21,8 +21,9 @@ class AlignmentsFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'name' => 'Lorem ipsum dolor sit amet',
-                'description' => 'Lorem ipsum dolor sit amet',
+                'campaign_id' => 1,
+                'role_id' => 1,
+                'permissions' => 14,
             ],
         ];
         parent::init();

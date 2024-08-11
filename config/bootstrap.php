@@ -17,8 +17,8 @@
 /*
  * Configure paths required to find CakePHP + general filepath constants
  */
-require __DIR__ . '/paths.php';
-require CAKE . 'functions.php';
+require_once __DIR__ . '/paths.php';
+require_once CAKE . 'functions.php';
 
 /*
  * Bootstrap CakePHP.
@@ -47,8 +47,8 @@ use Cake\Utility\Security;
  * You should copy `config/.env.default to `config/.env` and set/modify the
  * variables as required.
  */
-if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
-    $dotenv = new \josegonzalez\Dotenv\Loader([CONFIG . '.env']);
+if (!env('APP_NAME') && file_exists(ENV_CONFIG . '.env')) {
+    $dotenv = new \josegonzalez\Dotenv\Loader([ENV_CONFIG . '.env']);
     $dotenv->parse()
         ->putenv()
         ->toEnv()

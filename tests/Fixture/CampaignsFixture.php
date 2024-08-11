@@ -23,6 +23,7 @@ class CampaignsFixture extends TestFixture
                 'id' => 1,
                 'name' => 'Lorem ipsum dolor sit amet',
                 'synopsis' => 'Lorem ipsum dolor sit amet',
+                'user_id' => 1,
             ],
         ];
         parent::init();
