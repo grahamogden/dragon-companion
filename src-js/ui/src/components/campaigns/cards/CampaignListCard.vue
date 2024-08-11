@@ -5,6 +5,9 @@
   import ImageCard from '../../cards/ImageCard.vue'
   import { DropDownItemButton, DropDownItemRouter } from '../../interfaces/drop-down.item.interface';
   import KebabMenu from '../../dropdowns/kebab-menu/KebabMenu.vue';
+  import KebabMenuItemButton from '../../dropdowns/kebab-menu/KebabMenuItemButton.vue';
+  import KebabMenuItemText from '../../dropdowns/kebab-menu/KebabMenuItemText.vue';
+  import KebabMenuItemLink from '../../dropdowns/kebab-menu/KebabMenuItemLink.vue';
 
   const props = defineProps<{
     campaign: CampaignEntityInterface,
@@ -32,42 +35,28 @@
         })
     }
   }
-
-  function getLinks(campaign: CampaignEntityInterface): (DropDownItemRouter | DropDownItemButton)[] {
-    const links = [];
-    if (props.campaign.id !== campaignStore.selectedCampaignId) {
-      links.push(new DropDownItemButton(
-        'Select',
-        {
-          func: changeCampaign,
-          args: [campaign.id],
-        }
-      ))
-    }
-
-    return [
-      ...links,
-      new DropDownItemRouter(
-        'Edit',
-        { name: 'campaigns.edit', params: { externalCampaignId: campaign.id } },
-      ),
-      new DropDownItemButton(
-        'Delete',
-        {
-          func: confirmDelete,
-          args: [campaign.id],
-        },
-        true
-      ),
-    ]
-  }
 </script>
 <template>
   <image-card :text="props.campaign.name" :is-selected="props.campaign.id === campaignStore.selectedCampaignId">
     <div class="flex items-center w-full justify-between">
       <p class="truncate text-ellipsis overflow-hidden">{{ props.campaign.name }}</p>
-      <div><kebab-menu :links="getLinks(props.campaign)"
-          :button-aria-context-name="'Campaign ' + props.campaign.name" />
+      <div>
+        <KebabMenu :button-aria-context-name="'Campaign ' + props.campaign.name">
+          <template #items>
+            <KebabMenuItemText v-if="props.campaign.id === campaignStore.selectedCampaignId" :args="[campaign.id]">
+              <font-awesome-icon :icon="['fas', 'ban']" fixed-width class="mr-2"></font-awesome-icon>Selected
+            </KebabMenuItemText>
+            <KebabMenuItemButton v-else :func="changeCampaign" :args="[campaign.id]">
+              <font-awesome-icon :icon="['fas', 'check']" fixed-width class="mr-2"></font-awesome-icon>Select
+            </KebabMenuItemButton>
+            <KebabMenuItemLink :destination="{ name: 'campaigns.edit', params: { externalCampaignId: campaign.id } }">
+              <font-awesome-icon :icon="['fas', 'pencil']" fixed-width class="mr-2"></font-awesome-icon>Edit
+            </KebabMenuItemLink>
+            <KebabMenuItemButton :func="confirmDelete" :args="[campaign.id]" :is-destructive="true">
+              <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
+            </KebabMenuItemButton>
+          </template>
+        </KebabMenu>
       </div>
     </div>
   </image-card>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import { useUserAuthStore, useCampaignStore } from '../../stores'
-    import CampaignPicker from '../campaign-picker/CampaignPicker.vue'
     import NavLink from '../nav-link/NavLink.vue'
 
     const userAuthStore = useUserAuthStore()
@@ -24,20 +23,27 @@
         <div class="flex flex-col w-full bg-shark-950/70 backdrop-blur-lg grow">
             <nav v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected" class="side-nav flex flex-col">
                 <nav-link
-                    :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">Timelines</nav-link>
+                    :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
+                        :icon="['fas', 'timeline']" fixed-width class="mr-2" />Timelines</nav-link>
                 <nav-link
-                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">Characters</nav-link>
+                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
+                    <font-awesome-icon :icon="['fas', 'user']" fixed-width class="mr-2" />Characters
+                </nav-link>
                 <nav-link
-                    :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">Combat
-                    Encounters</nav-link>
+                    :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
+                        :icon="['fas', 'dice-d20']" fixed-width class="mr-2" />Combat Encounters</nav-link>
                 <nav-link
-                    :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">Species</nav-link>
+                    :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
+                        :icon="['fas', 'person']" fixed-width class="mr-2" />Species</nav-link>
                 <nav-link
-                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">Objects</nav-link>
+                    :destination="{ name: 'items.list', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
+                        :icon="['fas', 'shield']" fixed-width class="mr-2" />Items</nav-link>
                 <nav-link
-                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">Monsters</nav-link>
+                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
+                        :icon="['fas', 'dragon']" fixed-width class="mr-2" />Monsters</nav-link>
                 <nav-link
-                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">Permissions</nav-link>
+                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
+                        :icon="['fas', 'person-circle-plus']" fixed-width class="mr-2" />Permissions</nav-link>
             </nav>
             <div v-if="!(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)"
                 class="w-full max-w-page text-timberwolf-100 py-3 px-4 mx-auto">Please select a campaign to start

@@ -20,6 +20,10 @@
     "build:twcss:watch": "tailwindcss -i ./src/assets/input.css -o ./src/assets/main.css --watch"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
     "@vueuse/core": "^10.9.0",
     "firebase": "^10.8.1",
     "pinia": "^2.1.7",

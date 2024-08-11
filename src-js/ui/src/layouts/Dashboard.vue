@@ -1,35 +1,11 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { useCampaignStore, useUserAuthStore } from '../stores'
   import SideNavigation from '../components/navigation/SideNavigation.vue'
   import Breadcrumbs from '../components/breadcrumbs/Breadcrumbs.vue'
   import BannerContainer from '../components/alert-banner/BannerContainer.vue'
 
-  const campaignStore = useCampaignStore()
-  const userAuthStore = useUserAuthStore()
-
-  function toggleNavMenu(open: boolean | undefined = undefined) {
-    if (open === undefined) {
-      isNavMenuOpen.value = !isNavMenuOpen.value
-    } else {
-      isNavMenuOpen.value = open
-    }
-  }
-
-  function toggleAccountMenu(open: boolean | undefined = undefined) {
-    if (open === undefined) {
-      isAccountMenuOpen.value = !isAccountMenuOpen.value
-    } else {
-      isAccountMenuOpen.value = open
-    }
-  }
-
-  const isNavMenuOpen = ref(false)
-  const isAccountMenuOpen = ref(false)
-
 </script>
 <template>
-  <div class="max-w-page w-full m-0 mb-24 md:mx-auto md:my-6 md:px-6">
+  <div class="max-w-page w-full m-0 mb-32 md:mx-auto md:my-6 md:px-6">
     <div class="flex flex-row content-stretch rounded-3xl shadow-lg">
       <SideNavigation></SideNavigation>
 

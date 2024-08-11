@@ -7,16 +7,19 @@
 
 <template>
     <div
-        class="w-full rounded-xl shadow-sm shadow-shark-500 dark:shadow-stone-950 transition-colors transition-shadow duration-theme-change">
+        class="w-full rounded-xl shadow-sm shadow-shark-500 dark:shadow-stone-950 transition-colors-and-shadow duration-theme-change">
         <div class="relative rounded-t-xl overflow-hidden border-0 border-b-0"
             :class="props.isSelected ? 'border-saffron-mango-300' : 'border-timberwolf-200 dark:border-woodsmoke-800'">
             <img src="../../assets/images/background/light/full.svg">
-            <div class="absolute top-0 left-0 border-[2rem] border-transparent border-l-saffron-mango-300 border-t-saffron-mango-300"
+            <!-- <div class="absolute top-0 left-0 border-[2rem] border-transparent border-l-saffron-mango-300 border-t-saffron-mango-300"
+                :class="props.isSelected ? 'block' : 'hidden'">
+            </div> -->
+            <div class="absolute top-0 left-0 w-full h-full border-[1rem] border-saffron-mango-300 animate-pulse"
                 :class="props.isSelected ? 'block' : 'hidden'">
             </div>
         </div>
         <div
-            class="p-2 flex flex-row grow justify-between bg-timberwolf-50 dark:bg-woodsmoke-900 rounded-b-xl border-0 border-t-0">
+            class="p-2 flex flex-row grow justify-between bg-timberwolf-50 dark:bg-woodsmoke-900 rounded-b-xl border-0 border-t-0 transition-colors duration-theme-change">
             <slot></slot>
         </div>
     </div>

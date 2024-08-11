@@ -5,6 +5,8 @@
     import KebabMenu from '../dropdowns/kebab-menu/KebabMenu.vue';
     import type EntityTableHeadingInterface from './interface/entity-table-heading.interface';
     import type EntityTableLinkInterface from './interface/entity-table-link.interface';
+    import KebabMenuItemLink from '../dropdowns/kebab-menu/KebabMenuItemLink.vue';
+    import KebabMenuItemButton from '../dropdowns/kebab-menu/KebabMenuItemButton.vue';
 
     const campaignStore = useCampaignStore()
 
@@ -20,11 +22,11 @@
     function getActionLinks(campaignId: number, id: number): (DropDownItemRouter | DropDownItemButton)[] {
         return [
             new DropDownItemRouter(
-                'Edit',
+                '<i class="fa fa-pencil mr-2" aria-hidden="true"></i>Edit',
                 { name: props.editLink.routerToName, params: { externalCampaignId: campaignId, [props.editLink.idName]: id } },
             ),
             new DropDownItemButton(
-                'Delete',
+                '<i class="fa fa-trash mr-2" aria-hidden="true"></i>Delete',
                 {
                     func: props.deleteConfirmationFunction,
                     args: [campaignId, id],
@@ -40,22 +42,35 @@
         <table class="entity-list-table">
             <thead>
                 <tr>
-                    <th v-for="heading in props.headings" class="capitalize">{{ heading.title }}</th>
-                    <th></th>
+                    <th v-for="heading in props.headings" class="p-2 capitalize">{{ heading.title }}</th>
+                    <th class="p-2"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="props.entities.length > 0 && campaignStore.selectedCampaignId !== null"
                     v-for="entity in props.entities">
-                    <td v-for="field in props.headings">
-                        <router-link v-if="field.isLink && props.viewLink"
-                            :to="{ name: props.viewLink.routerToName, params: { externalCampaignId: campaignStore.selectedCampaignId, [props.viewLink.idName]: entity.id } }">{{
-                        entity[field.title] }}</router-link>
+                    <td v-for="field in props.headings" class="p-2">
+                        <RouterLink v-if="field.isLink && props.viewLink"
+                            :to="{ name: props.viewLink.routerToName, params: { externalCampaignId: campaignStore.selectedCampaignId, [props.viewLink.idName]: entity.id } }">
+                            {{
+                        entity[field.title] }}</RouterLink>
                         <p v-else>{{ entity[field.title] }}</p>
                     </td>
                     <td class="action-cell flex justify-end py-2">
-                        <kebab-menu :links="getActionLinks(campaignStore.selectedCampaignId, entity.id!)"
-                            :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + entity.name" />
+                        <KebabMenu :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + entity.name">
+                            <template #items>
+                                <KebabMenuItemLink
+                                    :destination="{ name: props.editLink.routerToName, params: { externalCampaignId: campaignStore.selectedCampaignId, [props.editLink.idName]: entity.id } }">
+                                    <font-awesome-icon :icon="['fas', 'pencil']" fixed-width
+                                        class="mr-2"></font-awesome-icon>Edit
+                                </KebabMenuItemLink>
+                                <KebabMenuItemButton :func="props.deleteConfirmationFunction"
+                                    :args="[campaignStore.selectedCampaignId, entity.id]" :is-destructive="true">
+                                    <font-awesome-icon :icon="['fas', 'trash']" fixed-width
+                                        class="mr-2"></font-awesome-icon>Delete
+                                </KebabMenuItemButton>
+                            </template>
+                        </KebabMenu>
                     </td>
                 </tr>
                 <tr v-else>

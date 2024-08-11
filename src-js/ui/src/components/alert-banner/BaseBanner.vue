@@ -15,7 +15,7 @@
         <div class="flex flex-row justify-between gap-3 mb-4 dark:text-timberwolf-50 rounded-xl duration-theme-change"
             :class="props.colourClasses">
             <div class="flex flex-col justify-center pl-3 py-1">
-                <i class="fa text-2xl" :class="props.iconClass" aria-hidden="true"></i>
+                <font-awesome-icon :icon="['fa', props.iconClass]" fixed-width class="text-xl"></font-awesome-icon>
             </div>
             <div class="grow py-3">
                 <slot></slot>
@@ -23,7 +23,7 @@
             <div class="flex flex-col justify-center pr-1">
                 <button class="px-3 py-2 rounded-lg text-center" :class="props.dismissHoverBackgroundColourClass"
                     @click="notificationStore.removeNotification(props.index)">
-                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <font-awesome-icon :icon="['fa', 'xmark']" fixed-width></font-awesome-icon>
                 </button>
             </div>
         </div>

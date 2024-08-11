@@ -7,6 +7,7 @@
   import EntityTable from '../../components/entity-table/EntityTable.vue'
   import EntityTableLink from '../../components/entity-table/interface/entity-table-link';
   import EntityTableHeading from '../../components/entity-table/interface/entity-table-heading';
+  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../components/page-header/interface';
 
   const notificationStore = useNotificationStore()
   const campaignStore = useCampaignStore()
@@ -31,7 +32,7 @@
     if (window.confirm('Are you sure you want to delete ' + id)) {
       notificationStore.removeAllNotifications()
       speciesStore.deleteSpecies(campaignId, id).then(() => {
-        notificationStore.addSuccess('Successfully created species')
+        notificationStore.addSuccess('Successfully deleted species')
         fetchSpecies(campaignId)
       })
     }
@@ -40,7 +41,8 @@
 
 <template>
   <div class="species-list">
-    <page-header link-text="Add species" :link-destination="{ name: 'species.add' }">Species</page-header>
+    <page-header
+      :link="new PageHeaderLink('Add species', { name: 'species.add' }, PageHeaderLinkActionEnum.ADD)">Species</page-header>
     <loading-page :is-loading="isLoading">
       <template #content>
         <entity-table :headings="[new EntityTableHeading('name', true)]" :entities="allSpecies"

@@ -123,6 +123,48 @@ const router = createRouter({
                 //     component: () => import('../views/species/SpeciesList.vue'),
                 // },
                 {
+                    path: 'items',
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
+                    children: [
+                        {
+                            path: '',
+                            name: 'items.list',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/items/ItemList.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: 'add',
+                            name: 'items.add',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/items/ItemCreate.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: ':itemId(\\d+)/edit',
+                            name: 'items.edit',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/items/ItemEdit.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: ':itemId(\\d+)/view',
+                            name: 'items.view',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/items/ItemView.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                    ],
+                },
+                {
                     path: 'species',
                     beforeEnter: [isLoggedIn, hasCampaignSelected],
                     children: [

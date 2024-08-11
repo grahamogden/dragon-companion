@@ -247,7 +247,7 @@
 
         th,
         td {
-            @apply border-0 p-3 align-top text-left;
+            @apply border-0 align-middle text-left;
 
             /* &.action-cell {
                 @apply ;

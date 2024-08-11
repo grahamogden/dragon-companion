@@ -4,14 +4,13 @@
   import { TimelineEntity, type TimelineEntityInterface } from '../../services/timeline';
   import PageHeader from '../../components/page-header/PageHeader.vue';
   import LoadingPage from '../../components/loading-page/LoadingPage.vue'
-  import ViewListTable from '../../components/timeline/view-list-table/ViewListTable.vue'
-  import EntityTableHeading from '../../components/entity-table/interface/entity-table-heading'
   import EntityTableLink from '../../components/entity-table/interface/entity-table-link'
   import ContentGroup from '../../components/elements/ContentGroup.vue'
   import { useRoute } from 'vue-router'
   import TimelineLinear from '../../components/timeline/linear/TimelineLinear.vue'
   import TimelineLinearItemCard from '../../components/timeline/linear/items/TimelineLinearItemCard.vue'
   import { NodePositionEnum } from '../../components/timeline/linear/interface/timeline.linear.item.node-position.interface';
+  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../components/page-header/interface'
 
   const route = useRoute()
   const timelineStore = useTimelineStore()
@@ -28,11 +27,12 @@
     timelineStore.findOneTimeline(campaignId, timelineId, true).then((timelineRes) => {
       // console.debug(timeline)
       if (timelineRes !== null) {
-        timeline.value.id = timelineRes.id
-        timeline.value.title = timelineRes.title
-        timeline.value.body = timelineRes.body
-        timeline.value.parent_id = timelineRes.parent_id
-        timeline.value.child_timelines = timelineRes.child_timelines
+        // timeline.value.id = timelineRes.id
+        // timeline.value.title = timelineRes.title
+        // timeline.value.body = timelineRes.body
+        // timeline.value.parent_id = timelineRes.parent_id
+        // timeline.value.child_timelines = timelineRes.child_timelines
+        timeline.value = timelineRes
       }
       isLoading.value = false
     })
@@ -59,8 +59,8 @@
 
 <template>
   <div class="timeline-view">
-    <page-header link-text="Edit"
-      :link-destination="{ name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }">{{
+    <page-header
+      :link="new PageHeaderLink('Edit', { name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }, PageHeaderLinkActionEnum.EDIT)">{{
         timeline.title ? timeline.title : 'Timeline' }}</page-header>
     <loading-page :is-loading="isLoading">
       <template #content>
@@ -77,7 +77,7 @@
               :entities="timeline.child_timelines" :view-link="new EntityTableLink('timelines.view', 'timelineId')"
               :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
               :delete-confirmation-function="confirmDelete" kebab-menu-button-aria-context="Timeline"></view-list-table> -->
-            <div class="mt-4 px-6">
+            <div class="mt-4 md:px-6">
               <timeline-linear v-if="timeline.child_timelines">
                 <timeline-linear-item-card v-for="(timelineItem, key) in timeline.child_timelines"
                   :campaignId="campaignId"

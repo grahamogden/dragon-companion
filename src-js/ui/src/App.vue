@@ -4,7 +4,7 @@
   import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
   import { firebaseAppKey } from './keys'
   import type { FirebaseApp } from 'firebase/app'
-  import { useCampaignStore, useUserAuthStore } from './stores'
+  import { useCampaignStore, useUserAuthStore, useConfigurationStore } from './stores'
   import LoadingSpinner from './components/loading-spinner/LoadingSpinner.vue'
   import SideNavigation from './components/navigation/SideNavigation.vue'
   import ToolbarNavigation from './components/navigation/ToolbarNavigation.vue'
@@ -15,6 +15,7 @@
   const auth = getAuth(firebaseApp);
   const campaignStore = useCampaignStore()
   const userAuthStore = useUserAuthStore()
+  const configStore = useConfigurationStore()
 
   onAuthStateChanged(
     auth,
@@ -120,6 +121,16 @@
     }
   })
 
+  // Prevent scrolling
+
+  watch(() => configStore.isBodyFixed, (isBodyFixed) => {
+    if (isBodyFixed) {
+      document.body.classList.add('overflow-hidden')
+    } else {
+      document.body.classList.remove('overflow-hidden')
+    }
+  })
+
   // Tab indexing
 
   // Use a link with tabindex=-1 to reset the tabindex on page changes so that pressing tab once will go to the skipLink again
@@ -142,8 +153,7 @@
     <div class="flex flex-row justify-between items-center max-w-page mx-auto py-2 md:py-4 px-4 md:px-6 relative">
       <div class="flex flex-row items-center">
         <div class="z-10">
-          <router-link to="/" class="top-2 left-2 w-12 h-12 p-1 md:p-0 overflow-visible"
-            @click="toggleNavMenu(false); toggleAccountMenu(false)">
+          <router-link to="/" class="top-2 left-2 w-12 h-12 p-1 md:p-0 overflow-visible">
             <img class="logo w-full h-full inline-block" src="@/assets/images/logo-8.svg" alt="Dragon Companion logo" />
           </router-link>
         </div>
@@ -163,16 +173,21 @@
             v-if="!userAuthStore.isLoggedIn" :to="{ name: 'user-register' }">Register</router-link>
 
           <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
-            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'login' }">Log In</router-link>
+            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'login' }"><font-awesome-icon
+              :icon="['fas', 'right-to-bracket']" fixed-width class="mr-2" />Log In</router-link>
 
           <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
-            v-if="userAuthStore.isLoggedIn" :to="{ name: 'campaigns.list' }">Campaigns</router-link>
+            v-if="userAuthStore.isLoggedIn" :to="{ name: 'campaigns.list' }"><font-awesome-icon :icon="['fas', 'book']"
+              fixed-width class="mr-2" />Campaigns</router-link>
 
           <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
-            v-if="userAuthStore.isLoggedIn" :to="{ name: 'user-account' }">Account</router-link>
+            v-if="userAuthStore.isLoggedIn" :to="{ name: 'user-account' }"><font-awesome-icon
+              :icon="['fas', 'circle-user']" fixed-width class="mr-2" />Account</router-link>
 
-          <button class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline border-0"
-            v-if="userAuthStore.isLoggedIn" @click="logOut();" type="button">Log Out</button>
+          <button
+            class="text-timberwolf-50 hidden md:inline-block underline hover:no-underline focus:no-underline border-0"
+            v-if="userAuthStore.isLoggedIn" @click="logOut();" type="button"><font-awesome-icon
+              :icon="['fas', 'right-from-bracket']" fixed-width class="mr-2" />Log Out</button>
 
           <button class="w-12 h-12 rounded-full overflow-hidden border-2 border-timberwolf-50 bg-stone-800 p-0"
             type="button" aria-label="Account menu toggle">

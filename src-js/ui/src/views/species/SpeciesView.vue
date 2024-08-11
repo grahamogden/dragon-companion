@@ -6,6 +6,7 @@
   import LoadingPage from '../../components/loading-page/LoadingPage.vue'
   import { useRoute } from 'vue-router';
   import ContentGroup from '../../components/elements/ContentGroup.vue'
+  import { PageHeaderLink, type PageHeaderLinkActionEnum } from '../../components/page-header/interface';
 
   const speciesStore = useSpeciesStore()
   const route = useRoute()
@@ -17,8 +18,7 @@
 
   speciesStore.getOneSpecies(campaignId, speciesId).then((speciesRes) => {
     if (speciesRes !== null) {
-      species.value.id = speciesRes.id
-      species.value.name = speciesRes.name
+      species.value = speciesRes
     }
     isLoading.value = false
   })
@@ -26,8 +26,8 @@
 
 <template>
   <div class="species-view">
-    <page-header link-text="Edit"
-      :link-destination="{ name: 'species.edit', params: { externalCampaignId: campaignId, speciesId: speciesId } }">{{
+    <page-header
+      :link="new PageHeaderLink('Edit', { name: 'species.edit', params: { externalCampaignId: campaignId, speciesId: speciesId } }, PageHeaderLinkActionEnum.EDIT)">{{
         species.name ? species.name : 'Species' }}</page-header>
     <loading-page :is-loading="isLoading">
       <template #content>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-    // import { watch } from 'vue';
     import { computed } from 'vue';
     import { useValidationStore } from '../../stores/validation';
 
@@ -10,38 +9,9 @@
         require?: boolean
     }>()
 
-    // const errorMessages: Ref<Record<string, ValidationError>> = inject(errorMessagesKey) || ref({})
-
-    // const errors = ref<string[]>([])
-
     const validationStore = useValidationStore()
-    // watch(validationStore.errors, () => {
-    //     errors.value = validationStore.getErrorMessagesForField(props.inputName)
-    // })
 
     const errors = computed(() => validationStore.getErrorMessagesForField(props.inputName) ?? [])
-
-    // watch(errorMessages, (newErrorMessages: Record<string, ValidationError>) => {
-    //     errors.value = []
-
-    //     if (!newErrorMessages) {
-    //         return
-    //     }
-
-    //     const errorMessagesForInputName = newErrorMessages[props.inputName];
-    //     if (!errorMessagesForInputName) {
-    //         return
-    //     }
-
-    //     const keys = Object.keys(errorMessagesForInputName) as Array<keyof ValidationError>;
-
-    //     keys.forEach((key: keyof ValidationError) => {
-    //         const error = errorMessagesForInputName[key];
-    //         if (error) {
-    //             errors.value.push(error)
-    //         }
-    //     })
-    // })
 </script>
 
 <template>

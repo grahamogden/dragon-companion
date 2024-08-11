@@ -4,6 +4,7 @@
   import PageHeader from '../../components/page-header/PageHeader.vue';
   import LoadingPage from '../../components/loading-page/LoadingPage.vue';
   import CampaignListCard from '../../components/campaigns/cards/CampaignListCard.vue';
+  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../components/page-header/interface';
 
   const isLoading = ref(true)
   const campaignStore = useCampaignStore()
@@ -14,7 +15,8 @@
 </script>
 
 <template>
-  <page-header link-text="Add campaign" :link-destination="{ name: 'campaigns.add' }">Campaigns</page-header>
+  <page-header
+    :link="new PageHeaderLink('Add campaign', { name: 'campaigns.add' }, PageHeaderLinkActionEnum.ADD)">Campaigns</page-header>
   <loading-page :is-loading="isLoading">
     <template #content>
       <div

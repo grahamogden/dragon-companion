@@ -1,19 +1,22 @@
 <script setup lang="ts">
     import { ref } from 'vue'
     import { RouterLink } from 'vue-router'
-    import { useCampaignStore, useUserAuthStore } from '../../stores'
+    import { useCampaignStore, useUserAuthStore, useConfigurationStore } from '../../stores'
     import ToolbarNavLink from '../nav-link/ToolbarNavLink.vue';
 
     const campaignStore = useCampaignStore()
     const userAuthStore = useUserAuthStore()
+    const configStore = useConfigurationStore()
     const isNavMenuOpen = ref(false)
 
-    function toggleNavMenu(open: boolean | undefined = undefined) {
+    function toggleNavMenu(open?: boolean) {
         if (open === undefined) {
             isNavMenuOpen.value = !isNavMenuOpen.value
         } else {
             isNavMenuOpen.value = open
         }
+
+        configStore.setIsBodyFixed(isNavMenuOpen.value)
     }
 </script>
 
@@ -21,9 +24,11 @@
     <div
         class="fixed md:hidden bottom-0 w-full max-h-screen flex flex-col bg-timberwolf-50/85 dark:bg-woodsmoke-950/85 text-woodsmoke-950 dark:text-timberwolf-50 backdrop-blur shadow-md shadow-toolbar rounded-t-3xl overflow-hidden z-10">
         <Transition name="toolbar-navigation-slide">
-            <div v-show="isNavMenuOpen" class="grid grid-cols-1 w-full w-full z-10 mx-auto text-center overflow-scroll">
+            <div v-show="isNavMenuOpen"
+                class="grid grid-cols-1 w-full w-full z-10 mx-auto border-b border-woodsmoke-300 text-center overflow-scroll">
                 <ToolbarNavLink @click="toggleNavMenu(false)" :destination="{ name: 'campaigns.list' }">
-                    Campaigns</ToolbarNavLink>
+                    <font-awesome-icon :icon="['fas', 'book']" fixed-width class="mr-2"></font-awesome-icon>Campaigns
+                </ToolbarNavLink>
                 <div v-if="campaignStore.isCampaignSelected"
                     class="px-4 py-2 bg-woodsmoke-300/50 dark:bg-woodsmoke-700/50 duration-theme-change">
                     {{ campaignStore.campaignName }}
@@ -41,26 +46,39 @@
                 <nav v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected" class="side-nav flex flex-col">
                     <ToolbarNavLink @click="toggleNavMenu(false)"
                         :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">
-                        Timelines</ToolbarNavLink>
+                        <font-awesome-icon :icon="['fas', 'timeline']" fixed-width
+                            class="mr-2"></font-awesome-icon>Timelines
+                    </ToolbarNavLink>
                     <ToolbarNavLink @click="toggleNavMenu(false)"
                         :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
-                        Characters</ToolbarNavLink>
+                        <font-awesome-icon :icon="['fas', 'user']" fixed-width
+                            class="mr-2"></font-awesome-icon>Characters
+                    </ToolbarNavLink>
                     <ToolbarNavLink @click="toggleNavMenu(false)"
                         :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">
-                        Combat
-                        Encounters</ToolbarNavLink>
+                        <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width
+                            class="mr-2"></font-awesome-icon>Combat
+                        Encounters
+                    </ToolbarNavLink>
                     <ToolbarNavLink @click="toggleNavMenu(false)"
                         :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">
-                        Species</ToolbarNavLink>
+                        <font-awesome-icon :icon="['fas', 'person']" fixed-width
+                            class="mr-2"></font-awesome-icon>Species
+                    </ToolbarNavLink>
+                    <ToolbarNavLink @click="toggleNavMenu(false)"
+                        :destination="{ name: 'items.list', params: { externalCampaignId: campaignStore.campaignId } }">
+                        <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2"></font-awesome-icon>Items
+                    </ToolbarNavLink>
                     <ToolbarNavLink @click="toggleNavMenu(false)"
                         :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
-                        Objects</ToolbarNavLink>
+                        <font-awesome-icon :icon="['fas', 'dragon']" fixed-width
+                            class="mr-2"></font-awesome-icon>Monsters
+                    </ToolbarNavLink>
                     <ToolbarNavLink @click="toggleNavMenu(false)"
                         :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
-                        Monsters</ToolbarNavLink>
-                    <ToolbarNavLink @click="toggleNavMenu(false)"
-                        :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
-                        Permissions</ToolbarNavLink>
+                        <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width
+                            class="mr-2"></font-awesome-icon>Permissions
+                    </ToolbarNavLink>
                 </nav>
                 <div v-if="!(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)"
                     class="w-full max-w-page text-timberwolf-100 py-3 px-4 mx-auto">Please select a campaign to
@@ -69,8 +87,9 @@
                 </div>
             </div>
         </Transition>
-        <nav class="toolbar grid grid-cols-4 gap-4" v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected">
-            <router-link class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center"
+        <nav class="toolbar grid grid-cols-4 gap-4" v-if="userAuthStore.isLoggedIn">
+            <router-link v-if="campaignStore.isCampaignSelected"
+                class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center"
                 :to="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><img
                     src="@/assets/images/dice-icon.svg" class="w-12 h-12 block rounded inline-block" /><span
                     class="inline-block w-full truncate text-ellipsis overflow-hidden">Characters</span></router-link>
@@ -78,6 +97,14 @@
                 @click="toggleNavMenu()"><img src="@/assets/images/dice-icon.svg"
                     class="w-12 h-12 block rounded inline-block" /><span
                     class="inline-block w-full truncate text-ellipsis overflow-hidden">More</span></button>
+        </nav>
+        <nav class="toolbar grid grid-cols-4 gap-4" v-else>
+            <router-link class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center"
+                :to="{ name: 'login' }"><img src="@/assets/images/dice-icon.svg"
+                    class="w-12 h-12 block rounded inline-block" /><span
+                    class="inline-block w-full truncate text-ellipsis overflow-hidden"><font-awesome-icon
+                        :icon="['fas', 'right-to-bracket']" fixed-width class="mr-2"></font-awesome-icon>Log
+                    In</span></router-link>
         </nav>
     </div>
     <div v-if="isNavMenuOpen" @click="toggleNavMenu(false)"
@@ -115,7 +142,7 @@
     .toolbar-navigation-slide-enter-active .campaign-picker,
     .toolbar-navigation-slide-leave-active .campaign-picker {
         transition-property: padding, line-height, font-size, height;
-        transition-duration: 0.3s;
+        transition-duration: 0.15s;
         transition-timing-function: ease;
         transition-delay: 0ms;
     }
@@ -137,7 +164,7 @@
     .scale-enter-active,
     .scale-leave-active {
         transition-property: transform, bottom;
-        transition-duration: 0.3s;
+        transition-duration: 0.15s;
         transition-timing-function: ease;
         transition-delay: 0ms;
         transform-origin: center bottom;

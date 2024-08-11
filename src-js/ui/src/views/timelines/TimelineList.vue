@@ -10,6 +10,7 @@
   import TimelineLinear from '../../components/timeline/linear/TimelineLinear.vue'
   import TimelineLinearItemCard from '../../components/timeline/linear/items/TimelineLinearItemCard.vue'
   import { NodePositionEnum } from '../../components/timeline/linear/interface/timeline.linear.item.node-position.interface';
+  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../components/page-header/interface';
 
   const notificationStore = useNotificationStore()
   const campaignStore = useCampaignStore()
@@ -43,7 +44,8 @@
 
 <template>
   <div class="timeline-list">
-    <page-header link-text="Add timeline" :link-destination="{ name: 'timelines.add' }">Timelines</page-header>
+    <page-header
+      :link="new PageHeaderLink('Add timeline', { name: 'timelines.add' }, PageHeaderLinkActionEnum.ADD)">Timelines</page-header>
     <loading-page :is-loading="isLoading">
       <template #content>
         <timeline-linear>

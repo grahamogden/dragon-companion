@@ -419,6 +419,13 @@ export default {
       skew: {
         '45': '45deg',
       },
+      dropShadow: {
+        'home-heading': '0 0 5px rgba(0, 0, 0, 0.5)',
+        'home-logo': '0 5px 10px rgba(0, 0, 0, 0.4)',
+      },
+      boxShadow: {
+        'toolbar': '0 -2px 6px 2px rgba(0, 0, 0, 0.2)',
+      },
     },
     fontFamily: {
       'sans': ["Open Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],

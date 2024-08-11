@@ -1,4 +1,6 @@
 export * from './campaign'
+export * from './configuration'
+export * from './item/item'
 export * from './species'
 export * from './userauth'
 export * from './timeline'

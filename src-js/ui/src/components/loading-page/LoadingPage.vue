@@ -4,7 +4,6 @@
     const props = defineProps<{
         isLoading?: boolean
     }>()
-    console.debug(props.isLoading)
 </script>
 
 <template>
