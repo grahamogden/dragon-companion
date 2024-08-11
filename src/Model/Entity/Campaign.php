@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use App\Model\Entity\Interface\EntityInterfaceWithUserIdInterface;
 use Cake\ORM\Entity;
 
 /**
@@ -23,7 +24,7 @@ use Cake\ORM\Entity;
  * @property Tag[] $tags
  * @property Timeline[] $timelines
  */
-class Campaign extends Entity
+class Campaign extends Entity implements EntityInterfaceWithUserIdInterface
 {
     public const ENTITY_NAME = 'Campaigns';
 
@@ -46,25 +47,25 @@ class Campaign extends Entity
     protected array $_accessible = [
         self::FIELD_NAME => true,
         self::FIELD_SYNOPSIS => true,
-        self::FIELD_USER_ID => true,
-        'user' => true,
-        'campaign_permissions' => true,
-        'characters' => true,
-        'combat_encounters' => true,
-        'roles' => true,
-        'species' => true,
-        'tags' => true,
-        'timelines' => true,
+        self::FIELD_USER_ID => false,
+        'user' => false,
+        'campaign_permissions' => false,
+        'characters' => false,
+        'combat_encounters' => false,
+        'roles' => false,
+        'species' => false,
+        'tags' => false,
+        'timelines' => false,
     ];
 
     protected array $_hidden = [
         self::FIELD_USER_ID,
         'campaign_users',
-        // 'campaign_permissions',
+        'campaign_permissions',
         'combat_encounters',
         'player_characters',
         'timeline_segments',
-        'users',
+        'user',
         '_matchingData',
     ];
 
@@ -99,6 +100,7 @@ class Campaign extends Entity
 
     public function addUser(int $userId, int $memberStatus, int $accountLevel): self
     {
+        // Not used? Could be removed??
         $this->users = [
             [
                 'id'        => $userId,
@@ -119,5 +121,10 @@ class Campaign extends Entity
     public function getCampaignPermissions(): array
     {
         return $this->campaign_permissions ?? [];
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
     }
 }

@@ -9,33 +9,35 @@ use App\Model\Entity\Interface\EntityInterfaceWithUserIdInterface;
 use Cake\ORM\Entity;
 
 /**
- * Species Entity
+ * Item Entity
  *
  * @property int $id
  * @property string $name
+ * @property string|null $description
  * @property int $campaign_id
  * @property int $user_id
  *
  * @property Campaign $campaign
- * @property SpeciesPermission[] $species_permissions
+ * @property ItemPermission[] $item_permissions
  * @property User $user
- * @property Character[] $characters
  * @property Role[] $roles
  */
-class Species extends Entity implements CampaignChildEntityInterface, EntityInterfaceWithUserIdInterface
+class Item extends Entity implements CampaignChildEntityInterface, EntityInterfaceWithUserIdInterface
 {
-    public const ENTITY_NAME = 'Species';
+    public const ENTITY_NAME = 'Items';
 
     public const FIELD_ID = 'id';
     public const FIELD_NAME = 'name';
+    public const FIELD_DESCRIPTION = 'description';
+    public const FIELD_CREATED = 'created';
+    public const FIELD_MODIFIED = 'modified';
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
     public const FIELD_USER_ID = 'user_id';
-    public const FIELD_SPECIES_PERMISSIONS = 'species_permissions';
+    public const FIELD_ITEM_PERMISSIONS = 'item_permissions';
     public const FIELD_CAMPAIGN = 'campaign';
     public const FIELD_USER = 'user';
-    public const FIELD_CHARACTERS = 'characters';
 
-    public const FUNC_GET_SPECIES_PERMISSIONS = 'getSpeciesPermissions';
+    public const FUNC_GET_ITEM_PERMISSIONS = 'getItemPermissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -48,18 +50,20 @@ class Species extends Entity implements CampaignChildEntityInterface, EntityInte
      */
     protected array $_accessible = [
         self::FIELD_NAME => true,
-        self::FIELD_CAMPAIGN_ID => true,
+        self::FIELD_DESCRIPTION => true,
+        self::FIELD_CREATED => false,
+        self::FIELD_MODIFIED => false,
+        self::FIELD_CAMPAIGN_ID => false,
         self::FIELD_USER_ID => false,
-        self::FIELD_SPECIES_PERMISSIONS => false,
+        self::FIELD_ITEM_PERMISSIONS => false,
         self::FIELD_CAMPAIGN => false,
         self::FIELD_USER => false,
-        self::FIELD_CHARACTERS => false,
     ];
 
     protected array $_hidden = [
         self::FIELD_CAMPAIGN_ID,
         self::FIELD_USER_ID,
-        self::FIELD_SPECIES_PERMISSIONS,
+        self::FIELD_ITEM_PERMISSIONS,
     ];
 
     public function getCampaignId(): int
@@ -68,11 +72,11 @@ class Species extends Entity implements CampaignChildEntityInterface, EntityInte
     }
 
     /**
-     * @return SpeciesPermission[]
+     * @return ItemPermission[]
      */
-    public function getSpeciesPermissions(): array
+    public function getItemPermissions(): array
     {
-        return $this->species_permissions ?? [];
+        return $this->item_permissions ?? [];
     }
 
     public function getUserId(): int

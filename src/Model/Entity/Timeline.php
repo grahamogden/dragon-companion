@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use App\Model\Entity\Interface\CampaignChildEntityInterface;
+use App\Model\Entity\Interface\EntityInterfaceWithUserIdInterface;
 use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
@@ -25,12 +26,12 @@ use Cake\ORM\Entity;
  *
  * @property Campaign $campaign
  * @property User $user
- * @property ParentTimeline|Timeline|null $parent_timeline
- * @property ChildTimeline[]|Timeline[] $child_timelines
+ * @property Timeline|null $parent_timeline
+ * @property Timeline[] $child_timelines
  * @property Role[] $roles
  * @property TimelinePermission[] $timeline_permissions
  */
-class Timeline extends Entity implements CampaignChildEntityInterface
+class Timeline extends Entity implements CampaignChildEntityInterface, EntityInterfaceWithUserIdInterface
 {
     public const ENTITY_NAME = 'Timelines';
 
@@ -66,18 +67,18 @@ class Timeline extends Entity implements CampaignChildEntityInterface
         self::FIELD_CAMPAIGN_ID => true,
         self::FIELD_TITLE => true,
         self::FIELD_BODY => true,
-        self::FIELD_USER_ID => true,
-        self::FIELD_CREATED => true,
-        self::FIELD_MODIFIED => true,
+        self::FIELD_USER_ID => false,
+        self::FIELD_CREATED => false,
+        self::FIELD_MODIFIED => false,
         self::FIELD_PARENT_ID => true,
         self::FIELD_LFT => true,
         self::FIELD_RGHT => true,
         self::FIELD_LEVEL => true,
-        'campaign' => true,
-        'user' => true,
-        'parent_timeline' => true,
-        self::FIELD_CHILD_TIMELINES => true,
-        'roles' => true,
+        'campaign' => false,
+        'user' => false,
+        'parent_timeline' => false,
+        self::FIELD_CHILD_TIMELINES => false,
+        'roles' => false,
     ];
 
     protected array $_hidden = [
@@ -102,5 +103,10 @@ class Timeline extends Entity implements CampaignChildEntityInterface
     public function getParentTimeline(): ?self
     {
         return $this->parent_timeline ?? null;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
     }
 }

@@ -18,13 +18,14 @@ use Cake\ORM\Entity;
  * @property int $campaign_default_permissions - enum of \App\Model\Enum\DefaultRole
  * @property int $species_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
  * @property int $timeline_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
+ * @property int $item_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
  *
  * @property Campaign $campaigns
  * @property CampaignPermission[] $campaign_permissions
  * @property Character[] $characters
  * @property CombatEncounter[] $combat_encounters
  * @property Species[] $species
- * @property Tag[] $tags
+ * @property Item[] $items
  * @property Timeline[] $timelines
  * @property User[] $users
  */
@@ -42,6 +43,8 @@ class Role extends Entity
     public const ACCESSOR_NAME_SPECIES_DEFAULT_PERMISSIONS = 'getSpeciesDefaultPermissions';
     public const FIELD_TIMELINE_DEFAULT_PERMISSIONS = 'timeline_default_permissions';
     public const ACCESSOR_NAME_TIMELINE_DEFAULT_PERMISSIONS = 'getTimelineDefaultPermissions';
+    public const FIELD_ITEM_DEFAULT_PERMISSIONS = 'item_default_permissions';
+    public const ACCESSOR_NAME_ITEM_DEFAULT_PERMISSIONS = 'getItemDefaultPermissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -59,12 +62,13 @@ class Role extends Entity
         self::FIELD_CAMPAIGN_DEFAULT_PERMISSIONS => true,
         self::FIELD_SPECIES_DEFAULT_PERMISSIONS => true,
         self::FIELD_TIMELINE_DEFAULT_PERMISSIONS => true,
+        self::FIELD_ITEM_DEFAULT_PERMISSIONS => true,
         'campaigns' => true,
         'campaign_permissions' => true,
         'characters' => true,
         'combat_encounters' => true,
         'species' => true,
-        'tags' => true,
+        'items' => true,
         // 'timelines' => true,
         'users' => true,
     ];
@@ -102,5 +106,10 @@ class Role extends Entity
     public function getTimelineDefaultPermissions(): RolePermission
     {
         return RolePermission::from($this->timeline_default_permissions);
+    }
+
+    public function getItemDefaultPermissions(): RolePermission
+    {
+        return RolePermission::from($this->item_default_permissions);
     }
 }
