@@ -19,6 +19,7 @@ use Cake\ORM\Entity;
  * @property int $species_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
  * @property int $timeline_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
  * @property int $item_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
+ * @property int $character_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
  *
  * @property Campaign $campaigns
  * @property CampaignPermission[] $campaign_permissions
@@ -45,6 +46,8 @@ class Role extends Entity
     public const ACCESSOR_NAME_TIMELINE_DEFAULT_PERMISSIONS = 'getTimelineDefaultPermissions';
     public const FIELD_ITEM_DEFAULT_PERMISSIONS = 'item_default_permissions';
     public const ACCESSOR_NAME_ITEM_DEFAULT_PERMISSIONS = 'getItemDefaultPermissions';
+    public const FIELD_CHARACTER_DEFAULT_PERMISSIONS = 'character_default_permissions';
+    public const ACCESSOR_NAME_CHARACTER_DEFAULT_PERMISSIONS = 'getCharacterDefaultPermissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -63,6 +66,7 @@ class Role extends Entity
         self::FIELD_SPECIES_DEFAULT_PERMISSIONS => true,
         self::FIELD_TIMELINE_DEFAULT_PERMISSIONS => true,
         self::FIELD_ITEM_DEFAULT_PERMISSIONS => true,
+        self::FIELD_CHARACTER_DEFAULT_PERMISSIONS => true,
         'campaigns' => true,
         'campaign_permissions' => true,
         'characters' => true,
@@ -111,5 +115,10 @@ class Role extends Entity
     public function getItemDefaultPermissions(): RolePermission
     {
         return RolePermission::from($this->item_default_permissions);
+    }
+
+    public function getCharacterDefaultPermissions(): RolePermission
+    {
+        return RolePermission::from($this->character_default_permissions);
     }
 }

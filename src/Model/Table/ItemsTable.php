@@ -67,11 +67,11 @@ class ItemsTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->belongsTo('Campaigns', [
-            'foreignKey' => 'campaign_id',
+            'foreignKey' => Item::FIELD_CAMPAIGN_ID,
             'joinType' => 'INNER',
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
+            'foreignKey' => Item::FIELD_USER_ID,
             'joinType' => 'INNER',
         ]);
         $this->hasMany('ItemPermissions', [
@@ -95,13 +95,14 @@ class ItemsTable extends Table
             ->notEmptyString(Item::FIELD_NAME);
 
         $validator
-            ->nonNegativeInteger('campaign_id')
-            ->notEmptyString('campaign_id');
+            ->requirePresence(Item::FIELD_CAMPAIGN_ID)
+            ->nonNegativeInteger(Item::FIELD_CAMPAIGN_ID)
+            ->notEmptyString(Item::FIELD_CAMPAIGN_ID);
 
         $validator
-            ->nonNegativeInteger('user_id')
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id');
+            ->nonNegativeInteger(Item::FIELD_USER_ID)
+            ->requirePresence(Item::FIELD_USER_ID)
+            ->notEmptyString(Item::FIELD_USER_ID);
 
         return $validator;
     }
@@ -115,8 +116,8 @@ class ItemsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['campaign_id'], 'Campaigns'), ['errorField' => 'campaign_id']);
-        $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
+        $rules->add($rules->existsIn([Item::FIELD_CAMPAIGN_ID], 'Campaigns'), ['errorField' => Item::FIELD_CAMPAIGN_ID]);
+        $rules->add($rules->existsIn([Item::FIELD_USER_ID], 'Users'), ['errorField' => Item::FIELD_USER_ID]);
 
         return $rules;
     }

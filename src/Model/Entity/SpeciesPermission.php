@@ -29,7 +29,7 @@ class SpeciesPermission extends Entity implements PermissionInterface
     // public const FIELD_CAN_WRITE = 'can_write';
     // public const FIELD_CAN_DELETE = 'can_delete';
     // public const FIELD_CAN_PERMISSION = 'can_permission';
-    public const FILED_PERMISSIONS = 'permissions';
+    public const FIELD_PERMISSIONS = 'permissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -47,13 +47,13 @@ class SpeciesPermission extends Entity implements PermissionInterface
         // self::FIELD_CAN_WRITE => true,
         // self::FIELD_CAN_DELETE => true,
         // self::FIELD_CAN_PERMISSION => true,
-        self::FILED_PERMISSIONS => true,
+        self::FIELD_PERMISSIONS => true,
         'species' => true,
         'role' => true,
     ];
 
     protected array $_hidden = [
-        self::FILED_PERMISSIONS,
+        self::FIELD_PERMISSIONS,
     ];
 
     public function getSpeciesId(): int

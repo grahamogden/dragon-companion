@@ -116,12 +116,48 @@ const router = createRouter({
                         layout: 'Dashboard',
                     },
                 },
-                // {
-                //     path: '/species',
-                //     name: 'species',
-                //     beforeEnter: isLoggedIn,
-                //     component: () => import('../views/species/SpeciesList.vue'),
-                // },
+                {
+                    path: 'characters',
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
+                    children: [
+                        {
+                            path: '',
+                            name: 'characters.list',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/characters/CharacterList.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: 'add',
+                            name: 'characters.add',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/characters/CharacterCreate.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: ':characterId(\\d+)/edit',
+                            name: 'characters.edit',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/characters/CharacterEdit.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: ':characterId(\\d+)/view',
+                            name: 'characters.view',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/characters/CharacterView.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                    ],
+                },
                 {
                     path: 'items',
                     beforeEnter: [isLoggedIn, hasCampaignSelected],
@@ -308,11 +344,17 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: LogInView,
+            meta: {
+                layout: 'Dashboard',
+            },
         },
         {
             path: '/logout',
             name: 'logout',
             component: LogOutView,
+            meta: {
+                layout: 'Dashboard',
+            },
         },
     ],
 })

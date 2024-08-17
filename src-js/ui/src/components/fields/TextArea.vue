@@ -12,7 +12,7 @@
         require?: boolean
     }>()
 
-    const model = defineModel<string>('model', {
+    const model = defineModel<string | number | null | undefined>('model', {
         required: true,
     })
 

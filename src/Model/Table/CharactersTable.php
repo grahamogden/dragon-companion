@@ -6,12 +6,14 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Campaign;
 use App\Model\Entity\Character;
-use App\Model\Entity\CharactersRole;
+use App\Model\Entity\CharacterPermission;
 use App\Model\Entity\Participant;
 use App\Model\Entity\Role;
 use App\Model\Entity\Species;
 use App\Model\Entity\User;
-use Cake\ORM\Query\SelectQuery;
+use App\Services\TablePermissionsHelper\TablePermissionsHelper;
+use Authorization\Identity;
+use Cake\Datasource\QueryInterface;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\HasMany;
 use Cake\ORM\Association\BelongsToMany;
@@ -46,6 +48,14 @@ class CharactersTable extends Table
 {
     public const TABLE_NAME = 'characters';
 
+    private readonly TablePermissionsHelper $tablePermissionsHelper;
+
+    public function __construct(array $config)
+    {
+        parent::__construct(config: $config);
+        $this->tablePermissionsHelper = new TablePermissionsHelper();
+    }
+
     /**
      * Initialize method
      *
@@ -75,10 +85,8 @@ class CharactersTable extends Table
             'foreignKey' => Character::FIELD_SPECIES_ID,
             'joinType' => 'INNER',
         ]);
-        $this->belongsToMany(Role::ENTITY_NAME, [
-            'foreignKey' => 'character_id',
-            'targetForeignKey' => 'role_id',
-            'joinTable' => CharactersRolesTable::TABLE_NAME,
+        $this->hasMany(CharacterPermission::ENTITY_NAME, [
+            'foreignKey' => CharacterPermission::FIELD_CHARACTER_ID,
         ]);
     }
 
@@ -91,10 +99,12 @@ class CharactersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
+            ->requirePresence(Character::FIELD_USER_ID, 'create')
             ->nonNegativeInteger(Character::FIELD_USER_ID)
             ->notEmptyString(Character::FIELD_USER_ID);
 
         $validator
+            ->requirePresence(Character::FIELD_CAMPAIGN_ID, 'create')
             ->nonNegativeInteger(Character::FIELD_CAMPAIGN_ID)
             ->notEmptyString(Character::FIELD_CAMPAIGN_ID);
 
@@ -106,29 +116,6 @@ class CharactersTable extends Table
             ->scalar(Character::FIELD_NAME)
             ->maxLength(Character::FIELD_NAME, 250)
             ->notEmptyString(Character::FIELD_NAME);
-
-        $validator
-            ->integer(Character::FIELD_AGE)
-            ->requirePresence(Character::FIELD_AGE, 'create')
-            ->notEmptyString(Character::FIELD_AGE);
-
-        $validator
-            ->nonNegativeInteger(Character::FIELD_MAX_HIT_POINTS)
-            ->requirePresence(Character::FIELD_MAX_HIT_POINTS, 'create')
-            ->notEmptyString(Character::FIELD_MAX_HIT_POINTS);
-
-        $validator
-            ->requirePresence(Character::FIELD_ARMOUR_CLASS, 'create')
-            ->notEmptyString(Character::FIELD_ARMOUR_CLASS);
-
-        $validator
-            ->requirePresence(Character::FIELD_DEXTERITY_MODIFIER, 'create')
-            ->notEmptyString(Character::FIELD_DEXTERITY_MODIFIER);
-
-        $validator
-            ->scalar(Character::FIELD_NOTES)
-            ->requirePresence(Character::FIELD_NOTES, 'create')
-            ->notEmptyString(Character::FIELD_NOTES);
 
         return $validator;
     }
@@ -143,9 +130,41 @@ class CharactersTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn([Character::FIELD_USER_ID], User::ENTITY_NAME), ['errorField' => Character::FIELD_USER_ID]);
+
         $rules->add($rules->existsIn([Character::FIELD_CAMPAIGN_ID], Campaign::ENTITY_NAME), ['errorField' => Character::FIELD_CAMPAIGN_ID]);
+
         $rules->add($rules->existsIn([Character::FIELD_SPECIES_ID], Species::ENTITY_NAME), ['errorField' => Character::FIELD_SPECIES_ID]);
 
         return $rules;
+    }
+
+    public function findByIdAndCampaignId(int $campaignId, int $id): ?Character
+    {
+        $query = $this->find()
+            ->where([
+                Character::ENTITY_NAME . '.' . Character::FIELD_ID => $id,
+                Character::ENTITY_NAME . '.' . Character::FIELD_CAMPAIGN_ID => $campaignId,
+            ])
+            ->contain([CharacterPermission::ENTITY_NAME, Species::ENTITY_NAME]);
+
+        return $query->first();
+    }
+
+    public function findByCampaignIdWithPermissionsCheck(Identity $identity, int $campaignId): QueryInterface
+    {
+        $role = $this->tablePermissionsHelper->getUserRoleForCampaignOrThrowUnauthorizedError(
+            identity: $identity,
+            campaignId: $campaignId,
+        );
+
+        $query = $this->tablePermissionsHelper->addReadPermissionsChecksToQuery(
+            query: $this->find()
+                ->where([Character::ENTITY_NAME . '.' . Character::FIELD_CAMPAIGN_ID => $campaignId])
+                ->contain([CharacterPermission::ENTITY_NAME]),
+            permissionEntityName: CharacterPermission::ENTITY_NAME,
+            role: $role,
+        );
+
+        return $query;
     }
 }

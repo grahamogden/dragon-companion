@@ -1,5 +1,6 @@
 export * from './campaign'
 export * from './configuration'
+export * from './character/character'
 export * from './item/item'
 export * from './species'
 export * from './userauth'

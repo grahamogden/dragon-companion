@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\CharacterPermission;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -29,9 +30,9 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\CharactersRole>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\CharactersRole>|false deleteMany(iterable $entities, array $options = [])
  * @method iterable<\App\Model\Entity\CharactersRole>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\CharactersRole> deleteManyOrFail(iterable $entities, array $options = [])
  */
-class CharactersRolesTable extends Table
+class CharacterPermissionsTable extends Table
 {
-    public const TABLE_NAME = 'characters_roles';
+    public const TABLE_NAME = 'character_permissions';
     /**
      * Initialize method
      *
@@ -47,11 +48,11 @@ class CharactersRolesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Characters', [
-            'foreignKey' => 'character_id',
+            'foreignKey' => CharacterPermission::FIELD_CHARACTER_ID,
             'joinType' => 'INNER',
         ]);
         $this->belongsTo('Roles', [
-            'foreignKey' => 'role_id',
+            'foreignKey' => CharacterPermission::FIELD_ROLE_ID,
             'joinType' => 'INNER',
         ]);
     }
@@ -65,12 +66,12 @@ class CharactersRolesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('character_id')
-            ->notEmptyString('character_id');
+            ->nonNegativeInteger(CharacterPermission::FIELD_CHARACTER_ID)
+            ->notEmptyString(CharacterPermission::FIELD_CHARACTER_ID);
 
         $validator
-            ->nonNegativeInteger('role_id')
-            ->notEmptyString('role_id');
+            ->nonNegativeInteger(CharacterPermission::FIELD_ROLE_ID)
+            ->notEmptyString(CharacterPermission::FIELD_ROLE_ID);
 
         return $validator;
     }
@@ -84,8 +85,8 @@ class CharactersRolesTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['character_id'], 'Characters'), ['errorField' => 'character_id']);
-        $rules->add($rules->existsIn(['role_id'], 'Roles'), ['errorField' => 'role_id']);
+        $rules->add($rules->existsIn([CharacterPermission::FIELD_CHARACTER_ID], 'Characters'), ['errorField' => CharacterPermission::FIELD_CHARACTER_ID]);
+        $rules->add($rules->existsIn([CharacterPermission::FIELD_ROLE_ID], 'Roles'), ['errorField' => CharacterPermission::FIELD_ROLE_ID]);
 
         return $rules;
     }

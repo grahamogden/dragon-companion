@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Policy;
 
 use App\Model\Entity\Interface\CampaignChildEntityInterface;
+use App\Model\Entity\Interface\EntityInterfaceWithUserIdInterface;
 use App\Model\Entity\Interface\PermissionInterface;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -36,6 +37,10 @@ trait StandardPolicyTrait
 
     private function getUserRoleForCampaign(IdentityInterface|User $identity, int $campaignId): ?Role
     {
+        if (!$identity->getIdentifier()) {
+            return null;
+        }
+
         foreach ($identity->getRoles() as $role) {
             if ($role->getCampaignId() === $campaignId) {
                 return $role;
@@ -43,6 +48,11 @@ trait StandardPolicyTrait
         }
 
         return null;
+    }
+
+    private function isCreatorOfEntity(IdentityInterface|User $identity, EntityInterfaceWithUserIdInterface $entity): bool
+    {
+        return $entity->getUserId() === $identity->getIdentifier();
     }
 
     private function isCampaignOwner(IdentityInterface|User $identity, int $campaignId): bool
@@ -71,15 +81,20 @@ trait StandardPolicyTrait
         return RolePermission::Inherit;
     }
 
-    public function canAdd(IdentityInterface|User $identity, CampaignChildEntityInterface $entity): bool
+    public function canAdd(IdentityInterface|User $identity, CampaignChildEntityInterface&EntityInterfaceWithUserIdInterface $entity): bool
     {
         $userRole = $this->getUserRoleForCampaign(
             identity: $identity,
             campaignId: $entity->getCampaignId(),
         );
 
-        if (!$userRole) {
+        if (null === $userRole) {
             return false;
+        }
+
+        // If the user is the owner of the campaign, then allow them to do anything
+        if ($userRole->getRoleLevel() === RoleLevel::Owner) {
+            return true;
         }
 
         $userHasDefaultPermissionToAddEntity = is_callable([$userRole, $this->getDefaultPermissionsFieldName()])
@@ -99,20 +114,32 @@ trait StandardPolicyTrait
     private function canWriteForCampaignId(
         IdentityInterface|User $identity,
         int $campaignId,
-        EntityInterface $entity
+        EntityInterfaceWithUserIdInterface $entity
     ): bool {
+        if ($this->isCreatorOfEntity(identity: $identity, entity: $entity)) {
+            return true;
+        }
+
         $userRole = $this->getUserRoleForCampaign(
             identity: $identity,
             campaignId: $campaignId,
         );
 
-        if (!$userRole) {
+        if (null === $userRole) {
             return false;
         }
 
+        // If the user is the owner of the campaign, then allow them to do anything
         if ($userRole->getRoleLevel() === RoleLevel::Owner) {
             return true;
         }
+
+        // if ($this->isCampaignOwner(
+        //     identity: $identity,
+        //     campaignId: $campaignId,
+        // )) {
+        //     return true;
+        // }
 
         $overrideEntityPermission = $this->getOverrideEntityRolePermissionForUser(userRole: $userRole, entity: $entity);
 
@@ -132,7 +159,7 @@ trait StandardPolicyTrait
         return false;
     }
 
-    public function canEdit(IdentityInterface|User $identity, CampaignChildEntityInterface $entity): bool
+    public function canEdit(IdentityInterface|User $identity, CampaignChildEntityInterface&EntityInterfaceWithUserIdInterface $entity): bool
     {
         return $this->canWriteForCampaignId(
             identity: $identity,
@@ -144,20 +171,32 @@ trait StandardPolicyTrait
     private function canReadForCampaignId(
         IdentityInterface|User $identity,
         int $campaignId,
-        EntityInterface $entity
+        EntityInterfaceWithUserIdInterface $entity
     ): bool {
+        if ($this->isCreatorOfEntity(identity: $identity, entity: $entity)) {
+            return true;
+        }
+
         $userRole = $this->getUserRoleForCampaign(
             identity: $identity,
             campaignId: $campaignId
         );
 
-        if (!$userRole) {
+        if (null === $userRole) {
             return false;
         }
 
+        // If the user is the owner of the campaign, then allow them to do anything
         if ($userRole->getRoleLevel() === RoleLevel::Owner) {
             return true;
         }
+
+        // if ($this->isCampaignOwner(
+        //     identity: $identity,
+        //     campaignId: $campaignId,
+        // )) {
+        //     return true;
+        // }
 
         $overrideEntityPermission = $this->getOverrideEntityRolePermissionForUser(userRole: $userRole, entity: $entity);
 
@@ -177,8 +216,10 @@ trait StandardPolicyTrait
         return false;
     }
 
-    public function canView(IdentityInterface|User $identity, CampaignChildEntityInterface $entity): bool
-    {
+    public function canView(
+        IdentityInterface|User $identity,
+        CampaignChildEntityInterface&EntityInterfaceWithUserIdInterface $entity
+    ): bool {
         return $this->canReadForCampaignId(
             identity: $identity,
             campaignId: $entity->getCampaignId(),
@@ -186,7 +227,7 @@ trait StandardPolicyTrait
         );
     }
 
-    public function canIndex(IdentityInterface|User $identity, CampaignChildEntityInterface $entity): bool
+    public function canIndex(IdentityInterface|User $identity, CampaignChildEntityInterface&EntityInterfaceWithUserIdInterface $entity): bool
     {
         return $this->canReadForCampaignId(
             identity: $identity,
@@ -198,20 +239,32 @@ trait StandardPolicyTrait
     private function canDeleteForCampaignId(
         IdentityInterface|User $identity,
         int $campaignId,
-        EntityInterface $entity
+        EntityInterfaceWithUserIdInterface $entity
     ): bool {
+        if ($this->isCreatorOfEntity(identity: $identity, entity: $entity)) {
+            return true;
+        }
+
         $userRole = $this->getUserRoleForCampaign(
             identity: $identity,
             campaignId: $campaignId
         );
 
-        if (!$userRole) {
+        if (null === $userRole) {
             return false;
         }
 
+        // If the user is the owner of the campaign, then allow them to do anything
         if ($userRole->getRoleLevel() === RoleLevel::Owner) {
             return true;
         }
+
+        // if ($this->isCampaignOwner(
+        //     identity: $identity,
+        //     campaignId: $campaignId,
+        // )) {
+        //     return true;
+        // }
 
         $overrideEntityPermission = $this->getOverrideEntityRolePermissionForUser(userRole: $userRole, entity: $entity);
 
@@ -231,7 +284,7 @@ trait StandardPolicyTrait
         return false;
     }
 
-    public function canDelete(IdentityInterface|User $identity, CampaignChildEntityInterface $entity): bool
+    public function canDelete(IdentityInterface|User $identity, CampaignChildEntityInterface&EntityInterfaceWithUserIdInterface $entity): bool
     {
         return $this->canDeleteForCampaignId(
             identity: $identity,

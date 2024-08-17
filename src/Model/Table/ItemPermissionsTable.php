@@ -34,7 +34,7 @@ class ItemPermissionsTable extends Table
 {
     public const TABLE_NAME = 'item_permissions';
 
-    public const FIELD_Item_ID = 'item_id';
+    public const FIELD_ITEM_ID = 'item_id';
     public const FIELD_ROLE_ID = 'role_id';
 
     /**
@@ -70,12 +70,12 @@ class ItemPermissionsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger(self::FIELD_Item_ID)
-            ->notEmptyString(self::FIELD_Item_ID);
+            ->nonNegativeInteger(ItemPermission::FIELD_ITEM_ID)
+            ->notEmptyString(ItemPermission::FIELD_ITEM_ID);
 
         $validator
-            ->nonNegativeInteger(self::FIELD_ROLE_ID)
-            ->notEmptyString(self::FIELD_ROLE_ID);
+            ->nonNegativeInteger(ItemPermission::FIELD_ROLE_ID)
+            ->notEmptyString(ItemPermission::FIELD_ROLE_ID);
 
         // NEED TO ADD PERMISSIONS FIELD CHECK TO MAKE SURE THAT IT MATCHES THE ENUM
 
@@ -91,8 +91,8 @@ class ItemPermissionsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn([self::FIELD_Item_ID], 'Item'), ['errorField' => self::FIELD_Item_ID]);
-        $rules->add($rules->existsIn([self::FIELD_ROLE_ID], 'Roles'), ['errorField' => self::FIELD_ROLE_ID]);
+        $rules->add($rules->existsIn([ItemPermission::FIELD_ITEM_ID], 'Item'), ['errorField' => ItemPermission::FIELD_ITEM_ID]);
+        $rules->add($rules->existsIn([ItemPermission::FIELD_ROLE_ID], 'Roles'), ['errorField' => ItemPermission::FIELD_ROLE_ID]);
 
         return $rules;
     }

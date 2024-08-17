@@ -23,9 +23,9 @@ class ItemPermission extends Entity implements PermissionInterface
 {
     public const ENTITY_NAME = 'ItemPermissions';
 
-    public const FIELD_SPECIES_ID = 'item_id';
+    public const FIELD_ITEM_ID = 'item_id';
     public const FIELD_ROLE_ID = 'role_id';
-    public const FILED_PERMISSIONS = 'permissions';
+    public const FIELD_PERMISSIONS = 'permissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -37,15 +37,15 @@ class ItemPermission extends Entity implements PermissionInterface
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        self::FIELD_SPECIES_ID => true,
+        self::FIELD_ITEM_ID => true,
         self::FIELD_ROLE_ID => true,
-        self::FILED_PERMISSIONS => true,
+        self::FIELD_PERMISSIONS => true,
         'item' => true,
         'role' => true,
     ];
 
     protected array $_hidden = [
-        self::FILED_PERMISSIONS,
+        self::FIELD_PERMISSIONS,
     ];
 
     public function getItemId(): int

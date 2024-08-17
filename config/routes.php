@@ -103,6 +103,60 @@ $routes->scope(
                     );
 
 
+                    /**************
+                     * Characters *
+                     **************/
+
+                    $routes->get('/campaigns/{campaignId}/characters', [
+                        'controller' => 'Characters',
+                        'action' => 'index',
+                    ])
+                        ->setPass(['campaignId'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                        ]);
+
+                    $routes->get('/campaigns/{campaignId}/characters/{id}', [
+                        'controller' => 'Characters',
+                        'action' => 'view'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->post('/campaigns/{campaignId}/characters', [
+                        'controller' => 'Characters',
+                        'action' => 'add'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->put('/campaigns/{campaignId}/characters/{id}', [
+                        'controller' => 'Characters',
+                        'action' => 'edit'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->delete('/campaigns/{campaignId}/characters/{id}', [
+                        'controller' => 'Characters',
+                        'action' => 'delete'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+
                     /***********
                      * Items *
                      ***********/
