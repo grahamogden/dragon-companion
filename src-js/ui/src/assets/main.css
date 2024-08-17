@@ -1583,6 +1583,10 @@ thead.table-heading-dark {
   border-color: rgb(26 25 25 / var(--tw-border-opacity));
 }
 
+.border-woodsmoke-700\/50{
+  border-color: rgb(81 77 77 / 0.5);
+}
+
 .border-l-saffron-mango-300{
   --tw-border-opacity: 1;
   border-left-color: rgb(246 193 81 / var(--tw-border-opacity));
@@ -2690,6 +2694,10 @@ thead.table-heading-dark {
 .dark\:border-woodsmoke-900:where(.dark, .dark *){
   --tw-border-opacity: 1;
   border-color: rgb(61 60 60 / var(--tw-border-opacity));
+}
+
+.dark\:border-timberwolf-50\/50:where(.dark, .dark *){
+  border-color: rgb(248 247 244 / 0.5);
 }
 
 .dark\:bg-alizarin-crimson-700:where(.dark, .dark *){
