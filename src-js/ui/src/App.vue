@@ -46,11 +46,6 @@
 
   // Theme toggling
 
-  const lightThemeSettingClass = 'bg-[center_top_0rem]'
-  const darkThemeSettingClass = 'bg-[center_top_-1.5rem]'
-  const autoThemeSettingClass = 'bg-[center_top_-3rem]'
-  const themeSettingClass = ref(autoThemeSettingClass)
-
   function toggleDarkModeClass(themeSetting: string): void {
     if (themeSetting === ThemeEnum.DARK
       || (themeSetting === ThemeEnum.AUTO
@@ -76,19 +71,16 @@
 
   function toggleDarkModeSetLight() {
     configStore.setTheme(ThemeEnum.LIGHT)
-    themeSettingClass.value = lightThemeSettingClass
     toggleDarkModeClass(ThemeEnum.LIGHT)
   }
 
   function toggleDarkModeSetDark() {
     configStore.setTheme(ThemeEnum.DARK)
-    themeSettingClass.value = darkThemeSettingClass
     toggleDarkModeClass(ThemeEnum.DARK)
   }
 
   function toggleDarkModeSetAuto() {
     configStore.setTheme(ThemeEnum.AUTO)
-    themeSettingClass.value = autoThemeSettingClass
     toggleDarkModeClass(ThemeEnum.AUTO)
   }
 
@@ -181,9 +173,14 @@
       <div class="flex flex-row">
         <nav class="h-full flex flex-row gap-x-8 justify-between items-center">
           <button
-            class="relative w-32 h-8 bg-theme-toggle bg-[length:auto_4.8rem] bg-no-repeat bg-clip-content rounded-full border border-timberwolf-50 p-1"
-            :class="themeSettingClass" @click="toggleDarkMode"
-            aria-label="Toggle theme - light, dark and auto"></button>
+            class="relative grid grid-cols-3 gap-1 text-woodsmoke-300 rounded-full border border-timberwolf-50 p-1 text-xl"
+            @click="toggleDarkMode" aria-label="Toggle theme - auto, light and dark"><font-awesome-icon
+              :icon="['fas', 'circle-half-stroke']" fixed-width
+              :class="{ 'text-timberwolf-50': configStore.theme === ThemeEnum.AUTO }"></font-awesome-icon><font-awesome-icon
+              :icon="[configStore.theme === ThemeEnum.LIGHT ? 'fas' : 'far', 'sun']" fixed-width
+              :class="{ 'text-timberwolf-50': configStore.theme === ThemeEnum.LIGHT }"></font-awesome-icon><font-awesome-icon
+              :icon="[configStore.theme === ThemeEnum.DARK ? 'fas' : 'far', 'moon']" fixed-width
+              :class="{ 'text-timberwolf-50': configStore.theme === ThemeEnum.DARK }"></font-awesome-icon></button>
 
           <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
             v-if="!userAuthStore.isLoggedIn" :to="{ name: 'user-register' }">Register</router-link>
