@@ -14,8 +14,8 @@
             <!-- <div class="absolute top-0 left-0 border-[2rem] border-transparent border-l-saffron-mango-300 border-t-saffron-mango-300"
                 :class="props.isSelected ? 'block' : 'hidden'">
             </div> -->
-            <div class="absolute top-0 left-0 w-full h-full border-[1rem] border-saffron-mango-300 animate-pulse"
-                :class="props.isSelected ? 'block' : 'hidden'">
+            <div class="absolute flex justify-center items-center top-0 left-0 w-full h-full bg-timberwolf-50/80 dark:bg-woodsmoke-900/80 border-[1rem] border-saffron-mango-300 transition-colors duration-theme-change"
+                :class="props.isSelected ? 'block' : 'hidden'">Currently selected
             </div>
         </div>
         <div

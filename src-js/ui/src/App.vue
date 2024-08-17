@@ -4,7 +4,7 @@
   import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
   import { firebaseAppKey } from './keys'
   import type { FirebaseApp } from 'firebase/app'
-  import { useCampaignStore, useUserAuthStore, useConfigurationStore } from './stores'
+  import { useCampaignStore, useUserAuthStore, useConfigurationStore, ThemeEnum } from './stores'
   import LoadingSpinner from './components/loading-spinner/LoadingSpinner.vue'
   import SideNavigation from './components/navigation/SideNavigation.vue'
   import ToolbarNavigation from './components/navigation/ToolbarNavigation.vue'
@@ -46,65 +46,81 @@
 
   // Theme toggling
 
-  const themeSetting = ref('auto')
+  const lightThemeSettingClass = 'bg-[center_top_0rem]'
+  const darkThemeSettingClass = 'bg-[center_top_-1.5rem]'
+  const autoThemeSettingClass = 'bg-[center_top_-3rem]'
+  const themeSettingClass = ref(autoThemeSettingClass)
 
   function toggleDarkModeClass(themeSetting: string): void {
-    // if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    if (themeSetting === 'dark'
-      || (themeSetting === 'auto'
+    if (themeSetting === ThemeEnum.DARK
+      || (themeSetting === ThemeEnum.AUTO
         && window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
-      document.documentElement.classList.add('dark')
+      document.documentElement.classList.add(ThemeEnum.DARK)
     } else {
-      document.documentElement.classList.remove('dark')
+      document.documentElement.classList.remove(ThemeEnum.DARK)
     }
   }
 
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', e => {
+    if (configStore.theme !== ThemeEnum.AUTO) {
+      return
+    }
+
+    if (e.matches) {
+      toggleDarkModeClass(ThemeEnum.DARK)
+    } else {
+      toggleDarkModeClass(ThemeEnum.LIGHT)
+    }
+  });
+
   function toggleDarkModeSetLight() {
-    themeSetting.value = 'light'
-    localStorage.setItem('theme', 'light')
-    toggleDarkModeClass('light')
+    configStore.setTheme(ThemeEnum.LIGHT)
+    themeSettingClass.value = lightThemeSettingClass
+    toggleDarkModeClass(ThemeEnum.LIGHT)
   }
 
   function toggleDarkModeSetDark() {
-    themeSetting.value = 'dark'
-    localStorage.setItem('theme', 'dark')
-    toggleDarkModeClass('dark')
+    configStore.setTheme(ThemeEnum.DARK)
+    themeSettingClass.value = darkThemeSettingClass
+    toggleDarkModeClass(ThemeEnum.DARK)
   }
 
   function toggleDarkModeSetAuto() {
-    themeSetting.value = 'auto'
-    localStorage.removeItem('theme')
-    toggleDarkModeClass('auto')
+    configStore.setTheme(ThemeEnum.AUTO)
+    themeSettingClass.value = autoThemeSettingClass
+    toggleDarkModeClass(ThemeEnum.AUTO)
   }
 
+  /**
+   * Switches the theme to the next setting:
+   * Light -> dark -> auto
+   */
   function toggleDarkMode() {
-    if (themeSetting.value === 'dark') {
-      toggleDarkModeSetLight()
-    } else if (themeSetting.value === 'light') {
-      toggleDarkModeSetDark()
-    } else {
-      toggleDarkModeSetAuto()
-    }
-  }
-
-  function getLocalStorageThemeSetting() {
-    if (localStorage.getItem('theme') === 'light') {
-      return 'light'
-    } else if (localStorage.getItem('theme') === 'dark') {
-      return 'dark'
-    } else {
-      return 'auto'
+    switch (configStore.theme) {
+      case (ThemeEnum.LIGHT):
+        toggleDarkModeSetDark()
+        break;
+      case (ThemeEnum.DARK):
+        toggleDarkModeSetAuto()
+        break;
+      default:
+        toggleDarkModeSetLight()
+        break;
     }
   }
 
   function synchroniseThemeWithLocalStorage() {
-    if (getLocalStorageThemeSetting() === 'light') {
-      toggleDarkModeSetLight()
-    } else if (getLocalStorageThemeSetting() === 'dark') {
-      toggleDarkModeSetDark()
-    } else {
-      toggleDarkModeSetAuto()
+    switch (configStore.theme) {
+      case (ThemeEnum.LIGHT):
+        toggleDarkModeSetLight()
+        break;
+      case (ThemeEnum.DARK):
+        toggleDarkModeSetDark()
+        break;
+      default:
+        toggleDarkModeSetAuto()
+        break;
     }
   }
 
@@ -165,9 +181,9 @@
       <div class="flex flex-row">
         <nav class="h-full flex flex-row gap-x-8 justify-between items-center">
           <button
-            class="relative h-8 w-[7rem] bg-theme-toggle bg-[length:auto_3.2rem] bg-no-repeat bg-clip-content rounded-full border border-timberwolf-50 p-2"
-            :class="{ 'bg-[center_top_0.4rem]': themeSetting === 'light', 'bg-[center_top_-0.7rem]': themeSetting === 'dark', 'bg-[center_top_-1.8rem]': themeSetting === 'auto' }"
-            @click="toggleDarkMode" aria-label="Toggle theme - light, dark and auto"></button>
+            class="relative w-32 h-8 bg-theme-toggle bg-[length:auto_4.8rem] bg-no-repeat bg-clip-content rounded-full border border-timberwolf-50 p-1"
+            :class="themeSettingClass" @click="toggleDarkMode"
+            aria-label="Toggle theme - light, dark and auto"></button>
 
           <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
             v-if="!userAuthStore.isLoggedIn" :to="{ name: 'user-register' }">Register</router-link>

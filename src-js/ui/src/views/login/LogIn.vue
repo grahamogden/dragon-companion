@@ -42,8 +42,8 @@
         <label>Password:</label>
         <input type="password" v-model="password" required />
       </div> -->
-      <TextInput input-name="email" label="Email" v-model="email" />
-      <PasswordInput input-name="password" label="Password" v-model="password" />
+      <TextInput input-name="email" label="Email" v-model:model="email" />
+      <PasswordInput input-name="password" label="Password" v-model:model="password" />
       <!-- <button class="primary-button" type="submit">Login</button> -->
       <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-6">
         <div class="md:order-last">

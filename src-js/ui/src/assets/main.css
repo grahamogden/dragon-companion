@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 /*
 ! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com
 */
@@ -1051,10 +1055,6 @@ thead.table-heading-dark {
   margin-bottom: 0.5rem;
 }
 
-.mb-24{
-  margin-bottom: 6rem;
-}
-
 .mb-32{
   margin-bottom: 8rem;
 }
@@ -1195,6 +1195,10 @@ thead.table-heading-dark {
   width: 3rem;
 }
 
+.w-2\/4{
+  width: 50%;
+}
+
 .w-20{
   width: 5rem;
 }
@@ -1207,12 +1211,12 @@ thead.table-heading-dark {
   width: 75%;
 }
 
-.w-8{
-  width: 2rem;
+.w-32{
+  width: 8rem;
 }
 
-.w-\[7rem\]{
-  width: 7rem;
+.w-8{
+  width: 2rem;
 }
 
 .w-full{
@@ -1285,22 +1289,16 @@ thead.table-heading-dark {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-@keyframes pulse{
-  50%{
-    opacity: .5;
-  }
-}
-
-.animate-pulse{
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
 .grid-flow-row{
   grid-auto-flow: row;
 }
 
 .grid-cols-1{
   grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .grid-cols-4{
@@ -1367,6 +1365,11 @@ thead.table-heading-dark {
 
 .gap-y-6{
   row-gap: 1.5rem;
+}
+
+.gap-x-6{
+  -moz-column-gap: 1.5rem;
+       column-gap: 1.5rem;
 }
 
 .overflow-hidden{
@@ -1702,15 +1705,15 @@ thead.table-heading-dark {
 }
 
 .bg-theme-toggle{
-  background-image: url('/src/assets/images/theme-selector-icon.svg');
+  background-image: url('/src/assets/images/theme-selector-icon-2.svg');
 }
 
 .bg-360{
   background-size: auto 22.5rem;
 }
 
-.bg-\[length\:auto_3\.2rem\]{
-  background-size: auto 3.2rem;
+.bg-\[length\:auto_4\.8rem\]{
+  background-size: auto 4.8rem;
 }
 
 .bg-cover{
@@ -1721,16 +1724,16 @@ thead.table-heading-dark {
   background-clip: content-box;
 }
 
-.bg-\[center_top_-0\.7rem\]{
-  background-position: center top -0.7rem;
+.bg-\[center_top_-1\.5rem\]{
+  background-position: center top -1.5rem;
 }
 
-.bg-\[center_top_-1\.8rem\]{
-  background-position: center top -1.8rem;
+.bg-\[center_top_-3rem\]{
+  background-position: center top -3rem;
 }
 
-.bg-\[center_top_0\.4rem\]{
-  background-position: center top 0.4rem;
+.bg-\[center_top_0rem\]{
+  background-position: center top 0rem;
 }
 
 .bg-center{
@@ -1840,8 +1843,8 @@ thead.table-heading-dark {
   vertical-align: middle;
 }
 
-.font-sans{
-  font-family: Open Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+.font-inter{
+  font-family: Inter, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 
 .text-3xl{
@@ -2478,6 +2481,14 @@ thead.table-heading-dark {
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
 
+  .md\:grid-cols-2{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-4{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .md\:flex-row{
     flex-direction: row;
   }
@@ -2735,6 +2746,10 @@ thead.table-heading-dark {
 .dark\:bg-woodsmoke-900:where(.dark, .dark *){
   --tw-bg-opacity: 1;
   background-color: rgb(61 60 60 / var(--tw-bg-opacity));
+}
+
+.dark\:bg-woodsmoke-900\/80:where(.dark, .dark *){
+  background-color: rgb(61 60 60 / 0.8);
 }
 
 .dark\:bg-woodsmoke-950:where(.dark, .dark *){

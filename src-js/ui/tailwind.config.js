@@ -391,7 +391,7 @@ export default {
         'background-texture': "url('/src/assets/images/background-texture.svg')",
         'navigation-leather-tab': "url('/src/assets/images/leather-tab.svg')",
         'header-sky': "url('/src/assets/images/header-sky.png')",
-        'theme-toggle': "url('/src/assets/images/theme-selector-icon.svg')",
+        'theme-toggle': "url('/src/assets/images/theme-selector-icon-2.svg')",
         'sky-light': "url('/src/assets/images/sky-light.png')",
         'sky-dark': "url('/src/assets/images/sky-dark.png')",
         'background-horizon': "url('/src/assets/images/background-horizon.svg')",
@@ -428,8 +428,10 @@ export default {
       },
     },
     fontFamily: {
+      'poppins': ["Poppins", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+      'inter': ["Inter", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
       'sans': ["Open Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
-      // 'sans': ["Nunito", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+      'nunito': ["Nunito", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
     }
   },
   safelist: [

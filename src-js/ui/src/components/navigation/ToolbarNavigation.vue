@@ -22,7 +22,7 @@
 
 <template>
     <div
-        class="fixed md:hidden bottom-0 w-full max-h-screen flex flex-col bg-timberwolf-50/85 dark:bg-woodsmoke-950/85 text-woodsmoke-950 dark:text-timberwolf-50 backdrop-blur shadow-md shadow-toolbar rounded-t-3xl overflow-hidden z-10">
+        class="fixed md:hidden bottom-0 w-full max-h-screen flex flex-col bg-timberwolf-50/85 dark:bg-woodsmoke-950/85 text-woodsmoke-950 dark:text-timberwolf-50 backdrop-blur shadow-md shadow-toolbar rounded-t-3xl transition-colors duration-theme-change overflow-hidden z-10">
         <Transition name="toolbar-navigation-slide">
             <div v-show="isNavMenuOpen"
                 class="grid grid-cols-1 w-full w-full z-10 mx-auto border-b border-woodsmoke-300 text-center overflow-scroll">
@@ -92,19 +92,23 @@
                 class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center"
                 :to="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><img
                     src="@/assets/images/dice-icon.svg" class="w-12 h-12 block rounded inline-block" /><span
-                    class="inline-block w-full truncate text-ellipsis overflow-hidden">Characters</span></router-link>
+                    class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change">Characters</span></router-link>
             <button type="button" class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 underline text-center"
                 @click="toggleNavMenu()"><img src="@/assets/images/dice-icon.svg"
                     class="w-12 h-12 block rounded inline-block" /><span
-                    class="inline-block w-full truncate text-ellipsis overflow-hidden">More</span></button>
+                    class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change">More</span></button>
         </nav>
-        <nav class="toolbar grid grid-cols-4 gap-4" v-else>
+        <nav class="toolbar grid grid-cols-2 gap-4" v-else>
             <router-link class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center"
                 :to="{ name: 'login' }"><img src="@/assets/images/dice-icon.svg"
                     class="w-12 h-12 block rounded inline-block" /><span
-                    class="inline-block w-full truncate text-ellipsis overflow-hidden"><font-awesome-icon
+                    class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change"><font-awesome-icon
                         :icon="['fas', 'right-to-bracket']" fixed-width class="mr-2"></font-awesome-icon>Log
                     In</span></router-link>
+            <button type="button" class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 underline text-center"
+                @click="toggleNavMenu()"><img src="@/assets/images/dice-icon.svg"
+                    class="w-12 h-12 block rounded inline-block" /><span
+                    class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change">More</span></button>
         </nav>
     </div>
     <div v-if="isNavMenuOpen" @click="toggleNavMenu(false)"
