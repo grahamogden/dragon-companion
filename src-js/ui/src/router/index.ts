@@ -78,18 +78,6 @@ const router = createRouter({
                     },
                 },
                 {
-                    path: 'characters',
-                    name: 'characters',
-                    beforeEnter: [isLoggedIn, hasCampaignSelected],
-                    // route level code-splitting
-                    // this generates a separate chunk (About.[hash].js) for this route
-                    // which is lazy-loaded when the route is visited.
-                    component: () => import('../views/characters/CharacterList.vue'),
-                    meta: {
-                        layout: 'Dashboard',
-                    },
-                },
-                {
                     path: 'classes',
                     name: 'classes',
                     beforeEnter: [isLoggedIn, hasCampaignSelected],
@@ -194,6 +182,48 @@ const router = createRouter({
                             name: 'items.view',
                             beforeEnter: [isLoggedIn, hasCampaignSelected],
                             component: () => import('../views/items/ItemView.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                    ],
+                },
+                {
+                    path: 'monsters',
+                    beforeEnter: [isLoggedIn, hasCampaignSelected],
+                    children: [
+                        {
+                            path: '',
+                            name: 'monsters.list',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/monsters/MonsterList.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: 'add',
+                            name: 'monsters.add',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/monsters/MonsterCreate.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: ':monsterId(\\d+)/edit',
+                            name: 'monsters.edit',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/monsters/MonsterEdit.vue'),
+                            meta: {
+                                layout: 'Dashboard',
+                            },
+                        },
+                        {
+                            path: ':monsterId(\\d+)/view',
+                            name: 'monsters.view',
+                            beforeEnter: [isLoggedIn, hasCampaignSelected],
+                            component: () => import('../views/monsters/MonsterView.vue'),
                             meta: {
                                 layout: 'Dashboard',
                             },

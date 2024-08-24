@@ -6,9 +6,9 @@ import type CampaignRepositoryInterface from '../services/campaign/CampaignRepos
 import { CampaignEntity } from '../services/campaign'
 
 interface CampaignStoreInterface {
-    campaignId: RemovableRef<string | number | null>
-    campaignName: RemovableRef<string | null>
-    campaigns: RemovableRef<CampaignEntityInterface[]>
+    campaignId: RemovableRef<string | number | null> // string | number | null
+    campaignName: RemovableRef<string | null> // string | null
+    campaigns: RemovableRef<CampaignEntityInterface[]> // CampaignEntityInterface[]
 }
 
 export const useCampaignStore = defineStore('campaign', {

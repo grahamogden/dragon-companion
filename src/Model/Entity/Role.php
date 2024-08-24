@@ -20,6 +20,7 @@ use Cake\ORM\Entity;
  * @property int $timeline_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
  * @property int $item_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
  * @property int $character_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
+ * @property int $monster_default_permissions - enum of \App\Model\Enum\DefaultRoleLevel
  *
  * @property Campaign $campaigns
  * @property CampaignPermission[] $campaign_permissions
@@ -29,6 +30,7 @@ use Cake\ORM\Entity;
  * @property Item[] $items
  * @property Timeline[] $timelines
  * @property User[] $users
+ * @property Monster[] $monsters
  */
 class Role extends Entity
 {
@@ -38,16 +40,24 @@ class Role extends Entity
     public const FIELD_ROLE_NAME = 'role_name';
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
     public const FIELD_ROLE_LEVEL = 'role_level';
+
     public const FIELD_CAMPAIGN_DEFAULT_PERMISSIONS = 'campaign_default_permissions';
     public const ACCESSOR_NAME_CAMPAIGN_DEFAULT_PERMISSIONS = 'getCampaignDefaultPermissions';
+
     public const FIELD_SPECIES_DEFAULT_PERMISSIONS = 'species_default_permissions';
     public const ACCESSOR_NAME_SPECIES_DEFAULT_PERMISSIONS = 'getSpeciesDefaultPermissions';
+
     public const FIELD_TIMELINE_DEFAULT_PERMISSIONS = 'timeline_default_permissions';
     public const ACCESSOR_NAME_TIMELINE_DEFAULT_PERMISSIONS = 'getTimelineDefaultPermissions';
+
     public const FIELD_ITEM_DEFAULT_PERMISSIONS = 'item_default_permissions';
     public const ACCESSOR_NAME_ITEM_DEFAULT_PERMISSIONS = 'getItemDefaultPermissions';
+
     public const FIELD_CHARACTER_DEFAULT_PERMISSIONS = 'character_default_permissions';
     public const ACCESSOR_NAME_CHARACTER_DEFAULT_PERMISSIONS = 'getCharacterDefaultPermissions';
+
+    public const FIELD_MONSTER_DEFAULT_PERMISSIONS = 'monster_default_permissions';
+    public const ACCESSOR_NAME_MONSTER_DEFAULT_PERMISSIONS = 'getMonsterDefaultPermissions';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -67,14 +77,19 @@ class Role extends Entity
         self::FIELD_TIMELINE_DEFAULT_PERMISSIONS => true,
         self::FIELD_ITEM_DEFAULT_PERMISSIONS => true,
         self::FIELD_CHARACTER_DEFAULT_PERMISSIONS => true,
-        'campaigns' => true,
-        'campaign_permissions' => true,
-        'characters' => true,
-        'combat_encounters' => true,
-        'species' => true,
-        'items' => true,
-        // 'timelines' => true,
-        'users' => true,
+        'campaigns' => false,
+        'campaign_permissions' => false,
+        'characters' => false,
+        'monsters' => false,
+        'combat_encounters' => false,
+        'species' => false,
+        'items' => false,
+        // 'timelines' => false,
+        'users' => false,
+    ];
+
+    protected array $hidden = [
+        '_matchingData',
     ];
 
     public function getId(): int
@@ -120,5 +135,10 @@ class Role extends Entity
     public function getCharacterDefaultPermissions(): RolePermission
     {
         return RolePermission::from($this->character_default_permissions);
+    }
+
+    public function getMonsterDefaultPermissions(): RolePermission
+    {
+        return RolePermission::from($this->monster_default_permissions);
     }
 }

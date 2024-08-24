@@ -20,13 +20,13 @@
                     Your Campaigns</router-link>
             </div>
         </div>
-        <div class="flex flex-col w-full bg-shark-950/70 backdrop-blur-lg grow">
+        <div class="flex flex-col w-full pb-4 bg-shark-950/70 backdrop-blur-lg grow">
             <nav v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected" class="side-nav flex flex-col">
                 <nav-link
                     :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
                         :icon="['fas', 'timeline']" fixed-width class="mr-2" />Timelines</nav-link>
                 <nav-link
-                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
+                    :destination="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }">
                     <font-awesome-icon :icon="['fas', 'user']" fixed-width class="mr-2" />Characters
                 </nav-link>
                 <nav-link
@@ -39,10 +39,10 @@
                     :destination="{ name: 'items.list', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
                         :icon="['fas', 'shield']" fixed-width class="mr-2" />Items</nav-link>
                 <nav-link
-                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
+                    :destination="{ name: 'monsters.list', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
                         :icon="['fas', 'dragon']" fixed-width class="mr-2" />Monsters</nav-link>
                 <nav-link
-                    :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
+                    :destination="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }"><font-awesome-icon
                         :icon="['fas', 'person-circle-plus']" fixed-width class="mr-2" />Permissions</nav-link>
             </nav>
             <div v-if="!(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)"

@@ -21,7 +21,7 @@
 <template>
     <div class="kebab-menu-container relative inline-block align-middle">
         <div class="block relative w-max min-w-2 md:min-w-20 min-h-9">
-            <div class="block md:absolute top-0 right-0 w-max bg-biscay-100 dark:bg-biscay-900 border border-biscay-600 rounded-xl shadow-shark-300 dark:shadow-stone-950 overflow-hidden transition-colors duration-theme-change"
+            <div class="block md:absolute top-0 right-0 w-max bg-biscay-100 dark:bg-biscay-900 border border-biscay-600 rounded-lg shadow-shark-300 dark:shadow-stone-950 overflow-hidden transition-colors duration-theme-change"
                 :class="(isMenuOpen ? 'z-10 transition-shadow shadow-sm' : '')">
                 <button @click="toggleKebabMenu" v-on-click-outside="closeDropDownMenu" :aria-expanded="isMenuOpen"
                     :aria-label="props.buttonAriaContextName + ' menu toggle'"

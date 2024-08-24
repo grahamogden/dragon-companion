@@ -211,6 +211,60 @@ $routes->scope(
                         ]);
 
 
+                    /************
+                     * Monsters *
+                     ************/
+
+                    $routes->get('/campaigns/{campaignId}/monsters', [
+                        'controller' => 'Monsters',
+                        'action' => 'index',
+                    ])
+                        ->setPass(['campaignId'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                        ]);
+
+                    $routes->get('/campaigns/{campaignId}/monsters/{id}', [
+                        'controller' => 'Monsters',
+                        'action' => 'view'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->post('/campaigns/{campaignId}/monsters', [
+                        'controller' => 'Monsters',
+                        'action' => 'add'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->put('/campaigns/{campaignId}/monsters/{id}', [
+                        'controller' => 'Monsters',
+                        'action' => 'edit'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+                    $routes->delete('/campaigns/{campaignId}/monsters/{id}', [
+                        'controller' => 'Monsters',
+                        'action' => 'delete'
+                    ])
+                        ->setPass(['campaignId', 'id'])
+                        ->setPatterns([
+                            'campaignId' => '[0-9]+',
+                            'id' => '[0-9]+',
+                        ]);
+
+
                     /***********
                      * SPECIES *
                      ***********/
@@ -587,7 +641,7 @@ $routes->scope(
         if (Configure::read('enableCsrf')) {
             $routes->applyMiddleware('csrf');
         }
-        $routes->connect('*', 'Pages::display');
+        $routes->connect('ui/*', 'Pages::display');
 
         /**
          * Connect catchall routes for all controllers.

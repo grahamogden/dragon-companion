@@ -50,7 +50,7 @@
                             class="mr-2"></font-awesome-icon>Timelines
                     </ToolbarNavLink>
                     <ToolbarNavLink @click="toggleNavMenu(false)"
-                        :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
+                        :destination="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'user']" fixed-width
                             class="mr-2"></font-awesome-icon>Characters
                     </ToolbarNavLink>
@@ -70,12 +70,12 @@
                         <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2"></font-awesome-icon>Items
                     </ToolbarNavLink>
                     <ToolbarNavLink @click="toggleNavMenu(false)"
-                        :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
+                        :destination="{ name: 'monsters.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'dragon']" fixed-width
                             class="mr-2"></font-awesome-icon>Monsters
                     </ToolbarNavLink>
                     <ToolbarNavLink @click="toggleNavMenu(false)"
-                        :destination="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }">
+                        :destination="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width
                             class="mr-2"></font-awesome-icon>Permissions
                     </ToolbarNavLink>
@@ -90,7 +90,7 @@
         <nav class="toolbar grid grid-cols-4 gap-4" v-if="userAuthStore.isLoggedIn">
             <router-link v-if="campaignStore.isCampaignSelected"
                 class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center"
-                :to="{ name: 'characters', params: { externalCampaignId: campaignStore.campaignId } }"><img
+                :to="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }"><img
                     src="@/assets/images/dice-icon.svg" class="w-12 h-12 block rounded inline-block" /><span
                     class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change">Characters</span></router-link>
             <button type="button" class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 underline text-center"

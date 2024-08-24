@@ -1337,6 +1337,10 @@ thead.table-heading-dark {
   justify-items: stretch;
 }
 
+.gap-1{
+  gap: 0.25rem;
+}
+
 .gap-3{
   gap: 0.75rem;
 }
@@ -1347,14 +1351,6 @@ thead.table-heading-dark {
 
 .gap-6{
   gap: 1.5rem;
-}
-
-.gap-2{
-  gap: 0.5rem;
-}
-
-.gap-1{
-  gap: 0.25rem;
 }
 
 .gap-x-10{
@@ -1568,9 +1564,8 @@ thead.table-heading-dark {
   border-color: rgb(139 133 134 / var(--tw-border-opacity));
 }
 
-.border-woodsmoke-700{
-  --tw-border-opacity: 1;
-  border-color: rgb(81 77 77 / var(--tw-border-opacity));
+.border-woodsmoke-700\/50{
+  border-color: rgb(81 77 77 / 0.5);
 }
 
 .border-woodsmoke-900{
@@ -1581,10 +1576,6 @@ thead.table-heading-dark {
 .border-woodsmoke-950{
   --tw-border-opacity: 1;
   border-color: rgb(26 25 25 / var(--tw-border-opacity));
-}
-
-.border-woodsmoke-700\/50{
-  border-color: rgb(81 77 77 / 0.5);
 }
 
 .border-l-saffron-mango-300{
@@ -1720,18 +1711,6 @@ thead.table-heading-dark {
   background-size: cover;
 }
 
-.bg-\[center_top_-1\.5rem\]{
-  background-position: center top -1.5rem;
-}
-
-.bg-\[center_top_-3rem\]{
-  background-position: center top -3rem;
-}
-
-.bg-\[center_top_0rem\]{
-  background-position: center top 0rem;
-}
-
 .bg-center{
   background-position: center;
 }
@@ -1805,6 +1784,10 @@ thead.table-heading-dark {
 
 .pb-2{
   padding-bottom: 0.5rem;
+}
+
+.pb-4{
+  padding-bottom: 1rem;
 }
 
 .pl-3{
@@ -1933,24 +1916,14 @@ thead.table-heading-dark {
   color: rgb(251 251 255 / var(--tw-text-opacity));
 }
 
-.text-woodsmoke-950{
-  --tw-text-opacity: 1;
-  color: rgb(26 25 25 / var(--tw-text-opacity));
-}
-
-.text-woodsmoke-200{
-  --tw-text-opacity: 1;
-  color: rgb(210 207 207 / var(--tw-text-opacity));
-}
-
-.text-woodsmoke-400{
-  --tw-text-opacity: 1;
-  color: rgb(139 133 134 / var(--tw-text-opacity));
-}
-
 .text-woodsmoke-300{
   --tw-text-opacity: 1;
   color: rgb(178 174 174 / var(--tw-text-opacity));
+}
+
+.text-woodsmoke-950{
+  --tw-text-opacity: 1;
+  color: rgb(26 25 25 / var(--tw-text-opacity));
 }
 
 .underline{
@@ -2676,6 +2649,10 @@ thead.table-heading-dark {
   border-color: rgb(248 247 244 / var(--tw-border-opacity));
 }
 
+.dark\:border-timberwolf-50\/50:where(.dark, .dark *){
+  border-color: rgb(248 247 244 / 0.5);
+}
+
 .dark\:border-white-lilac-50:where(.dark, .dark *){
   --tw-border-opacity: 1;
   border-color: rgb(251 251 255 / var(--tw-border-opacity));
@@ -2694,10 +2671,6 @@ thead.table-heading-dark {
 .dark\:border-woodsmoke-900:where(.dark, .dark *){
   --tw-border-opacity: 1;
   border-color: rgb(61 60 60 / var(--tw-border-opacity));
-}
-
-.dark\:border-timberwolf-50\/50:where(.dark, .dark *){
-  border-color: rgb(248 247 244 / 0.5);
 }
 
 .dark\:bg-alizarin-crimson-700:where(.dark, .dark *){
