@@ -9,16 +9,16 @@
     <div class="flex flex-row content-stretch rounded-3xl shadow-lg">
       <SideNavigation></SideNavigation>
 
-      <main id="main-content"
-        class="relative w-full h-auto before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:md:rounded-r-3xl before:duration-theme-change">
-        <!-- <div v-if="campaignStore.isCampaignSelected" class="relative md:hidden p-2 border-b border-timberwolf-50/25">
-          Selected campaign: {{ campaignStore.campaignName }}</div> -->
-        <div class="relative w-full h-full p-2 md:p-6">
+      <div
+        class="relative w-full h-auto p-2 md:p-6 before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:md:rounded-r-3xl before:duration-theme-change">
+        <div class="relative w-full">
           <BannerContainer></BannerContainer>
           <Breadcrumbs></Breadcrumbs>
-          <slot></slot>
         </div>
-      </main>
+        <main id="main-content" class="relative w-full h-full">
+          <slot></slot>
+        </main>
+      </div>
     </div>
   </div>
 </template>

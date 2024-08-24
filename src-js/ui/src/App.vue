@@ -6,7 +6,6 @@
   import type { FirebaseApp } from 'firebase/app'
   import { useCampaignStore, useUserAuthStore, useConfigurationStore, ThemeEnum } from './stores'
   import LoadingSpinner from './components/loading-spinner/LoadingSpinner.vue'
-  import SideNavigation from './components/navigation/SideNavigation.vue'
   import ToolbarNavigation from './components/navigation/ToolbarNavigation.vue'
   import Default from './layouts/Default.vue'
   import Dashboard from './layouts/Dashboard.vue'

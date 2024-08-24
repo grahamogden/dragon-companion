@@ -8,6 +8,7 @@
   import PrimaryButton from '../../components/buttons/PrimaryButton.vue'
   import { useRouter } from 'vue-router';
   import { FirebaseError } from 'firebase/app';
+  import PageHeader from '../../components/page-header/PageHeader.vue'
 
   const username = ref('TheDragon')
   const email = ref('dragon.companion.app@gmail.com')
@@ -88,20 +89,11 @@
 
 <template>
   <div>
-    <h2>Register</h2>
-    <form @submit.prevent="register">
+    <PageHeader>Register</PageHeader>
+    <form @submit.prevent="register" class="flex flex-col gap-6">
       <TextInput input-name="username" label="Username" v-model="username" />
       <TextInput input-name="email" label="Email" v-model="email" />
       <PasswordInput input-name="password" label="Password" v-model="password" />
-      <!-- <div>
-        <label>Email:</label>
-        <input type="email" v-model="email" required />
-      </div> -->
-      <!-- <div>
-        <label>Password:</label>
-        <input type="password" v-model="password" required />
-      </div> -->
-      <!-- <button class="primary-button" type="submit">Login</button> -->
       <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-6">
         <div class="md:order-last">
           <PrimaryButton text="Register" />

@@ -6,6 +6,7 @@
   import TextInput from '../../components/fields/TextInput.vue'
   import PasswordInput from '../../components/fields/PasswordInput.vue'
   import PrimaryButton from '../../components/buttons/PrimaryButton.vue'
+  import PageHeader from '../../components/page-header/PageHeader.vue'
 
   const email = ref('dragon.companion.app@gmail.com')
   const password = ref('password123')
@@ -32,19 +33,10 @@
 
 <template>
   <div>
-    <h1>Log in</h1>
-    <form @submit.prevent="logIn" class="flex flex-col">
-      <!-- <div>
-        <label>Email:</label>
-        <input type="email" v-model="email" required />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" v-model="password" required />
-      </div> -->
+    <PageHeader>Log in</PageHeader>
+    <form @submit.prevent="logIn" class="flex flex-col gap-6">
       <TextInput input-name="email" label="Email" v-model:model="email" />
       <PasswordInput input-name="password" label="Password" v-model:model="password" />
-      <!-- <button class="primary-button" type="submit">Login</button> -->
       <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-6">
         <div class="md:order-last">
           <PrimaryButton text="Log in" />
