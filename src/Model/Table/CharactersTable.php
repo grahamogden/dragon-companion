@@ -8,14 +8,12 @@ use App\Model\Entity\Campaign;
 use App\Model\Entity\Character;
 use App\Model\Entity\CharacterPermission;
 use App\Model\Entity\Participant;
-use App\Model\Entity\Role;
 use App\Model\Entity\Species;
 use App\Model\Entity\User;
 use App\Services\TablePermissionsHelper\TablePermissionsHelper;
 use Authorization\Identity;
 use Cake\Datasource\QueryInterface;
 use Cake\ORM\Association\BelongsTo;
-use Cake\ORM\Association\HasMany;
 use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -26,7 +24,6 @@ use Cake\Validation\Validator;
  *
  * @property UsersTable&BelongsTo $Users
  * @property CampaignsTable&BelongsTo $Campaigns
- * @property ParticipantsTable&HasMany $Participants
  * @property RolesTable&BelongsToMany $Roles
  * @property SpeciesTable&BelongsTo $Species
  *
@@ -68,7 +65,7 @@ class CharactersTable extends Table
 
         $this->setTable(self::TABLE_NAME);
         $this->setDisplayField(Character::FIELD_NAME);
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey(Character::FIELD_ID);
 
         $this->belongsTo(User::ENTITY_NAME, [
             'foreignKey' => Character::FIELD_USER_ID,
@@ -78,9 +75,9 @@ class CharactersTable extends Table
             'foreignKey' => Character::FIELD_CAMPAIGN_ID,
             'joinType' => 'INNER',
         ]);
-        $this->hasMany(Participant::ENTITY_NAME, [
-            'foreignKey' => Participant::FIELD_CHARACTER_ID,
-        ]);
+        // $this->hasMany(Participant::ENTITY_NAME, [
+        //     'foreignKey' => Participant::FIELD_CHARACTER_ID,
+        // ]);
         $this->belongsTo(Species::ENTITY_NAME, [
             'foreignKey' => Character::FIELD_SPECIES_ID,
             'joinType' => 'INNER',

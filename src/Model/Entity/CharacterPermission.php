@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
 use App\Model\Enum\RolePermission;
 
 /**
- * CharactersRole Entity
+ * CharacterPermissions Entity
  *
  * @property int $id
  * @property int $character_id
@@ -42,6 +42,7 @@ class CharacterPermission extends Entity implements PermissionInterface
         self::FIELD_PERMISSIONS => true,
         'character' => true,
         'role' => true,
+        '_matchingData',
     ];
 
     protected array $_hidden = [

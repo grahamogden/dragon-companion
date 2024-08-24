@@ -46,6 +46,7 @@ class ItemPermission extends Entity implements PermissionInterface
 
     protected array $_hidden = [
         self::FIELD_PERMISSIONS,
+        '_matchingData',
     ];
 
     public function getItemId(): int

@@ -54,7 +54,7 @@ class CharactersController extends ApiAppController
         /** @var Character $character */
         $character = $this->Characters->newEmptyEntity();
 
-        $character->setAccess(field: UsersTable::TABLE_NAME, set: true);
+        $character->setAccess(field: Character::FIELD_USER_ID, set: true);
         $character->setAccess(field: Character::FIELD_CAMPAIGN_ID, set: true);
         $character = $this->Characters->patchEntity(
             entity: $character,

@@ -85,6 +85,7 @@ class Timeline extends Entity implements CampaignChildEntityInterface, EntityInt
         self::FIELD_CAMPAIGN_ID,
         self::FIELD_USER_ID,
         self::FIELD_TIMELINE_PERMISSIONS,
+        '_matchingData',
     ];
 
     public function getCampaignId(): int

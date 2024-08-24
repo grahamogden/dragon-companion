@@ -60,6 +60,7 @@ class Species extends Entity implements CampaignChildEntityInterface, EntityInte
         self::FIELD_CAMPAIGN_ID,
         self::FIELD_USER_ID,
         self::FIELD_SPECIES_PERMISSIONS,
+        '_matchingData',
     ];
 
     public function getCampaignId(): int

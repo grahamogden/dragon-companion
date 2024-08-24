@@ -42,6 +42,7 @@ class TimelinePermission extends Entity implements PermissionInterface
         self::FIELD_PERMISSIONS => true,
         'timeline' => true,
         'role' => true,
+        '_matchingData',
     ];
 
     protected array $_hidden = [

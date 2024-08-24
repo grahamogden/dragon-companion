@@ -20,12 +20,12 @@ use Cake\ORM\Entity;
  * @property int $user_id
  * @property int $campaign_id
  * @property string $name
- * @property int $age
- * @property int $max_hit_points
- * @property int $armour_class
- * @property int $dexterity_modifier
- * @property string $appearance
- * @property string $notes
+ * @property int|null $age
+ * @property int|null $max_hit_points
+ * @property int|null $armour_class
+ * @property int|null $dexterity_modifier
+ * @property string|null $appearance
+ * @property string|null $notes
  *
  * @property User $user
  * @property Campaign $campaign
@@ -84,6 +84,7 @@ class Character extends Entity implements CampaignChildEntityInterface, EntityIn
         self::FIELD_CAMPAIGN_ID,
         self::FIELD_USER_ID,
         self::FIELD_CHARACTER_PERMISSIONS,
+        '_matchingData',
     ];
 
     public function getCampaignId(): int

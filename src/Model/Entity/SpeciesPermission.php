@@ -54,6 +54,7 @@ class SpeciesPermission extends Entity implements PermissionInterface
 
     protected array $_hidden = [
         self::FIELD_PERMISSIONS,
+        '_matchingData',
     ];
 
     public function getSpeciesId(): int

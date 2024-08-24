@@ -64,6 +64,7 @@ class Item extends Entity implements CampaignChildEntityInterface, EntityInterfa
         self::FIELD_CAMPAIGN_ID,
         self::FIELD_USER_ID,
         self::FIELD_ITEM_PERMISSIONS,
+        '_matchingData',
     ];
 
     public function getCampaignId(): int

@@ -45,6 +45,7 @@ class CampaignPermission extends Entity
 
     protected array $_hidden = [
         self::FIELD_PERMISSIONS,
+        '_matchingData',
     ];
 
     public function getCampaignId(): int

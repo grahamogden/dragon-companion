@@ -63,17 +63,17 @@ class User extends Entity implements IdentityInterface
     protected array $_accessible = [
         self::FIELD_USERNAME => true,
         self::FIELD_EMAIL => true,
-        self::FIELD_CREATED => true,
-        self::FIELD_MODIFIED => true,
-        self::FIELD_STATUS => true,
-        self::FIELD_EXTERNAL_USER_ID => true,
-        'campaigns' => true,
-        'characters' => true,
-        'combat_encounters' => true,
-        'species' => true,
-        'tags' => true,
-        'timelines' => true,
-        'roles' => true,
+        self::FIELD_CREATED => false,
+        self::FIELD_MODIFIED => false,
+        self::FIELD_STATUS => false,
+        self::FIELD_EXTERNAL_USER_ID => false,
+        'campaigns' => false,
+        'characters' => false,
+        'combat_encounters' => false,
+        'species' => false,
+        'tags' => false,
+        'timelines' => false,
+        'roles' => false,
     ];
 
     /**

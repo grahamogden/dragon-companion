@@ -98,7 +98,7 @@ class TimelinesController extends ApiAppController
         /** @var Timeline $timeline */
         $timeline = $this->Timelines->newEmptyEntity();
 
-        $timeline->setAccess(field: UsersTable::TABLE_NAME, set: true);
+        $timeline->setAccess(field: Timeline::FIELD_USER_ID, set: true);
         $timeline = $this->Timelines->patchEntity(
             entity: $timeline,
             data: $data

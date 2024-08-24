@@ -13,6 +13,7 @@ use App\Model\Entity\Species;
 use App\Model\Entity\Tag;
 use App\Model\Entity\Timeline;
 use App\Model\Entity\User;
+use App\Model\Enum\UserStatus;
 use Cake\ORM\Association\HasMany;
 use Cake\ORM\Association\BelongsToMany;
 use Cake\ORM\Query\SelectQuery;
@@ -114,7 +115,8 @@ class UsersTable extends Table
 
         $validator
             ->requirePresence(User::FIELD_STATUS, 'create')
-            ->notEmptyString(User::FIELD_STATUS);
+            ->notEmptyString(User::FIELD_STATUS)
+            ->inList(User::FIELD_STATUS, UserStatus::getValues());
 
         $validator
             ->scalar(User::FIELD_EXTERNAL_USER_ID)

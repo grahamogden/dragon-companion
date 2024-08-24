@@ -53,7 +53,8 @@ class ItemsController extends ApiAppController
         /** @var Item $item */
         $item = $this->Items->newEmptyEntity();
 
-        $item->setAccess(field: UsersTable::TABLE_NAME, set: true);
+        $item->setAccess(field: Item::FIELD_USER_ID, set: true);
+        $item->setAccess(field: Item::FIELD_CAMPAIGN_ID, set: true);
         $item = $this->Items->patchEntity(
             entity: $item,
             data: $data

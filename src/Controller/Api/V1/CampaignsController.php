@@ -10,12 +10,11 @@ use App\Model\Entity\CampaignPermission;
 use App\Model\Table\UsersTable;
 use App\Error\Api\BadRequestError;
 use App\Error\Api\NotFoundError;
-use App\Error\Api\UnauthorizedError;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Enum\EntityVisibility;
 use App\Model\Enum\RoleLevel;
 use App\Model\Enum\RolePermission;
-use App\Model\Table\CampaignPermissionsTable;
 use App\Model\Table\RolesTable;
 
 /**
@@ -56,13 +55,9 @@ class CampaignsController extends ApiAppController
         $data['user_id'] = $this->user['id'];
 
         /** @var Campaign $campaign */
-        $campaign = $this->Campaigns->newEmptyEntity();
+        $campaign = $this->Campaigns->newEntity(data: $data, options: ['accessibleFields' => [UsersTable::TABLE_NAME => true]]);
 
         $campaign->setAccess(field: UsersTable::TABLE_NAME, set: true);
-        $campaign = $this->Campaigns->patchEntity(
-            entity: $campaign,
-            data: $data
-        );
 
         $this->isAuthorized(entity: $campaign);
 
