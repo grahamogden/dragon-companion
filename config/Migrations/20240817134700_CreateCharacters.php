@@ -45,6 +45,7 @@ class CreateCharacters extends AbstractMigration
             ->addColumn('age', 'integer', [
                 'default' => null,
                 'null' => true,
+                'signed' => false,
             ])
             ->addColumn('max_hit_points', 'integer', [
                 'default' => null,
@@ -59,6 +60,7 @@ class CreateCharacters extends AbstractMigration
             ->addColumn('dexterity_modifier', 'tinyinteger', [
                 'default' => null,
                 'null' => true,
+                'signed' => false,
             ])
             ->addColumn('appearance', 'text', [
                 'default' => null,
