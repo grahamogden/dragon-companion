@@ -8,16 +8,17 @@ use App\Model\Enum\Trait\EnumCaseValuesTrait;
 use Cake\Database\Type\EnumLabelInterface;
 use Cake\Utility\Inflector;
 
-/**
- * UserStatus Enum
- */
-enum UserStatus: int implements EnumLabelInterface
+enum MonsterSize: int implements EnumLabelInterface
 {
     use EnumCaseValuesTrait;
 
-    case Inactive = 0;
-    case Pending = 5;
-    case Active = 10;
+    case Unknown = 0;
+    case Tiny = 20;
+    case Small = 30;
+    case Medium = 40;
+    case Large = 50;
+    case Huge = 60;
+    case Gargantuan = 70;
 
     /**
      * @return string
