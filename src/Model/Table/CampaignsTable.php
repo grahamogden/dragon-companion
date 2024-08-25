@@ -11,19 +11,14 @@ use App\Model\Entity\RolesUser;
 use App\Model\Entity\User;
 use App\Services\TablePermissionsHelper\TablePermissionsHelper;
 use Authorization\Identity;
-use Cake\Database\Query;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\ResultSetInterface;
-use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\HasMany;
 use Cake\Validation\Validator;
-use Closure;
-use Psr\SimpleCache\CacheInterface;
 
 /**
  * Campaigns Model
@@ -139,7 +134,18 @@ class CampaignsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn([Campaign::FIELD_USER_ID], 'Users'), ['errorField' => Campaign::FIELD_USER_ID]);
+        $rules->add($rules->existsIn([Campaign::FIELD_USER_ID], User::ENTITY_NAME), ['errorField' => Campaign::FIELD_USER_ID]);
+        $rules->add(
+            $rules->validCount(
+                field: Campaign::FIELD_USER_ID,
+                count: Campaign::MAX_CAMPAIGN_COUNT,
+                operator: '<=',
+                message: sprintf(
+                    'You can currently only have %s campaign(s) on your account',
+                    Campaign::MAX_CAMPAIGN_COUNT
+                )
+            )
+        );
 
         return $rules;
     }

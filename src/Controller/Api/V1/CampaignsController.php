@@ -39,12 +39,10 @@ class CampaignsController extends ApiAppController
 
     public function index(): void
     {
-        // We can skip authorization here because we are only going to get Campaigns
-        // that are actually linked to the user ID provided - so you can't sneakily
-        // get someone else's
-        $this->Authorization->skipAuthorization();
-
         $campaigns = $this->Campaigns->findByUserIdWithPermissionsCheck(identity: $this->user);
+
+        // Skip the authorization because it happens when we get the entities from the DB
+        $this->Authorization->skipAuthorization();
 
         $this->output(['campaigns' => $campaigns]);
     }
@@ -67,7 +65,7 @@ class CampaignsController extends ApiAppController
             $this->output(compact('campaign'));
             $this->response = $this->apiResponseHeaderService->returnCreatedResponse(response: $this->response);
         } elseif ($campaign->getErrors()) {
-            throw new BadRequestError(errors: $campaign->getErrors());
+            throw new BadRequestError(message: 'Error adding Campaign', errors: $campaign->getErrors());
         }
     }
 
@@ -127,7 +125,7 @@ class CampaignsController extends ApiAppController
         );
 
         if (!$rolesTable->save(entity: $role)) {
-            throw new BadRequestError(errors: $role->getErrors());
+            throw new BadRequestError(message: 'Error creating Roles for Campaign', errors: $role->getErrors());
         }
 
         return $role;
@@ -159,6 +157,11 @@ class CampaignsController extends ApiAppController
     public function edit(int $id): void
     {
         $campaign = $this->Campaigns->get(primaryKey: $id, contain: [User::ENTITY_NAME, CampaignPermission::ENTITY_NAME]);
+
+        if ($campaign === null) {
+            throw new NotFoundError(message: "Campaign $id not found");
+        }
+
         $data = $this->request->getData();
 
         $this->isAuthorized(entity: $campaign);
@@ -169,21 +172,25 @@ class CampaignsController extends ApiAppController
             $this->output(compact('campaign'));
             $this->response = $this->apiResponseHeaderService->returnNoContentResponse(response: $this->response);
         } else {
-            throw new NotFoundError(message: "Campaign $id not found");
+            throw new BadRequestError(message: "Error saving Campaign: $id", errors: $campaign->getErrors());
         }
     }
-
 
     public function delete(int $id): void
     {
         $campaign = $this->Campaigns->get(primaryKey: $id, contain: [User::ENTITY_NAME, CampaignPermission::ENTITY_NAME]);
 
+        if ($campaign === null) {
+            throw new NotFoundError(message: "Campaign $id not found");
+        }
+
         $this->isAuthorized(entity: $campaign);
 
         if ($this->Campaigns->delete(entity: $campaign)) {
+            $this->output([]);
             $this->response = $this->apiResponseHeaderService->returnNoContentResponse(response: $this->response);
         } else {
-            throw new NotFoundError(message: "Campaign $id not found");
+            throw new BadRequestError(message: "Error deleting Campaign: $id", errors: $campaign->getErrors());
         }
     }
 }

@@ -14,6 +14,7 @@ use Cake\Event\EventManagerInterface;
 use Cake\Http\ServerRequest;
 use App\InputFilter\Api\V1\Timelines\IndexQueryParameterInputFilter;
 use App\InputFilter\Api\V1\Timelines\ViewQueryParameterInputFilter;
+use App\Model\Entity\User;
 
 /**
  * Timelines Controller
@@ -116,7 +117,7 @@ class TimelinesController extends ApiAppController
 
     public function edit(int $campaignId, int $id): void
     {
-        $timeline = $this->Timelines->get(primaryKey: $id, contain: 'Users');
+        $timeline = $this->Timelines->get(primaryKey: $id, contain: User::ENTITY_NAME);
 
         if ($timeline === null) {
             throw new NotFoundError(message: "Timeline $id not found");

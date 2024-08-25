@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use App\Model\Entity\Interface\EntityInterfaceWithUserIdInterface;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Entity;
 
 /**
@@ -24,7 +25,7 @@ use Cake\ORM\Entity;
  * @property Tag[] $tags
  * @property Timeline[] $timelines
  */
-class Campaign extends Entity implements EntityInterfaceWithUserIdInterface
+class Campaign extends Entity implements EntityInterface, EntityInterfaceWithUserIdInterface
 {
     public const ENTITY_NAME = 'Campaigns';
 
@@ -34,6 +35,8 @@ class Campaign extends Entity implements EntityInterfaceWithUserIdInterface
     public const FIELD_USER_ID = 'user_id';
 
     public const FUNC_GET_CAMPAIGN_PERMISSIONS = 'getCampaignPermissions';
+
+    public const MAX_CAMPAIGN_COUNT = 1;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
