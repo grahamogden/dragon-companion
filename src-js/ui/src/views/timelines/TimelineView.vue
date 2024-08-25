@@ -11,6 +11,7 @@
   import TimelineLinearItemCard from '../../components/timeline/linear/items/TimelineLinearItemCard.vue'
   import { NodePositionEnum } from '../../components/timeline/linear/interface/timeline.linear.item.node-position.interface';
   import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../components/page-header/interface'
+  import LinkButton from '../../components/buttons/LinkButton.vue';
 
   const route = useRoute()
   const timelineStore = useTimelineStore()
@@ -25,13 +26,7 @@
   function fetchTimeline(campaignId: number, timelineId: number) {
     isLoading.value = true
     timelineStore.findOneTimeline(campaignId, timelineId, true).then((timelineRes) => {
-      // console.debug(timeline)
       if (timelineRes !== null) {
-        // timeline.value.id = timelineRes.id
-        // timeline.value.title = timelineRes.title
-        // timeline.value.body = timelineRes.body
-        // timeline.value.parent_id = timelineRes.parent_id
-        // timeline.value.child_timelines = timelineRes.child_timelines
         timeline.value = timelineRes
       }
       isLoading.value = false
@@ -59,39 +54,39 @@
 
 <template>
   <div class="timeline-view">
-    <page-header
-      :link="new PageHeaderLink('Edit', { name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }, PageHeaderLinkActionEnum.EDIT)">{{
-        timeline.title ? timeline.title : 'Timeline' }}</page-header>
-    <loading-page :is-loading="isLoading">
+    <PageHeader
+      :link="new PageHeaderLink('Edit', { name: 'timelines.edit', params: { externalCampaignId: campaignId, timelineId: timelineId } }, PageHeaderLinkActionEnum.EDIT)">
+      {{
+        timeline.title ? timeline.title : 'Timeline' }}</PageHeader>
+    <LoadingPage :is-loading="isLoading">
       <template #content>
-        <content-group><template #content>{{ timeline.body }}</template></content-group>
-        <content-group v-if="timeline.parent_id"><template #heading>Parent timeline</template><template
+        <ContentGroup><template #content>{{ timeline.body }}</template></ContentGroup>
+        <ContentGroup v-if="timeline.parent_id"><template #heading>Parent timeline</template><template
             #content><router-link
               :to="{ name: 'timelines.view', params: { externalCampaignId: campaignId, timelineId: timeline.parent_id } }">{{
-        timeline.parent_id }}</router-link></template></content-group>
-        <content-group>
-          <template #heading>Child timelines</template>
-          <template #content>
-            <!-- <view-list-table :campaign-id="campaignId" :timeline-id="timelineId"
-              :headings="[new EntityTableHeading('title', true), new EntityTableHeading('body')]"
-              :entities="timeline.child_timelines" :view-link="new EntityTableLink('timelines.view', 'timelineId')"
+                timeline.parent_id }}</router-link></template></ContentGroup>
+        <h3 class="mb-2 font-bold">Child timelines</h3>
+        <div v-if="(timeline.child_timelines?.length ?? 0) > 0" class="mt-4 md:px-6">
+          <TimelineLinear v-if="timeline.child_timelines">
+            <TimelineLinearItemCard v-for="(timelineItem, key) in timeline.child_timelines" :campaignId="campaignId"
+              :node-position="key === 0 ? NodePositionEnum.start : (key + 1) === timeline.child_timelines.length ? NodePositionEnum.end : NodePositionEnum.both"
+              :entity="timelineItem" :view-link="new EntityTableLink('timelines.view', 'timelineId')"
               :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
-              :delete-confirmation-function="confirmDelete" kebab-menu-button-aria-context="Timeline"></view-list-table> -->
-            <div class="mt-4 md:px-6">
-              <timeline-linear v-if="timeline.child_timelines">
-                <timeline-linear-item-card v-for="(timelineItem, key) in timeline.child_timelines"
-                  :campaignId="campaignId"
-                  :node-position="key === 0 ? NodePositionEnum.start : (key + 1) === timeline.child_timelines.length ? NodePositionEnum.end : NodePositionEnum.both"
-                  :entity="timelineItem" :view-link="new EntityTableLink('timelines.view', 'timelineId')"
-                  :edit-link="new EntityTableLink('timelines.edit', 'timelineId')"
-                  :delete-confirmation-function="confirmDelete"
-                  kebab-menu-button-aria-context="Timeline"></timeline-linear-item-card>
-              </timeline-linear>
-            </div>
-          </template>
-        </content-group>
+              :delete-confirmation-function="confirmDelete" kebab-menu-button-aria-context="Timeline">
+            </TimelineLinearItemCard>
+          </TimelineLinear>
+        </div>
+        <div v-else class="text-center pb-4">
+          No child timelines
+        </div>
+        <div class="flex justify-center">
+          <LinkButton :destination="{ name: 'timelines.add', params: { campaignId: campaignId } }">
+            <font-awesome-icon :icon="['fas', 'plus']" fixed-width class="mr-2" />Add child
+            timeline
+          </LinkButton>
+        </div>
       </template>
       <template #loading-text>timeline</template>
-    </loading-page>
+    </LoadingPage>
   </div>
 </template>

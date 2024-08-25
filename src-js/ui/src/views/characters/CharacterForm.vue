@@ -9,6 +9,8 @@
     import type SelectInputOptionInterface from '../../components/elements/interface/select-input-option.interface';
     import SelectInput from '../../components/fields/SelectInput.vue';
     import TextArea from '../../components/fields/TextArea.vue'
+    import Input from '../../components/fields/Input.vue'
+    import BaseInput from '../../components/fields/BaseInput.vue'
 
     const isLoading = ref<boolean>(true)
     const campaignStore = useCampaignStore()
@@ -60,9 +62,9 @@
             <form @submit.prevent="submitForm" class="flex flex-col gap-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-6">
                     <div class="">
-                        <TextInput inputName="name" v-model:model="character.name" label="Character Name"
+                        <BaseInput type="text" inputName="name" v-model:model="character.name" label="Character Name"
                             :require="true">
-                        </TextInput>
+                        </BaseInput>
                     </div>
                     <div class="">
                         <SelectInput inputName="species" v-model:model="character.species_id" label="Species"
@@ -72,20 +74,20 @@
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-6">
                     <div class="">
-                        <NumberInput inputName="age" v-model:model="character.age" label="Age">
-                        </NumberInput>
+                        <BaseInput type="number" inputName="age" v-model:model="character.age" label="Age">
+                        </BaseInput>
                     </div>
                     <div class="">
-                        <NumberInput inputName="maxHitPoints" v-model:model="character.max_hit_points"
-                            label="Max hit points"></NumberInput>
+                        <BaseInput type="number" inputName="maxHitPoints" v-model:model="character.max_hit_points"
+                            label="Max hit points"></BaseInput>
                     </div>
                     <div class="">
-                        <NumberInput inputName="armourClass" v-model:model="character.armour_class"
-                            label="Armour class"></NumberInput>
+                        <BaseInput type="number" inputName="armourClass" v-model:model="character.armour_class"
+                            label="Armour class"></BaseInput>
                     </div>
                     <div class="">
-                        <NumberInput inputName="dexterityModifier" v-model:model="character.dexterity_modifier"
-                            label="Dexterity modifier"></NumberInput>
+                        <BaseInput type="number" inputName="dexterityModifier"
+                            v-model:model="character.dexterity_modifier" label="Dexterity modifier"></BaseInput>
                     </div>
                 </div>
                 <div class="w-full">

@@ -2,7 +2,7 @@
     import { computed } from 'vue';
     import { useValidationStore } from '../../stores/validation';
 
-    const emit = defineEmits(['updateValue'])
+    // const emit = defineEmits(['updateValue'])
     const props = defineProps<{
         inputName: string
         label?: string | number
@@ -23,7 +23,7 @@
         <slot></slot>
         <div v-if="errors.length > 0" class="mt-2 text-sm text-alizarin-crimson-800 dark:text-alizarin-crimson-400">{{
             errors.join(', ')
-            }}
+        }}
         </div>
     </div>
 </template>

@@ -1038,11 +1038,6 @@ thead.table-heading-dark {
   margin-bottom: 0.5rem;
 }
 
-.my-4{
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 .-mt-2{
   margin-top: -0.5rem;
 }
@@ -1545,10 +1540,6 @@ thead.table-heading-dark {
   border-color: rgb(248 247 244 / var(--tw-border-opacity));
 }
 
-.border-timberwolf-50\/25{
-  border-color: rgb(248 247 244 / 0.25);
-}
-
 .border-transparent{
   border-color: transparent;
 }
@@ -1570,11 +1561,6 @@ thead.table-heading-dark {
 
 .border-woodsmoke-700\/50{
   border-color: rgb(81 77 77 / 0.5);
-}
-
-.border-woodsmoke-900{
-  --tw-border-opacity: 1;
-  border-color: rgb(61 60 60 / var(--tw-border-opacity));
 }
 
 .border-woodsmoke-950{
@@ -1784,10 +1770,6 @@ thead.table-heading-dark {
 
 .pb-1{
   padding-bottom: 0.25rem;
-}
-
-.pb-2{
-  padding-bottom: 0.5rem;
 }
 
 .pb-4{
@@ -2330,14 +2312,14 @@ thead.table-heading-dark {
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
 }
 
-.focus\:bg-timberwolf-50:focus{
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 247 244 / var(--tw-bg-opacity));
-}
-
 .focus\:bg-saffron-mango-600:focus{
   --tw-bg-opacity: 1;
   background-color: rgb(210 101 13 / var(--tw-bg-opacity));
+}
+
+.focus\:bg-timberwolf-50:focus{
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 247 244 / var(--tw-bg-opacity));
 }
 
 .focus\:p-4:focus{
@@ -2569,11 +2551,6 @@ thead.table-heading-dark {
 
   .lg\:right-0{
     right: 0px;
-  }
-
-  .lg\:my-0{
-    margin-top: 0px;
-    margin-bottom: 0px;
   }
 
   .lg\:mb-4{

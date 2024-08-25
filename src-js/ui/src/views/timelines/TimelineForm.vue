@@ -8,6 +8,7 @@
     import { useTimelineStore } from '../../stores';
     import { ref, watch } from 'vue';
     import LoadingPage from '../../components/loading-page/LoadingPage.vue';
+    import BaseInput from '../../components/fields/BaseInput.vue'
 
     const isLoading = ref<boolean>(true)
     const timeline = defineModel<TimelineEntityInterface>('timeline', { required: true })
@@ -53,22 +54,23 @@
 </script>
 
 <template>
-    <loading-page :is-loading="isLoading">
+    <LoadingPage :is-loading="isLoading">
         <template #content>
             <form @submit.prevent="submitForm" class="flex flex-row flex-wrap gap-6">
                 <div class="w-full md:w-auto grow">
-                    <text-input inputName="title" v-model:model="timeline.title" label="Title" :require="true" />
+                    <BaseInput type="text" inputName="title" v-model:model="timeline.title" label="Title"
+                        :require="true"></BaseInput>
                 </div>
                 <div class="w-full md:w-auto grow">
-                    <select-input v-model:model="timeline.parent_id" label="Parent timeline" input-name="parent_id"
-                        :options="timelineOptions" />
+                    <SelectInput v-model:model="timeline.parent_id" label="Parent timeline" input-name="parent_id"
+                        :options="timelineOptions"></SelectInput>
                 </div>
                 <div class="w-full">
-                    <text-area input-name="body" v-model:model="timeline.body" label="Body" :require="true" />
+                    <TextArea input-name="body" v-model:model="timeline.body" label="Body" :require="true"></TextArea>
                 </div>
                 <EntityButtonWrapper :cancelDestination="{ name: 'timelines.list' }" />
             </form>
         </template>
         <template #loading-text>timeline</template>
-    </loading-page>
+    </LoadingPage>
 </template>

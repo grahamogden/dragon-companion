@@ -7,6 +7,7 @@
   import PasswordInput from '../../components/fields/PasswordInput.vue'
   import PrimaryButton from '../../components/buttons/PrimaryButton.vue'
   import PageHeader from '../../components/page-header/PageHeader.vue'
+  import BaseInput from '../../components/fields/BaseInput.vue'
 
   const email = ref('dragon.companion.app@gmail.com')
   const password = ref('password123')
@@ -35,13 +36,14 @@
   <div>
     <PageHeader>Log in</PageHeader>
     <form @submit.prevent="logIn" class="flex flex-col gap-6">
-      <TextInput input-name="email" label="Email" v-model:model="email" />
-      <PasswordInput input-name="password" label="Password" v-model:model="password" />
+      <BaseInput type="email" input-name="email" label="Email" v-model:model="email"></BaseInput>
+      <BaseInput type="password" input-name="password" label="Password" v-model:model="password"></BaseInput>
       <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-6">
         <div class="md:order-last">
-          <PrimaryButton text="Log in" />
+          <PrimaryButton text="Log in"></PrimaryButton>
         </div>
-        <div class="w-full md:w-auto text-center"><router-link :to="{ name: 'home' }" class="my-2">Cancel</router-link>
+        <div class="w-full md:w-auto text-center">
+          <RouterLink :to="{ name: 'home' }" class="my-2">Cancel</RouterLink>
         </div>
       </div>
     </form>
