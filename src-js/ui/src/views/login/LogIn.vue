@@ -3,8 +3,6 @@
   import { inject, ref } from 'vue'
   import { useRouter, RouterLink } from 'vue-router'
   import { firebaseAppKey } from '../../keys'
-  import TextInput from '../../components/fields/TextInput.vue'
-  import PasswordInput from '../../components/fields/PasswordInput.vue'
   import PrimaryButton from '../../components/buttons/PrimaryButton.vue'
   import PageHeader from '../../components/page-header/PageHeader.vue'
   import BaseInput from '../../components/fields/BaseInput.vue'
@@ -20,7 +18,7 @@
       .then(() => {
         signInWithEmailAndPassword(auth, email.value, password.value)
           .then((data: UserCredential) => {
-            router.push('campaigns')
+            router.push({ name: 'campaigns.list' })
           })
           .catch((error) => {
             console.error(error)
@@ -35,10 +33,10 @@
 <template>
   <div>
     <PageHeader>Log in</PageHeader>
-    <form @submit.prevent="logIn" class="flex flex-col gap-6">
+    <form @submit.prevent="logIn" class="flex flex-col gap-default md:gap-default-md">
       <BaseInput type="email" input-name="email" label="Email" v-model:model="email"></BaseInput>
       <BaseInput type="password" input-name="password" label="Password" v-model:model="password"></BaseInput>
-      <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-6">
+      <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-default md:gap-y-default-md">
         <div class="md:order-last">
           <PrimaryButton text="Log in"></PrimaryButton>
         </div>

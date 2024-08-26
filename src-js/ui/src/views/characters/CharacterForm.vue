@@ -9,7 +9,6 @@
     import type SelectInputOptionInterface from '../../components/elements/interface/select-input-option.interface';
     import SelectInput from '../../components/fields/SelectInput.vue';
     import TextArea from '../../components/fields/TextArea.vue'
-    import Input from '../../components/fields/Input.vue'
     import BaseInput from '../../components/fields/BaseInput.vue'
 
     const isLoading = ref<boolean>(true)
@@ -59,8 +58,8 @@
 <template>
     <loading-page :is-loading="props.isParentLoading">
         <template #content>
-            <form @submit.prevent="submitForm" class="flex flex-col gap-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-6">
+            <form @submit.prevent="submitForm" class="flex flex-col gap-default md:gap-default-md">
+                <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-default md:gap-default-md">
                     <div class="">
                         <BaseInput type="text" inputName="name" v-model:model="character.name" label="Character Name"
                             :require="true">
@@ -72,7 +71,7 @@
                         </SelectInput>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-default md:gap-default-md">
                     <div class="">
                         <BaseInput type="number" inputName="age" v-model:model="character.age" label="Age">
                         </BaseInput>

@@ -56,7 +56,7 @@
 <template>
     <LoadingPage :is-loading="isLoading">
         <template #content>
-            <form @submit.prevent="submitForm" class="flex flex-row flex-wrap gap-6">
+            <form @submit.prevent="submitForm" class="flex flex-row flex-wrap gap-default md:gap-default-md">
                 <div class="w-full md:w-auto grow">
                     <BaseInput type="text" inputName="title" v-model:model="timeline.title" label="Title"
                         :require="true"></BaseInput>

@@ -19,7 +19,7 @@
 <template>
     <loading-page :is-loading="props.isParentLoading">
         <template #content>
-            <form @submit.prevent="submitForm" class="flex flex-row flex-wrap gap-6">
+            <form @submit.prevent="submitForm" class="flex flex-row flex-wrap gap-default md:gap-default-md">
                 <div class="w-full md:w-2/4">
                     <BaseInput type="text" inputName="name" v-model:model="item.name" label="Item Name" :require="true">
                     </BaseInput>

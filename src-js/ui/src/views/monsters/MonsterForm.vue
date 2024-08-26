@@ -34,13 +34,13 @@
 <template>
     <LoadingPage :is-loading="props.isParentLoading">
         <template #content>
-            <form @submit.prevent="submitForm" class="flex flex-col gap-6">
+            <form @submit.prevent="submitForm" class="flex flex-col gap-default md:gap-default-md">
                 <div class="">
                     <BaseInput type="text" inputName="name" v-model:model="monster.name" label="Monster Name"
                         :require="true">
                     </BaseInput>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-default md:gap-default-md">
                     <div class="">
                         <BaseInput type="number" inputName="default_hit_points"
                             v-model:model="monster.default_hit_points" label="Default hit points">
@@ -60,7 +60,7 @@
                             v-model:model="monster.calculated_hit_points_modifier" label="Modifier"></BaseInput>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-default md:gap-default-md">
                     <div class="">
                         <BaseInput type="number" inputName="armour_class" v-model:model="monster.armour_class"
                             label="Armour class (AC)">
