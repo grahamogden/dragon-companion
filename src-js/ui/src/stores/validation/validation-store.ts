@@ -38,12 +38,12 @@ export const useValidationStore = defineStore('validation', {
             this.errors[field] = error
         },
         addErrors(errors: Record<string, ValidationError>) {
-            const fields = Object.keys(errors) as Array<keyof ValidationError>
+            const fieldsWithErrors = Object.keys(errors) as Array<keyof ValidationError>
 
-            fields.forEach((field: keyof ValidationError) => {
-                const error = errors[field]
+            fieldsWithErrors.forEach((fieldWithError: keyof ValidationError) => {
+                const error = errors[fieldWithError]
                 if (error) {
-                    this.errors[field] = error
+                    this.errors[fieldWithError] = error
                 }
             })
         },

@@ -1,118 +1,134 @@
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { ref, watch } from 'vue'
     import { RouterLink } from 'vue-router'
     import { useCampaignStore, useUserAuthStore, useConfigurationStore } from '../../stores'
     import ToolbarNavLink from '../nav-link/ToolbarNavLink.vue';
+    import { vOnClickOutside } from '@vueuse/components';
 
     const campaignStore = useCampaignStore()
     const userAuthStore = useUserAuthStore()
     const configStore = useConfigurationStore()
     const isNavMenuOpen = ref(false)
+    const showDashboardLinks = ref(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)
 
     function toggleNavMenu(open?: boolean) {
-        if (open === undefined) {
-            isNavMenuOpen.value = !isNavMenuOpen.value
-        } else {
-            isNavMenuOpen.value = open
-        }
+        isNavMenuOpen.value = open ?? !isNavMenuOpen.value
 
-        configStore.setIsBodyFixed(isNavMenuOpen.value)
+        configStore.setOverlayActive(isNavMenuOpen.value)
     }
+
+    watch(() => userAuthStore.isLoggedIn, () => {
+        showDashboardLinks.value = userAuthStore.isLoggedIn && campaignStore.isCampaignSelected
+    })
+    watch(() => campaignStore.isCampaignSelected, () => {
+        showDashboardLinks.value = userAuthStore.isLoggedIn && campaignStore.isCampaignSelected
+    })
 </script>
 
 <template>
-    <div
+    <div v-on-click-outside="() => isNavMenuOpen && toggleNavMenu(false)"
         class="fixed md:hidden bottom-0 w-full max-h-screen flex flex-col bg-timberwolf-50/85 dark:bg-woodsmoke-950/85 text-woodsmoke-950 dark:text-timberwolf-50 backdrop-blur shadow-md shadow-toolbar rounded-t-3xl transition-colors duration-theme-change overflow-hidden z-10">
         <Transition name="toolbar-navigation-slide">
-            <div v-show="isNavMenuOpen"
+            <div v-if="isNavMenuOpen"
                 class="grid grid-cols-1 w-full w-full z-10 mx-auto border-b border-woodsmoke-300 text-center overflow-scroll">
-                <ToolbarNavLink @click="toggleNavMenu(false)" :destination="{ name: 'campaigns.list' }">
-                    <font-awesome-icon :icon="['fas', 'book']" fixed-width class="mr-2"></font-awesome-icon>Campaigns
-                </ToolbarNavLink>
-                <div v-if="campaignStore.isCampaignSelected"
-                    class="px-4 py-2 bg-woodsmoke-300/50 dark:bg-woodsmoke-700/50 duration-theme-change">
-                    {{ campaignStore.campaignName }}
-                </div>
-                <div class="campaign-image bg-horizon-light bg-cover bg-center h-36 w-full flex flex-col justify-end">
-                </div>
-                <!-- <div class="table absolute top-0 left-0 w-full h-full">
-                        <router-link
-                            class="table-cell align-middle text-white-lilac-50 bg-shark-950/75 backdrop-blur-sm hover:no-underline focus:no-underline text-center transition-opacity duration-150"
-                            :class="{ 'opacity-0': campaignStore.isCampaignSelected }"
-                            :to="{ name: 'campaigns.list' }">Go
-                            To
-                            Your Campaigns</router-link>
-                    </div> -->
-                <nav v-if="userAuthStore.isLoggedIn && campaignStore.isCampaignSelected" class="side-nav flex flex-col">
-                    <ToolbarNavLink @click="toggleNavMenu(false)"
+                <nav class="toolbar-menu flex flex-col">
+                    <ToolbarNavLink @click="toggleNavMenu(false)" :destination="{ name: 'campaigns.list' }">
+                        <font-awesome-icon :icon="['fas', 'book']" fixed-width
+                            class="mr-2"></font-awesome-icon>Campaigns
+                    </ToolbarNavLink>
+                    <div class="flex flex-col">
+                        <div class="px-4 py-2 bg-woodsmoke-300/50 dark:bg-woodsmoke-700/50 duration-theme-change">{{
+                            campaignStore.campaignName }}</div>
+                        <div v-if="showDashboardLinks"
+                            class="campaign-image bg-horizon-light bg-cover bg-center h-36 w-full flex flex-col justify-end">
+                        </div>
+                    </div>
+                    <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
                         :destination="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'timeline']" fixed-width
                             class="mr-2"></font-awesome-icon>Timelines
                     </ToolbarNavLink>
-                    <ToolbarNavLink @click="toggleNavMenu(false)"
+                    <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
                         :destination="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'user']" fixed-width
                             class="mr-2"></font-awesome-icon>Characters
                     </ToolbarNavLink>
-                    <ToolbarNavLink @click="toggleNavMenu(false)"
+                    <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
                         :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width
                             class="mr-2"></font-awesome-icon>Combat
                         Encounters
                     </ToolbarNavLink>
-                    <ToolbarNavLink @click="toggleNavMenu(false)"
+                    <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
                         :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'person']" fixed-width
                             class="mr-2"></font-awesome-icon>Species
                     </ToolbarNavLink>
-                    <ToolbarNavLink @click="toggleNavMenu(false)"
+                    <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
                         :destination="{ name: 'items.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2"></font-awesome-icon>Items
                     </ToolbarNavLink>
-                    <ToolbarNavLink @click="toggleNavMenu(false)"
+                    <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
                         :destination="{ name: 'monsters.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'dragon']" fixed-width
                             class="mr-2"></font-awesome-icon>Monsters
                     </ToolbarNavLink>
-                    <ToolbarNavLink @click="toggleNavMenu(false)"
+                    <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
                         :destination="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }">
                         <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width
                             class="mr-2"></font-awesome-icon>Permissions
                     </ToolbarNavLink>
                 </nav>
-                <div v-if="!(userAuthStore.isLoggedIn && campaignStore.isCampaignSelected)"
-                    class="w-full max-w-page text-timberwolf-100 py-3 px-4 mx-auto">Please select a campaign to
-                    start
-                    crafting!
-                </div>
             </div>
         </Transition>
-        <nav class="toolbar grid grid-cols-4 gap-4" v-if="userAuthStore.isLoggedIn">
-            <router-link v-if="campaignStore.isCampaignSelected"
-                class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center"
-                :to="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }"><img
-                    src="@/assets/images/dice-icon.svg" class="w-12 h-12 block rounded inline-block" /><span
-                    class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change">Characters</span></router-link>
-            <button type="button" class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 underline text-center"
-                @click="toggleNavMenu()"><img src="@/assets/images/dice-icon.svg"
-                    class="w-12 h-12 block rounded inline-block" /><span
-                    class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change">More</span></button>
-        </nav>
-        <nav class="toolbar grid grid-cols-2 gap-4" v-else>
-            <router-link class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center"
-                :to="{ name: 'login' }"><img src="@/assets/images/dice-icon.svg"
-                    class="w-12 h-12 block rounded inline-block" /><span
-                    class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change"><font-awesome-icon
-                        :icon="['fas', 'right-to-bracket']" fixed-width class="mr-2"></font-awesome-icon>Log
-                    In</span></router-link>
-            <button type="button" class="text-woodsmoke-950 dark:text-white-lilac-50 py-3 underline text-center"
-                @click="toggleNavMenu()"><img src="@/assets/images/dice-icon.svg"
-                    class="w-12 h-12 block rounded inline-block" /><span
-                    class="inline-block w-full truncate text-ellipsis overflow-hidden transition-colors duration-theme-change">More</span></button>
+        <nav class="toolbar grid grid-cols-4">
+            <RouterLink v-if="userAuthStore.isLoggedIn && !campaignStore.isCampaignSelected"
+                class="navigation-toolbar-link" :to="{ name: 'campaigns.list' }"><font-awesome-icon
+                    :icon="['fas', 'book']" fixed-width class="text-xl"></font-awesome-icon><span>Campaigns</span>
+            </RouterLink>
+
+            <div v-if="userAuthStore.isLoggedIn && !campaignStore.isCampaignSelected"
+                class="col-span-3 navigation-toolbar-link">Please select a
+                campaign to start
+                crafting!</div>
+
+            <RouterLink v-if="showDashboardLinks" class="navigation-toolbar-link"
+                :to="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">
+                <font-awesome-icon :icon="['fas', 'timeline']" fixed-width class="text-xl"></font-awesome-icon>Timelines
+            </RouterLink>
+
+            <RouterLink v-if="showDashboardLinks" class="navigation-toolbar-link"
+                :to="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }">
+                <font-awesome-icon :icon="['fas', 'user']" fixed-width
+                    class="text-xl"></font-awesome-icon><span>Characters</span>
+            </RouterLink>
+
+            <RouterLink v-if="showDashboardLinks" class="navigation-toolbar-link"
+                :to="{ name: 'monsters.list', params: { externalCampaignId: campaignStore.campaignId } }">
+                <font-awesome-icon :icon="['fas', 'dragon']" fixed-width
+                    class="text-xl"></font-awesome-icon><span>Monsters</span>
+            </RouterLink>
+
+            <RouterLink v-if="!userAuthStore.isLoggedIn" class="navigation-toolbar-link" :to="{ name: 'login' }">
+                <font-awesome-icon :icon="['fas', 'right-to-bracket']" fixed-width
+                    class="text-xl"></font-awesome-icon><span>Log
+                    In</span>
+            </RouterLink>
+
+            <RouterLink v-if="!userAuthStore.isLoggedIn" class="navigation-toolbar-link"
+                :to="{ name: 'user-register' }"><font-awesome-icon :icon="['fas', 'star']" fixed-width
+                    class="text-xl"></font-awesome-icon><span>Register</span></RouterLink>
+
+            <div v-if="!userAuthStore.isLoggedIn"></div>
+
+            <button v-if="showDashboardLinks" type="button"
+                class="flex flex-col items-center gap-1 text-woodsmoke-950 dark:text-white-lilac-50 py-3 underline text-center transition-colors duration-theme-change"
+                @click="toggleNavMenu()"><font-awesome-icon :icon="['fas', 'bars']" fixed-width
+                    class="text-xl"></font-awesome-icon><span>Menu</span></button>
         </nav>
     </div>
-    <div v-if="isNavMenuOpen" @click="toggleNavMenu(false)"
-        class="fixed top-0 left-0 w-full h-full bg-stone-950 opacity-50 md:hidden"></div>
+    <!-- <div v-if="isNavMenuOpen" @click="toggleNavMenu(false)"
+        class="fixed top-0 left-0 w-full h-full bg-stone-950 opacity-50 md:hidden"></div> -->
 </template>
 
 <style>
@@ -147,7 +163,7 @@
     .toolbar-navigation-slide-leave-active .campaign-picker {
         transition-property: padding, line-height, font-size, height;
         transition-duration: 0.15s;
-        transition-timing-function: ease;
+        transition-timing-function: ease-in-out;
         transition-delay: 0ms;
     }
 
@@ -157,25 +173,5 @@
     .toolbar-navigation-slide-leave-from div {
         line-height: normal;
         font-size: normal;
-    }
-
-    .scale-enter-from,
-    .scale-leave-to {
-        /* bottom: 0rem; */
-        transform: scale(1, 0);
-    }
-
-    .scale-enter-active,
-    .scale-leave-active {
-        transition-property: transform, bottom;
-        transition-duration: 0.15s;
-        transition-timing-function: ease;
-        transition-delay: 0ms;
-        transform-origin: center bottom;
-    }
-
-    .scale-enter-to,
-    .scale-leave-from {
-        transform: scale(1, 1);
     }
 </style>

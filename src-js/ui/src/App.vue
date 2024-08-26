@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { inject, ref, watch, computed } from 'vue'
-  import { RouterLink, RouterView, useRouter, useRoute } from 'vue-router'
-  import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
+  import { RouterLink, RouterView, useRoute } from 'vue-router'
+  import { getAuth, onAuthStateChanged } from 'firebase/auth'
   import { firebaseAppKey } from './keys'
   import type { FirebaseApp } from 'firebase/app'
   import { useCampaignStore, useUserAuthStore, useConfigurationStore, ThemeEnum } from './stores'
@@ -9,12 +9,14 @@
   import ToolbarNavigation from './components/navigation/ToolbarNavigation.vue'
   import Default from './layouts/Default.vue'
   import Dashboard from './layouts/Dashboard.vue'
+  import HeaderAccount from './components/header/account/HeaderAccount.vue'
 
   const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
   const auth = getAuth(firebaseApp);
   const campaignStore = useCampaignStore()
   const userAuthStore = useUserAuthStore()
   const configStore = useConfigurationStore()
+  const route = useRoute()
 
   onAuthStateChanged(
     auth,
@@ -26,22 +28,6 @@
       }
     }
   )
-
-  const router = useRouter()
-  const route = useRoute()
-
-  const logOut = () => {
-    const auth = getAuth(inject(firebaseAppKey));
-    campaignStore.reset()
-
-    signOut(auth).then(() => {
-      console.debug(('Logged out'));
-
-      router.push('/login')
-    }).catch((error) => {
-      console.error(error)
-    });
-  }
 
   // Theme toggling
 
@@ -156,7 +142,8 @@
     class="absolute z-30 focus:p-4 focus:underline max-h-0 focus:max-h-none bg-white-lilac-50 dark:bg-shark-950 overflow-hidden"
     ref="skipLink">Skip to main content</a>
 
-  <header class="w-full bg-shark-950/70 backdrop-blur-lg shadow-lg">
+  <header class="relative w-full">
+    <div class="absolute w-full h-full top-0 bg-shark-950/70 backdrop-blur-lg shadow-lg"></div>
     <div class="flex flex-row justify-between items-center max-w-page mx-auto py-2 md:py-4 px-4 md:px-6 relative">
       <div class="flex flex-row items-center">
         <div class="z-10">
@@ -182,29 +169,18 @@
               :class="{ 'text-timberwolf-50': configStore.theme === ThemeEnum.DARK }"></font-awesome-icon></button>
 
           <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
-            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'user-register' }">Register</router-link>
+            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'user-register' }"><font-awesome-icon :icon="['fas', 'star']"
+              fixed-width class="mr-2"></font-awesome-icon>Register</router-link>
 
-          <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
-            v-if="!userAuthStore.isLoggedIn" :to="{ name: 'login' }"><font-awesome-icon
-              :icon="['fas', 'right-to-bracket']" fixed-width class="mr-2" />Log In</router-link>
+          <router-link class="text-timberwolf-50 hover:no-underline focus:no-underline" v-if="!userAuthStore.isLoggedIn"
+            :to="{ name: 'login' }"><font-awesome-icon :icon="['fas', 'right-to-bracket']" fixed-width
+              class="mr-2" />Log In</router-link>
 
           <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
             v-if="userAuthStore.isLoggedIn" :to="{ name: 'campaigns.list' }"><font-awesome-icon :icon="['fas', 'book']"
               fixed-width class="mr-2" />Campaigns</router-link>
 
-          <router-link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
-            v-if="userAuthStore.isLoggedIn" :to="{ name: 'user-account' }"><font-awesome-icon
-              :icon="['fas', 'circle-user']" fixed-width class="mr-2" />Account</router-link>
-
-          <button
-            class="text-timberwolf-50 hidden md:inline-block underline hover:no-underline focus:no-underline border-0"
-            v-if="userAuthStore.isLoggedIn" @click="logOut();" type="button"><font-awesome-icon
-              :icon="['fas', 'right-from-bracket']" fixed-width class="mr-2" />Log Out</button>
-
-          <button class="w-12 h-12 rounded-full overflow-hidden border-2 border-timberwolf-50 bg-stone-800 p-0"
-            type="button" aria-label="Account menu toggle">
-            <img class="logo w-full h-full" src="@/assets/logo.svg" alt="User account picture" />
-          </button>
+          <HeaderAccount></HeaderAccount>
         </nav>
       </div>
     </div>
@@ -220,4 +196,7 @@
   </component>
 
   <ToolbarNavigation></ToolbarNavigation>
+
+  <div v-if="configStore.isOverlayActive" @click="configStore.setOverlayActive(false)"
+    class="fixed top-0 left-0 w-full h-full bg-stone-950 opacity-50 md:hidden"></div>
 </template>

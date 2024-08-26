@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { DropDownItemRouter, DropDownItemButton } from '../../../components/interfaces/drop-down.item.interface'
-    import KebabMenu from '../../dropdowns/kebab-menu/KebabMenu.vue';
+    import KebabMenu from '../../menu/wrapped-kebab-menu/KebabMenu.vue';
     import type EntityTableHeadingInterface from '../../entity-table/interface/entity-table-heading.interface';
     import type EntityTableLinkInterface from '../../entity-table/interface/entity-table-link.interface';
     import TimelineEntity from '../../../services/timeline/TimelineEntity'
@@ -53,7 +53,7 @@
                     <td v-for="field in props.headings">
                         <router-link v-if="field.isLink && props.viewLink"
                             :to="{ name: props.viewLink.routerToName, params: { externalCampaignId: props.campaignId, [props.viewLink.idName]: entity.id } }">{{
-                        entity[field.title] }}</router-link>
+                                entity[field.title] }}</router-link>
                         <p v-else>{{ entity[field.title] }}</p>
                     </td>
                     <td class="action-cell">
@@ -65,7 +65,8 @@
                     <td class="bg-woodsmoke-200/50 dark:bg-woodsmoke-700/50 text-center duration-500" colspan="99">
                         <router-link
                             :to="{ name: 'timelines.add', params: { externalCampaignId: props.campaignId }, query: { parentId: timelineId } }">Add
-                            a children timeline record</router-link></td>
+                            a children timeline record</router-link>
+                    </td>
                 </tr>
             </tbody>
         </table>

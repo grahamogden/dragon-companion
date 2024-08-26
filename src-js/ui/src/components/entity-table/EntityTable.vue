@@ -2,11 +2,11 @@
     import { useCampaignStore } from '../../stores/campaign';
     import { DropDownItemRouter, DropDownItemButton } from '../../components/interfaces/drop-down.item.interface'
     import type { EntityInterface } from '../../services/entity/EntityInterface';
-    import KebabMenu from '../dropdowns/kebab-menu/KebabMenu.vue';
+    import KebabMenu from '../menu/wrapped-kebab-menu/KebabMenu.vue';
     import type EntityTableHeadingInterface from './interface/entity-table-heading.interface';
     import type EntityTableLinkInterface from './interface/entity-table-link.interface';
-    import KebabMenuItemLink from '../dropdowns/kebab-menu/KebabMenuItemLink.vue';
-    import KebabMenuItemButton from '../dropdowns/kebab-menu/KebabMenuItemButton.vue';
+    import KebabMenuItemLink from '../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
+    import KebabMenuItemButton from '../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
 
     const campaignStore = useCampaignStore()
 
@@ -53,7 +53,7 @@
                         <RouterLink v-if="field.isLink && props.viewLink"
                             :to="{ name: props.viewLink.routerToName, params: { externalCampaignId: campaignStore.selectedCampaignId, [props.viewLink.idName]: entity.id } }">
                             {{
-                        entity[field.title] }}</RouterLink>
+                                entity[field.title] }}</RouterLink>
                         <p v-else>{{ entity[field.title] }}</p>
                     </td>
                     <td class="action-cell flex justify-end py-2">

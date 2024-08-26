@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { DropDownItemRouter, DropDownItemButton } from '../../components/interfaces/drop-down.item.interface'
-    import KebabMenu from '../dropdowns/kebab-menu/KebabMenu.vue';
+    import KebabMenu from '../menu/wrapped-kebab-menu/KebabMenu.vue';
     import type EntityTableHeadingInterface from '../entity-table/interface/entity-table-heading.interface';
     import type EntityTableLinkInterface from '../entity-table/interface/entity-table-link.interface';
     import { TimelineEntity } from '../../services/timeline'
@@ -37,12 +37,12 @@
     <tr>
         <td v-for="field in props.headings">
             <router-link v-if="field.isLink && props.viewLink" :to="{
-            name: props.viewLink.routerToName,
-            params: {
-                externalCampaignId: props.campaignId,
-                [props.viewLink.idName]: entity.id
-            }
-        }">{{ entity[field.title] }}</router-link>
+                name: props.viewLink.routerToName,
+                params: {
+                    externalCampaignId: props.campaignId,
+                    [props.viewLink.idName]: entity.id
+                }
+            }">{{ entity[field.title] }}</router-link>
             <p v-else>{{ entity[field.title] }}</p>
         </td>
         <td class="action-cell text-right py-1 align-middle">
@@ -54,12 +54,12 @@
         class="bg-woodsmoke-200/50 dark:bg-woodsmoke-700/25 transition-colors duration-theme-change">
         <td v-for="field in props.headings">
             <router-link v-if="field.isLink && props.viewLink" :to="{
-            name: props.viewLink.routerToName,
-            params: {
-                externalCampaignId: props.campaignId,
-                [props.viewLink.idName]: childTimelines.id
-            }
-        }">{{ childTimelines[field.title] }}</router-link>
+                name: props.viewLink.routerToName,
+                params: {
+                    externalCampaignId: props.campaignId,
+                    [props.viewLink.idName]: childTimelines.id
+                }
+            }">{{ childTimelines[field.title] }}</router-link>
             <p v-else>{{ childTimelines[field.title] }}</p>
         </td>
         <td class="action-cell text-right py-1 align-middle">

@@ -1,12 +1,14 @@
 <script setup lang="ts">
-    import KebabMenu from '../../../dropdowns/kebab-menu/KebabMenu.vue';
+    import KebabMenu from '../../../menu/wrapped-kebab-menu/KebabMenu.vue';
     import { DropDownItemRouter, DropDownItemButton } from '../../../../components/interfaces/drop-down.item.interface'
     import type EntityTableHeadingInterface from '../../../entity-table/interface/entity-table-heading.interface';
     import type EntityTableLinkInterface from '../../../entity-table/interface/entity-table-link.interface';
     import type { TimelineEntityInterface } from '../../../../services/timeline';
     import { NodePositionEnum } from '../interface/timeline.linear.item.node-position.interface';
-    import KebabMenuItemLink from '../../../dropdowns/kebab-menu/KebabMenuItemLink.vue';
-    import KebabMenuItemButton from '../../../dropdowns/kebab-menu/KebabMenuItemButton.vue';
+    import KebabMenuItemLink from '../../../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
+    import KebabMenuItemButton from '../../../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
+    import DropDownMenu from '../../../drop-down/DropDownMenu.vue';
+    import DropDownKebabIcon from '../../../drop-down/DropDownKebabIcon.vue';
 
     const props = defineProps<{
         campaignId: number,
@@ -53,7 +55,11 @@
                 <div
                     class="flex flex-row items-center justify-between p-2 bg-woodsmoke-200 dark:bg-woodsmoke-900 rounded-t-lg border-4 border-woodsmoke-200 dark:border-woodsmoke-900 transition-colors duration-theme-change">
                     <span class="text-lg">{{ props.entity.title }}</span>
-                    <KebabMenu :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + props.entity.title">
+                    <DropDownMenu
+                        :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + props.entity.title">
+                        <template #button-content>
+                            <DropDownKebabIcon></DropDownKebabIcon>
+                        </template>
                         <template #items>
                             <KebabMenuItemLink
                                 :destination="{ name: props.viewLink.routerToName, params: { externalCampaignId: props.campaignId, [props.viewLink.idName]: props.entity.id } }">
@@ -73,12 +79,12 @@
                                 Delete
                             </KebabMenuItemButton>
                         </template>
-                    </KebabMenu>
+                    </DropDownMenu>
                 </div>
                 <div
                     class="p-2 bg-timberwolf-50 dark:bg-woodsmoke-950 rounded-b-lg transition-colors duration-theme-change">
                     {{
-                props.entity.body }}
+                        props.entity.body }}
                 </div>
             </div>
         </div>

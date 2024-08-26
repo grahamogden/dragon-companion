@@ -9,21 +9,30 @@ export enum ThemeEnum {
 
 interface ConfigurationStoreInterface {
     isBodyFixed: boolean
+    isOverlayActive: boolean
     theme: RemovableRef<ThemeEnum>
 }
 
 export const useConfigurationStore = defineStore('configuration', {
     state: (): ConfigurationStoreInterface => ({
         isBodyFixed: false,
+        isOverlayActive: false,
         theme: useLocalStorage<ThemeEnum>('theme', ThemeEnum.AUTO),
     }),
     getters: {},
     actions: {
-        setIsBodyFixed(isFixed: boolean) {
+        isSmallScreen(): boolean {
+            return window.innerWidth < 768
+        },
+        setIsBodyFixed(isFixed: boolean): void {
             this.isBodyFixed = isFixed
         },
-        setTheme(theme: ThemeEnum) {
+        setTheme(theme: ThemeEnum): void {
             this.theme = theme
+        },
+        setOverlayActive(isActive: boolean): void {
+            this.setIsBodyFixed(isActive)
+            this.isOverlayActive = isActive
         },
     },
 })

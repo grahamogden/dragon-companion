@@ -5,12 +5,12 @@
 
 </script>
 <template>
-  <div class="max-w-page w-full m-0 mb-32 md:mx-auto md:my-6 md:px-6">
+  <div class="max-w-page w-full m-0 mb-32 md:mx-auto md:my-default-md md:px-default-md">
     <div class="flex flex-row content-stretch rounded-3xl shadow-lg">
       <SideNavigation></SideNavigation>
 
       <div
-        class="relative w-full h-auto p-2 md:p-6 before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:md:rounded-r-3xl before:duration-theme-change">
+        class="relative w-full h-auto p-default md:p-default-md before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:md:rounded-r-3xl before:duration-theme-change">
         <div class="relative w-full">
           <BannerContainer></BannerContainer>
           <Breadcrumbs></Breadcrumbs>

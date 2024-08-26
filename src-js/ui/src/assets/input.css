@@ -86,8 +86,28 @@
         }
     }
 
-    nav.side-nav .router-link-active {
-        @apply bg-saffron-mango-300 text-shark-950;
+    nav.side-nav,
+    nav.toolbar,
+    nav.toolbar-menu {
+        .router-link-active {
+            @apply bg-saffron-mango-300 text-shark-950;
+        }
+    }
+
+    nav .navigation-toolbar-link {
+        @apply flex flex-col items-center gap-1 text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center transition-colors duration-theme-change;
+
+        > span {
+            @apply inline-block w-full truncate text-ellipsis overflow-hidden;
+        }
+    }
+    
+    .drop-down-menu {
+        .drop-down-menu-item,
+        .drop-down-menu-button,
+        .drop-down-menu-link {
+            @apply p-4 block w-full hover:bg-biscay-600 focus:bg-biscay-600 text-biscay-600 dark:text-biscay-200 hover:text-timberwolf-50 focus:text-timberwolf-50 text-center duration-0;
+        }
     }
 
     /* .glassmorphism {

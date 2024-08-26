@@ -3,11 +3,11 @@
   import { useNotificationStore } from '../../../stores/notifications/notification-store'
   import type { CampaignEntityInterface } from '../../../services/campaign';
   import ImageCard from '../../cards/ImageCard.vue'
-  import { DropDownItemButton, DropDownItemRouter } from '../../interfaces/drop-down.item.interface';
-  import KebabMenu from '../../dropdowns/kebab-menu/KebabMenu.vue';
-  import KebabMenuItemButton from '../../dropdowns/kebab-menu/KebabMenuItemButton.vue';
-  import KebabMenuItemText from '../../dropdowns/kebab-menu/KebabMenuItemText.vue';
-  import KebabMenuItemLink from '../../dropdowns/kebab-menu/KebabMenuItemLink.vue';
+  import KebabMenuItemButton from '../../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
+  import KebabMenuItemText from '../../menu/wrapped-kebab-menu/KebabMenuItemText.vue';
+  import KebabMenuItemLink from '../../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
+  import DropDownMenu from '../../drop-down/DropDownMenu.vue';
+  import DropDownKebabIcon from '../../drop-down/DropDownKebabIcon.vue';
 
   const props = defineProps<{
     campaign: CampaignEntityInterface,
@@ -41,10 +41,13 @@
     <div class="flex items-center w-full justify-between">
       <p class="truncate text-ellipsis overflow-hidden">{{ props.campaign.name }}</p>
       <div>
-        <KebabMenu :button-aria-context-name="'Campaign ' + props.campaign.name">
+        <DropDownMenu :button-aria-context-name="'Campaign ' + props.campaign.name">
+          <template #button-content>
+            <DropDownKebabIcon></DropDownKebabIcon>
+          </template>
           <template #items>
             <KebabMenuItemText v-if="props.campaign.id === campaignStore.selectedCampaignId" :args="[campaign.id]">
-              <font-awesome-icon :icon="['fas', 'ban']" fixed-width class="mr-2"></font-awesome-icon>Selected
+              <font-awesome-icon :icon="['fas', 'ban']" fixed-width class="mr-2"></font-awesome-icon>Currently selected
             </KebabMenuItemText>
             <KebabMenuItemButton v-else :func="changeCampaign" :args="[campaign.id]">
               <font-awesome-icon :icon="['fas', 'check']" fixed-width class="mr-2"></font-awesome-icon>Select
@@ -56,7 +59,7 @@
               <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
             </KebabMenuItemButton>
           </template>
-        </KebabMenu>
+        </DropDownMenu>
       </div>
     </div>
   </image-card>
