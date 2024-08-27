@@ -188,7 +188,7 @@
             v-if="userAuthStore.isLoggedIn" :to="{ name: 'campaigns.list' }"><font-awesome-icon :icon="['fas', 'book']"
               fixed-width class="mr-2" />Campaigns</router-link>
 
-          <HeaderAccountMenu></HeaderAccountMenu>
+          <HeaderAccountMenu v-if="userAuthStore.isLoggedIn"></HeaderAccountMenu>
         </nav>
       </div>
     </div>

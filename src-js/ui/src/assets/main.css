@@ -1132,6 +1132,10 @@ thead.table-heading-dark {
   grid-column: span 3 / span 3;
 }
 
+.col-span-2{
+  grid-column: span 2 / span 2;
+}
+
 .m-0{
   margin: 0px;
 }
@@ -1501,6 +1505,10 @@ thead.table-heading-dark {
   gap: 0.75rem;
 }
 
+.gap-12{
+  gap: 3rem;
+}
+
 .gap-x-10{
   -moz-column-gap: 2.5rem;
        column-gap: 2.5rem;
@@ -1730,6 +1738,11 @@ thead.table-heading-dark {
   border-color: rgb(26 25 25 / var(--tw-border-opacity));
 }
 
+.border-red-600{
+  --tw-border-opacity: 1;
+  border-color: rgb(220 38 38 / var(--tw-border-opacity));
+}
+
 .border-l-saffron-mango-300{
   --tw-border-opacity: 1;
   border-left-color: rgb(246 193 81 / var(--tw-border-opacity));
@@ -1850,6 +1863,16 @@ thead.table-heading-dark {
 
 .bg-woodsmoke-300\/50{
   background-color: rgb(178 174 174 / 0.5);
+}
+
+.bg-red-200{
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
+}
+
+.bg-red-300{
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
 }
 
 .bg-horizon-dark{
@@ -2950,6 +2973,16 @@ thead.table-heading-dark {
 
 .dark\:bg-woodsmoke-950\/90:where(.dark, .dark *){
   background-color: rgb(26 25 25 / 0.9);
+}
+
+.dark\:bg-red-800:where(.dark, .dark *){
+  --tw-bg-opacity: 1;
+  background-color: rgb(153 27 27 / var(--tw-bg-opacity));
+}
+
+.dark\:bg-red-900:where(.dark, .dark *){
+  --tw-bg-opacity: 1;
+  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
 }
 
 .dark\:text-alizarin-crimson-400:where(.dark, .dark *){

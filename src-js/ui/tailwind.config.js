@@ -261,6 +261,7 @@ export default {
       },
       maxWidth: {
         page: '120rem',
+        'slim-content': '40rem',
       },
       skew: {
         '45': '45deg',

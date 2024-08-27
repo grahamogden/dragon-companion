@@ -92,7 +92,7 @@
             </RouterLink>
 
             <div v-if="userAuthStore.isLoggedIn && !campaignStore.isCampaignSelected"
-                class="col-span-3 navigation-toolbar-link">Please select a
+                class="col-span-2 navigation-toolbar-link">Please select a
                 campaign to start
                 crafting!</div>
 

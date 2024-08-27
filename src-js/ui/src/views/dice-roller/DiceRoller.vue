@@ -31,6 +31,13 @@
         })
     }
 
+    function reset() {
+        const keys = Object.keys(diceCounts).map(Number) as Array<keyof DiceCountsInterface>
+        keys.forEach((key) => {
+            diceCounts[key].count = 0
+        })
+    }
+
     type DiceCountInterface = { count: number }
     type DiceCountsInterface = Record<number, DiceCountInterface>
 
@@ -46,8 +53,9 @@
 <template>
     <PageHeader>Dice Roller</PageHeader>
     <div class="mb-default">
-        <div>You can roll a die individually by clicking on it or roll all of them with the button at the bottom of the
-            page!</div>
+        <p>Click or type in the number of dice you want of each kind and then roll them.</p>
+        <p>You can roll a die individually by clicking on it or roll all of them with the button at the bottom of the
+            page!</p>
     </div>
     <div class="mb-12">
         <div v-for="(diceCount, limit) in diceCounts" class="mb-6">
@@ -64,7 +72,8 @@
             <SmallHorizontalRule></SmallHorizontalRule>
         </div>
     </div>
-    <div v-if="totalDice > 0" class="flex justify-center">
+    <div v-if="totalDice > 0" class="flex flex-col md:flex-row gap-12 justify-center">
         <SecondaryButton :func="rollAll" :args="[]">Roll all</SecondaryButton>
+        <SecondaryButton :func="reset" :args="[]" :is-destructive="true">Reset</SecondaryButton>
     </div>
 </template>
