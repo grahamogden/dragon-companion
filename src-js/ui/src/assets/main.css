@@ -1303,6 +1303,10 @@ thead.table-heading-dark {
   min-height: 2.25rem;
 }
 
+.min-h-full{
+  min-height: 100%;
+}
+
 .w-1{
   width: 0.25rem;
 }
@@ -1362,6 +1366,10 @@ thead.table-heading-dark {
 
 .max-w-page{
   max-width: 120rem;
+}
+
+.max-w-slim-content{
+  max-width: 40rem;
 }
 
 .shrink{

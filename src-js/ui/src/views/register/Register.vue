@@ -89,20 +89,18 @@
 </script>
 
 <template>
-  <div>
-    <PageHeader>Register</PageHeader>
-    <form @submit.prevent="register" class="flex flex-col gap-default md:gap-default-md">
-      <BaseInput type="text" input-name="username" label="Username" v-model:model="username"></BaseInput>
-      <BaseInput type="email" input-name="email" label="Email" v-model:model="email"></BaseInput>
-      <BaseInput type="password" input-name="password" label="Password" v-model:model="password"></BaseInput>
-      <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-default md:gap-y-default-md">
-        <div class="md:order-last">
-          <PrimaryButton text="Register"></PrimaryButton>
-        </div>
-        <div class="w-full md:w-auto text-center">
-          <RouterLink :to="{ name: 'home' }" class="my-2">Cancel</RouterLink>
-        </div>
+  <PageHeader>Register</PageHeader>
+  <form @submit.prevent="register" class="flex flex-col gap-default md:gap-default-md">
+    <BaseInput type="text" input-name="username" label="Username" v-model:model="username"></BaseInput>
+    <BaseInput type="email" input-name="email" label="Email" v-model:model="email"></BaseInput>
+    <BaseInput type="password" input-name="password" label="Password" v-model:model="password"></BaseInput>
+    <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-default md:gap-y-default-md">
+      <div class="md:order-last">
+        <PrimaryButton text="Register"></PrimaryButton>
       </div>
-    </form>
-  </div>
+      <div class="w-full md:w-auto text-center">
+        <RouterLink :to="{ name: 'home' }" class="my-2">Cancel</RouterLink>
+      </div>
+    </div>
+  </form>
 </template>

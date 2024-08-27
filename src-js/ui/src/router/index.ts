@@ -54,6 +54,9 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: HomeView,
+            meta: {
+                layout: 'Home',
+            },
         },
         {
             path: '/campaigns/:externalCampaignId(\\d+)',
@@ -378,7 +381,7 @@ const router = createRouter({
                     name: 'user-register',
                     component: () => import('../views/register/Register.vue'),
                     meta: {
-                        layout: 'Dashboard',
+                        layout: 'SlimDefault',
                     },
                 },
             ],
@@ -388,15 +391,7 @@ const router = createRouter({
             name: 'login',
             component: LogInView,
             meta: {
-                layout: 'Dashboard',
-            },
-        },
-        {
-            path: '/logout',
-            name: 'logout',
-            component: LogOutView,
-            meta: {
-                layout: 'Dashboard',
+                layout: 'SlimDefault',
             },
         },
     ],

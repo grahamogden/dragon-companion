@@ -10,6 +10,8 @@
   import Default from './layouts/Default.vue'
   import Dashboard from './layouts/Dashboard.vue'
   import HeaderAccountMenu from './components/header/account/HeaderAccountMenu.vue'
+  import SlimDefault from './layouts/SlimDefault.vue'
+  import Home from './layouts/Home.vue'
 
   const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
   const auth = getAuth(firebaseApp);
@@ -111,6 +113,10 @@
     switch (route?.meta?.layout) {
       case 'Dashboard':
         return Dashboard
+      case 'Home':
+        return Home
+      case 'SlimDefault':
+        return SlimDefault
       default:
         return Default
     }
