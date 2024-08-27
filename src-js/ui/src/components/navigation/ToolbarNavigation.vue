@@ -17,11 +17,15 @@
         configStore.setOverlayActive(isNavMenuOpen.value)
     }
 
-    watch(() => userAuthStore.isLoggedIn, () => {
+    function updateShowDashboardLinks() {
         showDashboardLinks.value = userAuthStore.isLoggedIn && campaignStore.isCampaignSelected
+    }
+
+    watch(() => userAuthStore.isLoggedIn, () => {
+        updateShowDashboardLinks()
     })
     watch(() => campaignStore.isCampaignSelected, () => {
-        showDashboardLinks.value = userAuthStore.isLoggedIn && campaignStore.isCampaignSelected
+        updateShowDashboardLinks()
     })
 </script>
 
@@ -82,8 +86,9 @@
         </Transition>
         <nav class="toolbar grid grid-cols-4">
             <RouterLink v-if="userAuthStore.isLoggedIn && !campaignStore.isCampaignSelected"
-                class="navigation-toolbar-link" :to="{ name: 'campaigns.list' }"><font-awesome-icon
-                    :icon="['fas', 'book']" fixed-width class="text-xl"></font-awesome-icon><span>Campaigns</span>
+                class="navigation-toolbar-link" :to="{ name: 'campaigns.list' }" @click="toggleNavMenu(false)">
+                <font-awesome-icon :icon="['fas', 'book']" fixed-width
+                    class="text-xl"></font-awesome-icon><span>Campaigns</span>
             </RouterLink>
 
             <div v-if="userAuthStore.isLoggedIn && !campaignStore.isCampaignSelected"
@@ -92,17 +97,19 @@
                 crafting!</div>
 
             <RouterLink v-if="showDashboardLinks" class="navigation-toolbar-link"
-                :to="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }">
+                :to="{ name: 'timelines.list', params: { externalCampaignId: campaignStore.campaignId } }"
+                @click="toggleNavMenu(false)">
                 <font-awesome-icon :icon="['fas', 'timeline']" fixed-width class="text-xl"></font-awesome-icon>Timelines
             </RouterLink>
 
             <RouterLink v-if="showDashboardLinks" class="navigation-toolbar-link"
-                :to="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }">
+                :to="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }"
+                @click="toggleNavMenu(false)">
                 <font-awesome-icon :icon="['fas', 'user']" fixed-width
                     class="text-xl"></font-awesome-icon><span>Characters</span>
             </RouterLink>
 
-            <RouterLink class="navigation-toolbar-link" :to="{ name: 'dice-roller' }">
+            <RouterLink class="navigation-toolbar-link" :to="{ name: 'dice-roller' }" @click="toggleNavMenu(false)">
                 <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width
                     class="text-xl"></font-awesome-icon><span>Dice Roller</span>
             </RouterLink>
@@ -125,8 +132,6 @@
                     class="text-xl"></font-awesome-icon><span>Menu</span></button>
         </nav>
     </div>
-    <!-- <div v-if="isNavMenuOpen" @click="toggleNavMenu(false)"
-        class="fixed top-0 left-0 w-full h-full bg-stone-950 opacity-50 md:hidden"></div> -->
 </template>
 
 <style>
