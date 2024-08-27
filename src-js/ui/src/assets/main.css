@@ -2674,6 +2674,10 @@ thead.table-heading-dark {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
+  .md\:grid-cols-8{
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
   .md\:flex-row{
     flex-direction: row;
   }
@@ -2764,6 +2768,10 @@ thead.table-heading-dark {
     margin-bottom: 1rem;
   }
 
+  .lg\:grid-cols-8{
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
   .lg\:bg-1024{
     background-size: auto 50rem;
   }
@@ -2782,6 +2790,10 @@ thead.table-heading-dark {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .xl\:grid-cols-8{
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
   .xl\:bg-1280{
     background-size: auto 64rem;
   }
@@ -2790,6 +2802,10 @@ thead.table-heading-dark {
 @media (min-width: 1536px){
   .\32xl\:grid-cols-4{
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .\32xl\:grid-cols-8{
+    grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
   .\32xl\:bg-1440{
