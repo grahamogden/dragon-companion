@@ -40,7 +40,7 @@
                         :require="true">
                     </BaseInput>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-default md:gap-default-md">
+                <div class="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-8 w-full gap-default md:gap-default-md">
                     <div class="">
                         <BaseInput type="number" inputName="default_hit_points"
                             v-model:model="monster.default_hit_points" label="Default hit points">
@@ -59,8 +59,6 @@
                         <BaseInput type="number" inputName="calculated_hit_points_modifier"
                             v-model:model="monster.calculated_hit_points_modifier" label="Modifier"></BaseInput>
                     </div>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-default md:gap-default-md">
                     <div class="">
                         <BaseInput type="number" inputName="armour_class" v-model:model="monster.armour_class"
                             label="Armour class (AC)">
