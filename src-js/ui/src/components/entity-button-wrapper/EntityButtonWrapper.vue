@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { RouteLocationRaw } from 'vue-router';
     import PrimaryButton from '../buttons/PrimaryButton.vue'
-    import SecondaryButton from '../buttons/SecondaryButton.vue'
+    import LinkButton from '../buttons/LinkButton.vue';
 
 
     const props = defineProps<{
@@ -14,7 +14,8 @@
             <PrimaryButton>Save</PrimaryButton>
         </div>
         <div class="w-full md:w-auto text-center">
-            <SecondaryButton :destination="props.cancelDestination">Cancel</SecondaryButton>
+            <!-- <SecondaryButton :destination="props.cancelDestination">Cancel</SecondaryButton> -->
+            <LinkButton :destination="props.cancelDestination" :width-full="true">Cancel</LinkButton>
         </div>
     </div>
 </template>

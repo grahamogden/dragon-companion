@@ -30,9 +30,8 @@
                     :destination="{ name: 'characters.list', params: { externalCampaignId: campaignStore.campaignId } }">
                     <font-awesome-icon :icon="['fas', 'users']" fixed-width class="mr-2" />Characters
                 </NavLink>
-                <NavLink
-                    :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">
-                    <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width class="mr-2" />Combat Encounters
+                <NavLink :destination="{ name: 'dice-roller' }">
+                    <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width class="mr-2" />Dice Roller
                 </NavLink>
                 <NavLink
                     :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">

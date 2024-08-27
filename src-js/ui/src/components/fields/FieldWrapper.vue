@@ -8,7 +8,6 @@
         label?: string | number
         require?: boolean
     }>()
-
     const validationStore = useValidationStore()
 
     const errors = computed(() => validationStore.getErrorMessagesForField(props.inputName) ?? [])
@@ -16,7 +15,7 @@
 
 <template>
     <div class="flex flex-col">
-        <label :if="label" :for="'field-' + props.inputName" class="mb-2">
+        <label v-if="label !== undefined" :for="'field-' + props.inputName" class="mb-2">
             {{ label }}:<span v-if="props.require"
                 class="ml-1 text-alizarin-crimson-800 dark:text-alizarin-crimson-400">*</span>
         </label>

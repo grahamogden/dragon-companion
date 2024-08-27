@@ -86,15 +86,15 @@ const router = createRouter({
                         layout: 'Dashboard',
                     },
                 },
-                {
-                    path: 'combat-encounters',
-                    name: 'combat-encounters',
-                    beforeEnter: [isLoggedIn, hasCampaignSelected],
-                    component: () => import('../views/combat-encounters/CombatEncounterList.vue'),
-                    meta: {
-                        layout: 'Dashboard',
-                    },
-                },
+                // {
+                //     path: 'combat-encounters',
+                //     name: 'combat-encounters',
+                //     beforeEnter: [isLoggedIn, hasCampaignSelected],
+                //     component: () => import('../views/combat-encounters/CombatEncounterList.vue'),
+                //     meta: {
+                //         layout: 'Dashboard',
+                //     },
+                // },
                 {
                     path: 'tags',
                     name: 'tags',
@@ -335,6 +335,19 @@ const router = createRouter({
                     name: 'campaigns.add',
                     beforeEnter: isLoggedIn,
                     component: () => import('../views/campaigns/CampaignCreate.vue'),
+                    meta: {
+                        layout: 'Dashboard',
+                    },
+                },
+            ],
+        },
+        {
+            path: '/dice-roller',
+            children: [
+                {
+                    path: '',
+                    name: 'dice-roller',
+                    component: () => import('../views/dice-roller/DiceRoller.vue'),
                     meta: {
                         layout: 'Dashboard',
                     },

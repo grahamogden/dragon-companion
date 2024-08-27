@@ -10,7 +10,7 @@
       <SideNavigation></SideNavigation>
 
       <div
-        class="relative w-full h-auto p-default md:p-default-md before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:md:rounded-r-3xl before:duration-theme-change">
+        class="relative w-full h-full p-default md:p-default-md before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:md:rounded-r-3xl before:duration-theme-change">
         <div class="relative w-full">
           <BannerContainer></BannerContainer>
           <Breadcrumbs></Breadcrumbs>

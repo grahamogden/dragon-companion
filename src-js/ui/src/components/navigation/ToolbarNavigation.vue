@@ -54,10 +54,9 @@
                             class="mr-2"></font-awesome-icon>Characters
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :destination="{ name: 'combat-encounters', params: { externalCampaignId: campaignStore.campaignId } }">
-                        <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width
-                            class="mr-2"></font-awesome-icon>Combat
-                        Encounters
+                        :destination="{ name: 'dice-roller' }">
+                        <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width class="mr-2"></font-awesome-icon>Dice
+                        Roller
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
                         :destination="{ name: 'species.list', params: { externalCampaignId: campaignStore.campaignId } }">
@@ -103,10 +102,9 @@
                     class="text-xl"></font-awesome-icon><span>Characters</span>
             </RouterLink>
 
-            <RouterLink v-if="showDashboardLinks" class="navigation-toolbar-link"
-                :to="{ name: 'monsters.list', params: { externalCampaignId: campaignStore.campaignId } }">
-                <font-awesome-icon :icon="['fas', 'dragon']" fixed-width
-                    class="text-xl"></font-awesome-icon><span>Monsters</span>
+            <RouterLink class="navigation-toolbar-link" :to="{ name: 'dice-roller' }">
+                <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width
+                    class="text-xl"></font-awesome-icon><span>Dice Roller</span>
             </RouterLink>
 
             <RouterLink v-if="!userAuthStore.isLoggedIn" class="navigation-toolbar-link" :to="{ name: 'login' }">

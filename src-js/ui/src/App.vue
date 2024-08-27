@@ -79,7 +79,9 @@
         toggleDarkModeSetDark()
         break;
       case (ThemeEnum.DARK):
-        toggleDarkModeSetAuto()
+        // Auto needs uncommenting when we want auto back here
+        // toggleDarkModeSetAuto()
+        toggleDarkModeSetLight()
         break;
       default:
         toggleDarkModeSetLight()
