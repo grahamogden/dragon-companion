@@ -9,7 +9,7 @@
   import ToolbarNavigation from './components/navigation/ToolbarNavigation.vue'
   import Default from './layouts/Default.vue'
   import Dashboard from './layouts/Dashboard.vue'
-  import HeaderAccount from './components/header/account/HeaderAccount.vue'
+  import HeaderAccountMenu from './components/header/account/HeaderAccountMenu.vue'
 
   const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
   const auth = getAuth(firebaseApp);
@@ -182,7 +182,7 @@
             v-if="userAuthStore.isLoggedIn" :to="{ name: 'campaigns.list' }"><font-awesome-icon :icon="['fas', 'book']"
               fixed-width class="mr-2" />Campaigns</router-link>
 
-          <HeaderAccount></HeaderAccount>
+          <HeaderAccountMenu></HeaderAccountMenu>
         </nav>
       </div>
     </div>

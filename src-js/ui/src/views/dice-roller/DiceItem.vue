@@ -27,7 +27,7 @@
 </script>
 <template>
     <button @click="rollDice()" type="button"
-        class="relative w-full flex flex-col items-center p-2 bg-timberwolf-50 dark:bg-woodsmoke-800 border border-woodsmoke-300 dark:border-woodsmoke-600 rounded-xl duration-theme-change">
+        class="relative w-full flex flex-col items-center px-2 py-3 bg-timberwolf-50 dark:bg-woodsmoke-800 border border-woodsmoke-300 dark:border-woodsmoke-600 rounded-xl duration-theme-change">
         <div class="text-2xl">{{ currentRoll ?? 'X' }}</div>
     </button>
 </template>

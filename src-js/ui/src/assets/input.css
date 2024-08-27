@@ -21,6 +21,10 @@
     .transition-colors-and-shadows {
         @apply transition-[colors,shadow]
     }
+
+    .no-zoom {
+        touch-action: manipulation;
+    }
 }
 
 @layer base {

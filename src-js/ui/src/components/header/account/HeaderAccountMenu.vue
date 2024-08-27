@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { ref, inject } from 'vue';
     import { useRouter } from 'vue-router'
     import { getAuth, signOut } from 'firebase/auth'
     import { firebaseAppKey } from '../../../keys'
