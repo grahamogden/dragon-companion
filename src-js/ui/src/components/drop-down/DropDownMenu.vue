@@ -5,10 +5,10 @@
 
     const configStore = useConfigurationStore()
 
-    const props = defineProps<{
-        buttonAriaContextName: string
-        closeOnClick?: boolean | { type: boolean, default: true }
-    }>()
+    const props = defineProps({
+        buttonAriaContextName: String,
+        closeOnClick: { type: Boolean, default: true },
+    })
 
     const isMenuOpen = ref(false);
 
@@ -39,12 +39,9 @@
         </button>
         <transition name="drop-down-menu-slide-out">
             <div v-if="isMenuOpen"
-                class="drop-down-menu fixed md:absolute bottom-28 md:bottom-auto md:top-full left-1/2 md:left-auto md:right-0 w-11/12 md:w-max mt-2 z-40 origin-bottom md:origin-top-right"
+                class="drop-down-menu fixed md:absolute bottom-28 md:bottom-auto md:top-full left-1/2 md:left-auto md:right-0 w-11/12 md:w-max mt-2 z-40 origin-bottom md:origin-top-right flex flex-col bg-timberwolf-50 dark:bg-woodsmoke-950 border border-biscay-600 rounded-xl overflow-hidden shadow-md shadow-stone-900/10 transition-colors-and-shadows duration-theme-change"
                 @click="closeOnClick && toggleDropDownMenu(false)">
-                <div
-                    class="flex flex-col bg-timberwolf-50 dark:bg-woodsmoke-950 border border-biscay-600 rounded-xl overflow-hidden transition-colors-and-shadows duration-theme-change">
-                    <slot name="items"></slot>
-                </div>
+                <slot name="items"></slot>
             </div>
         </transition>
     </div>

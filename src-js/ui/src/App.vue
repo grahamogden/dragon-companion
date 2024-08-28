@@ -154,7 +154,7 @@
     <div class="absolute w-full h-full top-0 bg-shark-950/70 backdrop-blur-lg shadow-lg"></div>
     <div class="flex flex-row justify-between items-center max-w-page mx-auto py-2 md:py-4 px-4 md:px-6 relative">
       <div class="flex flex-row items-center">
-        <div class="z-10">
+        <div>
           <router-link to="/" class="top-2 left-2 w-12 h-12 p-1 md:p-0 overflow-visible">
             <img class="logo w-full h-full inline-block" src="@/assets/images/logo-8.svg" alt="Dragon Companion logo" />
           </router-link>
