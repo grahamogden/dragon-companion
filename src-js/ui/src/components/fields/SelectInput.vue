@@ -4,7 +4,6 @@
     import type SelectInputOptionInterface from '../elements/interface/select-input-option.interface'
     import FieldWrapper from './FieldWrapper.vue'
 
-    // const emit = defineEmits(['updateValue'])
     const props = defineProps<{
         options: SelectInputOptionInterface[],
         inputName: string,

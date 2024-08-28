@@ -1128,8 +1128,12 @@ thead.table-heading-dark {
   z-index: 40;
 }
 
-.col-span-3{
-  grid-column: span 3 / span 3;
+.order-1{
+  order: 1;
+}
+
+.order-2{
+  order: 2;
 }
 
 .col-span-2{
@@ -1493,6 +1497,10 @@ thead.table-heading-dark {
   gap: 0.25rem;
 }
 
+.gap-12{
+  gap: 3rem;
+}
+
 .gap-3{
   gap: 0.75rem;
 }
@@ -1503,10 +1511,6 @@ thead.table-heading-dark {
 
 .gap-default{
   gap: 0.75rem;
-}
-
-.gap-12{
-  gap: 3rem;
 }
 
 .gap-x-10{
@@ -1680,6 +1684,11 @@ thead.table-heading-dark {
   border-color: rgb(62 94 210 / var(--tw-border-opacity));
 }
 
+.border-red-600{
+  --tw-border-opacity: 1;
+  border-color: rgb(220 38 38 / var(--tw-border-opacity));
+}
+
 .border-saffron-mango-300{
   --tw-border-opacity: 1;
   border-color: rgb(246 193 81 / var(--tw-border-opacity));
@@ -1738,11 +1747,6 @@ thead.table-heading-dark {
   border-color: rgb(26 25 25 / var(--tw-border-opacity));
 }
 
-.border-red-600{
-  --tw-border-opacity: 1;
-  border-color: rgb(220 38 38 / var(--tw-border-opacity));
-}
-
 .border-l-saffron-mango-300{
   --tw-border-opacity: 1;
   border-left-color: rgb(246 193 81 / var(--tw-border-opacity));
@@ -1786,6 +1790,11 @@ thead.table-heading-dark {
 .bg-page-light{
   --tw-bg-opacity: 1;
   background-color: rgb(174 192 100 / var(--tw-bg-opacity));
+}
+
+.bg-red-200{
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
 }
 
 .bg-saffron-mango-300{
@@ -1863,16 +1872,6 @@ thead.table-heading-dark {
 
 .bg-woodsmoke-300\/50{
   background-color: rgb(178 174 174 / 0.5);
-}
-
-.bg-red-200{
-  --tw-bg-opacity: 1;
-  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
-}
-
-.bg-red-300{
-  --tw-bg-opacity: 1;
-  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
 }
 
 .bg-horizon-dark{
@@ -2596,6 +2595,14 @@ thead.table-heading-dark {
     order: 9999;
   }
 
+  .md\:order-1{
+    order: 1;
+  }
+
+  .md\:order-2{
+    order: 2;
+  }
+
   .md\:mx-auto{
     margin-left: auto;
     margin-right: auto;
@@ -2697,10 +2704,6 @@ thead.table-heading-dark {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  .md\:grid-cols-8{
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-  }
-
   .md\:flex-row{
     flex-direction: row;
   }
@@ -2791,10 +2794,6 @@ thead.table-heading-dark {
     margin-bottom: 1rem;
   }
 
-  .lg\:grid-cols-8{
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-  }
-
   .lg\:bg-1024{
     background-size: auto 50rem;
   }
@@ -2811,10 +2810,6 @@ thead.table-heading-dark {
 @media (min-width: 1280px){
   .xl\:grid-cols-3{
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .xl\:grid-cols-8{
-    grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
   .xl\:bg-1280{
@@ -2845,11 +2840,6 @@ thead.table-heading-dark {
 .dark\:border-alizarin-crimson-400:where(.dark, .dark *){
   --tw-border-opacity: 1;
   border-color: rgb(254 107 114 / var(--tw-border-opacity));
-}
-
-.dark\:border-biscay-200:where(.dark, .dark *){
-  --tw-border-opacity: 1;
-  border-color: rgb(199 216 246 / var(--tw-border-opacity));
 }
 
 .dark\:border-saffron-mango-300:where(.dark, .dark *){
@@ -2909,6 +2899,11 @@ thead.table-heading-dark {
 .dark\:bg-page-dark:where(.dark, .dark *){
   --tw-bg-opacity: 1;
   background-color: rgb(36 41 17 / var(--tw-bg-opacity));
+}
+
+.dark\:bg-red-900:where(.dark, .dark *){
+  --tw-bg-opacity: 1;
+  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
 }
 
 .dark\:bg-saffron-mango-800:where(.dark, .dark *){
@@ -2975,16 +2970,6 @@ thead.table-heading-dark {
   background-color: rgb(26 25 25 / 0.9);
 }
 
-.dark\:bg-red-800:where(.dark, .dark *){
-  --tw-bg-opacity: 1;
-  background-color: rgb(153 27 27 / var(--tw-bg-opacity));
-}
-
-.dark\:bg-red-900:where(.dark, .dark *){
-  --tw-bg-opacity: 1;
-  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
-}
-
 .dark\:text-alizarin-crimson-400:where(.dark, .dark *){
   --tw-text-opacity: 1;
   color: rgb(254 107 114 / var(--tw-text-opacity));
@@ -3027,11 +3012,6 @@ thead.table-heading-dark {
 .before\:dark\:bg-woodsmoke-950\/80:where(.dark, .dark *)::before{
   content: var(--tw-content);
   background-color: rgb(26 25 25 / 0.8);
-}
-
-.dark\:hover\:bg-biscay-200:hover:where(.dark, .dark *){
-  --tw-bg-opacity: 1;
-  background-color: rgb(199 216 246 / var(--tw-bg-opacity));
 }
 
 .dark\:hover\:bg-saffron-mango-300:hover:where(.dark, .dark *){

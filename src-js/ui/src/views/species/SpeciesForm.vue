@@ -10,11 +10,6 @@
     const props = defineProps<{
         isParentLoading: boolean
     }>()
-
-    const emit = defineEmits(['saveSpecies'])
-    function submitForm() {
-        emit('saveSpecies')
-    }
 </script>
 
 <template>

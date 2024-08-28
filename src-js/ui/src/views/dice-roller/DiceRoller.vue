@@ -73,7 +73,7 @@
         </div>
     </div>
     <div v-if="totalDice > 0" class="flex flex-col md:flex-row gap-12 justify-center">
-        <SecondaryButton :func="rollAll" :args="[]">Roll all</SecondaryButton>
-        <SecondaryButton :func="reset" :args="[]" :is-destructive="true">Reset</SecondaryButton>
+        <SecondaryButton :func="rollAll" :args="[]" class="md:order-2">Roll all</SecondaryButton>
+        <SecondaryButton :func="reset" :args="[]" :is-destructive="true" class="md:order-1">Reset</SecondaryButton>
     </div>
 </template>

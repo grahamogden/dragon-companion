@@ -9,11 +9,6 @@
     const props = defineProps<{
         isParentLoading: boolean
     }>()
-
-    const emit = defineEmits(['saveItem'])
-    function submitForm() {
-        emit('saveItem')
-    }
 </script>
 
 <template>

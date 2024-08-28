@@ -1,7 +1,5 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue'
-    import TextInput from '../../components/fields/TextInput.vue'
-    import NumberInput from '../../components/fields/NumberInput.vue'
     import EntityButtonWrapper from '../../components/entity-button-wrapper/EntityButtonWrapper.vue'
     import { type CharacterEntityInterface } from '../../services/character'
     import LoadingPage from '../../components/loading-page/LoadingPage.vue';
@@ -34,11 +32,6 @@
                 })
                 isLoading.value = false
             })
-    }
-
-    const emit = defineEmits(['saveCharacter'])
-    function submitForm() {
-        emit('saveCharacter')
     }
 
     if (props.isParentLoading) {

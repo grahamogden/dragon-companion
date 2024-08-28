@@ -3,7 +3,6 @@
     import { useValidationStore } from '../../stores/validation';
     import FieldWrapper from './FieldWrapper.vue'
 
-    // const emit = defineEmits(['updateValue'])
     const props = defineProps<{
         placeholder?: string
         inputName: string

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-    import KebabMenu from '../../../menu/wrapped-kebab-menu/KebabMenu.vue';
     import { DropDownItemRouter, DropDownItemButton } from '../../../../components/interfaces/drop-down.item.interface'
-    import type EntityTableHeadingInterface from '../../../entity-table/interface/entity-table-heading.interface';
     import type EntityTableLinkInterface from '../../../entity-table/interface/entity-table-link.interface';
     import type { TimelineEntityInterface } from '../../../../services/timeline';
     import { NodePositionEnum } from '../interface/timeline.linear.item.node-position.interface';

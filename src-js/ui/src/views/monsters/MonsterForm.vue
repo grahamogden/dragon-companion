@@ -24,11 +24,6 @@
         { value: 60, text: 'Huge' },
         { value: 70, text: 'Gargantuan' },
     ];
-
-    const emit = defineEmits(['saveMonster'])
-    function submitForm() {
-        emit('saveMonster')
-    }
 </script>
 
 <template>

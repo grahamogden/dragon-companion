@@ -34,11 +34,6 @@
             })
     }
 
-    const emit = defineEmits(['saveTimeline'])
-    function submitForm() {
-        emit('saveTimeline')
-    }
-
     if (props.isParentLoading) {
         // Watch for when the parent stops loading
         watch(() => props.isParentLoading, (isLoading) => {

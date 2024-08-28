@@ -20,11 +20,6 @@
     if (props.data) {
         campaign = props.data
     }
-
-    const emit = defineEmits(['saveCampaign'])
-    function submitForm() {
-        emit('saveCampaign', campaign)
-    }
 </script>
 
 <template>

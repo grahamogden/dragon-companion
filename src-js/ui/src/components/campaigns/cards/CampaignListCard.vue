@@ -46,7 +46,7 @@
             <DropDownKebabIcon></DropDownKebabIcon>
           </template>
           <template #items>
-            <KebabMenuItemText v-if="props.campaign.id === campaignStore.selectedCampaignId" :args="[campaign.id]">
+            <KebabMenuItemText v-if="props.campaign.id === campaignStore.selectedCampaignId">
               <font-awesome-icon :icon="['fas', 'ban']" fixed-width class="mr-2"></font-awesome-icon>Currently selected
             </KebabMenuItemText>
             <KebabMenuItemButton v-else :func="changeCampaign" :args="[campaign.id]">
