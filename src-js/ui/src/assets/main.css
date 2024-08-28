@@ -1291,6 +1291,10 @@ thead.table-heading-dark {
   height: 100%;
 }
 
+.h-\[125\%\]{
+  height: 125%;
+}
+
 .max-h-0{
   max-height: 0px;
 }
@@ -1874,6 +1878,41 @@ thead.table-heading-dark {
   background-color: rgb(178 174 174 / 0.5);
 }
 
+.bg-shark-900{
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 55 67 / var(--tw-bg-opacity));
+}
+
+.bg-shark-800{
+  --tw-bg-opacity: 1;
+  background-color: rgb(63 64 77 / var(--tw-bg-opacity));
+}
+
+.bg-shark-700{
+  --tw-bg-opacity: 1;
+  background-color: rgb(73 74 91 / var(--tw-bg-opacity));
+}
+
+.bg-shark-600{
+  --tw-bg-opacity: 1;
+  background-color: rgb(89 90 112 / var(--tw-bg-opacity));
+}
+
+.bg-woodsmoke-600{
+  --tw-bg-opacity: 1;
+  background-color: rgb(95 91 91 / var(--tw-bg-opacity));
+}
+
+.bg-woodsmoke-800{
+  --tw-bg-opacity: 1;
+  background-color: rgb(70 68 69 / var(--tw-bg-opacity));
+}
+
+.bg-woodsmoke-950{
+  --tw-bg-opacity: 1;
+  background-color: rgb(26 25 25 / var(--tw-bg-opacity));
+}
+
 .bg-horizon-dark{
   background-image: url('/src/assets/images/background/dark/full.svg');
 }
@@ -1991,6 +2030,10 @@ thead.table-heading-dark {
 
 .pt-6{
   padding-top: 1.5rem;
+}
+
+.pt-10{
+  padding-top: 2.5rem;
 }
 
 .text-left{

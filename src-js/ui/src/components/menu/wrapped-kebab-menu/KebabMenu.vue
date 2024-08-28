@@ -23,11 +23,11 @@
 <template>
     <div class="kebab-menu-container relative inline-block align-middle">
         <div class="block relative w-max min-w-2 md:min-w-20 min-h-9">
-            <div class="block md:absolute top-0 right-0 w-max bg-biscay-100 dark:bg-biscay-900 border border-biscay-600 rounded-lg shadow-shark-300 dark:shadow-stone-950 overflow-hidden transition-colors duration-theme-change"
+            <div class="block md:absolute top-0 right-0 w-max bg-biscay-100 dark:bg-biscay-900 text-biscay-800 dark:text-timberwolf-50 border border-biscay-600 rounded-lg shadow-shark-300 dark:shadow-stone-950 overflow-hidden transition-colors duration-theme-change"
                 :class="(isMenuOpen ? 'z-10 transition-shadow shadow-sm' : '')">
                 <button @click="toggleKebabMenu()" v-on-click-outside="() => isMenuOpen && toggleKebabMenu(false)"
                     :aria-expanded="isMenuOpen" :aria-label="props.buttonAriaContextName + ' menu toggle'"
-                    class="block w-full px-2 py-1 hover:bg-biscay-600 focus:bg-biscay-600 text-biscay-800 dark:text-timberwolf-50 hover:text-timberwolf-50 focus:text-timberwolf-50 text-right no-underline transition-colors duration-0"
+                    class="block w-full px-2 py-1 hover:bg-biscay-600 focus:bg-biscay-600 hover:text-timberwolf-50 focus:text-timberwolf-50 text-right no-underline transition-colors duration-0"
                     type="button"><span class="hidden md:inline">More </span><font-awesome-icon
                         :icon="['fas', iconClass]" fixed-width /></button>
                 <div v-if="configStore.isSmallScreen()">
