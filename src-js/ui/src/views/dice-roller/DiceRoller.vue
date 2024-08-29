@@ -1,12 +1,13 @@
 <script setup lang="ts">
     import { ref, reactive, watch } from 'vue';
-    import BaseInput from '../../components/fields/BaseInput.vue';
     import PageHeader from '../../components/page-header/PageHeader.vue';
     import DiceItem from './DiceItem.vue';
     import SecondaryButton from '../../components/buttons/SecondaryButton.vue';
-    import ContentGroup from '../../components/elements/ContentGroup.vue';
     import DiceCreator from './DiceCreator.vue';
     import SmallHorizontalRule from '../../components/horizontal-rule/SmallHorizontalRule.vue';
+
+    type DiceCountInterface = { count: number }
+    type DiceCountsInterface = Record<number, DiceCountInterface>
 
     const diceCounts = reactive<DiceCountsInterface>({
         4: { count: 0, },
@@ -38,9 +39,6 @@
         })
     }
 
-    type DiceCountInterface = { count: number }
-    type DiceCountsInterface = Record<number, DiceCountInterface>
-
     watch(diceCounts, (newCounts) => {
         const keys = Object.keys(newCounts).map(Number) as Array<keyof DiceCountsInterface>
         let total = 0
@@ -60,7 +58,7 @@
     <div class="mb-12">
         <div v-for="(diceCount, limit) in diceCounts" class="mb-6">
             <div class="mb-default">
-                <DiceCreator v-model:dice-count="diceCount.count" :limit="limit"></DiceCreator>
+                <DiceCreator v-model:dice-count="diceCount.count" :limit="parseInt('' + limit)"></DiceCreator>
             </div>
             <div v-if="diceCount.count" class="grid grid-cols-6 md:grid-cols-12 gap-default mb-default">
                 <div v-for="count in diceCount.count">
