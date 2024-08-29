@@ -14,5 +14,6 @@ interface ApiResponseHeaderServiceInterface
     public function returnCreatedResponse(Response $response): Response;
     public function returnNoContentResponse(Response $response): Response;
     public function returnUnauthorizedResponse(Response $response): Response;
+    public function returnLockedResponse(Response $response): Response;
     public function returnUnknownServerErrorResponse(Response $response): Response;
 }

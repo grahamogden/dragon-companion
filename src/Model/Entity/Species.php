@@ -48,7 +48,7 @@ class Species extends Entity implements CampaignChildEntityInterface, EntityInte
      */
     protected array $_accessible = [
         self::FIELD_NAME => true,
-        self::FIELD_CAMPAIGN_ID => true,
+        self::FIELD_CAMPAIGN_ID => false,
         self::FIELD_USER_ID => false,
         self::FIELD_SPECIES_PERMISSIONS => false,
         self::FIELD_CAMPAIGN => false,

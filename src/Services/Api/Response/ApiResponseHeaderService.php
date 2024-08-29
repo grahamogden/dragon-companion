@@ -39,6 +39,11 @@ final class ApiResponseHeaderService implements ApiResponseHeaderServiceInterfac
         return $response->withStatus(404);
     }
 
+    public function returnLockedResponse(Response $response): Response
+    {
+        return $response->withStatus(423);
+    }
+
     public function returnUnknownServerErrorResponse(Response $response): Response
     {
         return $response->withStatus(500);

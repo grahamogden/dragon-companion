@@ -83,16 +83,8 @@ class CampaignsController extends ApiAppController
         $this->addRole(
             rolesTable: $rolesTable,
             campaign: $campaign,
-            roleLevel: RoleLevel::Admin,
-            roleName: RoleLevel::Admin->label(),
-            campaignDefaultPermissions: RolePermission::Read_write_delete,
-            speciesDefaultPermissions: RolePermission::Read_write_delete,
-        );
-        $this->addRole(
-            rolesTable: $rolesTable,
-            campaign: $campaign,
-            roleLevel: RoleLevel::Custom,
-            roleName: 'Default',
+            roleLevel: RoleLevel::Player,
+            roleName: RoleLevel::Player->label(),
             campaignDefaultPermissions: RolePermission::Read,
             speciesDefaultPermissions: RolePermission::Read,
         );
@@ -113,6 +105,7 @@ class CampaignsController extends ApiAppController
     ): Role {
         /** @var Role $role */
         $role = $rolesTable->newEmptyEntity();
+        $role->setAccess(field: Role::FIELD_CAMPAIGN_ID, set: true);
         $role = $rolesTable->patchEntity(
             entity: $role,
             data: [

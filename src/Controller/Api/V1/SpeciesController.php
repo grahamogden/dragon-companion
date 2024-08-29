@@ -54,6 +54,7 @@ class SpeciesController extends ApiAppController
         $species = $this->Species->newEmptyEntity();
 
         $species->setAccess(field: Species::FIELD_USER_ID, set: true);
+        $species->setAccess(field: Species::FIELD_CAMPAIGN_ID, set: true);
         $species = $this->Species->patchEntity(
             entity: $species,
             data: $data

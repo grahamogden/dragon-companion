@@ -70,7 +70,7 @@ class Role extends Entity
      */
     protected array $_accessible = [
         self::FIELD_ROLE_NAME => true,
-        self::FIELD_CAMPAIGN_ID => true,
+        self::FIELD_CAMPAIGN_ID => false,
         self::FIELD_ROLE_LEVEL => true,
         self::FIELD_CAMPAIGN_DEFAULT_PERMISSIONS => true,
         self::FIELD_SPECIES_DEFAULT_PERMISSIONS => true,

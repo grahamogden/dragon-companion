@@ -64,7 +64,7 @@ class Timeline extends Entity implements CampaignChildEntityInterface, EntityInt
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        self::FIELD_CAMPAIGN_ID => true,
+        self::FIELD_CAMPAIGN_ID => false,
         self::FIELD_TITLE => true,
         self::FIELD_BODY => true,
         self::FIELD_USER_ID => false,

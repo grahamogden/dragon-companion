@@ -43,9 +43,9 @@ class CombatEncounter extends Entity
      */
     protected array $_accessible = [
         self::FIELD_NAME => true,
-        self::FIELD_USER_ID => true,
-        self::FIELD_CREATED => true,
-        self::FIELD_CAMPAIGN_ID => true,
+        self::FIELD_USER_ID => false,
+        self::FIELD_CREATED => false,
+        self::FIELD_CAMPAIGN_ID => false,
         'user' => true,
         'campaign' => true,
         'combat_turns' => true,

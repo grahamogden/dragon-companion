@@ -11,6 +11,7 @@ enum RoleLevel: int implements EnumLabelInterface
 {
     case Public = 10;
     case Custom = 20;
+    case Player = 30;
     case Admin = 40;
     case Owner = 50;
 

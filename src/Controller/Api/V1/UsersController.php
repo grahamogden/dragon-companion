@@ -17,6 +17,10 @@ class UsersController extends ApiAppController
 {
     public function add(): void
     {
+        if (env('ENABLE_REGISTRATIONS', 0) !== 1) {
+            $this->response = $this->apiResponseHeaderService->returnLockedResponse($this->response);
+            return;
+        }
         $this->Authorization->skipAuthorization();
         // $result = $this->Authentication->getResult();
         // dd($this->Authentication->getIdentity());
