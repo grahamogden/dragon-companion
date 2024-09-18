@@ -83,6 +83,7 @@
                 </nav>
             </div>
         </Transition>
+
         <nav class="toolbar grid grid-cols-4">
             <Link v-if="usePage().props.auth.user && !campaignStore.isCampaignSelected" class="navigation-toolbar-link"
                 :href="route('creator.campaigns.index')" @click="toggleNavMenu(false)">

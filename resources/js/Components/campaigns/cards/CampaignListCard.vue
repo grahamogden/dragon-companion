@@ -52,7 +52,7 @@
             <KebabMenuItemButton v-else :func="changeCampaign" :args="[campaign.id]">
               <font-awesome-icon :icon="['fas', 'check']" fixed-width class="mr-2"></font-awesome-icon>Select
             </KebabMenuItemButton>
-            <KebabMenuItemLink :destination="{ name: 'campaigns.edit', params: { externalCampaignId: campaign.id } }">
+            <KebabMenuItemLink :href="{ name: 'campaigns.edit', params: { externalCampaignId: campaign.id } }">
               <font-awesome-icon :icon="['fas', 'pencil']" fixed-width class="mr-2"></font-awesome-icon>Edit
             </KebabMenuItemLink>
             <KebabMenuItemButton :func="confirmDelete" :args="[campaign.id]" :is-destructive="true">

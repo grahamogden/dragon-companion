@@ -4,6 +4,7 @@
     import DropDownMenu from '../../drop-down/DropDownMenu.vue';
     import KebabMenuItemLink from '../../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
     import KebabMenuItemButton from '../../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
+    import { Link } from '@inertiajs/vue3';
 
     const configStore = useConfigurationStore()
 
@@ -37,13 +38,14 @@
             </div>
         </template>
         <template #items>
-            <KebabMenuItemLink class="drop-down-menu-item" v-if="$page.props.auth.user"
-                :destination="{ name: 'user-account' }"><font-awesome-icon :icon="['fas', 'circle-user']" fixed-width
-                    class="mr-2" />My account</KebabMenuItemLink>
+            <KebabMenuItemLink class="drop-down-menu-item" v-if="$page.props.auth.user" :href="route('profile')">
+                <font-awesome-icon :icon="['fas', 'circle-user']" fixed-width class="mr-2" />My account
+            </KebabMenuItemLink>
             <KebabMenuItemButton class="drop-down-menu-item" :func="() => { toggleAccountMenu(false); logOut(); }"
                 :args="[]" type="button">
                 <font-awesome-icon :icon="['fas', 'right-from-bracket']" fixed-width class="mr-2" />Log Out
             </KebabMenuItemButton>
+            <Link :href="route('logout')" method="post" as="button">Log out</Link>
         </template>
     </DropDownMenu>
 </template>

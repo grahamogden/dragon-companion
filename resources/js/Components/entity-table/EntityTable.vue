@@ -60,7 +60,7 @@
                         <KebabMenu :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + entity.name">
                             <template #items>
                                 <KebabMenuItemLink
-                                    :destination="{ name: props.editLink.routerToName, params: { externalCampaignId: campaignStore.selectedCampaignId, [props.editLink.idName]: entity.id } }">
+                                    :href="{ name: props.editLink.routerToName, params: { externalCampaignId: campaignStore.selectedCampaignId, [props.editLink.idName]: entity.id } }">
                                     <font-awesome-icon :icon="['fas', 'pencil']" fixed-width
                                         class="mr-2"></font-awesome-icon>Edit
                                 </KebabMenuItemLink>

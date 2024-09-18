@@ -1,10 +1,11 @@
 <script setup lang="ts">
-    import { ref, watch } from 'vue';
+    import { Link } from '@inertiajs/vue3';
+    import { ref } from 'vue';
     // import { useRoute, RouterLink } from 'vue-router'
     // const route = useRoute()
     const path = route().current() ?? ''
 
-    const breadcrumbs = ref<{ text: string, destination: string }[]>([]);
+    const breadcrumbs = ref<{ text: string, href: string }[]>([]);
 
     function updateBreadcrumbs(breadcrumbPaths: string[]) {
         // Reset array and add home
@@ -20,12 +21,12 @@
                 if (isNaN(parseFloat(breadcrumbPath))) {
                     breadcrumbs.value.push({
                         text: breadcrumbPath,
-                        destination: index !== breadcrumbPaths.length - 1 ? breadcrumbBasePath : ''
+                        href: index !== breadcrumbPaths.length - 1 ? breadcrumbBasePath : ''
                     })
                 }
             })
         if (breadcrumbs.value.length > 0) {
-            breadcrumbs.value[breadcrumbs.value.length - 1].destination = ''
+            breadcrumbs.value[breadcrumbs.value.length - 1].href = ''
         }
     }
 
@@ -37,10 +38,10 @@
 </script>
 
 <template>
-    <div class="breadcrumb-container mb-4 text-sm">
+    <div v-if="false" class="breadcrumb-container mb-4 text-sm">
         <div class="breadcrumb inline-block" v-for="breadcrumb in breadcrumbs">
-            <router-link v-if="breadcrumb.destination" :to="breadcrumb.destination" class="capitalize">{{
-                breadcrumb.text }}</router-link>
+            <Link v-if="breadcrumb.href" :href="breadcrumb.href" class="capitalize">{{
+                breadcrumb.text }}</Link>
             <span v-else class="capitalize">{{ breadcrumb.text }}</span>
         </div>
     </div>

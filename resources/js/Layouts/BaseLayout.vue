@@ -123,7 +123,7 @@
     // )
 </script>
 <template>
-    <div class="relative loading flex flex-col">
+    <div class="relative flex flex-col">
         <a tabindex="-1" ref="skipLinkReset" class="absolute"></a>
         <a href="#main-content"
             class="absolute z-30 focus:p-4 focus:underline max-h-0 focus:max-h-none bg-white-lilac-50 dark:bg-shark-950 overflow-hidden"

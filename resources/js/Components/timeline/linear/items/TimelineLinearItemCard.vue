@@ -60,12 +60,12 @@
                         </template>
                         <template #items>
                             <KebabMenuItemLink
-                                :destination="{ name: props.viewLink.routerToName, params: { externalCampaignId: props.campaignId, [props.viewLink.idName]: props.entity.id } }">
+                                :href="{ name: props.viewLink.routerToName, params: { externalCampaignId: props.campaignId, [props.viewLink.idName]: props.entity.id } }">
                                 <font-awesome-icon :icon="['fas', 'eye']" fixed-width
                                     class="mr-2"></font-awesome-icon>View
                             </KebabMenuItemLink>
                             <KebabMenuItemLink
-                                :destination="{ name: props.editLink.routerToName, params: { externalCampaignId: props.campaignId, [props.editLink.idName]: props.entity.id } }">
+                                :href="{ name: props.editLink.routerToName, params: { externalCampaignId: props.campaignId, [props.editLink.idName]: props.entity.id } }">
                                 <font-awesome-icon :icon="['fas', 'pencil']" fixed-width
                                     class="mr-2"></font-awesome-icon>
                                 Edit

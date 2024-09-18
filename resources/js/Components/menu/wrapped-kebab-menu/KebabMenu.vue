@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, computed } from 'vue';
-    import { vOnClickOutside } from '@vueuse/Components'
+    import { vOnClickOutside } from '@vueuse/components'
     import { useConfigurationStore } from '../../../stores';
     import MobileBottomMenu from '../mobile-bottom-menu/MobileBottomMenu.vue';
 
