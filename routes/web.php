@@ -30,10 +30,10 @@ Route::name('creator.')->group(function () {
 
         Route::resource(Campaign::TABLE_NAME, App\Http\Controllers\Creator\CampaignController::class);
     });
+
+    require __DIR__ . '/auth.php';
 });
 
 Route::get('/dice-roller', function () {
     return Inertia::render('DiceRoller/DiceRoller');
 })->name('dice-roller');
-
-require __DIR__ . '/auth.php';
