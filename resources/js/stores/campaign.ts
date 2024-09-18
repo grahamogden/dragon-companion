@@ -30,22 +30,25 @@ export const useCampaignStore = defineStore("campaign", {
         },
     },
     actions: {
-        selectCampaign(campaignId: number | null): number | null {
+        selectCampaign(
+            campaignId: number | null,
+            campaignName: string | null
+        ): number | null {
             if (campaignId === null) {
                 this.campaignId = null;
                 this.campaignName = null;
                 return this.campaignId;
             }
 
-            this.campaigns.forEach((campaign) => {
-                if (campaign.id === campaignId) {
-                    this.campaignId = campaign.id;
-                    this.campaignName = campaign.name;
-                    return;
-                }
-            });
+            // this.campaigns.forEach((campaign) => {
+            //     if (campaign.id === campaignId) {
+            this.campaignId = campaignId;
+            this.campaignName = campaignName;
+            //         return;
+            //     }
+            // });
 
-            return parseInt(this.campaignId as string);
+            return parseInt(this.campaignId as unknown as string);
         },
         async getCampaigns(): Promise<CampaignEntityInterface[]> {
             this.campaigns = [];

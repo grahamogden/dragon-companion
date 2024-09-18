@@ -116,15 +116,15 @@
                             :class="{ 'text-timberwolf-50': configStore.theme === ThemeEnum.DARK }"></font-awesome-icon></button>
 
                     <Link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
-                        v-if="!$page.props.auth.user" href="creator.register"><font-awesome-icon :icon="['fas', 'star']"
-                        fixed-width class="mr-2"></font-awesome-icon>Register</Link>
+                        v-if="!$page.props.auth.user" :href="route('creator.register')"><font-awesome-icon
+                        :icon="['fas', 'star']" fixed-width class="mr-2"></font-awesome-icon>Register</Link>
 
                     <Link class="text-timberwolf-50 hover:no-underline focus:no-underline" v-if="!$page.props.auth.user"
-                        href="creator.login"><font-awesome-icon :icon="['fas', 'right-to-bracket']" fixed-width
-                        class="mr-2" />Log In</Link>
+                        :href="route('creator.login')"><font-awesome-icon :icon="['fas', 'right-to-bracket']"
+                        fixed-width class="mr-2" />Log In</Link>
 
                     <Link class="text-timberwolf-50 hidden md:inline-block hover:no-underline focus:no-underline"
-                        v-if="$page.props.auth.user" href="creator.campaigns.index"><font-awesome-icon
+                        v-if="$page.props.auth.user" :href="route('creator.campaigns.index')"><font-awesome-icon
                         :icon="['fas', 'book']" fixed-width class="mr-2" />Campaigns</Link>
 
                     <HeaderAccountMenu v-if="$page.props.auth.user"></HeaderAccountMenu>

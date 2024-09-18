@@ -38,7 +38,8 @@
             </div>
         </template>
         <template #items>
-            <KebabMenuItemLink class="drop-down-menu-item" v-if="$page.props.auth.user" :href="route('profile')">
+            <KebabMenuItemLink class="drop-down-menu-item" v-if="$page.props.auth.user"
+                :href="route('creator.dashboard')">
                 <font-awesome-icon :icon="['fas', 'circle-user']" fixed-width class="mr-2" />My account
             </KebabMenuItemLink>
             <KebabMenuItemButton class="drop-down-menu-item" :func="() => { toggleAccountMenu(false); logOut(); }"

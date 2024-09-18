@@ -23,31 +23,25 @@
         </div>
         <div class="flex flex-col w-full pb-4 bg-shark-950/70 backdrop-blur-lg grow">
             <nav v-if="$page.props.auth.user && campaignStore.isCampaignSelected" class="side-nav flex flex-col">
-                <NavLink
-                    :href="route('creator.campaigns.timelines.index', { externalCampaignId: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'timeline']" fixed-width class="mr-2" />Timelines
                 </NavLink>
-                <NavLink
-                    :href="route('creator.campaigns.characters.index', { externalCampaignId: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'users']" fixed-width class="mr-2" />Characters
                 </NavLink>
                 <NavLink :href="route('dice-roller')">
                     <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width class="mr-2" />Dice Roller
                 </NavLink>
-                <NavLink
-                    :href="route('creator.campaigns.species.index', { externalCampaignId: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'person']" fixed-width class="mr-2" />Species
                 </NavLink>
-                <NavLink
-                    :href="route('creator.campaigns.items.index', { externalCampaignId: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2" />Items
                 </NavLink>
-                <NavLink
-                    :href="route('creator.campaigns.monsters.index', { externalCampaignId: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'dragon']" fixed-width class="mr-2" />Monsters
                 </NavLink>
-                <NavLink
-                    :href="route('creator.campaigns.characters.index', { externalCampaignId: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width class="mr-2" />Permissions
                 </NavLink>
             </nav>

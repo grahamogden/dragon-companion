@@ -6,6 +6,7 @@
   import { useUserAuthStore } from '../../../stores';
   import PageHeader from '../../../components/page-header/PageHeader.vue';
   import ContentGroup from '../../../components/elements/ContentGroup.vue';
+  import { Link } from '@inertiajs/vue3';
 
   const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
   const auth = getAuth(firebaseApp);
@@ -58,7 +59,9 @@
       </content-group>
     </div>
     <div class="px-4" v-else>
-      <p>You are not <router-link :to="{ name: 'login' }">logged in</router-link>.</p>
+      <p>You are not
+        <Link :href="route('creator.login')">logged in</Link>.
+      </p>
     </div>
   </div>
 </template>
