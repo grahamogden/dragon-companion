@@ -1,9 +1,0 @@
-button,
-input[type=button],
-input[type=submit] {
-    &.btn.btn-block {
-        @media all and (max-width: $width-min-tablet) {
-            margin-bottom: $size-sixteen;
-        }
-    }
-}

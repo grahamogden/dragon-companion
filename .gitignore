@@ -1,9 +1,21 @@
-# CakePHP specific files #
-##########################
-/config/env/*
-/logs/*
-/tmp/*
-/vendor/*
+/.phpunit.cache
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
 
 # OS generated files #
 ######################
@@ -18,45 +30,18 @@ Thumbs.db
 
 # Tool specific files #
 #######################
-# vim
-*~
-*.swp
-*.swo
-# sublime text & textmate
-*.sublime-*
-*.stTheme.cache
-*.tmlanguage.cache
-*.tmPreferences.cache
-.phpunit.cache
-# Eclipse
-.settings/*
-# JetBrains, aka PHPStorm, IntelliJ IDEA
-.idea/*
-# NetBeans
-nbproject/*
 # Visual Studio Code
 .vscode
-# Sass preprocessor
-.sass-cache/
 # NPM
-node_modules/*
+/node_modules
 
-
-# User Files #
-##############
+# User Specific
+/cakephp
 notes.md
-webroot/img/orig/
-deployments/*
 *.pem
 *.zip
-webroot/js/dist/*
-node_modules/*
 build/certs
 build/private
 config/keys/*
 tests/infection
 tests/coverage
-
-webroot/ui/dist/**
-src-js/ui/node_modules/*
-config/Migrations/schema-dump-test.lock

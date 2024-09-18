@@ -1,2 +1,0 @@
-<h1>Sorry, something went wrong!</h1>
-<div class="col-12">Sorry, an error has occurred our side! We're letting the monkeys out of their cages so they can keep typing on the typewritters until they get it fixed!</div>

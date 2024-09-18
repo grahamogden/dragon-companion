@@ -1,37 +1,32 @@
 {
     "compilerOptions": {
-        "module": "es2022",
-        "sourceMap": true,
-        "declaration": true,
-        //    "emitDecoratorMetadata": true,
-        "target": "es2022",
-        "outDir": "./webroot/js/dist",
-        "baseUrl": "./src-js",
-        "lib": [
-            "ES2022",
-            "DOM"
-        ],
+        "allowJs": true,
+        "allowImportingTsExtensions": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "preserve",
         "strict": true,
+        "isolatedModules": true,
+        "target": "ESNext",
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "removeComments": true,
-        "skipLibCheck": true,
-        "strictNullChecks": true,
-        "noImplicitAny": true,
-        "strictBindCallApply": false,
         "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true,
-        "moduleResolution": "node",
-//        "moduleResolution": "nodenext",
-        "allowJs": true
+        "noEmit": true,
+        "skipLibCheck": true,
+        "paths": {
+            "@/*": ["./resources/js/*"],
+            "ziggy-js": ["./vendor/tightenco/ziggy"]
+        }
     },
     "include": [
-        "config/**/*.json",
-        "src-js/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "webroot/js",
-        "src-js/combat-encounters"
+        "resources/js/**/*.ts",
+        "resources/js/**/*.d.ts",
+        "resources/js/**/*.vue",
+        "resources/js/Layouts/.AuthenticatedLayout.vue",
+        "resources/js/Layouts/.GuestLayout.vue",
+        "resources/js/Pages/Auth/.Login.vue",
+        "resources/js/Pages/.Welcome.vue",
+        "resources/js/Pages/Auth/.Register.vue",
+        "cakephp/src-ui/src/views/campaigns/CampaignCreate.vue",
+        "cakephp/src-ui/src/views/campaigns/CampaignEdit.vue"
     ]
 }
