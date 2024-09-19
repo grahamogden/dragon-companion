@@ -11,7 +11,7 @@ export default interface PaginationInterface<T> {
         active: boolean;
     }[];
     next_page_url: string | null;
-    path: "http://localhost/campaigns";
+    path: string;
     per_page: number;
     prev_page_url: string | null;
     to: number;

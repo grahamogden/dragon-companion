@@ -4,10 +4,11 @@
   import { CampaignEntityInterface, type NewCampaignEntityInterface, CampaignEntity } from '../../../types/entities/campaign'
   import LoadingPage from '../../../Components/loading-page/LoadingPage.vue';
   import BaseInput from '../../../Components/Fields/BaseInput.vue'
-  import { useForm, usePage } from '@inertiajs/vue3'
+  import { Head, useForm, usePage } from '@inertiajs/vue3'
   import { PropType } from 'vue';
   import { User } from '../../../types';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
+  import PageHeader from '../../../Components/page-header/PageHeader.vue';
 
   // const props = defineProps<{
   //     data?: CampaignEntityInterface
@@ -59,8 +60,11 @@
 </script>
 
 <template>
+
+  <Head title="Create a Campaign" />
   <form @submit.prevent="saveCampaign">
     <CreatorDefaultContentLayout>
+      <PageHeader>Create a Campaign</PageHeader>
       <div class="w-full md:w-2/4">
         <BaseInput type="text" inputName="name" v-model:model="form.name" :error="form.errors.name"
           label="Campaign Name" :require="true">

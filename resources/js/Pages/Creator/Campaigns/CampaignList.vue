@@ -6,6 +6,7 @@
   import type PaginationInterface from '../../../types/pagination/pagination.interface';
   import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
+  import { Head } from '@inertiajs/vue3';
 
   defineProps({
     campaigns: Object as PropType<PaginationInterface<CampaignEntityInterface>>,
@@ -13,6 +14,8 @@
 </script>
 
 <template>
+
+  <Head title="Campaigns" />
   <CreatorDefaultContentLayout>
     <PageHeaderWithLink :href="route('creator.campaigns.create')">
       <template #title>Campaigns</template><template #link><font-awesome-icon :icon="['fas', 'plus']" fixed-width
