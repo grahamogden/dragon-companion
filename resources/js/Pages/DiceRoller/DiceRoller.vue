@@ -4,7 +4,9 @@
     import DiceItem from './DiceItem.vue';
     import SecondaryButton from '../../Components/buttons/SecondaryButton.vue';
     import DiceCreator from './DiceCreator.vue';
-    import SmallHorizontalRule from '../../Components/horizontal-rule/SmallHorizontalRule.vue';
+    import HorizontalRule from '../../Components/horizontal-rule/HorizontalRule.vue';
+    import CreatorDefaultContentLayout from '../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
+    import { Head } from '@inertiajs/vue3';
 
     type DiceCountInterface = { count: number }
     type DiceCountsInterface = Record<number, DiceCountInterface>
@@ -49,29 +51,38 @@
     })
 </script>
 <template>
-    <PageHeader>Dice Roller</PageHeader>
-    <div class="mb-default">
-        <p>Click or type in the number of dice you want of each kind and then roll them.</p>
-        <p>You can roll a die individually by clicking on it or roll all of them with the button at the bottom of the
-            page!</p>
-    </div>
-    <div class="mb-12">
-        <div v-for="(diceCount, limit) in diceCounts" class="mb-6">
-            <div class="mb-default">
-                <DiceCreator v-model:dice-count="diceCount.count" :limit="parseInt('' + limit)"></DiceCreator>
-            </div>
-            <div v-if="diceCount.count" class="grid grid-cols-6 md:grid-cols-12 gap-default mb-default">
-                <div v-for="count in diceCount.count">
-                    <DiceItem :diceName="'d' + limit" :limit="parseInt('' + limit)"
-                        :ref="(el) => { diceItems['d' + limit + '-' + count] = el as unknown as DiceChildrenInterface }">
-                    </DiceItem>
+
+    <Head title="Dice Roller" />
+    <CreatorDefaultContentLayout>
+        <PageHeader>Dice Roller</PageHeader>
+        <div class="mb-default md:mb-default-md">
+            <p>Click or type in the number of dice you want of each kind and then roll them.</p>
+            <p>You can roll a die individually by clicking on it or roll all of them with the button at the bottom of
+                the
+                page!</p>
+        </div>
+        <div class="mb-12">
+            <div v-for="(diceCount, limit) in diceCounts" class="grid grid-cols-1 mb-default md:mb-default-md">
+                <div class="flex flex-row mb-default md:mb-default-md gap-default md:gap-default-md">
+                    <div class="w-1/4">
+                        <DiceCreator v-model:dice-count="diceCount.count" :limit="parseInt('' + limit)"></DiceCreator>
+                    </div>
+                    <div class="grid grid-cols-4 md:grid-cols-6 w-3/4 md:grid-cols-12 gap-default mb-default">
+                        <div v-for="count in diceCount.count">
+                            <DiceItem :diceName="'d' + limit" :limit="parseInt('' + limit)"
+                                :ref="(el) => { diceItems['d' + limit + '-' + count] = el as unknown as DiceChildrenInterface }">
+                            </DiceItem>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <HorizontalRule></HorizontalRule>
                 </div>
             </div>
-            <SmallHorizontalRule></SmallHorizontalRule>
         </div>
-    </div>
-    <div v-if="totalDice > 0" class="flex flex-col md:flex-row gap-12 justify-center">
-        <SecondaryButton :func="rollAll" :args="[]" class="md:order-2">Roll all</SecondaryButton>
-        <SecondaryButton :func="reset" :args="[]" :is-destructive="true" class="md:order-1">Reset</SecondaryButton>
-    </div>
+        <div v-if="totalDice > 0" class="flex flex-col md:flex-row gap-12 justify-center">
+            <SecondaryButton :func="rollAll" :args="[]" class="md:order-2">Roll all</SecondaryButton>
+            <SecondaryButton :func="reset" :args="[]" :is-destructive="true" class="md:order-1">Reset</SecondaryButton>
+        </div>
+    </CreatorDefaultContentLayout>
 </template>
