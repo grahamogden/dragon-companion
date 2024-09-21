@@ -114,13 +114,13 @@
                 Roller</span>
             </Link>
 
-            <Link v-if="!usePage().props.auth.user" class="navigation-toolbar-link" :href="route('creator.login')">
+            <Link v-if="!usePage().props.auth.user" class="navigation-toolbar-link" :href="route('login')">
             <font-awesome-icon :icon="['fas', 'right-to-bracket']" fixed-width
                 class="text-xl"></font-awesome-icon><span>Log
                 In</span>
             </Link>
 
-            <Link v-if="!usePage().props.auth.user" class="navigation-toolbar-link" :href="route('creator.register')">
+            <Link v-if="!usePage().props.auth.user" class="navigation-toolbar-link" :href="route('register')">
             <font-awesome-icon :icon="['fas', 'star']" fixed-width
                 class="text-xl"></font-awesome-icon><span>Register</span>
             </Link>
@@ -163,19 +163,19 @@
     .toolbar-navigation-slide-leave-active a,
     .toolbar-navigation-slide-enter-active div,
     .toolbar-navigation-slide-leave-active div,
-    .toolbar-navigation-slide-enter-active .campaign-picker,
-    .toolbar-navigation-slide-leave-active .campaign-picker {
+    .toolbar-navigation-slide-enter-active .campaign-image,
+    .toolbar-navigation-slide-leave-active .campaign-image {
         transition-property: padding, line-height, font-size, height;
         transition-duration: 0.15s;
         transition-timing-function: ease-in-out;
         transition-delay: 0ms;
     }
 
-    .toolbar-navigation-slide-enter-to,
+    /* .toolbar-navigation-slide-enter-to,
     .toolbar-navigation-slide-leave-from,
     .toolbar-navigation-slide-enter-to div,
     .toolbar-navigation-slide-leave-from div {
         line-height: normal;
         font-size: normal;
-    }
+    } */
 </style>

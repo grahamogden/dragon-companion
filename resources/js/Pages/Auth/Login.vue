@@ -17,7 +17,7 @@
   });
 
   const submit = () => {
-    form.post(route('creator.login'), {
+    form.post(route('login'), {
       onFinish: () => {
         form.reset('password');
       },

@@ -17,11 +17,12 @@ Route::get('/', function () {
 });
 
 Route::name('creator.')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Creator/Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::middleware('auth')->group(function () {
+        Route::get('/dashboard', function () {
+            return Inertia::render('Creator/Dashboard');
+        })->middleware(['verified'])->name('dashboard');
+
         Route::controller(App\Http\Controllers\ProfileController::class)->group(function () {
             Route::get('/profile', 'edit')->name('profile.edit');
             Route::patch('/profile', 'update')->name('profile.update');
@@ -30,10 +31,10 @@ Route::name('creator.')->group(function () {
 
         Route::resource(Campaign::TABLE_NAME, App\Http\Controllers\Creator\CampaignController::class);
     });
-
-    require __DIR__ . '/auth.php';
 });
 
 Route::get('/dice-roller', function () {
     return Inertia::render('DiceRoller/DiceRoller');
 })->name('dice-roller');
+
+require __DIR__ . '/auth.php';

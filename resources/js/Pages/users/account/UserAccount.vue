@@ -60,7 +60,7 @@
     </div>
     <div class="px-4" v-else>
       <p>You are not
-        <Link :href="route('creator.login')">logged in</Link>.
+        <Link :href="route('login')">logged in</Link>.
       </p>
     </div>
   </div>
