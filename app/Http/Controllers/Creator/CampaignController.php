@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Creator;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCampaignRequest;
-use App\Http\Requests\UpdateCampaignRequest;
+use App\Http\Requests\Creator\Campaign\StoreCampaignRequest;
+use App\Http\Requests\Creator\Campaign\UpdateCampaignRequest;
 use App\Models\Campaign;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -23,8 +25,14 @@ class CampaignController extends Controller
      */
     public function index(Request $request)
     {
-        $campaigns = $this->getUser($request)->campaigns()->paginate();
-        return Inertia::render('Creator/Campaigns/CampaignList', ['campaigns' => $campaigns]);
+        $campaigns = $this->getUser($request)
+            ->campaigns()
+            ->paginate();
+
+        return Inertia::render(
+            'Creator/Campaigns/CampaignList',
+            ['campaigns' => $campaigns]
+        );
     }
 
     /**
@@ -38,20 +46,13 @@ class CampaignController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCampaignRequest $request)
+    public function store(StoreCampaignRequest $request): RedirectResponse
     {
-        // $validated = $request->validate([
-        //     Campaign::FIELD_NAME => 'required|string|max:255',
-        //     Campaign::FIELD_SYNOPSIS => 'required|string',
-        // ]);
+        $this->getUser(request: $request)
+            ->campaigns()
+            ->create(attributes: $request->validated());
 
-        // $campaign = Campaign::create([
-        //     Campaign::FIELD_NAME => $request->name,
-        //     Campaign::FIELD_SYNOPSIS => $request->synopsis,
-        // ]);
-        $request->user()->campaigns()->create($request->validated());
-
-        return redirect(route('creator.campaigns.index', absolute: false));
+        return Redirect::route('creator.campaigns.index');
     }
 
     /**
@@ -69,32 +70,34 @@ class CampaignController extends Controller
      */
     public function edit(Request $request, Campaign $campaign)
     {
-        return Inertia::render('Campaigns/Edit', [
-            'status' => session('status'),
-        ]);
+        $this->getUser($request)
+            ->can('view');
+
+        return Inertia::render(
+            'Creator/Campaigns/CampaignForm',
+            ['campaign' => $campaign]
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCampaignRequest $request, Campaign $campaign)
+    public function update(UpdateCampaignRequest $request, Campaign $campaign): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $campaign->update($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
+        return Redirect::route('creator.campaigns.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Campaign $campaign)
+    public function destroy(Campaign $campaign): RedirectResponse
     {
-        //
+        Gate::authorize('delete', $campaign);
+
+        $campaign->deleteOrFail();
+
+        return Redirect::route('creator.campaigns.index');
     }
 }

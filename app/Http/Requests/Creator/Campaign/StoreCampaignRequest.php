@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Creator\Campaign;
 
 use App\Models\Campaign;
 use Illuminate\Foundation\Http\FormRequest;

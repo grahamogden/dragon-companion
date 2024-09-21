@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Creator\Campaign;
 
+use App\Models\Campaign;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateCampaignRequest extends FormRequest
@@ -11,7 +12,7 @@ class UpdateCampaignRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update', $this->campaign);
     }
 
     /**
@@ -22,7 +23,8 @@ class UpdateCampaignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            Campaign::FIELD_NAME => 'required|string|max:255',
+            Campaign::FIELD_SYNOPSIS => 'required|string',
         ];
     }
 }

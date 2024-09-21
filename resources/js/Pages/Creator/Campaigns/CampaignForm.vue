@@ -1,19 +1,16 @@
 <script setup lang="ts">
   import TextArea from '../../../Components/Fields/TextArea.vue'
   import EntityButtonWrapper from '../../../Components/entity-button-wrapper/EntityButtonWrapper.vue'
-  import { CampaignEntityInterface, type NewCampaignEntityInterface, CampaignEntity } from '../../../types/entities/campaign'
-  import LoadingPage from '../../../Components/loading-page/LoadingPage.vue';
+  import { CampaignEntityInterface } from '../../../types/entities/campaign'
   import BaseInput from '../../../Components/Fields/BaseInput.vue'
   import { Head, useForm, usePage } from '@inertiajs/vue3'
   import { PropType } from 'vue';
-  import { User } from '../../../types';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
   import PageHeader from '../../../Components/page-header/PageHeader.vue';
 
-  // const props = defineProps<{
-  //     data?: CampaignEntityInterface
-  //     isLoading?: boolean
-  // }>()
+  const props = defineProps({
+    campaign: { type: Object as PropType<CampaignEntityInterface>, required: false }
+  })
 
   // let campaign: NewCampaignEntityInterface = new CampaignEntity(
   //     props.data?.id,
@@ -28,8 +25,8 @@
   // const props = defineProps({ campaign: Object as PropType<CampaignEntityInterface | null>, auth: Object as PropType<User> })
 
   const form = useForm({
-    name: '',
-    synopsis: '',
+    name: props.campaign?.name ?? '',
+    synopsis: props.campaign?.synopsis ?? '',
   })
 
   const saveCampaign = () => {
@@ -55,7 +52,11 @@
     //       }
     //     })
     console.debug(usePage().props.auth);
-    form.post(route('creator.campaigns.store'))
+    if (props.campaign) {
+      form.put(route('creator.campaigns.update', { campaign: props.campaign.id }))
+    } else {
+      form.post(route('creator.campaigns.store'))
+    }
   }
 </script>
 

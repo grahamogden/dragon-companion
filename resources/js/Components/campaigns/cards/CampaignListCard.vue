@@ -59,6 +59,10 @@
             <KebabMenuItemButton :func="confirmDelete" :args="[campaign.id]" :is-destructive="true">
               <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
             </KebabMenuItemButton>
+            <KebabMenuItemLink :href="route('creator.campaigns.destroy', { campaign: campaign.id })" method="delete"
+              as="button">
+              <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
+            </KebabMenuItemLink>
           </template>
         </DropDownMenu>
       </div>

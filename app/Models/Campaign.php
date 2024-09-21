@@ -11,6 +11,8 @@ class Campaign extends Model
 
     public const TABLE_NAME = 'campaigns';
 
+    public const FIELD_ID = 'id';
+    public const FIELD_USER_ID = 'user_id';
     public const FIELD_NAME = 'name';
     public const FIELD_SYNOPSIS = 'synopsis';
 

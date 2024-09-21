@@ -2,21 +2,24 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
     public const TABLE_NAME = 'users';
 
+    public const FIELD_ID = 'id';
     public const FIELD_USERNAME = 'username';
     public const FIELD_EMAIL = 'email';
     public const FIELD_PASSWORD = 'password';
+    public const FIELD_EMAIL_VERIFIED_AT = 'email_verified_at';
+    public const FIELD_REMEMBER_TOKEN = 'remember_token';
 
     /**
      * The attributes that are mass assignable.
@@ -24,9 +27,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'username',
-        'email',
-        'password',
+        self::FIELD_USERNAME,
+        self::FIELD_EMAIL,
+        self::FIELD_PASSWORD,
     ];
 
     /**
@@ -35,8 +38,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        self::FIELD_PASSWORD,
+        self::FIELD_REMEMBER_TOKEN,
     ];
 
     /**
@@ -47,8 +50,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            self::FIELD_EMAIL_VERIFIED_AT => 'datetime',
+            self::FIELD_PASSWORD => 'hashed',
         ];
     }
 
