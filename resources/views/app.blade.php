@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/logo-8.svg" />
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
