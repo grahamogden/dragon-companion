@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers\Creator;
 
+use App\Enums\RolePermissionEnum;
+use App\Enums\RoleTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Creator\Campaign\StoreCampaignRequest;
 use App\Http\Requests\Creator\Campaign\UpdateCampaignRequest;
 use App\Models\Campaign;
+use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -48,9 +54,36 @@ class CampaignController extends Controller
      */
     public function store(StoreCampaignRequest $request): RedirectResponse
     {
-        $this->getUser(request: $request)
-            ->campaigns()
-            ->create(attributes: $request->validated());
+        $user = $this->getUser(request: $request);
+
+        DB::transaction(callback: function () use ($request, $user): void {
+            /** @var Campaign $campaign */
+            $campaign = $user->campaigns()
+                ->create(attributes: $request->validated());
+
+            /** @var Role[] */
+            $roles = $campaign->roles()
+                ->createMany(records: [
+                    [
+                        Role::FIELD_NAME => 'Admin',
+                        Role::FIELD_ROLE_TYPE => RoleTypeEnum::Admin,
+                    ],
+                    [
+                        Role::FIELD_NAME => 'Player',
+                        Role::FIELD_ROLE_TYPE => RoleTypeEnum::Player,
+                    ],
+                ]);
+
+            $roles[0]->rolePermission()->create(attributes: [
+                RolePermission::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
+            ]);
+
+            $user->roles()->attach($roles[0]->id);
+
+            $roles[1]->rolePermission()->create(attributes: [
+                RolePermission::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::Deny,
+            ]);
+        });
 
         return Redirect::route('creator.campaigns.index');
     }

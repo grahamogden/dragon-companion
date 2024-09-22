@@ -2,17 +2,28 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property string $username
+ * @property string $email
+ * @property string $password
+ * @property DateTime $email_verified_at
+ * @property string $remember_token
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
     public const TABLE_NAME = 'users';
+
+    public const PIVOT_TABLE_ROLE_USER = Role::PIVOT_TABLE_ROLE_USER;
 
     public const FIELD_ID = 'id';
     public const FIELD_USERNAME = 'username';
@@ -58,5 +69,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function campaigns(): HasMany
     {
         return $this->hasMany(Campaign::class);
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(related: Role::class)
+            ->using(class: RoleUser::class)
+            ->withTimestamps();
     }
 }

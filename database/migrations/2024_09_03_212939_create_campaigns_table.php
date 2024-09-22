@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string(column: Campaign::FIELD_NAME, length: 250);
-            $table->text(column: Campaign::FIELD_SYNOPSIS)->nullable()->default(value: null);
+            $table->text(column: Campaign::FIELD_SYNOPSIS)
+                ->nullable()
+                ->default(value: null);
             $table->unsignedBigInteger(column: Campaign::FIELD_USER_ID);
 
             $table->foreign(columns: Campaign::FIELD_USER_ID)

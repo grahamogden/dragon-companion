@@ -4,7 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $synopsis
+ */
 class Campaign extends Model
 {
     use HasFactory;
@@ -25,4 +31,9 @@ class Campaign extends Model
         self::FIELD_NAME,
         self::FIELD_SYNOPSIS,
     ];
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(related: Role::class);
+    }
 }
