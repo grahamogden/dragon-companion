@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
+ * @property int $user_id
  * @property string $name
  * @property string $synopsis
  */
@@ -21,6 +22,8 @@ class Campaign extends Model
     public const FIELD_USER_ID = 'user_id';
     public const FIELD_NAME = 'name';
     public const FIELD_SYNOPSIS = 'synopsis';
+    public const FIELD_CREATED = 'created_at';
+    public const FIELD_UPDATED = 'updated_at';
 
     /**
      * The attributes that are mass assignable.
@@ -35,5 +38,10 @@ class Campaign extends Model
     public function roles(): HasMany
     {
         return $this->hasMany(related: Role::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(related: Item::class);
     }
 }

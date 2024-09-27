@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
+ * @property int $id
  * @property string $username
  * @property string $email
  * @property string $password
@@ -31,6 +32,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public const FIELD_PASSWORD = 'password';
     public const FIELD_EMAIL_VERIFIED_AT = 'email_verified_at';
     public const FIELD_REMEMBER_TOKEN = 'remember_token';
+    public const FIELD_CREATED = 'created_at';
+    public const FIELD_UPDATED = 'updated_at';
 
     /**
      * The attributes that are mass assignable.

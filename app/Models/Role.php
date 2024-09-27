@@ -26,6 +26,8 @@ class Role extends Model
     public const FIELD_NAME = 'name';
     public const FIELD_ROLE_TYPE = 'role_type';
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
+    public const FIELD_CREATED = 'created_at';
+    public const FIELD_UPDATED = 'updated_at';
 
     /**
      * The attributes that are mass assignable.

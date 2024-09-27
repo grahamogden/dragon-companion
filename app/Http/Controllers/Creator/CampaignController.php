@@ -10,43 +10,46 @@ use App\Http\Requests\Creator\Campaign\UpdateCampaignRequest;
 use App\Models\Campaign;
 use App\Models\Role;
 use App\Models\RolePermission;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CampaignController extends Controller
 {
-    private function getUser(Request $request): User
-    {
-        return $request->user();
-    }
-
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $campaigns = $this->getUser($request)
+        $this->authorize(
+            ability: 'viewAny',
+            arguments: Campaign::class
+        );
+        $campaigns = $this->getUser(request: $request)
             ->campaigns()
             ->paginate();
 
         return Inertia::render(
-            'Creator/Campaigns/CampaignList',
-            ['campaigns' => $campaigns]
+            component: 'Creator/Campaigns/CampaignList',
+            props: ['campaigns' => $campaigns]
         );
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
-        return Inertia::render('Creator/Campaigns/CampaignForm');
+        $this->authorize(
+            ability: 'create',
+            arguments: Campaign::class
+        );
+
+        return Inertia::render(component: 'Creator/Campaigns/CampaignForm');
     }
 
     /**
@@ -54,6 +57,10 @@ class CampaignController extends Controller
      */
     public function store(StoreCampaignRequest $request): RedirectResponse
     {
+        $this->authorize(
+            ability: 'create',
+            arguments: Campaign::class
+        );
         $user = $this->getUser(request: $request);
 
         DB::transaction(callback: function () use ($request, $user): void {
@@ -76,39 +83,44 @@ class CampaignController extends Controller
 
             $roles[0]->rolePermission()->create(attributes: [
                 RolePermission::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
+                RolePermission::FIELD_ITEM_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
             ]);
 
-            $user->roles()->attach($roles[0]->id);
+            $user->roles()->attach(id: $roles[0]->id);
 
             $roles[1]->rolePermission()->create(attributes: [
-                RolePermission::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::Deny,
+                RolePermission::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::Read,
+                RolePermission::FIELD_ITEM_PERMISSIONS => RolePermissionEnum::Deny,
             ]);
         });
 
-        return Redirect::route('creator.campaigns.index');
+        return Redirect::route(route: 'creator.campaigns.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Campaign $campaign)
+    public function show(Request $request, Campaign $campaign): Response
     {
-        return Inertia::render('Campaigns/View', [
-            'status' => session('status'),
-        ]);
+        $this->authorize(ability: 'view', arguments: $campaign);
+
+        return Inertia::render(
+            component: 'Creator/Campaigns/CampaignView',
+            props: ['campaign' => $campaign]
+        );
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, Campaign $campaign)
+    public function edit(Request $request, Campaign $campaign): Response
     {
-        $this->getUser($request)
-            ->can('view');
+        $this->authorize(ability: 'view', arguments: $campaign);
+        $this->authorize(ability: 'update', arguments: $campaign);
 
         return Inertia::render(
-            'Creator/Campaigns/CampaignForm',
-            ['campaign' => $campaign]
+            component: 'Creator/Campaigns/CampaignForm',
+            props: ['campaign' => $campaign]
         );
     }
 
@@ -117,20 +129,22 @@ class CampaignController extends Controller
      */
     public function update(UpdateCampaignRequest $request, Campaign $campaign): RedirectResponse
     {
-        $campaign->update($request->validated());
+        $this->authorize(ability: 'update', arguments: $campaign);
 
-        return Redirect::route('creator.campaigns.index');
+        $campaign->update(attributes: $request->validated());
+
+        return Redirect::route(route: 'creator.campaigns.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Campaign $campaign): RedirectResponse
+    public function destroy(Request $request, Campaign $campaign): RedirectResponse
     {
-        Gate::authorize('delete', $campaign);
+        $this->authorize(ability: 'delete', arguments: $campaign);
 
         $campaign->deleteOrFail();
 
-        return Redirect::route('creator.campaigns.index');
+        return Redirect::route(route: 'creator.campaigns.index');
     }
 }

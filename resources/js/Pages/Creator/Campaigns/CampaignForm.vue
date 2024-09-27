@@ -73,7 +73,7 @@
       </div>
       <div class="w-full">
         <text-area inputName="synopsis" v-model:model="form.synopsis" :error="form.errors.synopsis"
-          label="Synopsis of campaign" :length="1000" :require="true"></text-area>
+          label="Synopsis of campaign" :length="1000"></text-area>
       </div>
       <EntityButtonWrapper :cancelDestination="route('creator.campaigns.index')" />
     </CreatorDefaultContentLayout>

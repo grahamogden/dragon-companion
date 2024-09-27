@@ -38,7 +38,7 @@ return new class extends Migration
                 column: RolePermission::FIELD_CAMPAIGN_PERMISSIONS,
                 unsigned: true,
             )
-                ->comment('[bitwise] deny:0,read:1,write:2,delete:4. For example, 3 means the role has read + write permissions but not delete. 5 Would mean read + delete but not write. 7 means that the role has read + write + delete permissions.');
+                ->comment(comment: '[bitwise] deny:0,read:1,write:2,delete:4. For example, 3 means the role has read + write permissions but not delete. 5 Would mean read + delete but not write. 7 means that the role has read + write + delete permissions.');
         });
 
         Schema::create(table: Role::PIVOT_TABLE_ROLE_USER, callback: function (Blueprint $table): void {

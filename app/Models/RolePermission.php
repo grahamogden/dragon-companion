@@ -18,7 +18,10 @@ class RolePermission extends Model
 
     public const FIELD_ID = 'id';
     public const FIELD_ROLE_ID = 'role_id';
+    public const FIELD_CREATED = 'created_at';
+    public const FIELD_UPDATED = 'updated_at';
     public const FIELD_CAMPAIGN_PERMISSIONS = 'campaign_permissions';
+    public const FIELD_ITEM_PERMISSIONS = 'item_permissions';
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +31,7 @@ class RolePermission extends Model
     protected $fillable = [
         self::FIELD_ROLE_ID,
         self::FIELD_CAMPAIGN_PERMISSIONS,
+        self::FIELD_ITEM_PERMISSIONS,
     ];
 
     public function role(): HasOne
@@ -38,7 +42,8 @@ class RolePermission extends Model
     public function casts(): array
     {
         return [
-            self::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::class
+            self::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::class,
+            self::FIELD_ITEM_PERMISSIONS => RolePermissionEnum::class,
         ];
     }
 }
