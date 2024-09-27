@@ -50,7 +50,6 @@
     </PageHeaderWithLink>
     <EntityTable :headings="[new EntityTableHeading('name', true), new EntityTableHeading('description', false)]"
       :entities="items" :view-link="new EntityTableLink('items.view', 'itemId')"
-      :edit-link="new EntityTableLink('items.edit', 'itemId')" :delete-confirmation-function="confirmDelete"
-      kebab-menu-button-aria-context="Item"></EntityTable>
+      :edit-link="new EntityTableLink('items.edit', 'itemId')" kebab-menu-button-aria-context="Item"></EntityTable>
   </CreatorDefaultContentLayout>
 </template>
