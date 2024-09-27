@@ -1,40 +1,29 @@
 <script setup lang="ts">
-    import { useCampaignStore } from '../../../../cakephp/src-ui/src/stores/campaign';
+    import { useCampaignStore } from '../../stores';
     import { DropDownItemRouter, DropDownItemButton } from '../interfaces/drop-down.item.interface'
     import type { EntityInterface } from '../../types/entities/entity.interface';
     import KebabMenu from '../menu/wrapped-kebab-menu/KebabMenu.vue';
-    import type EntityTableHeadingInterface from './interface/entity-table-heading.interface';
-    import type EntityTableLinkInterface from './interface/entity-table-link.interface';
     import KebabMenuItemLink from '../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
     import KebabMenuItemButton from '../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
+    import { PropType } from 'vue';
+    import { EntityTableHeadingInterface, EntityTableItemInterface } from './interface';
+    import { Link } from '@inertiajs/vue3';
 
     const campaignStore = useCampaignStore()
 
-    const props = defineProps<{
-        headings: EntityTableHeadingInterface[],
-        entities: EntityInterface[] & Record<string, string>[],
-        editLink: EntityTableLinkInterface,
-        viewLink?: EntityTableLinkInterface,
-        deleteConfirmationFunction: Function,
-        kebabMenuButtonAriaContext: string,
-    }>()
-
-    function getActionLinks(campaignId: number, id: number): (DropDownItemRouter | DropDownItemButton)[] {
-        return [
-            new DropDownItemRouter(
-                '<i class="fa fa-pencil mr-2" aria-hidden="true"></i>Edit',
-                { name: props.editLink.routerToName, params: { externalCampaignId: campaignId, [props.editLink.idName]: id } },
-            ),
-            new DropDownItemButton(
-                '<i class="fa fa-trash mr-2" aria-hidden="true"></i>Delete',
-                {
-                    func: props.deleteConfirmationFunction,
-                    args: [campaignId, id],
-                },
-                true,
-            )
-        ]
-    }
+    // const props = defineProps<{
+    //     headings: EntityTableHeadingInterface[],
+    //     entities: EntityInterface[] & Record<string, string>[],
+    //     editLink: EntityTableLinkInterface,
+    //     viewLink?: EntityTableLinkInterface,
+    //     deleteConfirmationFunction: Function,
+    //     kebabMenuButtonAriaContext: string,
+    // }>()
+    defineProps({
+        headings: { type: Object as PropType<EntityTableHeadingInterface[]>, required: true },
+        entities: { type: Object as PropType<EntityTableItemInterface[] & Record<string, string>[]>, required: true },
+        kebabMenuButtonAriaContext: { type: String, required: true }
+    })
 </script>
 
 <template>
@@ -42,33 +31,30 @@
         <table class="entity-list-table">
             <thead>
                 <tr>
-                    <th v-for="heading in props.headings" class="p-2 capitalize">{{ heading.title }}</th>
+                    <th v-for="heading in headings" class="p-2 capitalize">{{ heading.title }}</th>
                     <th class="p-2"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="props.entities.length > 0 && campaignStore.selectedCampaignId !== null"
-                    v-for="entity in props.entities">
-                    <td v-for="field in props.headings" class="p-2">
-                        <RouterLink v-if="field.isLink && props.viewLink"
-                            :to="{ name: props.viewLink.routerToName, params: { externalCampaignId: campaignStore.selectedCampaignId, [props.viewLink.idName]: entity.id } }">
-                            {{
-                                entity[field.title] }}</RouterLink>
+                <tr v-if="entities.length > 0 && campaignStore.selectedCampaignId !== null" v-for="entity in entities">
+                    <td v-for="field in headings" class="p-2">
+                        <Link v-if="field.isLink && entity.view_url" :href="entity.view_url">
+                        {{
+                            entity[field.title] }}</Link>
                         <p v-else>{{ entity[field.title] }}</p>
                     </td>
                     <td class="action-cell flex justify-end py-2">
-                        <KebabMenu :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + entity.name">
+                        <KebabMenu :button-aria-context-name="kebabMenuButtonAriaContext + ' ' + entity.name">
                             <template #items>
-                                <KebabMenuItemLink
-                                    :href="{ name: props.editLink.routerToName, params: { externalCampaignId: campaignStore.selectedCampaignId, [props.editLink.idName]: entity.id } }">
+                                <KebabMenuItemLink :href="entity.edit_url">
                                     <font-awesome-icon :icon="['fas', 'pencil']" fixed-width
                                         class="mr-2"></font-awesome-icon>Edit
                                 </KebabMenuItemLink>
-                                <KebabMenuItemButton :func="props.deleteConfirmationFunction"
-                                    :args="[campaignStore.selectedCampaignId, entity.id]" :is-destructive="true">
+                                <KebabMenuItemLink as="button" method="delete" :href="entity.delete_url"
+                                    :is-destructive="true">
                                     <font-awesome-icon :icon="['fas', 'trash']" fixed-width
                                         class="mr-2"></font-awesome-icon>Delete
-                                </KebabMenuItemButton>
+                                </KebabMenuItemLink>
                             </template>
                         </KebabMenu>
                     </td>

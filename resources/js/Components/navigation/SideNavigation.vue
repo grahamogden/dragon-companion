@@ -35,7 +35,7 @@
                 <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'person']" fixed-width class="mr-2" />Species
                 </NavLink>
-                <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.items.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2" />Items
                 </NavLink>
                 <NavLink :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">

@@ -1,56 +1,56 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { useItemStore, useCampaignStore, useNotificationStore } from '../../stores'
-  import type { ItemEntityInterface } from '../../services/item'
-  import PageHeader from '../../Components/page-header/PageHeader.vue'
-  import LoadingPage from '../../Components/loading-page/LoadingPage.vue'
-  import EntityTable from '../../Components/entity-table/EntityTable.vue'
-  import EntityTableLink from '../../Components/entity-table/interface/entity-table-link';
-  import EntityTableHeading from '../../Components/entity-table/interface/entity-table-heading';
-  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../Components/page-header/interface';
+  import { PropType } from 'vue';
+  import EntityTable from '../../../Components/entity-table/EntityTable.vue'
+  import { ItemEntityInterface } from '../../../types/entities/item'
+  import EntityTableLink from '../../../Components/entity-table/interface/entity-table-link';
+  import EntityTableHeading from '../../../Components/entity-table/interface/entity-table-heading';
+  import { Head } from '@inertiajs/vue3';
+  import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
+  import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
+  import PaginationInterface from '../../../types/pagination/pagination.interface';
+  import { useCampaignStore } from '../../../stores';
 
-  const notificationStore = useNotificationStore()
+  defineProps({
+    items: Object as PropType<PaginationInterface<ItemEntityInterface>>,
+  })
+
   const campaignStore = useCampaignStore()
-  const campaignId = campaignStore.selectedCampaignId!
-  const itemStore = useItemStore()
-  const isLoading = ref(true)
 
-  let allItems: ItemEntityInterface[] = []
-  fetchItems(campaignId)
+  // let allItems: ItemEntityInterface[] = []
+  // fetchItems(campaignId)
 
-  function fetchItems(campaignId: number): void {
-    isLoading.value = true
-    itemStore.getItems(campaignId).then((itemRes: ItemEntityInterface[]) => {
-      if (itemRes !== null) {
-        allItems = itemRes
-      }
-      isLoading.value = false
-    });
-  }
+  // function fetchItems(campaignId: number): void {
+  //   isLoading.value = true
+  //   itemStore.getItems(campaignId).then((itemRes: ItemEntityInterface[]) => {
+  //     if (itemRes !== null) {
+  //       allItems = itemRes
+  //     }
+  //     isLoading.value = false
+  //   });
+  // }
 
-  function confirmDelete(campaignId: number, id: number): void {
-    if (window.confirm('Are you sure you want to delete ' + id)) {
-      notificationStore.removeAllNotifications()
-      itemStore.deleteItem(campaignId, id).then(() => {
-        notificationStore.addSuccess('Successfully deleted item')
-        fetchItems(campaignId)
-      })
-    }
-  }
+  // function confirmDelete(campaignId: number, id: number): void {
+  //   if (window.confirm('Are you sure you want to delete ' + id)) {
+  //     notificationStore.removeAllNotifications()
+  //     itemStore.deleteItem(campaignId, id).then(() => {
+  //       notificationStore.addSuccess('Successfully deleted item')
+  //       fetchItems(campaignId)
+  //     })
+  //   }
+  // }
 </script>
 
 <template>
-  <div class="item-list">
-    <page-header
-      :link="new PageHeaderLink('Add item', { name: 'items.add' }, PageHeaderLinkActionEnum.ADD)">Items</page-header>
-    <loading-page :is-loading="isLoading">
-      <template #content>
-        <entity-table :headings="[new EntityTableHeading('name', true), new EntityTableHeading('description', false)]"
-          :entities="allItems" :view-link="new EntityTableLink('items.view', 'itemId')"
-          :edit-link="new EntityTableLink('items.edit', 'itemId')" :delete-confirmation-function="confirmDelete"
-          kebab-menu-button-aria-context="Item"></entity-table>
-      </template>
-      <template #loading-text>item</template>
-    </loading-page>
-  </div>
+
+  <Head title="Items" />
+  <CreatorDefaultContentLayout>
+    <PageHeaderWithLink :href="route('creator.campaigns.items.create', { campaign: campaignStore.selectedCampaignId })">
+      <template #title>Items</template><template #link><font-awesome-icon :icon="['fas', 'plus']" fixed-width
+          class="mr-2" />Add item</template>
+    </PageHeaderWithLink>
+    <EntityTable :headings="[new EntityTableHeading('name', true), new EntityTableHeading('description', false)]"
+      :entities="items" :view-link="new EntityTableLink('items.view', 'itemId')"
+      :edit-link="new EntityTableLink('items.edit', 'itemId')" :delete-confirmation-function="confirmDelete"
+      kebab-menu-button-aria-context="Item"></EntityTable>
+  </CreatorDefaultContentLayout>
 </template>

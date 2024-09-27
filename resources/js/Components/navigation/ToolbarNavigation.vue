@@ -67,7 +67,7 @@
                             class="mr-2"></font-awesome-icon>Species
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.items.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2"></font-awesome-icon>Items
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"

@@ -5,6 +5,7 @@
   import SimpleContainerSlimLayout from '../../Layouts/SimpleContainerSlimLayout.vue'
   import BaseLayout from '../../Layouts/BaseLayout.vue'
   import { Head, Link, useForm } from '@inertiajs/vue3'
+  import Checkbox from '../../Components/Checkbox.vue'
 
   defineOptions({
     layout: [BaseLayout, SimpleContainerSlimLayout],
@@ -34,6 +35,8 @@
     </BaseInput>
     <BaseInput type="password" input-name="password" label="Password" v-model:model="form.password"
       :error="form.errors.password"></BaseInput>
+    <Checkbox name="remember" v-model:checked="form.remember" />
+    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
     <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-default md:gap-y-default-md">
       <div class="md:order-last">
         <PrimaryButton text="Log in"></PrimaryButton>

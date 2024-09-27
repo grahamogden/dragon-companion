@@ -1,39 +1,25 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { useCampaignStore, useItemStore } from '../../stores';
-  import { ItemEntity, type ItemEntityInterface } from '../../services/item';
-  import PageHeader from '../../Components/page-header/PageHeader.vue';
-  import LoadingPage from '../../Components/loading-page/LoadingPage.vue'
-  import { useRoute } from 'vue-router';
-  import ContentGroup from '../../Components/elements/ContentGroup.vue'
-  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../Components/page-header/interface';
+  import { PropType } from 'vue';
+  import { ItemEntity } from '../../../types/entities/item';
+  import ContentGroup from '../../../Components/elements/ContentGroup.vue'
+  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../../Components/page-header/interface';
+  import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
+  import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
+  import { useCampaignStore } from '../../../stores';
 
-  const itemStore = useItemStore()
-  const route = useRoute()
-  const campaign = useCampaignStore()
-  const campaignId = campaign.selectedCampaignId!
-  const itemId = parseInt(route.params.itemId as string)
-  let isLoading = ref(true)
-  let item = ref<ItemEntityInterface>(new ItemEntity())
-
-  itemStore.getOneItem(campaignId, itemId).then((itemRes) => {
-    if (itemRes !== null) {
-      item.value = itemRes
-    }
-    isLoading.value = false
+  defineProps({
+    item: { type: Object as PropType<ItemEntity>, required: true }
   })
+  const campaignStore = useCampaignStore()
 </script>
 
 <template>
-  <div class="item-view">
-    <page-header
-      :link="new PageHeaderLink('Edit', { name: 'items.edit', params: { externalCampaignId: campaignId, itemId: itemId } }, PageHeaderLinkActionEnum.EDIT)">{{
-        item.name ? item.name : 'Item' }}</page-header>
-    <loading-page :is-loading="isLoading">
-      <template #content>
-        <ContentGroup><template #content>{{ item.description }}</template></ContentGroup>
-      </template>
-      <template #loading-text>item</template>
-    </loading-page>
-  </div>
+  <CreatorDefaultContentLayout>
+    <PageHeaderWithLink
+      :href="route('creator.campaigns.items.edit', { campaign: campaignStore.selectedCampaignId, item: item.id })">
+      <template #title>{{ item.name }}</template><template #link>Edit {{
+        item.name ? item.name : 'Item' }}</template>
+    </PageHeaderWithLink>
+    <ContentGroup><template #content>{{ item.description }}</template></ContentGroup>
+  </CreatorDefaultContentLayout>
 </template>
