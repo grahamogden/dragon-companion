@@ -25,10 +25,6 @@ class CampaignController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize(
-            ability: 'viewAny',
-            arguments: Campaign::class
-        );
         $campaigns = $this->getUser(request: $request)
             ->campaigns()
             ->paginate();

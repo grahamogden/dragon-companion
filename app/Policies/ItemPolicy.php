@@ -2,12 +2,18 @@
 
 namespace App\Policies;
 
+use App\Enums\RolePermissionEnum;
+use App\Models\Campaign;
 use App\Models\Item;
+use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class ItemPolicy
 {
+    use UserRolePermissionPolicyTrait;
+
     /**
      * Determine whether the user can view any models.
      */
@@ -19,9 +25,14 @@ class ItemPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Item $item): bool
+    public function view(User $user, Item $item, Campaign $campaign): bool
     {
-        return $user->id === $item->user_id;
+        if (((bool) $user->id) === false) {
+            return false;
+        }
+
+        return $this->getUserRolePermission(user: $user, campaign: $campaign)
+            ->hasItemPermission(permission: RolePermissionEnum::Read);
     }
 
     /**
@@ -35,17 +46,27 @@ class ItemPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Item $item): bool
+    public function update(User $user, Item $item, Campaign $campaign): bool
     {
-        return $user->id === $item->user_id;
+        if (((bool) $user->id) === false) {
+            return false;
+        }
+
+        return $this->getUserRolePermission(user: $user, campaign: $campaign)
+            ->hasItemPermission(permission: RolePermissionEnum::Write);
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Item $item): bool
+    public function delete(User $user, Item $item, Campaign $campaign): bool
     {
-        return $user->id === $item->user_id;
+        if (((bool) $user->id) === false) {
+            return false;
+        }
+
+        return $this->getUserRolePermission(user: $user, campaign: $campaign)
+            ->hasItemPermission(permission: RolePermissionEnum::Delete);
     }
 
     /**
@@ -53,7 +74,7 @@ class ItemPolicy
      */
     public function restore(User $user, Item $item): bool
     {
-        return $user->id === $item->user_id;
+        return false;
     }
 
     /**

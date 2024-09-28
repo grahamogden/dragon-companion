@@ -2,21 +2,23 @@
 
 namespace App\Policies;
 
+use App\Enums\RolePermissionEnum;
 use App\Models\Campaign;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Log;
 
 class CampaignPolicy
 {
     public const MAX_CAMPAIGN_COUNT = 3;
+
+    use UserRolePermissionPolicyTrait;
 
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,7 +26,8 @@ class CampaignPolicy
      */
     public function view(User $user, Campaign $campaign): bool
     {
-        return $user->id === $campaign->user_id;
+        return $this->getUserRolePermission(user: $user, campaign: $campaign)
+            ->hasCampaignPermission(permission: RolePermissionEnum::Read);
     }
 
     /**
@@ -47,7 +50,8 @@ class CampaignPolicy
      */
     public function update(User $user, Campaign $campaign): bool
     {
-        return $user->id === $campaign->user_id;
+        return $this->getUserRolePermission(user: $user, campaign: $campaign)
+            ->hasCampaignPermission(permission: RolePermissionEnum::Write);
     }
 
     /**
@@ -55,7 +59,8 @@ class CampaignPolicy
      */
     public function delete(User $user, Campaign $campaign): bool
     {
-        return $user->id === $campaign->user_id;
+        return $this->getUserRolePermission(user: $user, campaign: $campaign)
+            ->hasCampaignPermission(permission: RolePermissionEnum::Delete);
     }
 
     /**
@@ -63,7 +68,7 @@ class CampaignPolicy
      */
     public function restore(User $user, Campaign $campaign): bool
     {
-        return $user->id === $campaign->user_id;
+        return false;
     }
 
     /**

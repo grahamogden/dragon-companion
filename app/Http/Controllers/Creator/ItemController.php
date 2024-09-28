@@ -9,6 +9,7 @@ use App\Models\Campaign;
 use App\Models\Item;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,11 +24,7 @@ class ItemController extends Controller
         // Ensure the user is allowed to view this campaign
         $this->authorize(
             ability: 'view',
-            arguments: $campaign
-        );
-        $this->authorize(
-            ability: 'viewAny',
-            arguments: Item::class
+            arguments: [$campaign]
         );
 
         return Inertia::render(
@@ -102,7 +99,7 @@ class ItemController extends Controller
      */
     public function show(Request $request, Campaign $campaign, Item $item): Response
     {
-        $this->authorize(ability: 'view', arguments: $item);
+        $this->authorize(ability: 'view', arguments: [$item, $campaign]);
 
         return Inertia::render(
             component: 'Creator/Items/ItemView',
@@ -115,8 +112,8 @@ class ItemController extends Controller
      */
     public function edit(Request $request, Campaign $campaign, Item $item): Response
     {
-        $this->authorize(ability: 'view', arguments: $item);
-        $this->authorize(ability: 'update ', arguments: $item);
+        $this->authorize(ability: 'view', arguments: [$item, $campaign]);
+        $this->authorize(ability: 'update', arguments: [$item, $campaign]);
 
         return Inertia::render(
             component: 'Creator/Items/ItemForm',
@@ -129,7 +126,7 @@ class ItemController extends Controller
      */
     public function update(UpdateItemRequest $request, Campaign $campaign, Item $item): RedirectResponse
     {
-        $this->authorize(ability: 'update', arguments: $item);
+        $this->authorize(ability: 'update', arguments: [$item, $campaign]);
 
         $validated = $this->getValidatedRequestData(request: $request);
         $item->update(attributes: $validated);
@@ -142,7 +139,7 @@ class ItemController extends Controller
      */
     public function destroy(Request $request, Campaign $campaign, Item $item): RedirectResponse
     {
-        $this->authorize(ability: 'delete', arguments: $item);
+        $this->authorize(ability: 'delete', arguments: [$item, $campaign]);
 
         $item->deleteOrFail();
 

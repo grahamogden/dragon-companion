@@ -6,9 +6,15 @@ use App\Enums\RolePermissionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use \DateTime;
 
 /**
+ * @property int $id
+ * @property int $user_id
+ * @property DateTime $created_at
+ * @property DateTime $updated_at
  * @property RolePermissionEnum $campaign_permissions
+ * @property RolePermissionEnum $item_permissions
  */
 class RolePermission extends Model
 {
@@ -45,5 +51,15 @@ class RolePermission extends Model
             self::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::class,
             self::FIELD_ITEM_PERMISSIONS => RolePermissionEnum::class,
         ];
+    }
+
+    public function hasCampaignPermission(RolePermissionEnum $permission): bool
+    {
+        return $this->campaign_permissions->value & $permission === $permission;
+    }
+
+    public function hasItemPermission(RolePermissionEnum $permission): bool
+    {
+        return $this->item_permissions->value & $permission === $permission;
     }
 }
