@@ -62,11 +62,11 @@ class ItemController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request): Response
+    public function create(Request $request, Campaign $campaign): Response
     {
         $this->authorize(
             ability: 'create',
-            arguments: Item::class
+            arguments: [Item::class, $campaign]
         );
 
         return Inertia::render(component: 'Creator/Items/ItemForm');
@@ -79,7 +79,7 @@ class ItemController extends Controller
     {
         $this->authorize(
             ability: 'create',
-            arguments: Item::class
+            arguments: [Item::class, $campaign]
         );
 
         $validated = $this->getValidatedRequestData(
@@ -131,7 +131,7 @@ class ItemController extends Controller
         $validated = $this->getValidatedRequestData(request: $request);
         $item->update(attributes: $validated);
 
-        return Redirect::route(route: 'creator.campaigns.index', parameters: ['campaign' => $campaign->id]);
+        return Redirect::route(route: 'creator.campaigns.items.index', parameters: ['campaign' => $campaign->id]);
     }
 
     /**

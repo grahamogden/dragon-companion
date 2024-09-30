@@ -38,9 +38,14 @@ class ItemPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, Campaign $campaign): bool
     {
-        return (bool) $user->id;
+        if (((bool) $user->id) === false) {
+            return false;
+        }
+
+        return $this->getUserRolePermission(user: $user, campaign: $campaign)
+            ->hasItemPermission(permission: RolePermissionEnum::Write);
     }
 
     /**

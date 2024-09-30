@@ -2,7 +2,6 @@
   import { PropType } from 'vue';
   import { ItemEntity } from '../../../types/entities/item';
   import ContentGroup from '../../../Components/elements/ContentGroup.vue'
-  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../../Components/page-header/interface';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
   import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
   import { useCampaignStore } from '../../../stores';
@@ -17,8 +16,9 @@
   <CreatorDefaultContentLayout>
     <PageHeaderWithLink
       :href="route('creator.campaigns.items.edit', { campaign: campaignStore.selectedCampaignId, item: item.id })">
-      <template #title>{{ item.name }}</template><template #link>Edit {{
-        item.name ? item.name : 'Item' }}</template>
+      <template #title>{{ item.name }}</template><template #link><font-awesome-icon :icon="['fas', 'pencil']"
+          fixed-width class="mr-2"></font-awesome-icon>Edit {{
+            item.name ? item.name : 'Item' }}</template>
     </PageHeaderWithLink>
     <ContentGroup><template #content>{{ item.description }}</template></ContentGroup>
   </CreatorDefaultContentLayout>

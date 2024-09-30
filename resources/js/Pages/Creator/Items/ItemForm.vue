@@ -3,7 +3,7 @@
     import EntityButtonWrapper from '../../../Components/entity-button-wrapper/EntityButtonWrapper.vue'
     import type { ItemEntityInterface } from '../../../types/entities/item'
     import { useCampaignStore } from '../../../stores';
-    import { useForm } from '@inertiajs/vue3';
+    import { Head, useForm } from '@inertiajs/vue3';
     import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
     import BaseInput from '../../../Components/Fields/BaseInput.vue';
 
@@ -11,7 +11,7 @@
         item: { type: Object as PropType<ItemEntityInterface>, required: false }
     })
 
-    const campaignStore = useCampaignStore();
+    const campaignStore = useCampaignStore()
 
     const form = useForm({
         name: props.item?.name ?? '',
@@ -19,7 +19,6 @@
     })
 
     const saveItem = () => {
-        console.debug(campaignStore.selectedCampaignId)
         if (props.item) {
             form.put(route('creator.campaigns.items.update', { campaign: campaignStore.selectedCampaignId, item: props.item.id }))
         } else {
