@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Creator\RolePermission;
 
-use App\Http\Requests\Creator\Role\RolePermissionRequestRulesTrait;
+use App\Http\Requests\Creator\RolePermission\RolePermissionRequestRulesTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRolePermissionRequest extends FormRequest
