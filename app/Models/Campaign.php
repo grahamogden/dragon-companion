@@ -44,4 +44,9 @@ class Campaign extends Model
     {
         return $this->hasMany(related: Item::class);
     }
+
+    public function timelines(): HasMany
+    {
+        return $this->hasMany(related: Timeline::class);
+    }
 }

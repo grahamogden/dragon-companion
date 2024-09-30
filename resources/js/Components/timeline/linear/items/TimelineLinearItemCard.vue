@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { DropDownItemRouter, DropDownItemButton } from '../../../interfaces/drop-down.item.interface'
     import type EntityTableLinkInterface from '../../../entity-table/interface/entity-table-link.interface';
-    import type { TimelineEntityInterface } from '../../../../../../cakephp/src-ui/src/services/timeline';
+    import type { TimelineEntityInterface } from '../../../../types/entities/timeline';
     import { NodePositionEnum } from '../interface/timeline.linear.item.node-position.interface';
     import KebabMenuItemLink from '../../../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
     import KebabMenuItemButton from '../../../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
@@ -11,38 +11,19 @@
     const props = defineProps<{
         campaignId: number,
         entity: TimelineEntityInterface
-        editLink: EntityTableLinkInterface,
-        viewLink: EntityTableLinkInterface,
-        deleteConfirmationFunction: Function,
+        // editLink: EntityTableLinkInterface,
+        // viewLink: EntityTableLinkInterface,
+        routeBase: string,
+        // deleteConfirmationFunction: Function,
         kebabMenuButtonAriaContext: string,
-        nodePosition?: { type: NodePositionEnum, default: NodePositionEnum.both } | NodePositionEnum
+        nodePosition?: { type: NodePositionEnum, default: NodePositionEnum.only } | NodePositionEnum
     }>()
-
-    function getActionLinks(campaignId: number, id: number): (DropDownItemRouter | DropDownItemButton)[] {
-        return [
-            new DropDownItemRouter(
-                '',
-                { name: props.viewLink.routerToName, params: { externalCampaignId: campaignId, [props.viewLink.idName]: id } },
-            ),
-            new DropDownItemRouter(
-                '<i class="fa fa-pencil mr-2" aria-hidden="true"></i>Edit',
-                { name: props.editLink.routerToName, params: { externalCampaignId: campaignId, [props.editLink.idName]: id } },
-            ),
-            new DropDownItemButton(
-                '<i class="fa fa-trash mr-2" aria-hidden="true"></i>Delete',
-                {
-                    func: props.deleteConfirmationFunction,
-                    args: [campaignId, id],
-                },
-                true
-            )
-        ]
-    }
 </script>
 <template>
     <div class="relative w-full">
-        <div class="timline-item-line absolute left-1 md:left-2.5 w-1 -mt-2 md:-mt-5 bg-woodsmoke-300 dark:bg-woodsmoke-700 transition-colors duration-theme-change"
-            :class="{ 'top-0 h-full': props.nodePosition === NodePositionEnum.both, 'top-2/4 h-2/4': props.nodePosition === NodePositionEnum.start, 'top-0 h-2/4': props.nodePosition === NodePositionEnum.end }">
+        <div v-if="nodePosition !== NodePositionEnum.only"
+            class="timline-item-line absolute left-1 md:left-2.5 w-1 -mt-2 md:-mt-5 bg-woodsmoke-300 dark:bg-woodsmoke-700 transition-colors duration-theme-change"
+            :class="{ 'top-0 h-full': nodePosition === NodePositionEnum.both, 'top-2/4 h-2/4': nodePosition === NodePositionEnum.start, 'top-0 h-2/4': nodePosition === NodePositionEnum.end }">
         </div>
         <div class="flex flex-row relative w-full mb-4 md:mb-10">
             <div
@@ -50,39 +31,38 @@
             </div>
             <div
                 class="grid grid-cols-1 w-full ml-6 md:ml-10 rounded-lg shadow-sm shadow-shark-500 dark:shadow-stone-950 transition-colors-and-shadow duration-theme-change">
-                <div
-                    class="flex flex-row items-center justify-between p-2 bg-woodsmoke-200 dark:bg-woodsmoke-900 rounded-t-lg border-4 border-woodsmoke-200 dark:border-woodsmoke-900 transition-colors duration-theme-change">
-                    <span class="text-lg">{{ props.entity.title }}</span>
-                    <DropDownMenu
-                        :button-aria-context-name="props.kebabMenuButtonAriaContext + ' ' + props.entity.title">
+                <div class="flex flex-row items-center justify-between p-2 bg-woodsmoke-200 dark:bg-woodsmoke-900 rounded-t-lg border-4 border-woodsmoke-200 dark:border-woodsmoke-900 transition-colors duration-theme-change"
+                    :class="{ 'rounded-b-lg': !entity.description }">
+                    <span class="text-lg">{{ entity.name }}</span>
+                    <DropDownMenu :button-aria-context-name="kebabMenuButtonAriaContext + ' ' + entity.name">
                         <template #button-content>
                             <DropDownKebabIcon></DropDownKebabIcon>
                         </template>
                         <template #items>
                             <KebabMenuItemLink
-                                :href="{ name: props.viewLink.routerToName, params: { externalCampaignId: props.campaignId, [props.viewLink.idName]: props.entity.id } }">
+                                :href="route(routeBase + '.show', { campaign: campaignId, timeline: entity.id })">
                                 <font-awesome-icon :icon="['fas', 'eye']" fixed-width
                                     class="mr-2"></font-awesome-icon>View
                             </KebabMenuItemLink>
                             <KebabMenuItemLink
-                                :href="{ name: props.editLink.routerToName, params: { externalCampaignId: props.campaignId, [props.editLink.idName]: props.entity.id } }">
+                                :href="route(routeBase + '.edit', { campaign: campaignId, timeline: entity.id })">
                                 <font-awesome-icon :icon="['fas', 'pencil']" fixed-width
                                     class="mr-2"></font-awesome-icon>
                                 Edit
                             </KebabMenuItemLink>
-                            <KebabMenuItemButton :func="props.deleteConfirmationFunction"
-                                :args="[props.campaignId, props.entity.id]" :is-destructive=true>
+                            <KebabMenuItemLink as="button" method="delete"
+                                :href="route(routeBase + '.destroy', { campaign: campaignId, timeline: entity.id })"
+                                :is-destructive=true>
                                 <font-awesome-icon :icon="['fas', 'trash']" fixed-width
                                     class="mr-2"></font-awesome-icon>
                                 Delete
-                            </KebabMenuItemButton>
+                            </KebabMenuItemLink>
                         </template>
                     </DropDownMenu>
                 </div>
-                <div
+                <div v-if="entity.description"
                     class="p-2 bg-timberwolf-50 dark:bg-woodsmoke-950 rounded-b-lg transition-colors duration-theme-change">
-                    {{
-                        props.entity.body }}
+                    {{ entity.description }}
                 </div>
             </div>
         </div>

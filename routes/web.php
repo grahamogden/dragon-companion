@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Campaign;
 use App\Models\Item;
+use App\Models\Timeline;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,6 +34,8 @@ Route::name('creator.')->group(function () {
         Route::resource(Campaign::TABLE_NAME, App\Http\Controllers\Creator\CampaignController::class);
 
         Route::resource(Campaign::TABLE_NAME . '.' . Item::TABLE_NAME, App\Http\Controllers\Creator\ItemController::class);
+
+        Route::resource(Campaign::TABLE_NAME . '.' . Timeline::TABLE_NAME, App\Http\Controllers\Creator\TimelineController::class);
     });
 });
 

@@ -1,9 +1,10 @@
 export enum NodePositionEnum {
-    start = 'start',
-    end = 'end',
-    both = 'both',
+    only = "only",
+    start = "start",
+    end = "end",
+    both = "both",
 }
 
 export default interface TimelineLinearItemNodePositionInterface {
-    truncateLine: NodePositionEnum
+    truncateLine: NodePositionEnum;
 }

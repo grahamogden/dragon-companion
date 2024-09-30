@@ -80,6 +80,7 @@ class CampaignController extends Controller
             $roles[0]->rolePermission()->create(attributes: [
                 RolePermission::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
                 RolePermission::FIELD_ITEM_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
+                RolePermission::FIELD_TIMELINE_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
             ]);
 
             $user->roles()->attach(id: $roles[0]->id);
@@ -87,6 +88,7 @@ class CampaignController extends Controller
             $roles[1]->rolePermission()->create(attributes: [
                 RolePermission::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::Read,
                 RolePermission::FIELD_ITEM_PERMISSIONS => RolePermissionEnum::Deny,
+                RolePermission::FIELD_TIMELINE_PERMISSIONS => RolePermissionEnum::Deny,
             ]);
         });
 

@@ -47,12 +47,12 @@
                         </div>
                     </div>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.selectedCampaignId })">
+                        :href="route('creator.campaigns.timelines.index', { campaign: campaignStore.selectedCampaignId })">
                         <font-awesome-icon :icon="['fas', 'timeline']" fixed-width
                             class="mr-2"></font-awesome-icon>Timelines
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'user']" fixed-width
                             class="mr-2"></font-awesome-icon>Characters
                     </ToolbarNavLink>
@@ -62,7 +62,7 @@
                         Roller
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'person']" fixed-width
                             class="mr-2"></font-awesome-icon>Species
                     </ToolbarNavLink>
@@ -71,12 +71,12 @@
                         <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2"></font-awesome-icon>Items
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'dragon']" fixed-width
                             class="mr-2"></font-awesome-icon>Monsters
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width
                             class="mr-2"></font-awesome-icon>Permissions
                     </ToolbarNavLink>
@@ -97,13 +97,13 @@
                 crafting!</div>
 
             <Link v-if="showDashboardLinks" class="navigation-toolbar-link"
-                :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })"
+                :href="route('creator.campaigns.timelines.index', { campaign: campaignStore.campaignId })"
                 @click="toggleNavMenu(false)">
             <font-awesome-icon :icon="['fas', 'timeline']" fixed-width class="text-xl"></font-awesome-icon>Timelines
             </Link>
 
             <Link v-if="showDashboardLinks" class="navigation-toolbar-link"
-                :href="route('creator.campaigns.index', { externalCampaignId: campaignStore.campaignId })"
+                :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })"
                 @click="toggleNavMenu(false)">
             <font-awesome-icon :icon="['fas', 'user']" fixed-width
                 class="text-xl"></font-awesome-icon><span>Characters</span>
