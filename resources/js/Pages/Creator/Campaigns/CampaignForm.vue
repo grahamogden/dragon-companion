@@ -62,7 +62,7 @@
 
 <template>
 
-  <Head title="Create a Campaign" />
+  <Head :title="(campaign ? 'Edit ' + campaign.name : 'Create a') + ' Campaign'" />
   <form @submit.prevent="saveCampaign">
     <CreatorDefaultContentLayout>
       <PageHeader>Create a Campaign</PageHeader>
