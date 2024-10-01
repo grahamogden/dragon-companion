@@ -55,12 +55,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists(table: Timeline::TABLE_NAME);
         Schema::dropColumns(
             table: RolePermission::TABLE_NAME,
             columns: [
                 RolePermission::FIELD_TIMELINE_PERMISSIONS,
             ]
         );
+        Schema::dropIfExists(table: Timeline::TABLE_NAME);
     }
 };

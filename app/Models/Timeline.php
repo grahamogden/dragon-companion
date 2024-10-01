@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int $parent_id
+ * @property int $campaign_id
+ * @property int $user_id
+ * @property Timeline[] $children
+ * @property Timeline $parent
+ */
 class Timeline extends Model
 {
     use HasFactory;
