@@ -3,15 +3,15 @@ import type {
     IndexEntityInterface,
 } from "../entity.interface.ts";
 
-export interface NewItemEntityInterface {
+export interface NewSpeciesEntityInterface {
     name: string;
     description: string;
 }
 
-export interface ItemEntityInterface
+export interface SpeciesEntityInterface
     extends EntityInterface,
-        NewItemEntityInterface {}
+        NewSpeciesEntityInterface {}
 
-export interface ItemIndexEntityInterface
-    extends ItemEntityInterface,
+export interface SpeciesIndexEntityInterface
+    extends SpeciesEntityInterface,
         IndexEntityInterface {}

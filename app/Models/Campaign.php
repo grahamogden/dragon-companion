@@ -49,4 +49,9 @@ class Campaign extends Model
     {
         return $this->hasMany(related: Timeline::class);
     }
+
+    public function species(): HasMany
+    {
+        return $this->hasMany(related: Species::class);
+    }
 }

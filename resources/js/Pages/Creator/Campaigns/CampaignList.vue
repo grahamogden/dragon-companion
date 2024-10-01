@@ -9,7 +9,7 @@
   import { Head } from '@inertiajs/vue3';
 
   defineProps({
-    campaigns: Object as PropType<PaginationInterface<CampaignEntityInterface>>,
+    campaigns: { type: Object as PropType<PaginationInterface<CampaignEntityInterface>>, required: true },
   })
 </script>
 
@@ -23,7 +23,7 @@
     </PageHeaderWithLink>
     <div
       class="grid gap-default md:gap-default-md grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 grid-flow-row justify-between justify-items-stretch">
-      <CampaignListCard v-for="campaign in campaigns?.data" :campaign="campaign"></CampaignListCard>
+      <CampaignListCard v-for="campaign in campaigns.data" :campaign="campaign"></CampaignListCard>
     </div>
     <Pagination :pagination="campaigns"></Pagination>
   </CreatorDefaultContentLayout>

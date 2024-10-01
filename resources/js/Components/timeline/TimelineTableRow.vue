@@ -19,7 +19,7 @@
         return [
             new DropDownItemRouter(
                 'Edit',
-                { name: props.editLink.routerToName, params: { externalCampaignId: campaignId, [props.editLink.idName]: id } },
+                { name: props.editLink.routeBase, params: { externalCampaignId: campaignId, [props.editLink.entityName]: id } },
             ),
             new DropDownItemButton(
                 'Delete',
@@ -37,10 +37,10 @@
     <tr>
         <td v-for="field in props.headings">
             <router-link v-if="field.isLink && props.viewLink" :to="{
-                name: props.viewLink.routerToName,
+                name: props.viewLink.routeBase,
                 params: {
                     externalCampaignId: props.campaignId,
-                    [props.viewLink.idName]: entity.id
+                    [props.viewLink.entityName]: entity.id
                 }
             }">{{ entity[field.title] }}</router-link>
             <p v-else>{{ entity[field.title] }}</p>
@@ -54,10 +54,10 @@
         class="bg-woodsmoke-200/50 dark:bg-woodsmoke-700/25 transition-colors duration-theme-change">
         <td v-for="field in props.headings">
             <router-link v-if="field.isLink && props.viewLink" :to="{
-                name: props.viewLink.routerToName,
+                name: props.viewLink.routeBase,
                 params: {
                     externalCampaignId: props.campaignId,
-                    [props.viewLink.idName]: childTimelines.id
+                    [props.viewLink.entityName]: childTimelines.id
                 }
             }">{{ childTimelines[field.title] }}</router-link>
             <p v-else>{{ childTimelines[field.title] }}</p>

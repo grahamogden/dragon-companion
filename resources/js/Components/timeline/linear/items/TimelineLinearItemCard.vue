@@ -1,12 +1,11 @@
 <script setup lang="ts">
-    import { DropDownItemRouter, DropDownItemButton } from '../../../interfaces/drop-down.item.interface'
-    import type EntityTableLinkInterface from '../../../entity-table/interface/entity-table-link.interface';
     import type { TimelineEntityInterface } from '../../../../types/entities/timeline';
     import { NodePositionEnum } from '../interface/timeline.linear.item.node-position.interface';
     import KebabMenuItemLink from '../../../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
     import KebabMenuItemButton from '../../../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
     import DropDownMenu from '../../../drop-down/DropDownMenu.vue';
     import DropDownKebabIcon from '../../../drop-down/DropDownKebabIcon.vue';
+    import { router } from '@inertiajs/vue3';
 
     const props = defineProps<{
         campaignId: number,
@@ -18,6 +17,12 @@
         kebabMenuButtonAriaContext: string,
         nodePosition?: { type: NodePositionEnum, default: NodePositionEnum.only } | NodePositionEnum
     }>()
+
+    const deleteTimeline = (timeline: TimelineEntityInterface) => {
+        if (confirm('Are you sure you want to delete ' + timeline.name)) {
+            router.delete(route('creator.campaigns.timelines.destroy', { campaign: props.campaignId, timeline: timeline.id }))
+        }
+    }
 </script>
 <template>
     <div class="relative w-full">
@@ -50,13 +55,17 @@
                                     class="mr-2"></font-awesome-icon>
                                 Edit
                             </KebabMenuItemLink>
-                            <KebabMenuItemLink as="button" method="delete"
+                            <!-- <KebabMenuItemLink as="button" method="delete"
                                 :href="route(routeBase + '.destroy', { campaign: campaignId, timeline: entity.id })"
                                 :is-destructive=true>
                                 <font-awesome-icon :icon="['fas', 'trash']" fixed-width
                                     class="mr-2"></font-awesome-icon>
                                 Delete
-                            </KebabMenuItemLink>
+                            </KebabMenuItemLink> -->
+                            <KebabMenuItemButton :func="deleteTimeline" :args="[entity]" is-destructive>
+                                <font-awesome-icon :icon="['fas', 'trash']" fixed-width
+                                    class="mr-2"></font-awesome-icon>Delete
+                            </KebabMenuItemButton>
                         </template>
                     </DropDownMenu>
                 </div>

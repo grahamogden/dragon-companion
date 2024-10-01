@@ -32,7 +32,7 @@
                 <NavLink :href="route('dice-roller')">
                     <font-awesome-icon :icon="['fas', 'dice-d20']" fixed-width class="mr-2" />Dice Roller
                 </NavLink>
-                <NavLink :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.species.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'person']" fixed-width class="mr-2" />Species
                 </NavLink>
                 <NavLink :href="route('creator.campaigns.items.index', { campaign: campaignStore.campaignId })">

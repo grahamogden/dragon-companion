@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useCampaignStore } from '../../../stores/campaign'
   import { useNotificationStore } from '../../../stores/notifications/notification-store'
-  import type { CampaignEntityInterface } from '../../../types/entities/campaign';
+  import type { CampaignEntity, CampaignEntityInterface } from '../../../types/entities/campaign';
   import ImageCard from '../../cards/ImageCard.vue'
   import KebabMenuItemButton from '../../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
   import KebabMenuItemText from '../../menu/wrapped-kebab-menu/KebabMenuItemText.vue';
@@ -9,6 +9,7 @@
   import DropDownMenu from '../../drop-down/DropDownMenu.vue';
   import DropDownKebabIcon from '../../drop-down/DropDownKebabIcon.vue';
   import { PropType } from 'vue';
+  import { router } from '@inertiajs/vue3';
 
   defineProps({
     campaign: { type: Object as PropType<CampaignEntityInterface>, required: true },
@@ -25,15 +26,16 @@
     }, 250)
   }
 
-  function confirmDelete(campaignId: number) {
-    console.debug('Confirming delete for ' + campaignId)
-    if (window.confirm('Are you sure you want to delete ' + campaignId + ': "' + campaignStore.getCampaignById(campaignId)?.name + '"')) {
-      notificationStore.removeAllNotifications()
+  const deleteCampaign = (campaign: CampaignEntity) => {
+    console.debug('Confirming delete for ' + campaign.name)
+    if (window.confirm('Are you sure you want to delete ' + campaign.name)) {
+      // notificationStore.removeAllNotifications()
       console.debug('Confirmed - attempting delete')
-      campaignStore.deleteCampaign(campaignId)
-        .then(() => {
-          notificationStore.addSuccess('Successfully deleted campaign')
-        })
+      router.delete(route('creator.campaigns.destroy', { campaign: campaign.id }))
+      // campaignStore.deleteCampaign(campaignId)
+      //   .then(() => {
+      //     notificationStore.addSuccess('Successfully deleted campaign')
+      //   })
     }
   }
 </script>
@@ -56,10 +58,13 @@
             <KebabMenuItemLink :href="route('creator.campaigns.edit', { campaign: campaign.id })">
               <font-awesome-icon :icon="['fas', 'pencil']" fixed-width class="mr-2"></font-awesome-icon>Edit
             </KebabMenuItemLink>
-            <KebabMenuItemLink :href="route('creator.campaigns.destroy', { campaign: campaign.id })" method="delete"
+            <!-- <KebabMenuItemLink :href="route('creator.campaigns.destroy', { campaign: campaign.id })" method="delete"
               as="button" :is-destructive="true">
               <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
-            </KebabMenuItemLink>
+            </KebabMenuItemLink> -->
+            <KebabMenuItemButton :func="deleteCampaign" :args="[campaign]" is-destructive>
+              <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
+            </KebabMenuItemButton>
           </template>
         </DropDownMenu>
       </div>

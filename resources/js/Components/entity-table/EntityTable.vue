@@ -1,13 +1,12 @@
 <script setup lang="ts">
     import { useCampaignStore } from '../../stores';
-    import { DropDownItemRouter, DropDownItemButton } from '../interfaces/drop-down.item.interface'
-    import type { EntityInterface } from '../../types/entities/entity.interface';
+    import type { EntityInterface, IndexEntityInterface } from '../../types/entities/entity.interface';
     import KebabMenu from '../menu/wrapped-kebab-menu/KebabMenu.vue';
     import KebabMenuItemLink from '../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
     import KebabMenuItemButton from '../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
     import { PropType } from 'vue';
-    import { EntityTableHeadingInterface, EntityTableItemInterface } from './interface';
-    import { Link } from '@inertiajs/vue3';
+    import { EntityTableHeadingInterface } from './interface';
+    import { Link, router } from '@inertiajs/vue3';
 
     const campaignStore = useCampaignStore()
 
@@ -21,9 +20,19 @@
     // }>()
     defineProps({
         headings: { type: Object as PropType<EntityTableHeadingInterface[]>, required: true },
-        entities: { type: Object as PropType<EntityTableItemInterface[] & Record<string, string>[]>, required: true },
-        kebabMenuButtonAriaContext: { type: String, required: true }
+        entities: { type: Object as PropType<EntityInterface[] & IndexEntityInterface[] & Record<string, string>[]>, required: true },
+        kebabMenuButtonAriaContext: { type: String, required: true },
     })
+
+    const deleteEntity = (entity: IndexEntityInterface & EntityInterface) => {
+        if (entity.destroy_url) {
+            if (confirm('Are you sure you want to delete this record?')) {
+                router.delete(entity.destroy_url)
+            }
+        } else {
+            alert('Nothing to delete!')
+        }
+    }
 </script>
 
 <template>
@@ -38,25 +47,33 @@
             <tbody>
                 <tr v-if="entities.length > 0 && campaignStore.selectedCampaignId !== null" v-for="entity in entities">
                     <td v-for="field in headings" class="p-2">
-                        <Link v-if="field.isLink && entity.view_url" :href="entity.view_url">
-                        {{
-                            entity[field.title] }}</Link>
+                        <Link v-if="field.isShowLink && entity.show_url" :href="entity.show_url">
+                        {{ entity[field.title] }}
+                        </Link>
                         <p v-else>{{ entity[field.title] }}</p>
                     </td>
-                    <td class="action-cell flex justify-end py-2">
-                        <KebabMenu :button-aria-context-name="kebabMenuButtonAriaContext + ' ' + entity.name">
-                            <template #items>
-                                <KebabMenuItemLink :href="entity.edit_url">
-                                    <font-awesome-icon :icon="['fas', 'pencil']" fixed-width
-                                        class="mr-2"></font-awesome-icon>Edit
-                                </KebabMenuItemLink>
-                                <KebabMenuItemLink as="button" method="delete" :href="entity.delete_url"
-                                    :is-destructive="true">
+                    <td class="p-0">
+                        <div class="action-cell flex justify-end py-2">
+                            <KebabMenu v-if="entity.edit_url || entity.destroy_url"
+                                :button-aria-context-name="kebabMenuButtonAriaContext + ' ' + entity.name">
+                                <template #items>
+                                    <KebabMenuItemLink v-if="entity.edit_url" :href="entity.edit_url">
+                                        <font-awesome-icon :icon="['fas', 'pencil']" fixed-width
+                                            class="mr-2"></font-awesome-icon>Edit
+                                    </KebabMenuItemLink>
+                                    <!-- <KebabMenuItemLink v-if="entity.destroy_url" as="button" method="delete"
+                                    :href="entity.destroy_url" :is-destructive="true">
                                     <font-awesome-icon :icon="['fas', 'trash']" fixed-width
                                         class="mr-2"></font-awesome-icon>Delete
-                                </KebabMenuItemLink>
-                            </template>
-                        </KebabMenu>
+                                </KebabMenuItemLink> -->
+                                    <KebabMenuItemButton v-if="entity.destroy_url" :func="deleteEntity" :args="[entity]"
+                                        is-destructive>
+                                        <font-awesome-icon :icon="['fas', 'trash']" fixed-width
+                                            class="mr-2"></font-awesome-icon>Delete
+                                    </KebabMenuItemButton>
+                                </template>
+                            </KebabMenu>
+                        </div>
                     </td>
                 </tr>
                 <tr v-else>

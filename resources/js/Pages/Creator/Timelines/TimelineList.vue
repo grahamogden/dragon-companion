@@ -2,8 +2,6 @@
   import { useCampaignStore } from '../../../stores'
   import type { TimelineEntityInterface } from '../../../types/entities/timeline'
   import TimelineLinear from '../../../Components/timeline/linear/TimelineLinear.vue'
-  import TimelineLinearItemCard from '../../../Components/timeline/linear/items/TimelineLinearItemCard.vue'
-  import { NodePositionEnum } from '../../../Components/timeline/linear/interface/timeline.linear.item.node-position.interface';
   import { Head } from '@inertiajs/vue3';
   import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
   import PaginationInterface from '../../../types/pagination/pagination.interface';

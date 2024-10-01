@@ -1,4 +1,4 @@
 export interface EntityTableHeadingInterface {
     title: string;
-    isLink: boolean;
+    isShowLink: boolean;
 }

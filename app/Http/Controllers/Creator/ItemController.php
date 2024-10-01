@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Creator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Creator\Item\StoreItemRequest;
 use App\Http\Requests\Creator\Item\UpdateItemRequest;
+use App\Http\Resources\ItemResource;
 use App\Models\Campaign;
 use App\Models\Item;
 use Illuminate\Http\RedirectResponse;
@@ -30,31 +31,8 @@ class ItemController extends Controller
         return Inertia::render(
             component: 'Creator/Items/ItemList',
             props: [
-                'items' => $campaign->items()
-                    ->paginate()
-                    ->map(callback: function (Item $item) use ($campaign): array {
-                        return [
-                            ...$item->toArray(),
-                            'edit_url' => $this->generateEditLinkForEntityInCampaign(
-                                campaign: $campaign,
-                                model: $item,
-                                modelName: 'item',
-                                modelRouteName: 'items',
-                            ),
-                            'view_url' => $this->generateShowLinkForEntityInCampaign(
-                                campaign: $campaign,
-                                model: $item,
-                                modelName: 'item',
-                                modelRouteName: 'items',
-                            ),
-                            'delete_url' => $this->generateDestroyLinkForEntityInCampaign(
-                                campaign: $campaign,
-                                model: $item,
-                                modelName: 'item',
-                                modelRouteName: 'items',
-                            ),
-                        ];
-                    })
+                'items' => ItemResource::collection(resource: $campaign->items()
+                    ->paginate())
             ]
         );
     }

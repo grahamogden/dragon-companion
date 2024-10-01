@@ -62,7 +62,7 @@
                         Roller
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.species.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'person']" fixed-width
                             class="mr-2"></font-awesome-icon>Species
                     </ToolbarNavLink>

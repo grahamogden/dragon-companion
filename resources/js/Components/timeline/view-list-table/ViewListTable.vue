@@ -20,7 +20,7 @@
         return [
             new DropDownItemRouter(
                 'Edit',
-                { name: props.editLink.routerToName, params: { externalCampaignId: campaignId, [props.editLink.idName]: id } },
+                { name: props.editLink.routeBase, params: { externalCampaignId: campaignId, [props.editLink.entityName]: id } },
             ),
             new DropDownItemButton(
                 'Delete',
@@ -52,7 +52,7 @@
                 <tr v-else v-for="entity in props.entities">
                     <td v-for="field in props.headings">
                         <router-link v-if="field.isLink && props.viewLink"
-                            :to="{ name: props.viewLink.routerToName, params: { externalCampaignId: props.campaignId, [props.viewLink.idName]: entity.id } }">{{
+                            :to="{ name: props.viewLink.routeBase, params: { externalCampaignId: props.campaignId, [props.viewLink.entityName]: entity.id } }">{{
                                 entity[field.title] }}</router-link>
                         <p v-else>{{ entity[field.title] }}</p>
                     </td>

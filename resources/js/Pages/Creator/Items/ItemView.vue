@@ -5,6 +5,7 @@
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
   import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
   import { useCampaignStore } from '../../../stores';
+  import { Head } from '@inertiajs/vue3';
 
   defineProps({
     item: { type: Object as PropType<ItemEntity>, required: true }
@@ -13,6 +14,8 @@
 </script>
 
 <template>
+
+  <Head :title="item.name + ' Item'" />
   <CreatorDefaultContentLayout>
     <PageHeaderWithLink
       :href="route('creator.campaigns.items.edit', { campaign: campaignStore.selectedCampaignId, item: item.id })">

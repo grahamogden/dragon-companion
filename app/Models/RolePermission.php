@@ -16,6 +16,7 @@ use \DateTime;
  * @property RolePermissionEnum $campaign_permissions
  * @property RolePermissionEnum $item_permissions
  * @property RolePermissionEnum $timeline_permissions
+ * @property RolePermissionEnum $species_permissions
  */
 class RolePermission extends Model
 {
@@ -30,6 +31,7 @@ class RolePermission extends Model
     public const FIELD_CAMPAIGN_PERMISSIONS = 'campaign_permissions';
     public const FIELD_ITEM_PERMISSIONS = 'item_permissions';
     public const FIELD_TIMELINE_PERMISSIONS = 'timeline_permissions';
+    public const FIELD_SPECIES_PERMISSIONS = 'species_permissions';
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +43,7 @@ class RolePermission extends Model
         self::FIELD_CAMPAIGN_PERMISSIONS,
         self::FIELD_ITEM_PERMISSIONS,
         self::FIELD_TIMELINE_PERMISSIONS,
+        self::FIELD_SPECIES_PERMISSIONS,
     ];
 
     public function role(): HasOne
@@ -54,6 +57,7 @@ class RolePermission extends Model
             self::FIELD_CAMPAIGN_PERMISSIONS => RolePermissionEnum::class,
             self::FIELD_ITEM_PERMISSIONS => RolePermissionEnum::class,
             self::FIELD_TIMELINE_PERMISSIONS => RolePermissionEnum::class,
+            self::FIELD_SPECIES_PERMISSIONS => RolePermissionEnum::class,
         ];
     }
 
@@ -70,5 +74,10 @@ class RolePermission extends Model
     public function hasTimelinePermission(RolePermissionEnum $permission): bool
     {
         return $this->timeline_permissions->value & $permission === $permission;
+    }
+
+    public function hasSpeciesPermission(RolePermissionEnum $permission): bool
+    {
+        return $this->species_permissions->value & $permission === $permission;
     }
 }
