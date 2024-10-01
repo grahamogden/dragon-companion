@@ -9,7 +9,6 @@ use App\Models\Campaign;
 use App\Models\Timeline;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -42,7 +41,6 @@ class TimelineController extends Controller
      */
     public function create(Request $request, Campaign $campaign): Response
     {
-        Log::debug('Create in TimelineController');
         $this->authorize(
             ability: 'create',
             arguments: [Timeline::class, $campaign],
@@ -52,7 +50,6 @@ class TimelineController extends Controller
 
         $parentId = $request->query(key: Timeline::FIELD_PARENT_ID);
         if ($parentId && is_numeric($parentId)) {
-            Log::debug('Parent ID: ' . $parentId);
             $parentTimeline = $campaign->timelines()
                 ->whereKey(id: (int) $parentId)
                 ->firstOrFail();
@@ -71,7 +68,6 @@ class TimelineController extends Controller
      */
     public function store(StoreTimelineRequest $request, Campaign $campaign): RedirectResponse
     {
-        Log::debug('Store in TimelineController');
         $this->authorize(
             ability: 'create',
             arguments: [Timeline::class, $campaign],
@@ -103,7 +99,6 @@ class TimelineController extends Controller
     {
         $this->authorize(ability: 'view', arguments: [$timeline, $campaign]);
         $timeline->load(relations: ['children', 'parent']);
-        Log::debug(var_export($timeline, true));
 
         return Inertia::render(
             component: 'Creator/Timelines/TimelineView',
@@ -148,8 +143,16 @@ class TimelineController extends Controller
     {
         $this->authorize(ability: 'delete', arguments: [$timeline, $campaign]);
 
+        $route = 'creator.campaigns.timelines.index';
+        $parameters = ['campaign' => $campaign->id];
+
+        if ($timeline->parent_id) {
+            $route = 'creator.campaigns.timelines.show';
+            $parameters['timeline'] = $timeline->parent_id;
+        }
+
         $timeline->deleteOrFail();
 
-        return Redirect::route(route: 'creator.campaigns.timelines.index', parameters: ['campaign' => $campaign->id]);
+        return Redirect::route(route: $route, parameters: $parameters);
     }
 }
