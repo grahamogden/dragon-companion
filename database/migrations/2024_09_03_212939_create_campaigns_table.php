@@ -16,15 +16,13 @@ return new class extends Migration
         Schema::create(table: Campaign::TABLE_NAME, callback: function (Blueprint $table): void {
             $table->id();
             $table->timestamps();
-            $table->string(column: Campaign::FIELD_NAME, length: 250);
+            $table->string(column: Campaign::FIELD_NAME, length: 250)
+                ->index();
             $table->text(column: Campaign::FIELD_SYNOPSIS)
                 ->nullable()
                 ->default(value: null);
-            $table->unsignedBigInteger(column: Campaign::FIELD_USER_ID);
-
-            $table->foreign(columns: Campaign::FIELD_USER_ID)
-                ->references(columns: User::FIELD_ID)
-                ->on(table: User::TABLE_NAME)
+            $table->foreignIdFor(model: User::class)
+                ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
         });

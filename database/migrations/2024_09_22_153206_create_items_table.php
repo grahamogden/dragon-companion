@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RolePermissionEnum;
 use App\Models\Campaign;
 use App\Models\Item;
 use App\Models\RolePermission;
@@ -26,7 +27,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->string(column: Item::FIELD_NAME, length: 250);
+            $table->string(column: Item::FIELD_NAME, length: 250)
+                ->index();
             $table->text(column: Item::FIELD_DESCRIPTION)
                 ->nullable()
                 ->default(value: null);
@@ -37,7 +39,8 @@ return new class extends Migration
                 column: RolePermission::FIELD_ITEM_PERMISSIONS,
                 unsigned: true,
             )
-                ->comment(comment: '[bitwise] deny:0,read:1,write:2,delete:4. For example, 3 means the role has read + write permissions but not delete. 5 Would mean read + delete but not write. 7 means that the role has read + write + delete permissions.');
+                ->comment(comment: '[bitwise] deny:0,read:1,write:2,delete:4. For example, 3 means the role has read + write permissions but not delete. 5 Would mean read + delete but not write. 7 means that the role has read + write + delete permissions.')
+                ->default(value: RolePermissionEnum::Deny);
         });
     }
 
@@ -46,12 +49,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists(table: Item::TABLE_NAME);
         Schema::dropColumns(
             table: RolePermission::TABLE_NAME,
             columns: [
                 RolePermission::FIELD_ITEM_PERMISSIONS,
             ]
         );
+        Schema::dropIfExists(table: Item::TABLE_NAME);
     }
 };

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string(column: Role::FIELD_NAME, length: 250);
 
             $table->foreignIdFor(model: Campaign::class)
+                ->index()
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
@@ -30,6 +31,7 @@ return new class extends Migration
         Schema::create(table: RolePermission::TABLE_NAME, callback: function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(model: Role::class)
+                ->index()
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
@@ -38,7 +40,8 @@ return new class extends Migration
                 column: RolePermission::FIELD_CAMPAIGN_PERMISSIONS,
                 unsigned: true,
             )
-                ->comment(comment: '[bitwise] deny:0,read:1,write:2,delete:4. For example, 3 means the role has read + write permissions but not delete. 5 Would mean read + delete but not write. 7 means that the role has read + write + delete permissions.');
+                ->comment(comment: '[bitwise] deny:0,read:1,write:2,delete:4. For example, 3 means the role has read + write permissions but not delete. 5 Would mean read + delete but not write. 7 means that the role has read + write + delete permissions.')
+                ->default(value: RolePermissionEnum::Deny);
         });
 
         Schema::create(table: Role::PIVOT_TABLE_ROLE_USER, callback: function (Blueprint $table): void {
