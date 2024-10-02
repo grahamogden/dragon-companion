@@ -52,7 +52,7 @@
                             class="mr-2"></font-awesome-icon>Timelines
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.characters.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'user']" fixed-width
                             class="mr-2"></font-awesome-icon>Characters
                     </ToolbarNavLink>
@@ -103,7 +103,7 @@
             </Link>
 
             <Link v-if="showDashboardLinks" class="navigation-toolbar-link"
-                :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })"
+                :href="route('creator.campaigns.characters.index', { campaign: campaignStore.campaignId })"
                 @click="toggleNavMenu(false)">
             <font-awesome-icon :icon="['fas', 'user']" fixed-width
                 class="text-xl"></font-awesome-icon><span>Characters</span>

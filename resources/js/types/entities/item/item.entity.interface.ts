@@ -5,7 +5,7 @@ import type {
 
 export interface NewItemEntityInterface {
     name: string;
-    description: string;
+    description?: string | null;
 }
 
 export interface ItemEntityInterface

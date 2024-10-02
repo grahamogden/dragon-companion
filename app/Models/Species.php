@@ -15,6 +15,9 @@ class Species extends Model
     public const FIELD_ID = 'id';
     public const FIELD_NAME = 'name';
     public const FIELD_DESCRIPTION = 'description';
+    public const FIELD_CREATED = 'created_at';
+    public const FIELD_UPDATED = 'updated_at';
+
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
     public const FIELD_USER_ID = 'user_id';
 

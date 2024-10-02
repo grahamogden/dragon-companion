@@ -4,11 +4,11 @@ namespace App\Policies;
 
 use App\Enums\RolePermissionEnum;
 use App\Models\Campaign;
-use App\Models\Item;
+use App\Models\Character;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ItemPolicy
+class CharacterPolicy
 {
     use UserRolePermissionPolicyTrait;
 
@@ -23,14 +23,14 @@ class ItemPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Item $item, Campaign $campaign): bool
+    public function view(User $user, Character $item, Campaign $campaign): bool
     {
         if (((bool) $user->id) === false) {
             return false;
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasItemPermission(permission: RolePermissionEnum::Read);
+            ->hasCharacterPermission(permission: RolePermissionEnum::Read);
     }
 
     /**
@@ -43,39 +43,39 @@ class ItemPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasItemPermission(permission: RolePermissionEnum::Write);
+            ->hasCharacterPermission(permission: RolePermissionEnum::Write);
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Item $item, Campaign $campaign): bool
+    public function update(User $user, Character $item, Campaign $campaign): bool
     {
         if (((bool) $user->id) === false) {
             return false;
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasItemPermission(permission: RolePermissionEnum::Write);
+            ->hasCharacterPermission(permission: RolePermissionEnum::Write);
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Item $item, Campaign $campaign): bool
+    public function delete(User $user, Character $item, Campaign $campaign): bool
     {
         if (((bool) $user->id) === false) {
             return false;
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasItemPermission(permission: RolePermissionEnum::Delete);
+            ->hasCharacterPermission(permission: RolePermissionEnum::Delete);
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Item $item): bool
+    public function restore(User $user, Character $item): bool
     {
         return false;
     }
@@ -83,7 +83,7 @@ class ItemPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Item $item): bool
+    public function forceDelete(User $user, Character $item): bool
     {
         return false;
     }

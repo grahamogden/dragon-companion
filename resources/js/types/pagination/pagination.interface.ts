@@ -1,6 +1,7 @@
-export default interface PaginationInterface<T> {
+import { CollectionInterace } from "../collection/collection.interface";
+
+export interface PaginationInterface<T> extends CollectionInterace<T> {
     current_page: number;
-    data: T[];
     first_page_url: string;
     from: number;
     last_page: number;

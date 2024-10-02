@@ -1,56 +1,54 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { useCharacterStore, useCampaignStore, useNotificationStore } from '../../stores'
-  import type { CharacterEntityInterface } from '../../services/character'
-  import PageHeader from '../../Components/page-header/PageHeader.vue'
-  import LoadingPage from '../../Components/loading-page/LoadingPage.vue'
-  import EntityTable from '../../Components/entity-table/EntityTable.vue'
-  import EntityTableLink from '../../Components/entity-table/interface/entity-table-link';
-  import EntityTableHeading from '../../Components/entity-table/interface/entity-table-heading';
-  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../Components/page-header/interface';
+  import { PropType } from 'vue';
+  import { useCampaignStore } from '../../../stores'
+  import EntityTable from '../../../Components/entity-table/EntityTable.vue'
+  import EntityTableHeading from '../../../Components/entity-table/interface/entity-table-heading';
+  import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
+  import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
+  import type { PaginationInterface } from '../../../types/pagination';
+  import { CharacterIndexEntityInterface } from '../../../types/entities/character';
+  import { Head } from '@inertiajs/vue3';
 
-  const notificationStore = useNotificationStore()
   const campaignStore = useCampaignStore()
-  const campaignId = campaignStore.selectedCampaignId!
-  const characterStore = useCharacterStore()
-  const isLoading = ref(true)
 
-  let allCharacters: CharacterEntityInterface[] = []
-  fetchCharacters(campaignId)
+  defineProps({
+    characters: Object as PropType<PaginationInterface<CharacterIndexEntityInterface>>,
+  })
 
-  function fetchCharacters(campaignId: number): void {
-    isLoading.value = true
-    characterStore.getCharacters(campaignId).then((characterRes: CharacterEntityInterface[]) => {
-      if (characterRes !== null) {
-        allCharacters = characterRes
-      }
-      isLoading.value = false
-    });
-  }
+  // let allCharacters: CharacterEntityInterface[] = []
+  // fetchCharacters(campaignId)
 
-  function confirmDelete(campaignId: number, id: number): void {
-    if (window.confirm('Are you sure you want to delete ' + id)) {
-      notificationStore.removeAllNotifications()
-      characterStore.deleteCharacter(campaignId, id).then(() => {
-        notificationStore.addSuccess('Successfully deleted character')
-        fetchCharacters(campaignId)
-      })
-    }
-  }
+  // function fetchCharacters(campaignId: number): void {
+  //   isLoading.value = true
+  //   characterStore.getCharacters(campaignId).then((characterRes: CharacterEntityInterface[]) => {
+  //     if (characterRes !== null) {
+  //       allCharacters = characterRes
+  //     }
+  //     isLoading.value = false
+  //   });
+  // }
+
+  // function confirmDelete(campaignId: number, id: number): void {
+  //   if (window.confirm('Are you sure you want to delete ' + id)) {
+  //     notificationStore.removeAllNotifications()
+  //     characterStore.deleteCharacter(campaignId, id).then(() => {
+  //       notificationStore.addSuccess('Successfully deleted character')
+  //       fetchCharacters(campaignId)
+  //     })
+  //   }
+  // }
 </script>
 
 <template>
-  <div class="character-list">
-    <page-header
-      :link="new PageHeaderLink('Add character', { name: 'characters.add' }, PageHeaderLinkActionEnum.ADD)">Characters</page-header>
-    <loading-page :is-loading="isLoading">
-      <template #content>
-        <entity-table :headings="[new EntityTableHeading('name', true), new EntityTableHeading('species', false)]"
-          :entities="allCharacters" :view-link="new EntityTableLink('characters.view', 'characterId')"
-          :edit-link="new EntityTableLink('characters.edit', 'characterId')"
-          :delete-confirmation-function="confirmDelete" kebab-menu-button-aria-context="Character"></entity-table>
-      </template>
-      <template #loading-text>character</template>
-    </loading-page>
-  </div>
+
+  <Head title="Characters" />
+  <CreatorDefaultContentLayout>
+    <PageHeaderWithLink
+      :href="route('creator.campaigns.characters.create', { campaign: campaignStore.selectedCampaignId })">
+      <template #title>Characters</template><template #link><font-awesome-icon :icon="['fas', 'plus']" fixed-width
+          class="mr-2" />Add character</template>
+    </PageHeaderWithLink>
+    <entity-table :headings="[new EntityTableHeading('name', true)]" :entities="characters.data"
+      kebab-menu-button-aria-context="Character"></entity-table>
+  </CreatorDefaultContentLayout>
 </template>

@@ -54,4 +54,9 @@ class Campaign extends Model
     {
         return $this->hasMany(related: Species::class);
     }
+
+    public function characters(): HasMany
+    {
+        return $this->hasMany(related: Character::class);
+    }
 }

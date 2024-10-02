@@ -26,7 +26,7 @@
                 <NavLink :href="route('creator.campaigns.timelines.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'timeline']" fixed-width class="mr-2" />Timelines
                 </NavLink>
-                <NavLink :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.characters.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'users']" fixed-width class="mr-2" />Characters
                 </NavLink>
                 <NavLink :href="route('dice-roller')">
