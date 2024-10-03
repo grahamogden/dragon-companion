@@ -21,7 +21,7 @@
                 class="px-4 py-2 bg-timberwolf-50/80 dark:bg-woodsmoke-950/80 backdrop-blur-sm duration-theme-change">{{
                     campaignStore.campaignName }}</div>
         </div>
-        <div class="flex flex-col w-full pb-4 bg-shark-950/70 backdrop-blur-lg grow">
+        <div class="flex flex-col w-full pb-4 bg-shark-950/70 backdrop-blur-sm grow">
             <nav v-if="$page.props.auth.user && campaignStore.isCampaignSelected" class="side-nav flex flex-col">
                 <NavLink :href="route('creator.campaigns.timelines.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'timeline']" fixed-width class="mr-2" />Timelines
@@ -38,7 +38,7 @@
                 <NavLink :href="route('creator.campaigns.items.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2" />Items
                 </NavLink>
-                <NavLink :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.monsters.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'dragon']" fixed-width class="mr-2" />Monsters
                 </NavLink>
                 <NavLink :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">

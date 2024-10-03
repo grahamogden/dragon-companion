@@ -71,7 +71,7 @@
                         <font-awesome-icon :icon="['fas', 'shield']" fixed-width class="mr-2"></font-awesome-icon>Items
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.monsters.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'dragon']" fixed-width
                             class="mr-2"></font-awesome-icon>Monsters
                     </ToolbarNavLink>

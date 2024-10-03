@@ -83,6 +83,7 @@ class CampaignController extends Controller
                 RolePermission::FIELD_TIMELINE_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
                 RolePermission::FIELD_SPECIES_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
                 RolePermission::FIELD_CHARACTER_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
+                RolePermission::FIELD_MONSTER_PERMISSIONS => RolePermissionEnum::Read_or_write_or_delete,
             ]);
 
             $user->roles()->attach(id: $roles[0]->id);

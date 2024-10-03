@@ -11,6 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $user_id
  * @property string $name
  * @property string $synopsis
+ * 
+ * @property Item[] $items
+ * @property Timeline[] $timelines
+ * @property Species[] $species
+ * @property Character[] $characters
+ * @property Monster[] $monsters
  */
 class Campaign extends Model
 {
@@ -58,5 +64,10 @@ class Campaign extends Model
     public function characters(): HasMany
     {
         return $this->hasMany(related: Character::class);
+    }
+
+    public function monsters(): HasMany
+    {
+        return $this->hasMany(related: Monster::class);
     }
 }

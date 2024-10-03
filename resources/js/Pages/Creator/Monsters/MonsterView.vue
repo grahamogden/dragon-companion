@@ -1,48 +1,55 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { useCampaignStore, useMonsterStore } from '../../stores/index.ts';
-  import { MonsterEntity, type MonsterEntityInterface } from '../../services/monster/index.ts';
-  import PageHeader from '../../Components/page-header/PageHeader.vue';
-  import LoadingPage from '../../Components/loading-page/LoadingPage.vue'
-  import { useRoute } from 'vue-router';
-  import ContentGroup from '../../Components/elements/ContentGroup.vue'
-  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../Components/page-header/interface/index.ts';
-  import { MonsterSizeEnum } from '../../services/monster/MonsterSizeEnum.ts'
+  import { PropType } from 'vue';
+  import { useCampaignStore } from '../../../stores';
+  import { type MonsterEntityInterface } from '../../../types/entities/monster/';
+  import PageHeader from '../../../Components/page-header/PageHeader.vue';
+  import LoadingPage from '../../../Components/loading-page/LoadingPage.vue'
+  import ContentGroup from '../../../Components/elements/ContentGroup.vue'
+  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../../Components/page-header/interface/index.ts';
+  import { Head } from '@inertiajs/vue3';
+  import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
+  import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
+  import { MonsterSizeEnum } from '../../../types/entities/monster/monster-size.enum.ts';
+  import { ChallengeRatingEnum } from '../../../types/entities/monster/challenge-rating.enum copy.ts';
+  import { SpeciesEntityInterface } from '../../../types/entities/species/species.entity.interface.ts';
 
-  const monsterStore = useMonsterStore()
-  const route = useRoute()
-  const campaign = useCampaignStore()
-  const campaignId = campaign.selectedCampaignId!
-  const monsterId = parseInt(route.params.monsterId as string)
-  let isLoading = ref(true)
-  let monster = ref<MonsterEntityInterface>(new MonsterEntity())
-
-  monsterStore.getOneMonster(campaignId, monsterId).then((monsterRes) => {
-    if (monsterRes !== null) {
-      monster.value = monsterRes
-    }
-    isLoading.value = false
+  defineProps({
+    monster: { type: Object as PropType<MonsterEntityInterface>, required: true },
+    species: { type: Object as PropType<SpeciesEntityInterface>, required: false },
   })
+
+  const campaignStore = useCampaignStore()
+
+  // monsterStore.getOneMonster(campaignId, monsterId).then((monsterRes) => {
+  //   if (monsterRes !== null) {
+  //     monster.value = monsterRes
+  //   }
+  //   isLoading.value = false
+  // })
 </script>
 
 <template>
-  <div class="monster-view">
-    <page-header
-      :link="new PageHeaderLink('Edit', { name: 'monsters.edit', params: { externalCampaignId: campaignId, monsterId: monsterId } }, PageHeaderLinkActionEnum.EDIT)">{{
-        monster.name ? monster.name : 'Monster' }}</page-header>
-    <loading-page :is-loading="isLoading">
-      <template #content>
-        <ContentGroup><template #heading>Hit points</template><template #content>{{ monster.default_hit_points }} ({{
-          monster.calculated_hit_points_dice_count }}d{{ monster.calculated_hit_points_dice_type }} + {{
-              monster.calculated_hit_points_modifier }})</template>
-        </ContentGroup>
-        <ContentGroup><template #heading>Size</template><template #content>{{ MonsterSizeEnum[monster.size ?? 0]
-            }}</template>
-        </ContentGroup>
-        <ContentGroup><template #heading>Description</template><template #content>{{ monster.description }}</template>
-        </ContentGroup>
-      </template>
-      <template #loading-text>monster</template>
-    </loading-page>
-  </div>
+
+  <Head :title="monster.name + ' Monster'" />
+  <CreatorDefaultContentLayout>
+    <PageHeaderWithLink
+      :href="route('creator.campaigns.monsters.edit', { campaign: campaignStore.selectedCampaignId, monster: monster.id })">
+      <template #title>{{ monster.name + ` (CR: ` + (monster.challenge_rating !== null ? monster.challenge_rating :
+        'unknown') + `)`
+        }}</template><template #link><font-awesome-icon :icon="['fas', 'pencil']" fixed-width
+          class="mr-2"></font-awesome-icon>Edit {{
+            monster.name ? monster.name : 'Monster' }}</template>
+    </PageHeaderWithLink>
+    <ContentGroup><template #heading>Hit points</template><template #content>{{ monster.default_hit_points }} ({{
+      monster.calculated_hit_points_dice_count }}d{{ monster.calculated_hit_points_dice_type }} + {{
+          monster.calculated_hit_points_modifier }})</template>
+    </ContentGroup>
+    <ContentGroup><template #heading>Size</template><template #content>{{ MonsterSizeEnum[monster.size ??
+      MonsterSizeEnum.Unknown]
+        }}</template>
+    </ContentGroup>
+    <ContentGroup><template #heading>Description</template><template #content>{{ monster.description }}</template>
+    </ContentGroup>
+
+  </CreatorDefaultContentLayout>
 </template>

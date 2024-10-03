@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\Item;
+use App\Models\Monster;
 use App\Models\Species;
 use App\Models\Timeline;
 use Illuminate\Foundation\Application;
@@ -42,6 +43,8 @@ Route::name('creator.')->group(function () {
         Route::resource(Campaign::TABLE_NAME . '.' . Species::TABLE_NAME, App\Http\Controllers\Creator\SpeciesController::class);
 
         Route::resource(Campaign::TABLE_NAME . '.' . Character::TABLE_NAME, App\Http\Controllers\Creator\CharacterController::class);
+
+        Route::resource(Campaign::TABLE_NAME . '.' . Monster::TABLE_NAME, App\Http\Controllers\Creator\MonsterController::class);
     });
 });
 
