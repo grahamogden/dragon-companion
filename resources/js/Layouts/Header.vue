@@ -1,9 +1,8 @@
 <script setup lang="ts">
-    import { useCampaignStore, useConfigurationStore, ThemeEnum } from '../stores/index'
+    import { useConfigurationStore, ThemeEnum } from '../stores/index'
     import HeaderAccountMenu from '../Components/header/account/HeaderAccountMenu.vue'
     import { Link } from '@inertiajs/vue3';
 
-    const campaignStore = useCampaignStore()
     const configStore = useConfigurationStore()
 
     // Theme toggling
@@ -57,8 +56,8 @@
                 break;
             case (ThemeEnum.DARK):
                 // Auto needs uncommenting when we want auto back here
-                // toggleDarkModeSetAuto()
-                toggleDarkModeSetLight()
+                toggleDarkModeSetAuto()
+                // toggleDarkModeSetLight()
                 break;
             default:
                 toggleDarkModeSetLight()
@@ -89,7 +88,7 @@
         ref="skipLink">Skip to main content</a>
 
     <header class="relative w-full">
-        <div class="absolute w-full h-full top-0 bg-shark-950/70 backdrop-blur-lg shadow-lg"></div>
+        <div class="absolute w-full h-full top-0 bg-shark-950/70 backdrop-blur-sm shadow-lg"></div>
         <div class="flex flex-row justify-between items-center max-w-page mx-auto py-2 md:py-4 px-4 md:px-6 relative">
             <div class="flex flex-row items-center">
                 <div>

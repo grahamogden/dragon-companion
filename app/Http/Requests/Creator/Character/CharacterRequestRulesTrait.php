@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Creator\Character;
 
+use App\Models\Campaign;
 use App\Models\Character;
+use App\Models\Species;
+use App\Rules\SpeciesBelongsToCampaign;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 trait CharacterRequestRulesTrait
 {
@@ -15,7 +20,7 @@ trait CharacterRequestRulesTrait
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(Request $request): array
     {
         return [
             Character::FIELD_NAME => [
@@ -50,6 +55,11 @@ trait CharacterRequestRulesTrait
             Character::FIELD_NOTES => [
                 'string',
                 'nullable',
+            ],
+            Character::FIELD_SPECIES_ID => [
+                'nullable',
+                sprintf('exists:%s,id', Species::TABLE_NAME),
+                new SpeciesBelongsToCampaign(campaignId: $request->campaign->id),
             ],
         ];
     }

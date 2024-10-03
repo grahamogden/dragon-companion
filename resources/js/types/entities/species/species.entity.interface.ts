@@ -5,7 +5,7 @@ import type {
 
 export interface NewSpeciesEntityInterface {
     name: string;
-    description: string;
+    description?: string;
 }
 
 export interface SpeciesEntityInterface

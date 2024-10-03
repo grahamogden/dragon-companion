@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Creator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Creator\Species\StoreSpeciesRequest;
 use App\Http\Requests\Creator\Species\UpdateSpeciesRequest;
-use App\Http\Resources\SpeciesResource;
+use App\Http\Resources\Species\SpeciesResource;
 use App\Models\Campaign;
 use App\Models\Species;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +32,7 @@ class SpeciesController extends Controller
             component: 'Creator/Species/SpeciesList',
             props: [
                 'species' => SpeciesResource::collection(
-                    $campaign->species()->paginate()
+                    resource: $campaign->species()->paginate()
                 )
             ]
         );
@@ -99,7 +99,10 @@ class SpeciesController extends Controller
         return Inertia::render(
             component: 'Creator/Species/SpeciesForm',
             props: [
-                'cancelLink' => route('creator.campaigns.species.show', ['campaign' => $campaign, 'species' => $species]),
+                'cancelLink' => route(
+                    name: 'creator.campaigns.species.show',
+                    parameters: ['campaign' => $campaign, 'species' => $species]
+                ),
                 'species' => $species,
             ]
         );

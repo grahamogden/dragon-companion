@@ -1,3 +1,3 @@
-export interface CollectionInterace<T> {
+export interface CollectionInterface<T> {
     data: T[];
 }

@@ -6,9 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Creator\Character\StoreCharacterRequest;
 use App\Http\Requests\Creator\Character\UpdateCharacterRequest;
 use App\Http\Resources\CharacterResource;
-use App\Http\Resources\SpeciesResource;
+use App\Http\Resources\Species\SpeciesOptionResource;
 use App\Models\Campaign;
 use App\Models\Character;
+use App\Models\Species;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -49,7 +50,7 @@ class CharacterController extends Controller
         );
 
         return Inertia::render(component: 'Creator/Characters/CharacterForm', props: [
-            'species' => SpeciesResource::collection(resource: $campaign->species()->getModels()),
+            'species' => SpeciesOptionResource::collection(resource: $campaign->species()->getModels()),
         ]);
     }
 
@@ -81,10 +82,13 @@ class CharacterController extends Controller
     public function show(Request $request, Campaign $campaign, Character $character): Response
     {
         $this->authorize(ability: 'view', arguments: [$character, $campaign]);
+        $character->load(relations: [Species::TABLE_NAME]);
 
         return Inertia::render(
             component: 'Creator/Characters/CharacterView',
-            props: ['character' => $character]
+            props: [
+                'character' => $character,
+            ],
         );
     }
 
@@ -100,7 +104,7 @@ class CharacterController extends Controller
             component: 'Creator/Characters/CharacterForm',
             props: [
                 'character' => $character,
-                'species' => SpeciesResource::collection(resource: $campaign->species()->getModels()),
+                'species' => SpeciesOptionResource::collection(resource: $campaign->species()->getModels()),
             ]
         );
     }

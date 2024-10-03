@@ -8,13 +8,12 @@
     import BaseInput from '../../../Components/Fields/BaseInput.vue'
     import { Head, useForm } from '@inertiajs/vue3';
     import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
-    import { SpeciesEntityInterface } from '../../../types/entities/species';
-    import { type CollectionInterace } from '../../../types/collection';
-    import SelectInputOptionInterface from '../../../Components/elements/interface/select-input-option.interface';
+    import { CollectionInterface } from '../../../types/collection';
+    import { SelectInputOptionInterface } from '../../../types/entity-option';
 
     const props = defineProps({
         character: { type: Object as PropType<CharacterEntityInterface>, required: false },
-        species: { type: Object as PropType<CollectionInterface<SpeciesEntityInterface[]>>, required: true }
+        species: { type: Object as PropType<CollectionInterface<SelectInputOptionInterface>>, required: true }
     })
 
     const campaignStore = useCampaignStore()
@@ -27,7 +26,7 @@
         dexterity_modifier: props.character?.dexterity_modifier ?? '',
         appearance: props.character?.appearance ?? '',
         notes: props.character?.notes ?? '',
-        species_id: props.character?.species_id ?? '',
+        species_id: props.character?.species_id ?? null,
     })
 
     const saveCharacter = () => {
@@ -38,10 +37,10 @@
         }
     }
 
-    const speciesOptions = props.species.data.map((species: SpeciesEntityInterface): SelectInputOptionInterface => ({
-        value: species.id!,
-        text: species.name,
-    }))
+    // const speciesOptions = props.species.data.map((species: SpeciesEntityInterface): SelectInputOptionInterface => ({
+    //     value: species.id!,
+    //     text: species.name,
+    // }))
 
     // const props = defineProps<{
     //     isParentLoading: boolean
@@ -85,12 +84,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-default md:gap-default-md">
                 <div class="">
                     <BaseInput type="text" inputName="name" v-model:model="form.name" :error="form.errors.name"
-                        label="Character Name" :require="true">
+                        label="Character Name" :isRequired="true">
                     </BaseInput>
                 </div>
                 <div class="">
                     <SelectInput inputName="species" v-model:model="form.species_id" :error="form.errors.species_id"
-                        label="Species" :options="speciesOptions">
+                        label="Species" :options="species.data" inlcude-null-value>
                     </SelectInput>
                 </div>
             </div>

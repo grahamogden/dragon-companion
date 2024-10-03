@@ -4,6 +4,7 @@ use App\Enums\RolePermissionEnum;
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\RolePermission;
+use App\Models\Species;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -47,6 +48,11 @@ return new class extends Migration
             $table->text(column: Character::FIELD_NOTES)
                 ->nullable()
                 ->default(value: null);
+            $table->foreignIdFor(model: Species::class)
+                ->nullable()
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
         });
 
         Schema::table(table: RolePermission::TABLE_NAME, callback: function (Blueprint $table): void {

@@ -9,9 +9,11 @@
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
   import { Head } from '@inertiajs/vue3';
   import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
+  import { SpeciesEntityInterface } from '../../../types/entities/species';
 
   defineProps({
-    character: { type: Object as PropType<CharacterEntityInterface>, required: true }
+    character: { type: Object as PropType<CharacterEntityInterface>, required: true },
+    species: { type: Object as PropType<SpeciesEntityInterface>, required: false },
   })
 
   const campaignStore = useCampaignStore()
@@ -27,7 +29,7 @@
           fixed-width class="mr-2"></font-awesome-icon>Edit {{
             character.name ? character.name : 'Character' }}</template>
     </PageHeaderWithLink>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-x-6">
       <ContentGroup><template #heading>Max hit points</template><template #content>{{
         character.max_hit_points
           }}</template></ContentGroup>
@@ -37,9 +39,14 @@
       <ContentGroup><template #heading>Dexterity modifier</template><template #content>{{
         character.dexterity_modifier }}</template></ContentGroup>
     </div>
-    <ContentGroup><template #heading>Species</template><template #content>{{ character.species?.name ?? 'Not set'
-        }}</template>
-    </ContentGroup>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-x-6">
+      <ContentGroup><template #heading>Age</template><template #content>{{
+        character.age
+          }}</template></ContentGroup>
+      <ContentGroup><template #heading>Species</template><template #content>{{ character?.species?.name ?? 'Not set'
+          }}</template>
+      </ContentGroup>
+    </div>
     <ContentGroup><template #heading>Appearance</template><template #content>{{ character.appearance }}</template>
     </ContentGroup>
     <ContentGroup><template #heading>Notes</template><template #content>{{ character.notes }}</template>

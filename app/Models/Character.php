@@ -47,7 +47,6 @@ class Character extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        self::FIELD_ID,
         self::FIELD_NAME,
         self::FIELD_AGE,
         self::FIELD_MAX_HIT_POINTS,
@@ -72,6 +71,6 @@ class Character extends Model
 
     public function species(): BelongsTo
     {
-        return $this->belongsTo(related: User::class);
+        return $this->belongsTo(related: Species::class);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Species;
 
 use App\Models\Species;
 use Illuminate\Http\Request;

@@ -1,6 +1,6 @@
 <script setup lang="ts"></script>
 <template>
-    <div class="mb-default">
+    <div class="">
         <h3 v-if="$slots.heading" class="mb-2 font-bold">
             <slot name="heading"></slot>
         </h3>

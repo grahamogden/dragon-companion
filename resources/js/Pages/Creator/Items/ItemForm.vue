@@ -34,7 +34,7 @@
         <CreatorDefaultContentLayout>
             <div class="w-full md:w-2/4">
                 <BaseInput type="text" inputName="name" v-model:model="form.name" :error="form.errors.name"
-                    label="Item Name" :require="true">
+                    label="Item Name" :isRequired="true">
                 </BaseInput>
             </div>
             <div class="w-full">
