@@ -91,7 +91,8 @@
     nav.side-nav,
     nav.toolbar,
     nav.toolbar-menu {
-        .router-link-active {
+        .router-link-active,
+        .active {
             @apply bg-saffron-mango-300 text-shark-950;
         }
     }
