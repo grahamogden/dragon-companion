@@ -9,18 +9,3 @@ export enum MonsterSizeEnum {
     Huge = "Huge",
     Gargantuan = "Gargantuan",
 }
-
-export class MonsterSizeUtils {
-    static values(): MonsterSizeEnum[] {
-        return Object.values(MonsterSizeEnum);
-    }
-
-    static options(): SelectInputOptionInterface[] {
-        return Object.values(MonsterSizeEnum).map((value) => {
-            return {
-                text: value,
-                value: value,
-            };
-        });
-    }
-}

@@ -2,7 +2,7 @@ import type {
     EntityInterface,
     IndexEntityInterface,
 } from "../entity.interface.js";
-import { ChallengeRatingEnum } from "./challenge-rating.enum copy.js";
+import { ChallengeRatingEnum } from "./challenge-rating.enum.js";
 import { MonsterSizeEnum } from "./monster-size.enum.js";
 
 export interface NewMonsterEntityInterface {

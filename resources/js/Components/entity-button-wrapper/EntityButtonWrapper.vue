@@ -1,11 +1,11 @@
 <script setup lang="ts">
+    import LinkButton from '../buttons/LinkButton.vue';
     import PrimaryButton from '../buttons/PrimaryButton.vue'
-    // import LinkButton from '../buttons/LinkButton.vue';
     import SecondaryButton from '../buttons/SecondaryButton.vue';
 
     defineProps<{
-        cancelDestination?: string | undefined,
-        onCancel?: Function | undefined,
+        cancelDestination?: string,
+        onCancel?: Function,
     }>()
 
     const back = () => {
@@ -18,8 +18,8 @@
             <PrimaryButton>Save</PrimaryButton>
         </div>
         <div class="w-full md:w-auto text-center">
-            <SecondaryButton :func="onCancel ?? back" :args="[]">Cancel</SecondaryButton>
-            <!-- <LinkButton :href="cancelDestination" :width-full="true">Cancel</LinkButton> -->
+            <SecondaryButton v-if="onCancel" :func="onCancel ?? back" :args="[]">Cancel</SecondaryButton>
+            <LinkButton v-else-if="cancelDestination" :href="cancelDestination" :width-full="true">Cancel</LinkButton>
         </div>
     </div>
 </template>

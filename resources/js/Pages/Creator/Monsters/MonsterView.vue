@@ -2,15 +2,11 @@
   import { PropType } from 'vue';
   import { useCampaignStore } from '../../../stores';
   import { type MonsterEntityInterface } from '../../../types/entities/monster/';
-  import PageHeader from '../../../Components/page-header/PageHeader.vue';
-  import LoadingPage from '../../../Components/loading-page/LoadingPage.vue'
   import ContentGroup from '../../../Components/elements/ContentGroup.vue'
-  import { PageHeaderLink, PageHeaderLinkActionEnum } from '../../../Components/page-header/interface/index.ts';
   import { Head } from '@inertiajs/vue3';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
   import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
   import { MonsterSizeEnum } from '../../../types/entities/monster/monster-size.enum.ts';
-  import { ChallengeRatingEnum } from '../../../types/entities/monster/challenge-rating.enum copy.ts';
   import { SpeciesEntityInterface } from '../../../types/entities/species/species.entity.interface.ts';
 
   defineProps({

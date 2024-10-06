@@ -1,3 +1,4 @@
+import { ChallengeRatingEnum } from "./challenge-rating.enum.js";
 import { MonsterSizeEnum } from "./monster-size.enum.js";
 import type { MonsterEntityInterface } from "./monster.entity.interface.js";
 
@@ -12,7 +13,7 @@ export class MonsterEntity implements MonsterEntityInterface {
     calculated_hit_points_modifier?: number;
     armour_class?: number;
     speed?: number;
-    challenge_rating?: number;
+    challenge_rating?: ChallengeRatingEnum;
 
     constructor(
         name: string,
@@ -25,7 +26,7 @@ export class MonsterEntity implements MonsterEntityInterface {
         calculated_hit_points_modifier?: number,
         armour_class?: number,
         speed?: number,
-        challenge_rating?: number
+        challenge_rating?: ChallengeRatingEnum
     ) {
         this.id = id;
         this.name = name;

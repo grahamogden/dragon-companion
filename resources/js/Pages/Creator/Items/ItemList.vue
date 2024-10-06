@@ -6,7 +6,7 @@
   import { Head } from '@inertiajs/vue3';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
   import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
-  import PaginationInterface from '../../../types/pagination/pagination.interface';
+  import { type PaginationInterface } from '../../../types/pagination/pagination.interface';
   import { useCampaignStore } from '../../../stores';
 
   defineProps({

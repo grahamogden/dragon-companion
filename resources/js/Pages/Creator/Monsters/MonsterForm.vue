@@ -7,10 +7,11 @@
     import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
     import { useCampaignStore } from '../../../stores';
     import { PropType } from 'vue';
-    import { MonsterEntityInterface, MonsterSizeEnum, MonsterSizeUtils } from '../../../types/entities/monster/';
-    import { CollectionInterface } from '../../../types/collection';
+    import { MonsterEntityInterface, MonsterSizeEnum } from '../../../types/entities/monster/';
+    import { CollectionInterface } from '../../../types/resource';
     import { SelectInputOptionInterface } from '../../../types/entity-option';
-    import { ChallengeRatingUtils } from '../../../types/entities/monster/challenge-rating.enum copy';
+    import { ChallengeRatingEnum } from '../../../types/entities/monster/challenge-rating.enum';
+    import { EnumUtils } from '../../../types/enum.utils';
 
     const props = defineProps({
         monster: { type: Object as PropType<MonsterEntityInterface>, required: false },
@@ -103,12 +104,12 @@
                 <div class="">
                     <SelectInput inputName="challenge_rating" v-model:model="form.challenge_rating"
                         :error="form.errors.challenge_rating" label="Challenge rating (CR)"
-                        :options="ChallengeRatingUtils.options()">
+                        :options="EnumUtils.getSelectOptions(ChallengeRatingEnum)">
                     </SelectInput>
                 </div>
                 <div class="">
                     <SelectInput inputName="size" v-model:model="form.size" :error="form.errors.size" label="Size"
-                        :options="MonsterSizeUtils.options()">
+                        :options="EnumUtils.getSelectOptions(MonsterSizeEnum)">
                     </SelectInput>
                 </div>
             </div>

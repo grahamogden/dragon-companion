@@ -36,18 +36,3 @@ export enum ChallengeRatingEnum {
     TwentyNine = "29",
     Thirty = "30",
 }
-
-export class ChallengeRatingUtils {
-    static values(): ChallengeRatingEnum[] {
-        return Object.values(ChallengeRatingEnum);
-    }
-
-    static options(): SelectInputOptionInterface[] {
-        return Object.values(ChallengeRatingEnum).map((value) => {
-            return {
-                text: value,
-                value: value,
-            };
-        });
-    }
-}
