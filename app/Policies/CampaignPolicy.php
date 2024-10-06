@@ -12,6 +12,7 @@ class CampaignPolicy
     public const MAX_CAMPAIGN_COUNT = 3;
 
     use UserRolePermissionPolicyTrait;
+    use UserOwnsCampaignTrait;
 
     /**
      * Determine whether the user can view any models.
@@ -26,8 +27,13 @@ class CampaignPolicy
      */
     public function view(User $user, Campaign $campaign): bool
     {
+        if (((bool) $user->id) === false) {
+            return false;
+        }
+
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasCampaignPermission(permission: RolePermissionEnum::Read);
+            ->hasCampaignPermission(permission: RolePermissionEnum::Read)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -35,6 +41,10 @@ class CampaignPolicy
      */
     public function create(User $user): Response
     {
+        if (((bool) $user->id) === false) {
+            return Response::deny();
+        }
+
         if ((bool) $user->id) {
             return $user->campaigns()->count() < self::MAX_CAMPAIGN_COUNT
                 ? Response::allow()
@@ -50,8 +60,13 @@ class CampaignPolicy
      */
     public function update(User $user, Campaign $campaign): bool
     {
+        if (((bool) $user->id) === false) {
+            return false;
+        }
+
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasCampaignPermission(permission: RolePermissionEnum::Write);
+            ->hasCampaignPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -59,8 +74,13 @@ class CampaignPolicy
      */
     public function delete(User $user, Campaign $campaign): bool
     {
+        if (((bool) $user->id) === false) {
+            return false;
+        }
+
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasCampaignPermission(permission: RolePermissionEnum::Delete);
+            ->hasCampaignPermission(permission: RolePermissionEnum::Delete)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**

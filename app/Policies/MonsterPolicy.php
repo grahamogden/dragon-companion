@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\Response;
 class MonsterPolicy
 {
     use UserRolePermissionPolicyTrait;
+    use UserOwnsCampaignTrait;
 
     /**
      * Determine whether the user can view any models.
@@ -30,7 +31,8 @@ class MonsterPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasMonsterPermission(permission: RolePermissionEnum::Read);
+            ->hasMonsterPermission(permission: RolePermissionEnum::Read)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -43,7 +45,8 @@ class MonsterPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasMonsterPermission(permission: RolePermissionEnum::Write);
+            ->hasMonsterPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -56,7 +59,8 @@ class MonsterPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasMonsterPermission(permission: RolePermissionEnum::Write);
+            ->hasMonsterPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -69,7 +73,8 @@ class MonsterPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasMonsterPermission(permission: RolePermissionEnum::Delete);
+            ->hasMonsterPermission(permission: RolePermissionEnum::Delete)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**

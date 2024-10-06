@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\Response;
 class ItemPolicy
 {
     use UserRolePermissionPolicyTrait;
+    use UserOwnsCampaignTrait;
 
     /**
      * Determine whether the user can view any models.
@@ -30,7 +31,8 @@ class ItemPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasItemPermission(permission: RolePermissionEnum::Read);
+            ->hasItemPermission(permission: RolePermissionEnum::Read)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -43,7 +45,8 @@ class ItemPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasItemPermission(permission: RolePermissionEnum::Write);
+            ->hasItemPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -56,7 +59,8 @@ class ItemPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasItemPermission(permission: RolePermissionEnum::Write);
+            ->hasItemPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -69,7 +73,8 @@ class ItemPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasItemPermission(permission: RolePermissionEnum::Delete);
+            ->hasItemPermission(permission: RolePermissionEnum::Delete)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**

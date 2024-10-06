@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\Response;
 class SpeciesPolicy
 {
     use UserRolePermissionPolicyTrait;
+    use UserOwnsCampaignTrait;
 
     /**
      * Determine whether the user can view any models.
@@ -30,7 +31,8 @@ class SpeciesPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasSpeciesPermission(permission: RolePermissionEnum::Read);
+            ->hasSpeciesPermission(permission: RolePermissionEnum::Read)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -43,7 +45,8 @@ class SpeciesPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasSpeciesPermission(permission: RolePermissionEnum::Write);
+            ->hasSpeciesPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -56,7 +59,8 @@ class SpeciesPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasSpeciesPermission(permission: RolePermissionEnum::Write);
+            ->hasSpeciesPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -69,7 +73,8 @@ class SpeciesPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasSpeciesPermission(permission: RolePermissionEnum::Delete);
+            ->hasSpeciesPermission(permission: RolePermissionEnum::Delete)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**

@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\Response;
 class CharacterPolicy
 {
     use UserRolePermissionPolicyTrait;
+    use UserOwnsCampaignTrait;
 
     /**
      * Determine whether the user can view any models.
@@ -30,7 +31,8 @@ class CharacterPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasCharacterPermission(permission: RolePermissionEnum::Read);
+            ->hasCharacterPermission(permission: RolePermissionEnum::Read)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -43,7 +45,8 @@ class CharacterPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasCharacterPermission(permission: RolePermissionEnum::Write);
+            ->hasCharacterPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -56,7 +59,8 @@ class CharacterPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasCharacterPermission(permission: RolePermissionEnum::Write);
+            ->hasCharacterPermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -69,7 +73,8 @@ class CharacterPolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasCharacterPermission(permission: RolePermissionEnum::Delete);
+            ->hasCharacterPermission(permission: RolePermissionEnum::Delete)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**

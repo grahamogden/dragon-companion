@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\Response;
 class TimelinePolicy
 {
     use UserRolePermissionPolicyTrait;
+    use UserOwnsCampaignTrait;
 
     /**
      * Determine whether the user can view any models.
@@ -30,7 +31,8 @@ class TimelinePolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasTimelinePermission(permission: RolePermissionEnum::Read);
+            ->hasTimelinePermission(permission: RolePermissionEnum::Read)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -43,7 +45,8 @@ class TimelinePolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasTimelinePermission(permission: RolePermissionEnum::Write);
+            ->hasTimelinePermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -56,7 +59,8 @@ class TimelinePolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasTimelinePermission(permission: RolePermissionEnum::Write);
+            ->hasTimelinePermission(permission: RolePermissionEnum::Write)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
@@ -69,7 +73,8 @@ class TimelinePolicy
         }
 
         return $this->getUserRolePermission(user: $user, campaign: $campaign)
-            ->hasTimelinePermission(permission: RolePermissionEnum::Delete);
+            ->hasTimelinePermission(permission: RolePermissionEnum::Delete)
+            || $this->isCampaignOwner(user: $user, campaign: $campaign);
     }
 
     /**
