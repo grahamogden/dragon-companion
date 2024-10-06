@@ -11,7 +11,7 @@
         <button
             class="relative w-full min-w-48 md:w-auto py-2 px-4 hover:text-timberwolf-50 focus:text-timberwolf-50 text-center no-underline duration-0"
             :class="props.isDestructive ? 'hover:bg-red-600 focus:bg-red-600' : 'hover:bg-biscay-600 focus:bg-biscay-600 text-biscay-800 dark:text-timberwolf-50 dark:text-biscay-200'"
-            type="submit" @click="func(...args)">
+            type="submit" @click.prevent="func(...args)">
             <slot>Submit</slot>
         </button>
     </div>

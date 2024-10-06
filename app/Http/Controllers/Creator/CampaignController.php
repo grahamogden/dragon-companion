@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Creator;
 
 use App\Enums\RolePermissionEnum;
-use App\Enums\RoleTypeEnum;
+use App\Enums\RoleLevelEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Creator\Campaign\StoreCampaignRequest;
 use App\Http\Requests\Creator\Campaign\UpdateCampaignRequest;
@@ -69,11 +69,11 @@ class CampaignController extends Controller
                 ->createMany(records: [
                     [
                         Role::FIELD_NAME => 'Admin',
-                        Role::FIELD_ROLE_TYPE => RoleTypeEnum::Admin,
+                        Role::FIELD_ROLE_LEVEL => RoleLevelEnum::Admin,
                     ],
                     [
                         Role::FIELD_NAME => 'Player',
-                        Role::FIELD_ROLE_TYPE => RoleTypeEnum::Player,
+                        Role::FIELD_ROLE_LEVEL => RoleLevelEnum::Player,
                     ],
                 ]);
 

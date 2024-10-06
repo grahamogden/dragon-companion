@@ -8,7 +8,7 @@
     import BaseInput from '../../../Components/Fields/BaseInput.vue'
     import { Head, useForm } from '@inertiajs/vue3';
     import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
-    import { CollectionInterface } from '../../../types/collection';
+    import { CollectionInterface } from '../../../types/resource';
     import { SelectInputOptionInterface } from '../../../types/entity-option';
 
     const props = defineProps({

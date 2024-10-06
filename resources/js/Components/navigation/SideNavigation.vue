@@ -41,7 +41,7 @@
                 <NavLink :href="route('creator.campaigns.monsters.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'dragon']" fixed-width class="mr-2" />Monsters
                 </NavLink>
-                <NavLink :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
+                <NavLink :href="route('creator.campaigns.roles.index', { campaign: campaignStore.campaignId })">
                     <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width class="mr-2" />Permissions
                 </NavLink>
             </nav>

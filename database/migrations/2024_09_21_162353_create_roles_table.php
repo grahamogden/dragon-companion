@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\RolePermissionEnum;
+use App\Enums\RoleLevelEnum;
 use App\Models\Campaign;
 use App\Models\Role;
 use App\Models\RolePermission;
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string(column: Role::FIELD_NAME, length: 250);
+            $table->enum(column: Role::FIELD_ROLE_LEVEL, allowed: RoleLevelEnum::values());
 
             $table->foreignIdFor(model: Campaign::class)
                 ->index()

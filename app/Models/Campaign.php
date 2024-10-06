@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $synopsis
  * 
+ * @property Role[] $roles
  * @property Item[] $items
  * @property Timeline[] $timelines
  * @property Species[] $species

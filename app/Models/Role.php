@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\RoleTypeEnum;
+use App\Enums\RoleLevelEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * @property int $id
  * @property string $name
- * @property RoleTypeEnum $role_type
+ * @property RoleLevelEnum $role_level
+ * @property RolePermission $rolePermission
  */
 class Role extends Model
 {
@@ -24,10 +25,13 @@ class Role extends Model
 
     public const FIELD_ID = 'id';
     public const FIELD_NAME = 'name';
-    public const FIELD_ROLE_TYPE = 'role_type';
+    public const FIELD_ROLE_LEVEL = 'role_level';
     public const FIELD_CAMPAIGN_ID = 'campaign_id';
     public const FIELD_CREATED = 'created_at';
     public const FIELD_UPDATED = 'updated_at';
+
+    public const FIELD_ROLE_PERMISSION = 'role_permission';
+    public const RELATIONSHIP_ROLE_PERMISSION = 'rolePermission';
 
     /**
      * The attributes that are mass assignable.
@@ -37,6 +41,11 @@ class Role extends Model
     protected $fillable = [
         self::FIELD_NAME,
         self::FIELD_CAMPAIGN_ID,
+        self::FIELD_ROLE_LEVEL,
+    ];
+
+    protected $casts = [
+        self::FIELD_ROLE_LEVEL => RoleLevelEnum::class,
     ];
 
     public function campaign(): BelongsTo
@@ -59,7 +68,12 @@ class Role extends Model
     public function casts(): array
     {
         return [
-            self::FIELD_ROLE_TYPE => RoleTypeEnum::class,
+            self::FIELD_ROLE_LEVEL => RoleLevelEnum::class,
         ];
+    }
+
+    public function isAdminRoleLevel(): bool
+    {
+        return $this->role_level === RoleLevelEnum::Admin;
     }
 }

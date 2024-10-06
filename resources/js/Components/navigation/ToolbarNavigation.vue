@@ -76,7 +76,7 @@
                             class="mr-2"></font-awesome-icon>Monsters
                     </ToolbarNavLink>
                     <ToolbarNavLink v-if="showDashboardLinks" @click="toggleNavMenu(false)"
-                        :href="route('creator.campaigns.index', { campaign: campaignStore.campaignId })">
+                        :href="route('creator.campaigns.roles.index', { campaign: campaignStore.campaignId })">
                         <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width
                             class="mr-2"></font-awesome-icon>Permissions
                     </ToolbarNavLink>

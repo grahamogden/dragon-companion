@@ -1,4 +1,4 @@
-import { CollectionInterface } from "../collection/collection.interface";
+import { CollectionInterface } from "../resource/collection.interface";
 
 export interface PaginationInterface<T> extends CollectionInterface<T> {
     current_page: number;

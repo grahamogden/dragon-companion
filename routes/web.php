@@ -6,6 +6,7 @@ use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\Item;
 use App\Models\Monster;
+use App\Models\Role;
 use App\Models\Species;
 use App\Models\Timeline;
 use Illuminate\Foundation\Application;
@@ -45,6 +46,8 @@ Route::name('creator.')->group(function () {
         Route::resource(Campaign::TABLE_NAME . '.' . Character::TABLE_NAME, App\Http\Controllers\Creator\CharacterController::class);
 
         Route::resource(Campaign::TABLE_NAME . '.' . Monster::TABLE_NAME, App\Http\Controllers\Creator\MonsterController::class);
+
+        Route::resource(Campaign::TABLE_NAME . '.' . Role::TABLE_NAME, App\Http\Controllers\Creator\RoleController::class)->except(['show', 'edit']);
     });
 });
 
