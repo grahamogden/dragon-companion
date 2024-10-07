@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import SideNavigation from '../Components/navigation/SideNavigation.vue'
   import Breadcrumbs from '../Components/breadcrumbs/Breadcrumbs.vue'
-  import BannerContainer from '../Components/alert-banner/BannerContainer.vue'
+  import NotificationContainer from '../Components/notification-bar/NotificationContainer.vue'
 
 </script>
 <template>
@@ -12,8 +12,8 @@
       <div
         class="relative w-full min-h-full p-default md:p-default-md before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-timberwolf-50/80 before:dark:bg-woodsmoke-950/80 before:backdrop-blur-xl before:md:rounded-r-3xl before:duration-theme-change">
         <div class="relative w-full">
-          <BannerContainer></BannerContainer>
           <Breadcrumbs></Breadcrumbs>
+          <NotificationContainer></NotificationContainer>
         </div>
         <main id="main-content" class="relative w-full">
           <slot></slot>

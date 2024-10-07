@@ -1,6 +1,6 @@
-import type { NotificationEnum } from './notification.enum.ts'
+import { NotificationTypeEnum } from "../../types/inertia/page/props/notification/notification-type.enum.ts";
 
 export interface NotificationInterface {
-    type: NotificationEnum
-    text: string
+    type: NotificationTypeEnum;
+    message: string;
 }

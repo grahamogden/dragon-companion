@@ -9,6 +9,7 @@ use App\Http\Resources\RolePermissionResource;
 use App\Models\Campaign;
 use App\Models\Role;
 use App\Models\RolePermission;
+use App\Services\FlashNotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -17,6 +18,8 @@ use Inertia\Response;
 
 class RoleController extends Controller
 {
+    public function __construct(private readonly FlashNotificationService $flashMessageService) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -91,10 +94,11 @@ class RoleController extends Controller
             RolePermission::FIELD_MONSTER_PERMISSIONS => $validatedPermission[RolePermission::FIELD_MONSTER_PERMISSIONS],
         ]);
 
-        return Redirect::route(route: 'creator.campaigns.roles.index', parameters: ['campaign' => $campaign->id])->with('flash', [
-            'title' => 'Success',
-            'type' => 'success',
-        ]);
+        $this->flashMessageService->addSuccessMsg(
+            message: "Role \"$role->name\" successfully saved"
+        );
+
+        return Redirect::route(route: 'creator.campaigns.roles.index', parameters: ['campaign' => $campaign->id]);
     }
 
     /**
@@ -126,10 +130,10 @@ class RoleController extends Controller
             RolePermission::FIELD_MONSTER_PERMISSIONS => $validatedPermission[RolePermission::FIELD_MONSTER_PERMISSIONS],
         ]);
 
-        return Redirect::route(route: 'creator.campaigns.roles.index', parameters: ['campaign' => $campaign->id])->with('flash', [
-            'title' => 'Success',
-            'type' => 'success',
-        ]);
+        $this->flashMessageService->addSuccessMsg(
+            message: "Role \"$role->name\" successfully saved"
+        );
+        return Redirect::route(route: 'creator.campaigns.roles.index', parameters: ['campaign' => $campaign->id]);
     }
 
     /**
@@ -140,6 +144,10 @@ class RoleController extends Controller
         $this->authorize(ability: 'delete', arguments: [$role, $campaign]);
 
         $role->deleteOrFail();
+
+        $this->flashMessageService->addSuccessMsg(
+            message: 'Role successfully deleted'
+        );
 
         return Redirect::route(route: 'creator.campaigns.roles.index', parameters: ['campaign' => $campaign->id]);
     }

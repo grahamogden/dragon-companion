@@ -58,12 +58,12 @@
     <form @submit.prevent="saveRole" class="grid gap-default mt-default">
         <div class="flex flex-col md:flex-row gap-default">
             <div class="w-full md:w-1/4">
-                <BaseInput type="text" v-model:model="form.name" input-name="role_name" :error="form.errors.name"
-                    label="Role name">
+                <BaseInput type="text" v-model:model="form.name" :input-name="'role_name-' + role.name.toLowerCase()"
+                    :error="form.errors.name" label="Role name">
                 </BaseInput>
             </div>
             <div class="w-full md:w-1/4">
-                <SelectInput input-name="role_type" v-model:model="form.role_level"
+                <SelectInput :input-name="'role_type' + role.name.toLowerCase()" v-model:model="form.role_level"
                     :options="EnumUtils.getSelectOptions(RoleLevelEnum)" label="Role type"></SelectInput>
             </div>
         </div>
