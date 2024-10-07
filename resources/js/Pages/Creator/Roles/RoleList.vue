@@ -30,7 +30,6 @@
             <p><strong>Admin</strong> level roles will be able to edit Roles and Permissions, so be careful who you add!
             </p>
         </div>
-        <!-- <RoleViewTable :roles="roles.data" :is-read-only="true"></RoleViewTable> -->
         <div v-for="role in roles.data">
             <RolePermissionSection :role="role"></RolePermissionSection>
         </div>
