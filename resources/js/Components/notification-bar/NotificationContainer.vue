@@ -11,14 +11,17 @@
 
   const flashNotifications = usePage<InertiaPagePropsInterface>().props?.flash?.notifications ?? [];
 
-  watch(() => usePage<InertiaPagePropsInterface>().props?.flash?.notifications ?? [], (notifications: NotificationInterface[]) => {
-    console.debug('Updating notifications')
-    // flashMessages.value = notifications
+  watch(() => usePage<InertiaPagePropsInterface>().props?.flash?.notifications ?? [], (notifications: NotificationInterface[] | null, previous: NotificationInterface[] | null) => {
+    if (
+      notifications === previous
+      || notifications === null
+      || notifications.length === 0
+    ) {
+      notificationStore.removeAllNotifications()
+      return;
+    }
+
     notifications.forEach((notification) => {
-      // switch (notification.type) {
-      //   case NotificationTypeEnum.success:
-      //     notificationStore.addSuccess(notification.message)
-      // }
       notificationStore.addNotification(notification)
     });
   })
