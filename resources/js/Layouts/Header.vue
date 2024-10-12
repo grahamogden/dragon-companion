@@ -82,11 +82,6 @@
     synchroniseThemeWithLocalStorage()
 </script>
 <template>
-    <a tabindex="-1" ref="skipLinkReset" class="absolute"></a>
-    <a href="#main-content"
-        class="absolute z-30 focus:p-4 focus:underline max-h-0 focus:max-h-none bg-white-lilac-50 dark:bg-shark-950 overflow-hidden"
-        ref="skipLink">Skip to main content</a>
-
     <header class="relative w-full">
         <div class="absolute w-full h-full top-0 bg-shark-950/70 backdrop-blur-sm shadow-lg"></div>
         <div class="flex flex-row justify-between items-center max-w-page mx-auto py-2 md:py-4 px-4 md:px-6 relative">
