@@ -125,6 +125,12 @@
 </script>
 <template>
     <div class="relative flex flex-col">
+
+        <Transition name="overlay-fade">
+            <div v-if="configStore.isOverlayActive" @click="configStore.setOverlayActive(false)"
+                class="fixed top-0 left-0 w-full h-full bg-stone-950 md:hidden opacity-50 z-10"></div>
+        </Transition>
+
         <a tabindex="-1" ref="skipLinkReset" class="absolute"></a>
         <a href="#main-content"
             class="absolute z-30 focus:p-4 focus:underline max-h-0 focus:max-h-none bg-white-lilac-50 dark:bg-shark-950 overflow-hidden"
@@ -142,8 +148,22 @@
         <!-- </component> -->
 
         <ToolbarNavigation></ToolbarNavigation>
-
-        <div v-if="configStore.isOverlayActive" @click="configStore.setOverlayActive(false)"
-            class="fixed top-0 left-0 w-full h-full bg-stone-950 opacity-50 md:hidden"></div>
     </div>
 </template>
+<style>
+
+    .overlay-fade-enter-from,
+    .overlay-fade-leave-to {
+        opacity: 0;
+    }
+
+    .overlay-fade-enter-to,
+    .overlay-fade-leave-from {
+        opacity: 0.5;
+    }
+
+    .overlay-fade-enter-active,
+    .overlay-fade-leave-active {
+        transition: opacity 0.3s ease-in-out;
+    }
+</style>
