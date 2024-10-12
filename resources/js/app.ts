@@ -10,6 +10,8 @@ import FontAwesomeIcon from "./plugins/font-awesome.ts";
 import BaseLayout from "./Layouts/BaseLayout.vue";
 import CreatorDashboardLayout from "./Layouts/CreatorDashboardLayout.vue";
 import SimpleContainerLayout from "./Layouts/SimpleContainerLayout.vue";
+import { PrimeVue } from "@primevue/core";
+import { defaultTheme } from "./assets/primevue/theme/default.ts";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -34,6 +36,18 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(createPinia())
+            .use(PrimeVue, {
+                theme: {
+                    preset: defaultTheme,
+                    options: {
+                        darkModeSelector: ".dark",
+                        cssLayer: {
+                            name: "primevue",
+                            order: "tailwind-base, primevue, tailwind-utilities",
+                        },
+                    },
+                },
+            })
             .component("font-awesome-icon", FontAwesomeIcon)
             .mixin({
                 methods: { route },

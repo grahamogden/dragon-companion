@@ -5,6 +5,8 @@
   import { Head, Link, useForm } from '@inertiajs/vue3'
   import BaseLayout from '../../Layouts/BaseLayout.vue';
   import SimpleContainerSlimLayout from '../../Layouts/SimpleContainerSlimLayout.vue';
+  import Password from 'primevue/password';
+  import FieldWrapper from '../../Components/Fields/FieldWrapper.vue';
 
   defineOptions({
     layout: [BaseLayout, SimpleContainerSlimLayout],
@@ -102,10 +104,14 @@
       :error="form.errors.username"></BaseInput>
     <BaseInput type="email" input-name="email" label="Email" v-model:model="form.email" :error="form.errors.email">
     </BaseInput>
-    <BaseInput type="password" input-name="password" label="Password" v-model:model="form.password"
-      :error="form.errors.password"></BaseInput>
-    <BaseInput type="password" input-name="password_confirmation" label="Password"
-      v-model:model="form.password_confirmation" :error="form.errors.password_confirmation"></BaseInput>
+    <FieldWrapper input-name="password" :error="form.errors.password">
+      <Password input-name="password" label="Password" v-model="form.password" :invalid="!!form.errors.password">
+      </Password>
+    </FieldWrapper>
+    <FieldWrapper input-name="password_confirmation" :error="form.errors.password_confirmation">
+      <Password input-name="password_confirmation" label="Password" v-model="form.password_confirmation"
+        :invalid="!!form.errors.password_confirmation"></Password>
+    </FieldWrapper>
     <div class="mt-10 flex flex-col md:flex-row justify-center gap-x-10 gap-y-default md:gap-y-default-md">
       <div class="md:order-last">
         <PrimaryButton text="Register"></PrimaryButton>

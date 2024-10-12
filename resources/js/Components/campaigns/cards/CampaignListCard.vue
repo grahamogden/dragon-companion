@@ -2,30 +2,27 @@
   import { useCampaignStore } from '../../../stores/campaign'
   import { useNotificationStore } from '../../../stores/notifications/notification-store'
   import type { CampaignEntity, CampaignEntityInterface } from '../../../types/entities/campaign';
-  import ImageCard from '../../cards/ImageCard.vue'
+  import { PropType, ref, watch } from 'vue';
+  import { router } from '@inertiajs/vue3';
+  import Card from 'primevue/card';
+  import Button from '../../buttons/Button.vue';
+  import DropDownMenu from '../../drop-down/DropDownMenu.vue';
   import KebabMenuItemButton from '../../menu/wrapped-kebab-menu/KebabMenuItemButton.vue';
   import KebabMenuItemLink from '../../menu/wrapped-kebab-menu/KebabMenuItemLink.vue';
-  import DropDownMenu from '../../drop-down/DropDownMenu.vue';
-  import DropDownKebabIcon from '../../drop-down/DropDownKebabIcon.vue';
-  import { PropType } from 'vue';
-  import { router } from '@inertiajs/vue3';
 
-  defineProps({
+  const props = defineProps({
     campaign: { type: Object as PropType<CampaignEntityInterface>, required: true },
   })
 
   const campaignStore = useCampaignStore()
   const notificationStore = useNotificationStore()
+  const campaignIsCurrentlySelected = ref(props.campaign.id === campaignStore.selectedCampaignId)
 
-  function changeCampaign(id: number, name: string) {
+  function selectCampaign() {
     notificationStore.removeAllNotifications()
     setTimeout(() => {
-      campaignStore.selectCampaign(id, name)
-      if (id === null) {
-        notificationStore.addSuccess('Campaign unselected')
-      } else {
-        notificationStore.addSuccess('Campaign "' + campaignStore.campaignName + '" successfully selected')
-      }
+      campaignStore.selectCampaign(props.campaign.id!, props.campaign.name)
+      notificationStore.addSuccess('Campaign "' + campaignStore.campaignName + '" successfully selected')
     }, 250)
   }
 
@@ -36,40 +33,49 @@
       router.delete(route('creator.campaigns.destroy', { campaign: campaign.id }))
     }
   }
+
+  watch(() => campaignStore.selectedCampaignId, (newSelectedCampaignid) => {
+    if (newSelectedCampaignid === props.campaign.id) {
+      campaignIsCurrentlySelected.value = true
+    } else {
+      campaignIsCurrentlySelected.value = false
+    }
+  })
 </script>
 <template>
-  <image-card :text="campaign.name" :is-selected="campaign.id === campaignStore.selectedCampaignId">
-    <div class="flex items-center w-full justify-between">
-      <p class="truncate text-ellipsis overflow-hidden">{{ campaign.name }}</p>
-      <div>
-        <DropDownMenu :button-aria-context-name="'Campaign ' + campaign.name">
-          <template #button-content>
-            <DropDownKebabIcon></DropDownKebabIcon>
-          </template>
-          <template #items>
-            <!-- <KebabMenuItemText v-if="campaign.id === campaignStore.selectedCampaignId">
-              <font-awesome-icon :icon="['fas', 'ban']" fixed-width class="mr-2"></font-awesome-icon>Currently selected
-            </KebabMenuItemText> -->
-            <KebabMenuItemButton v-if="campaign.id === campaignStore.selectedCampaignId" :func="changeCampaign"
-              :args="[null, null]">
-              <font-awesome-icon :icon="['fas', 'ban']" fixed-width class="mr-2"></font-awesome-icon>Currently selected
-            </KebabMenuItemButton>
-            <KebabMenuItemButton v-else :func="changeCampaign" :args="[campaign.id, campaign.name]">
-              <font-awesome-icon :icon="['fas', 'check']" fixed-width class="mr-2"></font-awesome-icon>Select
-            </KebabMenuItemButton>
-            <KebabMenuItemLink :href="route('creator.campaigns.edit', { campaign: campaign.id })">
-              <font-awesome-icon :icon="['fas', 'pencil']" fixed-width class="mr-2"></font-awesome-icon>Edit
-            </KebabMenuItemLink>
-            <KebabMenuItemLink :href="route('creator.campaigns.roles.index', { campaign: campaignStore.campaignId })">
-              <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width
-                class="mr-2"></font-awesome-icon>Permissions
-            </KebabMenuItemLink>
-            <KebabMenuItemButton :func="deleteCampaign" :args="[campaign]" is-destructive>
-              <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
-            </KebabMenuItemButton>
-          </template>
-        </DropDownMenu>
+  <Card class="rounded-xl">
+    <template #header>
+      <div class="rounded-t-xl overflow-hidden"><img src="@/assets/images/background/light/full.svg"></div>
+    </template>
+    <template #title>
+      {{ campaign.name }}
+    </template>
+    <template #footer>
+      <div class="flex gap-default justify-between">
+        <div>
+          <Button type="button" @click="selectCampaign" aria-haspopup :disabled="campaignIsCurrentlySelected"
+            :outlined="campaignIsCurrentlySelected" :aria-controls="'overlay-menu-' + campaign.id"
+            :icon="campaignIsCurrentlySelected ? ['fas', 'check'] : ['far', 'circle']">{{ campaignIsCurrentlySelected ?
+              'Selected' : 'Select' }}
+          </Button>
+        </div>
+        <div>
+          <DropDownMenu :button-aria-context-name="'Campaign ' + campaign.name">
+            <template #items>
+              <KebabMenuItemLink :href="route('creator.campaigns.edit', { campaign: campaign.id })">
+                <font-awesome-icon :icon="['fas', 'pencil']" fixed-width class="mr-2"></font-awesome-icon>Edit
+              </KebabMenuItemLink>
+              <KebabMenuItemLink :href="route('creator.campaigns.roles.index', { campaign: campaignStore.campaignId })">
+                <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width
+                  class="mr-2"></font-awesome-icon>Permissions
+              </KebabMenuItemLink>
+              <KebabMenuItemButton :func="deleteCampaign" :args="[campaign]" is-destructive>
+                <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
+              </KebabMenuItemButton>
+            </template>
+          </DropDownMenu>
+        </div>
       </div>
-    </div>
-  </image-card>
+    </template>
+  </Card>
 </template>

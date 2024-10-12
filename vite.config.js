@@ -2,6 +2,9 @@ import { defineConfig, loadEnv } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import autoprefixer from 'autoprefixer';
+import Components from 'unplugin-vue-components/vite'
+import { PrimeVueResolver } from '@primevue/auto-import-resolver';
+import tailwindcss from 'tailwindcss'
 
 export default defineConfig((mode) => {
     const env = loadEnv(mode, process.cwd());
@@ -15,10 +18,10 @@ export default defineConfig((mode) => {
         },
         plugins: [
             laravel({
-                input: 'resources/js/app.ts',
+                input: ['resources/js/app.ts'],
                 refresh: true,
                 postcss: [
-                    // tailwindcss(),
+                    tailwindcss(),
                     autoprefixer(),
                 ],
             }),
@@ -30,6 +33,11 @@ export default defineConfig((mode) => {
                     },
                 },
             }),
+            Components({
+                resolvers: [
+                    PrimeVueResolver()
+                ]
+            })
         ],
     }
 });

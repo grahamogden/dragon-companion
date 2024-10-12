@@ -10,6 +10,7 @@
     import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
     import { CollectionInterface } from '../../../types/resource';
     import { SelectInputOptionInterface } from '../../../types/entity-option';
+    import PageHeader from '../../../Components/page-header/PageHeader.vue';
 
     const props = defineProps({
         character: { type: Object as PropType<CharacterEntityInterface>, required: false },
@@ -37,50 +38,15 @@
         }
     }
 
-    // const speciesOptions = props.species.data.map((species: SpeciesEntityInterface): SelectInputOptionInterface => ({
-    //     value: species.id!,
-    //     text: species.name,
-    // }))
-
-    // const props = defineProps<{
-    //     isParentLoading: boolean
-    // }>()
-
-    // const speciesOptions: SelectInputOptionInterface[] = [
-    //     { value: null, text: '-- No species --' }
-    // ];
-
-    // function fetchSpeciesOptions() {
-    //     speciesStore.fetchSpecies(campaignStore.selectedCampaignId!)
-    //         .then((species) => {
-    //             species.forEach((speciesRes) => {
-    //                 if (speciesRes.id && speciesRes.id !== character.value.species_id) {
-    //                     speciesOptions.push({ value: speciesRes.id, text: speciesRes.name })
-    //                 }
-    //             })
-    //             isLoading.value = false
-    //         })
-    // }
-
-    // if (props.isParentLoading) {
-    //     // Watch for when the parent stops loading
-    //     watch(() => props.isParentLoading, (isLoading) => {
-    //         if (!isLoading) {
-    //             fetchSpeciesOptions()
-    //         }
-    //     })
-    // } else {
-    //     // Has the parent already finished loading or
-    //     // not needed to load anything to begin with
-    //     fetchSpeciesOptions()
-    // }
+    const title = (props.character ? 'Edit ' + props.character.name : 'Create a') + ' Character'
 </script>
 
 <template>
 
-    <Head :title="(character ? 'Edit ' + character.name : 'Create an') + ' Item'" />
+    <Head :title="title" />
     <form @submit.prevent="saveCharacter">
         <CreatorDefaultContentLayout>
+            <PageHeader><template #title>{{ title }}</template></PageHeader>
             <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-default md:gap-default-md">
                 <div class="">
                     <BaseInput type="text" inputName="name" v-model:model="form.name" :error="form.errors.name"
@@ -89,7 +55,7 @@
                 </div>
                 <div class="">
                     <SelectInput inputName="species" v-model:model="form.species_id" :error="form.errors.species_id"
-                        label="Species" :options="species.data" inlcude-null-value>
+                        label="Species" :options="species.data" inlcude-null-value editable>
                     </SelectInput>
                 </div>
             </div>
@@ -118,7 +84,7 @@
             </div>
             <div class="w-full">
                 <TextArea inputName="notes" v-model:model="form.notes" :error="form.errors.notes" label="Notes">
-                    </TextArea>
+    </TextArea>
             </div>
             <EntityButtonWrapper
                 :cancelDestination="route('creator.campaigns.characters.index', { campaign: campaignStore.selectedCampaignId })">

@@ -12,60 +12,27 @@
     campaign: { type: Object as PropType<CampaignEntityInterface>, required: false }
   })
 
-  // let campaign: NewCampaignEntityInterface = new CampaignEntity(
-  //     props.data?.id,
-  //     props.data?.name,
-  //     props.data?.synopsis
-  // );
-
-  // if (props.data) {
-  //     campaign = props.data
-  // }
-
-  // const props = defineProps({ campaign: Object as PropType<CampaignEntityInterface | null>, auth: Object as PropType<User> })
-
   const form = useForm({
     name: props.campaign?.name ?? '',
     synopsis: props.campaign?.synopsis ?? '',
   })
 
   const saveCampaign = () => {
-    //   notificationStore.removeAllNotifications()
-    //   validationStore.removeAllErrors()
-
-    //   campaignStore.addCampaign(
-    //     {
-    //       name: formData.name,
-    //       synopsis: formData.synopsis
-    //     }
-    //   ).then(() => {
-    //     router.push({ name: 'campaigns.list' })
-    //       .then(() => {
-    //         notificationStore.addSuccess('Successfully created campaign')
-    //       })
-    //   })
-    //     .catch((error: ApplicationErrorInterface) => {
-    //       console.debug(error)
-    //       notificationStore.addError(error.message)
-    //       if (error.errors) {
-    //         validationStore.addErrors(error.errors)
-    //       }
-    //     })
-    console.debug(usePage().props.auth);
     if (props.campaign) {
       form.put(route('creator.campaigns.update', { campaign: props.campaign.id }))
     } else {
       form.post(route('creator.campaigns.store'))
     }
   }
+  const title = (props.campaign ? 'Edit ' + props.campaign.name : 'Create a') + ' Campaign'
 </script>
 
 <template>
 
-  <Head :title="(campaign ? 'Edit ' + campaign.name : 'Create a') + ' Campaign'" />
+  <Head :title="title" />
   <form @submit.prevent="saveCampaign">
     <CreatorDefaultContentLayout>
-      <PageHeader>Create a Campaign</PageHeader>
+      <PageHeader><template #title>{{ title }}</template></PageHeader>
       <div class="w-full md:w-2/4">
         <BaseInput type="text" inputName="name" v-model:model="form.name" :error="form.errors.name"
           label="Campaign Name" :isRequired="true">

@@ -46,7 +46,7 @@
     <Head :title="pageTitle" />
     <form @submit.prevent="saveRole">
         <CreatorDefaultContentLayout>
-            <PageHeader>{{ pageTitle }}</PageHeader>
+            <PageHeader><template #title>{{ pageTitle }}</template></PageHeader>
             <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-default md:gap-default-md">
                 <div class="">
                     <BaseInput type="text" inputName="role_name" v-model:model="form.name" :error="form.errors.name"

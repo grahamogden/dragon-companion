@@ -1,16 +1,31 @@
 <script setup lang="ts">
     import { Link } from '@inertiajs/vue3';
+    import { ButtonSeverity } from './button-severity';
+    import { PropType } from 'vue';
 
-    defineProps({
+    const props = defineProps({
         href: { type: String, required: true },
-        widthFull: { type: Boolean, required: false },
+        severity: { type: String as PropType<ButtonSeverity>, required: false, default: ButtonSeverity.primary },
+        isDefaultMinWidth: { type: Boolean, required: false, default: false },
+        rounded: { type: Boolean, required: false, default: false },
+        outlined: { type: Boolean, required: false, default: false },
+        disabled: { type: Boolean, required: false, default: false },
+        icon: { type: Array as PropType<string[] | null>, required: false, default: null },
     })
 </script>
 <template>
-    <div class="inline-block bg-biscay-100 dark:bg-biscay-900 text-biscay-800 dark:text-timberwolf-50 border border-biscay-600 rounded-lg overflow-hidden transition-colors duration-theme-change"
-        :class="{ 'w-full': widthFull === true }">
-        <Link :href="href"
-            class="inline-block w-full py-2 px-4 hover:bg-biscay-600 focus:bg-biscay-600 hover:text-timberwolf-50 focus:text-timberwolf-50 text-center no-underline duration-0">
+    <div class="button-wrapper overflow-hidden transition-colors duration-theme-change" :class="{
+        'success': severity === ButtonSeverity.success,
+        'danger': severity === ButtonSeverity.danger,
+        'primary': severity === ButtonSeverity.primary,
+        'rounded-full': rounded,
+        'outlined': outlined,
+        'disabled': disabled,
+    }">
+        <Link :href="href" class="button w-full text-center text-lg no-underline duration-0" :class="{
+            'is-default-min-width': isDefaultMinWidth
+        }">
+        <font-awesome-icon v-if="icon" :icon="icon" fixed-width class="mr-/2"></font-awesome-icon>
         <slot></slot>
         </Link>
     </div>

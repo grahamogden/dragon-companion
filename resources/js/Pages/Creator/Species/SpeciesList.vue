@@ -1,13 +1,14 @@
 <script setup lang="ts">
   import { PropType } from 'vue';
   import { useCampaignStore } from '../../../stores'
-  import type { SpeciesEntityInterface, SpeciesIndexEntityInterface } from '../../../types/entities/species'
+  import { type SpeciesIndexEntityInterface } from '../../../types/entities/species'
   import EntityTable from '../../../Components/entity-table/EntityTable.vue'
   import EntityTableHeading from '../../../Components/entity-table/interface/entity-table-heading';
-  import PaginationInterface from '../../../types/pagination/pagination.interface';
-  import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
+  import { type PaginationInterface } from '../../../types/pagination/pagination.interface';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
   import { Head } from '@inertiajs/vue3';
+  import PageHeader from '../../../Components/page-header/PageHeader.vue';
+  import LinkButton from '../../../Components/buttons/LinkButton.vue';
 
   const campaignStore = useCampaignStore()
 
@@ -43,12 +44,15 @@
 
   <Head title="Species" />
   <CreatorDefaultContentLayout>
-    <PageHeaderWithLink
-      :href="route('creator.campaigns.species.create', { campaign: campaignStore.selectedCampaignId })">
-      <template #title>Species</template><template #link><font-awesome-icon :icon="['fas', 'plus']" fixed-width
-          class="mr-2" />Add species</template>
-    </PageHeaderWithLink>
-    <EntityTable :headings="[new EntityTableHeading('name', true), new EntityTableHeading('description')]"
+    <PageHeader>
+      <template #title>Species</template><template #action>
+        <LinkButton :href="route('creator.campaigns.species.create', { campaign: campaignStore.selectedCampaignId })"
+          :icon="['fas', 'plus']">Add species
+        </LinkButton>
+      </template>
+    </PageHeader>
+    <EntityTable
+      :headings="[new EntityTableHeading('Name', 'name', true), new EntityTableHeading('Description', 'description')]"
       :entities="species.data" kebab-menu-button-aria-context="Species"></EntityTable>
   </CreatorDefaultContentLayout>
 </template>

@@ -12,6 +12,7 @@
     import { SelectInputOptionInterface } from '../../../types/entity-option';
     import { ChallengeRatingEnum } from '../../../types/entities/monster/challenge-rating.enum';
     import { EnumUtils } from '../../../types/enum.utils';
+    import PageHeader from '../../../Components/page-header/PageHeader.vue';
 
     const props = defineProps({
         monster: { type: Object as PropType<MonsterEntityInterface>, required: false },
@@ -24,13 +25,13 @@
         name: props.monster?.name ?? '',
         description: props.monster?.description ?? '',
         size: props.monster?.size ?? MonsterSizeEnum.Unknown,
-        default_hit_points: props.monster?.default_hit_points ?? '',
-        calculated_hit_points_dice_count: props.monster?.calculated_hit_points_dice_count ?? '',
-        calculated_hit_points_dice_type: props.monster?.calculated_hit_points_dice_type ?? '',
-        calculated_hit_points_modifier: props.monster?.calculated_hit_points_modifier ?? '',
-        armour_class: props.monster?.armour_class ?? '',
-        speed: props.monster?.speed ?? '',
-        challenge_rating: props.monster?.challenge_rating ?? '',
+        default_hit_points: props.monster?.default_hit_points ?? 0,
+        calculated_hit_points_dice_count: props.monster?.calculated_hit_points_dice_count ?? 0,
+        calculated_hit_points_dice_type: props.monster?.calculated_hit_points_dice_type ?? 0,
+        calculated_hit_points_modifier: props.monster?.calculated_hit_points_modifier ?? 0,
+        armour_class: props.monster?.armour_class ?? 0,
+        speed: props.monster?.speed ?? 0,
+        challenge_rating: props.monster?.challenge_rating ?? 0,
         species_id: props.monster?.species_id ?? null,
     })
 
@@ -42,28 +43,15 @@
         }
     }
 
-    // const monster = defineModel<MonsterEntityInterface>('monster', { required: true })
-
-    // const props = defineProps<{
-    //     isParentLoading: boolean
-    // }>()
-
-    // const sizeOptions: SelectInputOptionInterface[] = [
-    //     { value: null, text: '-- Unknown size --' },
-    //     { value: 20, text: 'Tiny' },
-    //     { value: 30, text: 'Small' },
-    //     { value: 40, text: 'Medium' },
-    //     { value: 50, text: 'Large' },
-    //     { value: 60, text: 'Huge' },
-    //     { value: 70, text: 'Gargantuan' },
-    // ];
+    const title = (props.monster ? 'Edit ' + props.monster.name : 'Create a') + ' Monster'
 </script>
 
 <template>
 
-    <Head :title="(monster ? 'Edit ' + monster.name : 'Create an') + ' Item'" />
+    <Head :title="title" />
     <form @submit.prevent="saveMonster">
         <CreatorDefaultContentLayout>
+            <PageHeader><template #title>{{ title }}</template></PageHeader>
             <div class="">
                 <BaseInput type="text" inputName="name" v-model:model="form.name" :error="form.errors.name"
                     label="Monster Name" :require="true">

@@ -4,10 +4,11 @@
   import EntityTable from '../../../Components/entity-table/EntityTable.vue'
   import EntityTableHeading from '../../../Components/entity-table/interface/entity-table-heading';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
-  import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
+  import PageHeader from '../../../Components/page-header/PageHeader.vue';
   import type { PaginationInterface } from '../../../types/pagination';
   import { CharacterIndexEntityInterface } from '../../../types/entities/character';
   import { Head } from '@inertiajs/vue3';
+  import LinkButton from '../../../Components/buttons/LinkButton.vue';
 
   const campaignStore = useCampaignStore()
 
@@ -43,12 +44,13 @@
 
   <Head title="Characters" />
   <CreatorDefaultContentLayout>
-    <PageHeaderWithLink
-      :href="route('creator.campaigns.characters.create', { campaign: campaignStore.selectedCampaignId })">
-      <template #title>Characters</template><template #link><font-awesome-icon :icon="['fas', 'plus']" fixed-width
-          class="mr-2" />Add character</template>
-    </PageHeaderWithLink>
-    <entity-table :headings="[new EntityTableHeading('name', true)]" :entities="characters.data"
+    <PageHeader>
+      <template #title>Characters</template><template #action>
+        <LinkButton :href="route('creator.campaigns.characters.create', { campaign: campaignStore.selectedCampaignId })"
+          :icon="['fas', 'plus']">Add character</LinkButton>
+      </template>
+    </PageHeader>
+    <entity-table :headings="[new EntityTableHeading('Name', 'name', true)]" :entities="characters.data"
       kebab-menu-button-aria-context="Character"></entity-table>
   </CreatorDefaultContentLayout>
 </template>

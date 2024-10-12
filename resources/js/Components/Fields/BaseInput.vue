@@ -3,7 +3,7 @@
     import FieldWrapper from './FieldWrapper.vue'
 
     const props = defineProps<{
-        type: 'text' | 'password' | 'email' | 'number'
+        type: 'text' | 'email' | 'number'
         inputName: string
         error: string | undefined
         placeholder?: string
@@ -18,8 +18,6 @@
     })
 
     const validationStore = useValidationStore()
-
-    // const errors = computed(() => validationStore.getErrorMessagesForField(props.inputName) ?? [])
 </script>
 
 <template>

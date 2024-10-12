@@ -5,12 +5,12 @@
     import { router, useForm } from '@inertiajs/vue3';
     import RolePermissionCheckBoxGroup from '../../Components/RoleTable/RolePermissionCheckBoxGroup.vue';
     import { useCampaignStore, useNotificationStore } from '../../stores';
-    import PrimaryButton from '../../Components/buttons/PrimaryButton.vue';
-    import SecondaryButton from '../../Components/buttons/SecondaryButton.vue';
+    import Button from '../../Components/buttons/Button.vue';
     import HorizontalRule from '../../Components/horizontal-rule/HorizontalRule.vue';
     import { RoleLevelEnum } from '../../types/entities/role';
     import SelectInput from '../../Components/Fields/SelectInput.vue';
     import { EnumUtils } from '../../types/enum.utils';
+    import { ButtonSeverity } from '../../Components/buttons/button-severity';
     import BaseInput from '../../Components/Fields/BaseInput.vue';
 
     const props = defineProps({
@@ -55,62 +55,64 @@
 </script>
 <template>
     <HorizontalRule />
-    <form @submit.prevent="saveRole" class="grid gap-default mt-default">
+    <form class="grid gap-default mt-default">
         <div class="flex flex-col md:flex-row gap-default">
             <div class="w-full md:w-1/4">
                 <BaseInput type="text" v-model:model="form.name" :input-name="'role_name-' + role.name.toLowerCase()"
-                    :error="form.errors.name" label="Role name">
-                </BaseInput>
+                    :error="form.errors.name" label="Role name" />
             </div>
             <div class="w-full md:w-1/4">
                 <SelectInput :input-name="'role_type' + role.name.toLowerCase()" v-model:model="form.role_level"
-                    :options="EnumUtils.getSelectOptions(RoleLevelEnum)" label="Role type"></SelectInput>
+                    :error="form.errors.role_level" :options="EnumUtils.getSelectOptions(RoleLevelEnum)"
+                    label="Role type">
+                </SelectInput>
             </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-6 mb-default">
             <div class="">
                 <div>Campaigns</div>
-                <RolePermissionCheckBoxGroup permission-name="campaign_permissions"
+                <RolePermissionCheckBoxGroup permission-name="campaign_permissions" :role-id="role.id ?? 0"
                     v-model:permissions="form.rolePermission.campaign_permissions">
                 </RolePermissionCheckBoxGroup>
             </div>
             <div class="">
                 <div>Items</div>
-                <RolePermissionCheckBoxGroup permission-name="item_permissions"
+                <RolePermissionCheckBoxGroup permission-name="item_permissions" :role-id="role.id ?? 0"
                     v-model:permissions="form.rolePermission.item_permissions">
                 </RolePermissionCheckBoxGroup>
             </div>
             <div class="">
                 <div>Timelines</div>
-                <RolePermissionCheckBoxGroup permission-name="timeline_permissions"
+                <RolePermissionCheckBoxGroup permission-name="timeline_permissions" :role-id="role.id ?? 0"
                     v-model:permissions="form.rolePermission.timeline_permissions">
                 </RolePermissionCheckBoxGroup>
             </div>
             <div class="">
                 <div>Species</div>
-                <RolePermissionCheckBoxGroup permission-name="species_permissions"
+                <RolePermissionCheckBoxGroup permission-name="species_permissions" :role-id="role.id ?? 0"
                     v-model:permissions="form.rolePermission.species_permissions">
                 </RolePermissionCheckBoxGroup>
             </div>
             <div class="">
                 <div>Characters</div>
-                <RolePermissionCheckBoxGroup permission-name="character_permissions"
+                <RolePermissionCheckBoxGroup permission-name="character_permissions" :role-id="role.id ?? 0"
                     v-model:permissions="form.rolePermission.character_permissions">
                 </RolePermissionCheckBoxGroup>
             </div>
             <div class="">
                 <div>Monsters</div>
-                <RolePermissionCheckBoxGroup permission-name="monster_permissions"
+                <RolePermissionCheckBoxGroup permission-name="monster_permissions" :role-id="role.id ?? 0"
                     v-model:permissions="form.rolePermission.monster_permissions">
                 </RolePermissionCheckBoxGroup>
             </div>
         </div>
-        <div class="flex flex-col md:flex-row justify-center items-center gap-x-10 gap-y-6 w-full">
-            <div class="md:order-last w-full md:w-auto text-center">
-                <PrimaryButton>Save</PrimaryButton>
+        <div class="flex flex-row justify-center items-center gap-x-default md:gap-x-default-md w-full">
+            <div class="order-last w-full md:w-auto text-center">
+                <Button :severity="ButtonSeverity.success" @button:on-click="saveRole" is-min-width>Save</Button>
             </div>
             <div class="w-full md:w-auto text-center">
-                <SecondaryButton :func="deleteEntity" :args="[role]" is-destructive>Delete</SecondaryButton>
+                <Button @button:on-click="deleteEntity(role)" :severity="ButtonSeverity.danger"
+                    is-min-width>Delete</Button>
             </div>
         </div>
     </form>

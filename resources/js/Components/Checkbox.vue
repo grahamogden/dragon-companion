@@ -1,13 +1,15 @@
 <script setup lang="ts">
-    import { computed, PropType, defineEmits } from 'vue'
-    import { v4 as uuidv4 } from 'uuid'
+    import { computed, defineEmits } from 'vue'
+    import Checkbox from 'primevue/checkbox';
 
     const emit = defineEmits(['update:checked']);
 
     const props = defineProps({
-        checked: { type: Boolean as PropType<boolean> },
+        checked: { type: Boolean },
         value: { required: false },
-        disabled: { type: Boolean as PropType<boolean>, required: false, default: false },
+        disabled: { type: Boolean, required: false, default: false },
+        inputName: { type: String, required: true },
+        error: { type: String, required: true }
     });
 
     const proxyChecked = computed({
@@ -19,19 +21,17 @@
             emit('update:checked', val, props.value);
         },
     });
-
-    const id = uuidv4();
 </script>
 
 <template>
     <div class="flex grid-cols-2 gap-2 justify-between">
-        <div class="flex items-center w-max"><input type="checkbox" :value="value" v-model="proxyChecked"
-                :disabled="!!disabled"
-                class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                :id="id" />
+        <div class="flex items-center w-max">
+            <Checkbox v-model="proxyChecked" binary :name="inputName" :input-id="inputName" :error="error"
+                :value="value">
+            </Checkbox>
         </div>
         <div class="w-full">
-            <label :for="id">
+            <label :for="inputName" class="cursor-pointer">
                 <slot></slot>
             </label>
         </div>

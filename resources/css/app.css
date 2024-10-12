@@ -2,36 +2,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer utilities {
-    .fixed-center {
-        position: fixed;
-        left: 50%;
-        transform: translate(-50%, 0);
-    }
-
-    .duration-theme-change {
-        @apply motion-reduce:transition-none duration-300 ease-linear;
-    }
-
-    .transition-colors-and-shadows {
-        @apply transition-[colors,shadow];
-    }
-
-    .no-zoom {
-        touch-action: manipulation;
-    }
-}
-
-@layer base {
-    /* input,
-    select,
-    textarea {
-        @apply p-2 rounded-sm border border-dark-brown rounded bg-transparent shadow-inner;
-    } */
+@layer tailwind-base {
+    @tailwind base;
 
     body,
     #app {
@@ -53,13 +25,8 @@
         @apply cursor-pointer;
     }
 
-    a,
-    .button {
-        @apply /* text-white-lilac-800 dark:text-white-lilac-200 */ text-biscay-600 dark:text-biscay-200 underline hover:no-underline transition-colors duration-300;
-    }
-
-    .button {
-        @apply py-1 px-4 no-underline border border-white-lilac-800 dark:border-white-lilac-200 rounded-xl;
+    a:not(.button) {
+        @apply text-biscay-600 dark:text-biscay-200 underline hover:no-underline transition-colors duration-300;
     }
 
     pre {
@@ -67,21 +34,40 @@
     }
 }
 
-@layer components {
+@layer tailwind-components {
+
+    .fixed-center {
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .transition-colors-and-shadows {
+        @apply transition-[colors,shadow];
+    }
+
+    .duration-theme-change {
+        @apply motion-reduce:transition-none duration-300 ease-linear;
+    }
+
+    .no-zoom {
+        touch-action: manipulation;
+    }
+
     .header-transition {
         transition-property: background-position;
-        /* transition-duration: 350ms; */
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .breadcrumb {
-        & + &:before {
+        &+&:before {
             content: ">";
             @apply px-1;
         }
     }
 
     .campaign-picker {
+
         &:hover a,
         a:focus {
             @apply opacity-100;
@@ -91,6 +77,7 @@
     nav.side-nav,
     nav.toolbar,
     nav.toolbar-menu {
+
         .router-link-active,
         .active {
             @apply bg-saffron-mango-300 text-shark-950;
@@ -100,88 +87,19 @@
     nav .navigation-toolbar-link {
         @apply flex flex-col items-center gap-1 text-woodsmoke-950 dark:text-white-lilac-50 py-3 text-center transition-colors duration-theme-change;
 
-        > span {
+        >span {
             @apply inline-block w-full truncate text-ellipsis overflow-hidden;
         }
     }
 
     .drop-down-menu {
+
         .drop-down-menu-item,
         .drop-down-menu-button,
         .drop-down-menu-link {
             @apply p-4 block w-full hover:bg-biscay-600 focus:bg-biscay-600 text-biscay-600 dark:text-biscay-200 hover:text-timberwolf-50 focus:text-timberwolf-50 text-center duration-0;
         }
     }
-
-    /* .glassmorphism {
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    } */
-
-    /* .stitching {
-        position: relative;
-
-        &:before {
-            content: '';
-            @apply absolute top-0 left-0 border-dashed rounded-sm border-parchment-pale border;
-            width: 100%;
-            height: 100%;
-        }
-    }
-
-    .stitching-bottom {
-        position: relative;
-
-        &:after {
-            content: '';
-            @apply absolute border-dashed rounded-sm border-parchment-pale border-b;
-            width: 100%;
-            height: 0;
-            bottom: 0.2rem;
-            left: 0;
-        }
-    }
-
-    .stitching-top {
-        position: relative;
-
-        &:before {
-            content: '';
-            @apply absolute border-dashed rounded-sm border-parchment-pale border-t;
-            width: 100%;
-            height: 0;
-            top: 0.2rem;
-            left: 0;
-        }
-    } */
-
-    /* .destructive-button {
-        @apply py-2 px-4 border-2 border-red-600 rounded-md text-center;
-    } */
-
-    /* .app-name {
-        text-shadow: 0 1px 3px rgba(30, 30, 90, 0.7);
-    } */
-
-    /* .loading {
-        &:before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            height: 5rem;
-            width: 5rem;
-            border-width: 1rem;
-            border-radius: 50%;
-            border-style: dashed;
-            transform-origin: center;
-            animation: spin 2s linear infinite;
-            @apply border-woodsmoke-950 dark:border-timberwolf-50;
-        }
-    } */
 
     .loading {
         transform: translate(-50%, -50%);
@@ -206,91 +124,123 @@
         }
     }
 
-    th,
-    td {
-        @apply border-0 p-3 align-top;
+    .p-invalid {
+        @apply bg-alizarin-crimson-100;
     }
 
-    th {
-        @apply text-left;
+    .p-datatable-table {
+        @apply rounded-2xl overflow-hidden;
     }
 
-    thead.table-heading-dark {
-        th {
-            @apply bg-woodsmoke-800 text-white-lilac-50 font-bold transition duration-500;
+    tr.p-row-even {
+        @apply bg-shark-300/30 dark:bg-woodsmoke-800/30;
+    }
 
-            &:first-of-type {
-                @apply rounded-tl-2xl;
+    .p-inputnumber-increment-button {
+        @apply bg-apple-400 text-apple-900;
+    }
+
+    .p-inputnumber-decrement-button {
+        @apply bg-red-500 text-red-900;
+    }
+
+    .button-wrapper {
+        @apply border-2;
+
+        &.success {
+            @apply bg-apple-600 dark:bg-apple-600 text-apple-100 border-2 border-transparent;
+
+            &.outlined {
+                @apply border-apple-600 bg-transparent text-apple-900 dark:text-apple-100;
+
+                &:not(.disabled) .button {
+                    @apply hover:bg-apple-100 focus:bg-apple-100 dark:hover:bg-apple-900 dark:focus:bg-apple-900;
+                }
             }
 
-            &:last-of-type {
-                @apply rounded-tr-2xl;
+            &:not(.disabled) .button {
+                @apply hover:bg-apple-800 focus:bg-apple-800 dark:hover:bg-apple-800 dark:focus:bg-apple-800;
+            }
+        }
+
+        &.danger {
+            @apply bg-red-600 dark:bg-red-600 border-red-600 text-red-100 border-2 border-transparent;
+
+            &.outlined {
+                @apply border-red-600 bg-transparent text-red-900 dark:text-red-100;
+
+                &:not(.disabled) .button {
+                    @apply hover:bg-red-100 focus:bg-red-100 dark:hover:bg-red-900 dark:focus:bg-red-900;
+                }
+            }
+
+            &:not(.disabled) .button {
+                @apply hover:bg-red-900 focus:bg-red-900 dark:hover:bg-red-800 dark:focus:bg-red-800 dark:hover:text-red-100 dark:focus:text-red-100;
+            }
+        }
+
+        &.primary {
+            @apply bg-biscay-500 border-2 border-transparent text-biscay-100;
+
+            &.outlined {
+                @apply border-biscay-500 bg-transparent text-biscay-900 dark:text-biscay-100;
+
+                &:not(.disabled) .button {
+                    @apply hover:bg-biscay-100 focus:bg-biscay-100 dark:hover:bg-biscay-900 dark:focus:bg-biscay-900;
+                }
+            }
+
+            &:not(.disabled) .button {
+                @apply hover:bg-biscay-700 focus:bg-biscay-700 dark:hover:bg-biscay-700 dark:focus:bg-biscay-700;
+            }
+        }
+
+        &.rounded-full {
+            .button {
+                @apply px-3 py-2;
+            }
+        }
+
+        &:not(.rounded-full) {
+            @apply rounded-lg;
+        }
+
+        &.disabled {
+            @apply opacity-60 cursor-not-allowed;
+            .button {
+                @apply cursor-not-allowed;
+            }
+        }
+
+        .button {
+            @apply px-4 py-2;
+
+            &.is-default-min-width {
+                @apply min-w-48;
             }
         }
     }
 
-    .entity-list-table {
-        @apply border-0 w-full border-collapse;
+    .timeline-event {
+        .p-card-header {
+            @apply sticky top-0;
+        }
+    }
 
-        thead {
-            th {
-                @apply bg-woodsmoke-800 text-white-lilac-50 transition duration-500;
-
-                &:first-of-type {
-                    @apply rounded-tl-2xl;
-                }
-
-                &:last-of-type {
-                    @apply rounded-tr-2xl;
-                }
-            }
+    @keyframes spin {
+        0% {
+            transform: translate(-50%, -50%) rotate(0deg);
         }
 
-        /* tbody tr:nth-of-type(odd) {
-            @apply bg-shark-100 dark:bg-woodsmoke-950;
-        } */
-
-        tbody tr {
-            &:nth-of-type(even) {
-                td {
-                    @apply bg-shark-200/30 dark:bg-woodsmoke-800/30 transition duration-500;
-                }
-            }
-
-            &:last-of-type {
-                td {
-                    &:first-of-type {
-                        @apply rounded-bl-2xl;
-                    }
-
-                    &:last-of-type {
-                        @apply rounded-br-2xl;
-                    }
-                }
-            }
-        }
-
-        th,
-        td {
-            @apply border-0 align-middle text-left;
-
-            /* &.action-cell {
-                @apply ;
-            } */
-        }
-
-        th {
-            @apply font-bold;
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg);
         }
     }
 }
 
-@keyframes spin {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+@layer tailwind-utilities {
+    @tailwind components;
+    @tailwind utilities;
 }
+
+@layer tailwind-base, primevue, tailwind-components, tailwind-utilities;

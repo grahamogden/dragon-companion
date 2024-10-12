@@ -13,7 +13,7 @@
         <TimelineLinearItemCard v-for="(timelineItem, key) in timelineEvents" :routeBase="'creator.campaigns.timelines'"
             :campaignId="campaignId"
             :node-position="key === 0 && timelineEvents.length === 1 ? NodePositionEnum.only : key === 0 ? NodePositionEnum.start : (key + 1) === timelineEvents.length ? NodePositionEnum.end : NodePositionEnum.both"
-            :entity="timelineItem" kebab-menu-button-aria-context="Timeline">
+            :timeline="timelineItem" kebab-menu-button-aria-context="Timeline">
         </TimelineLinearItemCard>
     </div>
 </template>

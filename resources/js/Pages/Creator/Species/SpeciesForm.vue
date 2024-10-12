@@ -34,12 +34,12 @@
         <CreatorDefaultContentLayout>
             <div class="w-full md:w-2/4">
                 <BaseInput type="text" inputName="name" v-model:model="form.name" :error="form.errors.name" label="Name"
-                    :isRequired="true">
+                    is-required>
                 </BaseInput>
             </div>
             <div class="w-full">
                 <BaseInput type="text" inputName="description" v-model:model="form.description"
-                    :error="form.errors.description" label="Description" :isRequired="true">
+                    :error="form.errors.description" label="Description">
                 </BaseInput>
             </div>
             <EntityButtonWrapper

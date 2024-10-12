@@ -5,9 +5,10 @@
   import EntityTableHeading from '../../../Components/entity-table/interface/entity-table-heading';
   import { Head } from '@inertiajs/vue3';
   import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
-  import PageHeaderWithLink from '../../../Components/page-header/PageHeaderWithLink.vue';
+  import PageHeader from '../../../Components/page-header/PageHeader.vue';
   import { type PaginationInterface } from '../../../types/pagination/pagination.interface';
   import { useCampaignStore } from '../../../stores';
+  import LinkButton from '../../../Components/buttons/LinkButton.vue';
 
   defineProps({
     items: Object as PropType<PaginationInterface<ItemIndexEntityInterface>>,
@@ -43,11 +44,14 @@
 
   <Head title="Items" />
   <CreatorDefaultContentLayout>
-    <PageHeaderWithLink :href="route('creator.campaigns.items.create', { campaign: campaignStore.selectedCampaignId })">
-      <template #title>Items</template><template #link><font-awesome-icon :icon="['fas', 'plus']" fixed-width
-          class="mr-2" />Add item</template>
-    </PageHeaderWithLink>
-    <EntityTable :headings="[new EntityTableHeading('name', true), new EntityTableHeading('description', false)]"
+    <PageHeader>
+      <template #title>Items</template><template #action>
+        <LinkButton :href="route('creator.campaigns.items.create', { campaign: campaignStore.selectedCampaignId })"
+          :icon="['fas', 'plus']">Add item</LinkButton>
+      </template>
+    </PageHeader>
+    <EntityTable
+      :headings="[new EntityTableHeading('Name', 'name', true), new EntityTableHeading('Description', 'description', false)]"
       :entities="items.data" kebab-menu-button-aria-context="Item"></EntityTable>
   </CreatorDefaultContentLayout>
 </template>

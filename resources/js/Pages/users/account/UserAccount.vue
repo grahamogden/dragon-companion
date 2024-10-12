@@ -1,29 +1,29 @@
 <script setup lang="ts">
-  import { inject, ref } from 'vue';
-  import { firebaseAppKey } from '../../../keys';
-  import { getAuth, onAuthStateChanged } from 'firebase/auth';
-  import { type FirebaseApp } from 'firebase/app';
-  import { useUserAuthStore } from '../../../stores';
-  import PageHeader from '../../../components/page-header/PageHeader.vue';
-  import ContentGroup from '../../../components/elements/ContentGroup.vue';
+  import { ref } from 'vue';
+  // import { firebaseAppKey } from '../../../keys';
+  // import { getAuth, onAuthStateChanged } from 'firebase/auth';
+  // import { type FirebaseApp } from 'firebase/app';
+  // import { useUserAuthStore } from '../../../stores';
+  import PageHeader from '../../../Components/page-header/PageHeader.vue';
+  import ContentGroup from '../../../Components/elements/ContentGroup.vue';
   import { Link } from '@inertiajs/vue3';
 
-  const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
-  const auth = getAuth(firebaseApp);
-  const userAuth = useUserAuthStore()
+  // const firebaseApp: FirebaseApp = inject(firebaseAppKey)!
+  // const auth = getAuth(firebaseApp);
+  // const userAuth = useUserAuthStore()
   const idToken = ref('')
 
-  onAuthStateChanged(auth, (user) => {
-    userAuth.setUser(user)
-    user?.getIdToken()
-      .then((token) => {
-        console.debug(token)
-        idToken.value = token
-      })
-      .catch((error) => {
-        console.error(error, { depth: 10 })
-      })
-  })
+  // onAuthStateChanged(auth, (user) => {
+  //   userAuth.setUser(user)
+  //   user?.getIdToken()
+  //     .then((token) => {
+  //       console.debug(token)
+  //       idToken.value = token
+  //     })
+  //     .catch((error) => {
+  //       console.error(error, { depth: 10 })
+  //     })
+  // })
 
   const isCopied = ref(false)
 
@@ -44,8 +44,8 @@
 <template>
   <div>
     <page-header>User Profile</page-header>
-    <div class="px-4" v-if="userAuth.getUser !== null">
-      <content-group #content>{{ userAuth.getUser.email }} - {{ userAuth.getUser.uid
+    <div class="px-4" v-if="$page.props.auth.user !== null">
+      <content-group #content>{{ $page.props.auth.user.email }} - {{ $page.props.auth.user.id
         }}:</content-group>
       <content-group #content>
         <button @click="copyToClipboard($event)" data-target="token" class="relative"><i class="fa fa-clipboard text-xl"

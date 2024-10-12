@@ -6,6 +6,7 @@
     import { Head, useForm } from '@inertiajs/vue3';
     import CreatorDefaultContentLayout from '../../../Layouts/ContentLayouts/CreatorDefaultContentLayout.vue';
     import BaseInput from '../../../Components/Fields/BaseInput.vue';
+    import PageHeader from '../../../Components/page-header/PageHeader.vue';
 
     const props = defineProps({
         item: { type: Object as PropType<ItemEntityInterface>, required: false }
@@ -25,13 +26,16 @@
             form.post(route('creator.campaigns.items.store', { campaign: campaignStore.selectedCampaignId }))
         }
     }
+
+    const title = (props.item ? 'Edit ' + props.item.name : 'Create an') + ' Item'
 </script>
 
 <template>
 
-    <Head :title="(item ? 'Edit ' + item.name : 'Create an') + ' Item'" />
+    <Head :title="title" />
     <form @submit.prevent="saveItem">
         <CreatorDefaultContentLayout>
+            <PageHeader><template #title>{{ title }}</template></PageHeader>
             <div class="w-full md:w-2/4">
                 <BaseInput type="text" inputName="name" v-model:model="form.name" :error="form.errors.name"
                     label="Item Name" :isRequired="true">

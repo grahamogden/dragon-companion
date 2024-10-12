@@ -1,25 +1,14 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: [
-        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
-        './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php',
-        './resources/js/**/*.vue',
-    ],
-
-    // theme: {
-    //     extend: {
-    //         fontFamily: {
-    //             sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-    //         },
-    //     },
-    // },
-
-    plugins: [forms],
-    
+  content: [
+      './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+      './storage/framework/views/*.php',
+      './resources/views/**/*.blade.php',
+      './resources/js/**/*.vue',
+  ],
+  plugins: [forms, require('tailwindcss-primeui')],
   darkMode: 'selector',
   theme: {
     extend: {
@@ -56,32 +45,6 @@ export default {
           '800': '#61544B',
           '900': '#50473E',
           '950': '#2A2420',
-        },
-        'deep-koamaru': {
-          '50': '#F1F5FF',
-          '100': '#E6EDFF',
-          '200': '#D0DEFF',
-          '300': '#ABC1FF',
-          '400': '#7C99FF',
-          '500': '#4764FF',
-          '600': '#2139FF',
-          '700': '#1025F1',
-          '800': '#0C1FCB',
-          '900': '#0C1BA6',
-          '950': '#051685',
-        },
-        biscay: {
-          '50': '#F1F5FD',
-          '100': '#DFE9FA',
-          '200': '#C7D8F6',
-          '300': '#A1BFEF',
-          '400': '#749CE6',
-          '500': '#537BDE',
-          '600': '#3E5ED2',
-          '700': '#354CC0',
-          '800': '#31409C',
-          '900': '#242F66',
-          '950': '#1F254C',
         },
         woodsmoke: {
           '50': '#F6F5F5',
@@ -123,6 +86,7 @@ export default {
           '900': '#311E8A',
           '950': '#241754',
         },
+
         'saffron-mango': {
           '50': '#FEF9EC',
           '100': '#FCEEC9',
@@ -175,6 +139,34 @@ export default {
           '900': '#7C3F0B',
           '950': '#482000',
         },
+
+        'deep-koamaru': {
+          '50': '#F1F5FF',
+          '100': '#E6EDFF',
+          '200': '#D0DEFF',
+          '300': '#ABC1FF',
+          '400': '#7C99FF',
+          '500': '#4764FF',
+          '600': '#2139FF',
+          '700': '#1025F1',
+          '800': '#0C1FCB',
+          '900': '#0C1BA6',
+          '950': '#051685',
+        },
+        biscay: {
+          '50': '#F1F5FD',
+          '100': '#DFE9FA',
+          '200': '#C7D8F6',
+          '300': '#A1BFEF',
+          '400': '#749CE6',
+          '500': '#537BDE',
+          '600': '#3E5ED2',
+          '700': '#354CC0',
+          '800': '#31409C',
+          '900': '#242F66',
+          '950': '#1F254C',
+        },
+
         'fern': {
           '50': '#F3FAF3',
           '100': '#E5F4E4',
@@ -188,6 +180,33 @@ export default {
           '900': '#234425',
           '950': '#0F2411',
         },
+        'chateau-green': {
+          '50': '#F1FCF3',
+          '100': '#DEFAE6',
+          '200': '#BFF3CC',
+          '300': '#8DE8A6',
+          '400': '#54D478',
+          '500': '#2EB955',
+          '600': '#219E44',
+          '700': '#1D7837',
+          '800': '#1C5F2F',
+          '900': '#184F29',
+          '950': '#082B13',
+        },
+        'apple': {
+          '50': '#F2FCF1',
+          '100': '#DEFADF',
+          '200': '#BFF3C0',
+          '300': '#8DE890',
+          '400': '#54D459',
+          '500': '#2BB431',
+          '600': '#1F9A24',
+          '700': '#1C7921',
+          '800': '#1B601F',
+          '900': '#184F1C',
+          '950': '#082B0B',
+        },
+
         'sorbus': {
           '50': '#FFF9EC',
           '100': '#FFF3D3',
@@ -303,5 +322,5 @@ export default {
       'sans': ["Open Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
       'nunito': ["Nunito", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
     },
-}
+  }
 };
