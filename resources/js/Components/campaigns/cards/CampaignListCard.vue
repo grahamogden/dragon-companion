@@ -60,10 +60,10 @@
             <KebabMenuItemLink :href="route('creator.campaigns.edit', { campaign: campaign.id })">
               <font-awesome-icon :icon="['fas', 'pencil']" fixed-width class="mr-2"></font-awesome-icon>Edit
             </KebabMenuItemLink>
-            <!-- <KebabMenuItemLink :href="route('creator.campaigns.destroy', { campaign: campaign.id })" method="delete"
-              as="button" :is-destructive="true">
-              <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
-            </KebabMenuItemLink> -->
+            <KebabMenuItemLink :href="route('creator.campaigns.roles.index', { campaign: campaignStore.campaignId })">
+              <font-awesome-icon :icon="['fas', 'person-circle-plus']" fixed-width
+                class="mr-2"></font-awesome-icon>Permissions
+            </KebabMenuItemLink>
             <KebabMenuItemButton :func="deleteCampaign" :args="[campaign]" is-destructive>
               <font-awesome-icon :icon="['fas', 'trash']" fixed-width class="mr-2"></font-awesome-icon>Delete
             </KebabMenuItemButton>
