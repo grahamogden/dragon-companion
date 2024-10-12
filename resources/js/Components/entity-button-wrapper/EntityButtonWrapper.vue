@@ -17,7 +17,7 @@
 <template>
     <div class="flex flex-col md:flex-row justify-center items-center gap-x-10 gap-y-6 w-full mt-10">
         <div class="md:order-last w-full md:w-auto text-center">
-            <Button type="submit" :severity="ButtonSeverity.success" is-min-width>Save</Button>
+            <Button type="submit" :severity="ButtonSeverity.success" is-default-min-width>Save</Button>
         </div>
         <div v-if="onCancel || cancelDestination || goBack" class="w-full md:w-auto text-center">
             <Button v-if="onCancel" type="button" @button:on-click="onCancel"
